@@ -1,6 +1,13 @@
+import cors from 'cors';
 import express from 'express';
 import mongoose from 'mongoose';
+import Middleware from '../src/middleware/middleware';
 import Controller from '../src/controllers/controller';
+
+import errorInterceptor from '../src/middleware/interceptors/errorInterceptor';
+import notFoundInterceptor from '../src/middleware/interceptors/notfoundInterceptor';
+import requestInterceptor from '../src/middleware/interceptors/requestInterceptor';
+
 import { Request, Response } from 'express';
 
 class Application {
@@ -10,33 +17,49 @@ class Application {
       useNewUrlParser: true,
       useCreateIndex: true
    }
-   
+
    public app: express.Application;
 
-   constructor(controllers: Controller[]) {
+   constructor(controllers: Controller[], middleware: Middleware) {
       this.app = express();
 
-      this.connectToTheDatabase();
-      this.initializeMiddlewares();
+      this.setupExpress();
+      this.initializeMiddleware(middleware);
       this.initializeControllers(controllers);
-      this.initializeErrorHandling();
+      this.initializeErrorHandling(middleware);
       this.initializeWebjobs();
+
    }
 
    public startlistening() {
       const port = process.env.PORT;
 
-      this.app.listen(port, () => {
+      this.app.listen(5000, () => {
          console.log(`Server listening on the port ${port}`);
       });
    }
 
-   private initializeMiddlewares() {
-      this.app.use();
+   private setupExpress() {
+      this.app.use(cors());
+      this.app.use(express.json());
+      this.app.use(express.urlencoded({ extended: false }))
    }
 
-   private initializeErrorHandling() {
-      this.app.use();
+   private initializeMiddleware(middleware: Middleware) {
+      middleware.getInterceptors().forEach((middleware) => {
+         this.app.use(middleware);
+      });
+   }
+
+   private initializeControllers(controllers: Controller[]) {
+      controllers.forEach((controller) => {
+         this.app.use(controller.getRoute(), controller.getRouter());
+      });
+   }
+
+   private initializeErrorHandling(middleware: Middleware) {
+      this.app.use(middleware.getNotFoundHandler());
+      this.app.use(middleware.getErrorHandler());
    }
 
    private initializeWebjobs() {
@@ -45,18 +68,6 @@ class Application {
       dataCollector.scheduleA(scheduler);
       dataCollector.scheduleB(scheduler);
       dataCollector.scheduleC(scheduler);*/
-   }
-
-   private initializeControllers(controllers: Controller[]) {
-      this.app.get('/', (request: Request, response: Response) => {
-         return response.json({
-            message: 'Hello there'
-         });
-      })
-      
-      controllers.forEach((controller) => {
-         this.app.use('/', controller.getRouter());
-      });
    }
 
    private async connectToTheDatabase() {

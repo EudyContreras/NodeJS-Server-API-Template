@@ -1,8 +1,8 @@
 import { Router } from 'express'
 
 interface Controller {
+   getRoute(): string
    getRouter(): Router;
-   setupRoutes(router: Router): void;
 }
 
 export default Controller;

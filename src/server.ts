@@ -1,15 +1,17 @@
-import express from 'express';
-import { Request, Response, Application } from 'express';
 
-const app = express();
+import Application from './application';
+import Middleware from './middleware/middleware';
+import RoleController from './controllers/restful/api/roles';
+import UserController from './controllers/restful/api/users';
+import PriviledgeController from './controllers/restful/api/priviledges';
+import AuthenticationController from './controllers/restful/api/authentication';
 
-app.get('/', (req: Request, res: Response) => {
-   const response = {
-      message: 'Hello there'
-   };
-   return res.json(response);
-})
+const application = new Application([
+   new RoleController(),
+   new UserController(),
+   new PriviledgeController(),
+   new AuthenticationController()
+], new Middleware()
+);
 
-app.listen(5000, () => {
-   console.log('Running on port 5000');
-});
+application.startlistening();
