@@ -1,22 +1,38 @@
 {
   "name": "template-server",
   "version": "1.0.0",
-  "description": "A NodeJS template API and Server meant to speed up the initial development process.",
-  "main": "server.js",
-  "scripts": {
-    "start": "node server.js",
-    "server": "nodemon server.js"
-  },
   "author": "Eudy Contreras",
   "license": "MIT",
+  "description": "A NodeJS template API and Server meant to speed up the initial development process.",
+  "main": "src/server.ts",
+  "scripts": {
+    "install": "npm install --prefix start",
+    "start": "node dist/server.ts",
+    "dev": "nodemon src/server.ts",
+    "build": "tsc -p ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/EudyContreras/NodeJS-Server-API-Template.git"
+  },
   "dependencies": {
+    "@hapi/joi": "^16.1.7",
+    "agenda": "^2.1.0",
+    "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "mongoose": "^5.7.5",
-    "nodemailer": "^6.3.1"
+    "nodemailer": "^6.3.1",
+    "request": "^2.88.0"
   },
   "devDependencies": {
-    "nodemon": "^1.19.4"
+    "@types/mongoose": "^5.5.22",
+    "@types/express": "^4.17.1",
+    "@types/node": "^12.11.1",
+    "@types/cors": "^2.8.6",
+    "nodemon": "^1.19.4",
+    "ts-node": "^8.4.1",
+    "typescript": "^3.6.4"
   }
 }
