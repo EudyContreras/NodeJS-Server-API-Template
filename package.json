@@ -1,0 +1,22 @@
+{
+  "name": "template-server",
+  "version": "1.0.0",
+  "description": "A NodeJS template API and Server meant to speed up the initial development process.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "server": "nodemon server.js"
+  },
+  "author": "Eudy Contreras",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "mongoose": "^5.7.5",
+    "nodemailer": "^6.3.1"
+  },
+  "devDependencies": {
+    "nodemon": "^1.19.4"
+  }
+}
