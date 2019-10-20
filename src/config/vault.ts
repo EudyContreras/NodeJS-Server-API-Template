@@ -32,7 +32,16 @@ const vault = Object.freeze({
     CODES: [
       'asdfuhadfnzx6a42brq40qnf0q84tnm9',
       'asdfuhadfnzx6a42brq40qnf0q84tnm9',
+      'asdfuhadfnzx6a42brq40qnf0q84tnm9',
       'asdfuhadfnzx6a42brq40qnf0q84tnm9'
+    ]
+  },
+  priviledges: {
+    CODES: [
+      'hadfnzx6a42brq40qn',
+      'hadfnzx6a42brq40qn',
+      'hadfnzx6a42brq40qn',
+      'hadfnzx6a42brq40qn'
     ]
   },
   validation: {

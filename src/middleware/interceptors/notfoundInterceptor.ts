@@ -1,6 +1,6 @@
 
 import HttpCodes from '../../definitions/httpCode'
-import HttpException from '../../exceptions/httpException';
+import HttpException from '../../exceptions/http.exception';
 
 import { NextFunction, Response, Request } from 'express';
 

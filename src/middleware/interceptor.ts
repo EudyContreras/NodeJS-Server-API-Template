@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 
-import HttpException from '../exceptions/httpException';
+import HttpException from '../exceptions/http.exception';
 import errorInterceptor from './interceptors/errorInterceptor';
 import notFoundInterceptor from './interceptors/notfoundInterceptor';
 import requestInterceptor from './interceptors/requestInterceptor';
