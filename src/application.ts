@@ -28,9 +28,9 @@ class Application {
    }
 
    public startlistening() {
-      const port = process.env.PORT;
+      const port = vault.host.PORT;
 
-      this.app.listen(5000, () => {
+      this.app.listen(port, () => {
          console.log(`Server listening on the port ${port}`);
       });
    }
