@@ -1,14 +1,10 @@
 import cors from 'cors';
 import express from 'express';
 import mongoose from 'mongoose';
-import Middleware from '../src/middleware/middleware';
+import vault from './config/vault';
+import Interceptor from './middleware/interceptor';
 import Controller from '../src/controllers/controller';
 
-import errorInterceptor from '../src/middleware/interceptors/errorInterceptor';
-import notFoundInterceptor from '../src/middleware/interceptors/notfoundInterceptor';
-import requestInterceptor from '../src/middleware/interceptors/requestInterceptor';
-
-import { Request, Response } from 'express';
 
 class Application {
 
@@ -20,15 +16,15 @@ class Application {
 
    public app: express.Application;
 
-   constructor(controllers: Controller[], middleware: Middleware) {
+   constructor(controllers: Controller[], middleware: Interceptor) {
       this.app = express();
 
       this.setupExpress();
       this.initializeMiddleware(middleware);
       this.initializeControllers(controllers);
       this.initializeErrorHandling(middleware);
+      this.connectToTheDatabase();
       this.initializeWebjobs();
-
    }
 
    public startlistening() {
@@ -45,7 +41,7 @@ class Application {
       this.app.use(express.urlencoded({ extended: false }))
    }
 
-   private initializeMiddleware(middleware: Middleware) {
+   private initializeMiddleware(middleware: Interceptor) {
       middleware.getInterceptors().forEach((middleware) => {
          this.app.use(middleware);
       });
@@ -57,7 +53,7 @@ class Application {
       });
    }
 
-   private initializeErrorHandling(middleware: Middleware) {
+   private initializeErrorHandling(middleware: Interceptor) {
       this.app.use(middleware.getNotFoundHandler());
       this.app.use(middleware.getErrorHandler());
    }
@@ -70,16 +66,14 @@ class Application {
       dataCollector.scheduleC(scheduler);*/
    }
 
-   private async connectToTheDatabase() {
-      const {
-         DB_USERNAME,
-         DB_PASSWORD,
-         DB_URI_PATH,
-      } = process.env;
+   private connectToTheDatabase() {
+      const userName = vault.databse.DB_USERNAME;
+      const password = vault.databse.DB_PASSWORD;
+      const dbURIPath = vault.databse.DB_URI_PATH;
 
-      const connectionString = `mongodb://${DB_USERNAME}:${DB_PASSWORD}${DB_URI_PATH}`;
+      const connectionString = `mongodb+srv://${userName}:${password}${dbURIPath}`; 
 
-      await mongoose.connect(connectionString, this.dbOptions);
+      mongoose.connect(connectionString, this.dbOptions);
 
       mongoose.connection.once('open', () => {
          console.log('MongoDB connected successfully');

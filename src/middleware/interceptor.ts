@@ -5,7 +5,7 @@ import errorInterceptor from './interceptors/errorInterceptor';
 import notFoundInterceptor from './interceptors/notfoundInterceptor';
 import requestInterceptor from './interceptors/requestInterceptor';
 
-class Middleware {
+class Interceptor {
    getInterceptors(): Array<(request: Request, response: Response, next: NextFunction) => void> {
       return [
          requestInterceptor
@@ -21,4 +21,4 @@ class Middleware {
    }
 }
 
-export default Middleware
+export default Interceptor

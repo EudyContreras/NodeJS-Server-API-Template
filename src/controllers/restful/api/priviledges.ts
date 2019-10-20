@@ -20,7 +20,7 @@ class Priviledges implements Controller {
       return this.router;
    }
 
-   setupRoutes(router: Router) {
+   private setupRoutes(router: Router) {
       router.get('/', this.getOne);
    }
 

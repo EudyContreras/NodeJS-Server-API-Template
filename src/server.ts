@@ -1,6 +1,6 @@
 
 import Application from './application';
-import Middleware from './middleware/middleware';
+import Interceptor from './middleware/interceptor';
 import RoleController from './controllers/restful/api/roles';
 import UserController from './controllers/restful/api/users';
 import PriviledgeController from './controllers/restful/api/priviledges';
@@ -11,7 +11,7 @@ const application = new Application([
    new UserController(),
    new PriviledgeController(),
    new AuthenticationController()
-], new Middleware()
+], new Interceptor()
 );
 
 application.startlistening();
