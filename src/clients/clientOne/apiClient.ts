@@ -5,7 +5,6 @@ import Endpoints from './endpoints';
 import ContentTypes from '../../definitions/httpContent'
 import HttpMethod from '../../definitions/httpMethod';
 
-
 class ApiClient extends Client {
 
    private baseUrl: Function = Vault.api.someapi.baseUrl;

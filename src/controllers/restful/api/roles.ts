@@ -4,6 +4,7 @@ import Controller from '../../controller';
 import express from 'express';
 
 class Roles implements Controller {
+   
    private routing: string = '/rest/api/roles';
    private router: Router;
 

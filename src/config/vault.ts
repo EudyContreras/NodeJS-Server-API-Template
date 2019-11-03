@@ -1,6 +1,12 @@
 require('dotenv').config();
 
 const vault = Object.freeze({
+  self: {
+    headers: {
+      AUTHORIZATION: 'authorization',
+      TOKEN_HEADER: 'x-auth-token',
+    }
+  },
   host: {
     BASE_URL: '',
     PORT: process.env.PORT || 5000,
@@ -33,6 +39,7 @@ const vault = Object.freeze({
       'asdfuhadfnzx6a42brq40qnf0q84tnm9',
       'asdfuhadfnzx6a42brq40qnf0q84tnm9',
       'asdfuhadfnzx6a42brq40qnf0q84tnm9',
+      'asdfuhadfnzx6a42brq40qnf0q84tnm9',
       'asdfuhadfnzx6a42brq40qnf0q84tnm9'
     ]
   },
@@ -60,7 +67,7 @@ const vault = Object.freeze({
   },
   jwt: {
     PREFIX: 'Bearer ',
-    TOKEN_SECRET: process.env.JWT_SECRET,
+    TOKEN_SECRET: process.env.JWT_SECRET || '',
     EXPIRATION_TIME: '2h',
   },
   encryption: {

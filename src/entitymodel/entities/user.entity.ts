@@ -1,5 +1,4 @@
 import EntitySchema from '../entitySchema';
-import { PriviledgeSchema } from './priviledge.entity';
 import { IUser } from '../models/user.model';
 
 const schema = new EntitySchema({
@@ -37,7 +36,6 @@ const schema = new EntitySchema({
         required: false,
         default: true
     },
-    priviledges: [PriviledgeSchema]
 }, { timestamps: true, strict: false, versionKey: false });
 
 const User = schema.getModel<IUser>('User');

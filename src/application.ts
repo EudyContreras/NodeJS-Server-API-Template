@@ -5,7 +5,6 @@ import vault from './config/vault';
 import Interceptor from './middleware/interceptor';
 import Controller from '../src/controllers/controller';
 
-
 class Application {
 
    private dbOptions = {

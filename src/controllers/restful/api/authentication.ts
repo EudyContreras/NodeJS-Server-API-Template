@@ -4,6 +4,7 @@ import Controller from '../../controller';
 import express from 'express';
 
 class Authentication implements Controller {
+   
    private routing: string = '/rest/api/authentication';
    private router: Router;
 

@@ -1,4 +1,4 @@
-import { IPriviledge } from './priviledge.model';
+
 import { Document } from 'mongoose';
 
 export interface IUser extends Document {
@@ -8,6 +8,5 @@ export interface IUser extends Document {
    email: string,
    password: string,
    lastLogin: Date,
-   active: boolean,
-   priviledges: IPriviledge[]
+   active: boolean
 }

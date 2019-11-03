@@ -27,6 +27,4 @@ schema.index({userId: 1, actionId: 1, controllerId: 1,}, {unique: true});
 
 const Priviledge = schema.getModel<IPriviledge>('Priviledge');
 
-export const PriviledgeEntity = Priviledge;
-export const PriviledgeSchema = schema;
-export default PriviledgeEntity;
+export default Priviledge;
