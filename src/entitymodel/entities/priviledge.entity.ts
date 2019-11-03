@@ -12,7 +12,7 @@ const schema = new EntitySchema({
         trim: true,
         lowercase: true,
         minlength: 3,
-        required: [true, 'The action Id required']
+        required: true
     },
     controllerId: {
         type: String,

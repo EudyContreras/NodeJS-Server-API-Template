@@ -2,11 +2,10 @@
 import { Document } from 'mongoose';
 
 export interface IUser extends Document {
-   invitationId: string;
-   roleCode: string,
    name: string,
    email: string,
+   roleCode: string,
    password: string,
-   lastLogin: Date,
+   lastLogin: Date | null,
    active: boolean
 }

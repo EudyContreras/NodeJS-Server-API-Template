@@ -1,10 +1,9 @@
 export const UserMessages = {
-   validation: {
-      
-   },
-   general: {
-
-   }
+   NO_SUCH_ID: 'No user with the given id was found',
+   NO_SUCH_EMAIL: 'No user with the give email was found',
+   NO_SUCH_USER: 'No user with the give criteria was found',
+   WRONG_PASSWORD: 'The given user password does not match our records',
+   EMAIL_TAKEN: 'The given email is already taken'
 }
 
 export const PriviledgeMessages = {
@@ -13,7 +12,11 @@ export const PriviledgeMessages = {
 }
 
 export const InvitationMessages = {
-
+   EXPIRED: 'The invitation does not exist or it has expired',
+   NOT_PENDING: 'There is no pending invitation for the given user',
+   NO_INVITATION: 'No invitation was found for the give criteria',
+   IS_ACTIVE: 'There already is an active accepted invitation for this user',
+   IS_PENDING: 'There already is a pending active invitation for this user',
 }
 
 export const CredentialsMessages = {
@@ -31,8 +34,17 @@ export const AuthorizationMessages = {
    NO_TOKEN_FOUND: 'No token found'
 }
 
-export const RoleMessages = {
-   DENIED: 'You do not have sufficient priviledges to perform this action',
-   NONE_FOUND: 'No role was found for this user',
-   INVALID_CODE: 'The given role code is invalid',
+export const AuthenticationMessages = {
+   NO_USER_FOUND: 'No user with a matching user id was found',
+   NO_USER_EMAIL: 'No user with the given email was found',
+   WRONG_PASSWORD: 'The given password did not match our records'
+}
+
+export const AccessRoleMessages = {
+   ROLE_EXIST: 'A role matching the given criteria already exists',
+   NO_SUCH_ROLE: 'No role with the given criteria was found',
+}
+
+export const NotificationMessages = {
+   RECOVERY_EMAIL: 'A recovery email has been sent to the given email address'
 }

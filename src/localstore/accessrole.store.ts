@@ -37,6 +37,6 @@ export {
 }
 
 export default {
-   ROOT, ADMIN, GUEST, USER 
+   ROOT, ADMIN, GUEST, USER, ACCESS_ROLES
 };
 

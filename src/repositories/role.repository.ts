@@ -20,10 +20,8 @@ class RoleRepository {
    private options: any;
 
    constructor() {
-      this.exclude = {
-         roles: false,
-         roleId: false
-      };
+      this.exclude = null;
+      
       this.options = {
          new: true,
          upsert: false,
@@ -115,14 +113,12 @@ class RoleRepository {
       return result;
    }
 
-   async insertRole(data: IRole, options = { dto: true }) {
+   async insertRole(data: any, options = { dto: true }) {
       const role = new Role(data);
 
       await role.validate();
 
-      const saved = await role
-         .save(this.options)
-         .then();
+      const saved = await role.save(this.options);
 
       const result = saved ? (saved as any).toClient() : null;
 

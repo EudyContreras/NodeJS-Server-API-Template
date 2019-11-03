@@ -20,10 +20,8 @@ class UserRepository {
    private options: any;
 
    constructor() {
-      this.exclude = {
-         priviledges: false,
-         userId: false
-      };
+      this.exclude = null;
+
       this.options = {
          new: true,
          upsert: false,
@@ -115,14 +113,12 @@ class UserRepository {
       return result;
    }
 
-   async insertUser(data: IUser, options = { dto: true }) {
+   async insertUser(data: any, options = { dto: true }) {
       const user = new User(data);
 
       await user.validate();
 
-      const saved = await user
-         .save(this.options)
-         .then();
+      const saved = await user.save(this.options);
 
       const result = saved ? (saved as any).toClient() : null;
 

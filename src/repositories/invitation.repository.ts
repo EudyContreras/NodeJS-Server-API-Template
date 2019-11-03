@@ -20,10 +20,8 @@ class InvitationRepository {
    private options: any;
 
    constructor() {
-      this.exclude = {
-         invitations: false,
-         invitationId: false
-      };
+      this.exclude = null;
+
       this.options = {
          new: true,
          upsert: false,
@@ -115,14 +113,12 @@ class InvitationRepository {
       return result;
    }
 
-   async insertInvitation(data: IInvitation, options = { dto: true }) {
+   async insertInvitation(data: any, options = { dto: true }) {
       const invitation = new Invitation(data);
 
       await invitation.validate();
 
-      const saved = await invitation
-         .save(this.options)
-         .then();
+      const saved = await invitation.save(this.options);
 
       const result = saved ? (saved as any).toClient() : null;
 

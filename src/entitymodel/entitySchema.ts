@@ -6,7 +6,7 @@ class EntitySchema extends Schema {
       super(definition, options)
 
       this.method('toClient', () => {
-         var model = this.obj;
+         let model = this.obj;
          model.id = model._id;
          delete model._id;
          delete model.__v;
@@ -19,7 +19,7 @@ class EntitySchema extends Schema {
    }
 
    toClient() {
-      var model = this.obj;
+      let model = this.obj;
       model.id = model._id;
       delete model._id;
       delete model.__v;

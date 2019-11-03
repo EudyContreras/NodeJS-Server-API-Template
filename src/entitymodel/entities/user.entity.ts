@@ -2,16 +2,6 @@ import EntitySchema from '../entitySchema';
 import { IUser } from '../models/user.model';
 
 const schema = new EntitySchema({
-    invitationId: {
-        type: String,
-        required: false,
-        trim: true,
-    },
-    roleCode: {
-        type: String,
-        required: true,
-        default: null
-    },
     name: {
         type: String,
         required: true,
@@ -27,6 +17,11 @@ const schema = new EntitySchema({
     password: {
         type: String,
         required: true
+    },
+    roleCode: {
+        type: String,
+        required: true,
+        default: null
     },
     lastLogin: {
         type: Date,

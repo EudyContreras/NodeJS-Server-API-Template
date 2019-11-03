@@ -5,6 +5,7 @@ import UserService from '../services/user.service';
 import RoleStore from '../localstore/accessrole.store';
 import Logger from '../handlers/logging.handler';
 import Handler from '../handlers/error.handler';
+import Vault from '../config/vault';
 
 class DatabaseIntializer {
 
@@ -15,21 +16,36 @@ class DatabaseIntializer {
       this.handler = errorHandler;
       this.logger = logger;
    }
-   /**
-    * Populates the user collection with some
-    * initital user related data for users with
-    * role admin.
-    */
-   createInitialAdministrators() {
-      const service = new UserService();
-   }
 
    /**
     * Populates the invitation collection with some
     * initital invitation related data.
     */
-   createInitialInvitation() {
-      const service = new InvitationService();
+   async createInitialInvitation() {
+      const inviteService = new InvitationService();
+   }
+
+   /**
+    * Populates the user collection with some
+    * initital user related data for users with
+    * role admin.
+    */
+   async createInitialAdministrators() {
+      const userService = new UserService();
+
+      const user = {
+         name: Vault.admin.ADMIN_NAME,
+         email: Vault.admin.ADMIN_USERNAME,
+         password: Vault.admin.ADMIN_PASSWORD
+      };
+
+      const saved = await userService.registerUser(user);
+
+      if (saved.error) {
+         this.logger.logInfo(saved.error);
+      } else {
+         this.logger.logInfo(saved.result);
+      }
    }
 
    /**
@@ -39,7 +55,7 @@ class DatabaseIntializer {
    async createInitialRoles() {
       const service = new PermissionsService();
 
-      for (var i = 0; i < RoleStore.ACCESS_ROLES.length; i++) {
+      for (let i = 0; i < RoleStore.ACCESS_ROLES.length; i++) {
          const type = RoleStore.ACCESS_ROLES[i].type;
          const code = RoleStore.ACCESS_ROLES[i].code;
 

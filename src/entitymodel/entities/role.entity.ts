@@ -12,7 +12,7 @@ const schema = new EntitySchema({
     },
     code: {
         type: String,
-        unique: [true, 'The role code must be unique']
+        unique: true
     },
 }, { timestamps: true,  strict: false, versionKey: false });
 

@@ -20,13 +20,11 @@ class PriviledgeRepository {
    private options: any;
 
    constructor() {
-      this.exclude = {
-         priviledges: false,
-         priviledgeId: false
-      };
+      this.exclude = null;
+      
       this.options = {
          new: true,
-         upsert: false,
+         upsert: true,
          useFindAndModify: false,
          runValidators: true
       };
@@ -115,14 +113,12 @@ class PriviledgeRepository {
       return result;
    }
 
-   async insertPriviledge(data: IPriviledge, options = { dto: true }) {
+   async insertPriviledge(data: any, options = { dto: true }) {
       const priviledge = new Priviledge(data);
 
       await priviledge.validate();
 
-      const saved = await priviledge
-         .save(this.options)
-         .then();
+      const saved = await priviledge.save(this.options);
 
       const result = saved ? (saved as any).toClient() : null;
 
@@ -131,6 +127,14 @@ class PriviledgeRepository {
       }
 
       return result;
+   }
+
+   async updateOrInsertPriviledge(query: any, update: any) {
+      const priviledge = await Priviledge
+         .updateOne(query, update, this.options)
+         .select(this.exclude);
+
+      return priviledge;
    }
 
    async updatePriviledge(priviledgeId: string, update: any, options = { dto: true }) {

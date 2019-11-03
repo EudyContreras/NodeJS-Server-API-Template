@@ -1,6 +1,8 @@
 import cors from 'cors';
+import helmet from 'helmet';
 import express from 'express';
 import mongoose from 'mongoose';
+import compression from 'compression';
 import vault from './config/vault';
 import Interceptor from './middleware/interceptor';
 import Controller from '../src/controllers/controller';
@@ -36,8 +38,11 @@ class Application {
 
    private setupExpress() {
       this.app.use(cors());
+      this.app.use(helmet());
+      this.app.use(compression());
       this.app.use(express.json());
       this.app.use(express.urlencoded({ extended: false }))
+      this.app.use(express.static(vault.application.FILE_DIRECTORY));
    }
 
    private initializeMiddleware(middleware: Interceptor) {
