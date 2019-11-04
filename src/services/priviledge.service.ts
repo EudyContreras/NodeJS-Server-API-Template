@@ -18,9 +18,9 @@ export default class AccessPriviledgeService {
 
          query.userId = userId
 
-         const priviledges = await repository.getAllPriviledgesWhere(query);
+         const result = await repository.getAllPriviledgesWhere(query);
 
-         return { result: priviledges };
+         return { result };
       } catch (error) {
          return { error };
       }
@@ -58,9 +58,9 @@ export default class AccessPriviledgeService {
       const controllerId = priviledge.controllerId;
 
       const data = {
-         userId: userId,
-         actionId: actionId,
-         controllerId: controllerId
+         userId,
+         actionId,
+         controllerId
       };
 
       try {
@@ -88,9 +88,9 @@ export default class AccessPriviledgeService {
 
          data.userId = userId
 
-         const response = await repository.deletePriviledgeWhere(data);
+         const result = await repository.deletePriviledgeWhere(data);
 
-         return { result: response };
+         return { result };
       } catch (error) {
          return { error };
       }
@@ -105,11 +105,11 @@ export default class AccessPriviledgeService {
       try {
          const repository = new PriviledgeRespository();
 
-         const query = { userId: userId };
+         const query = { userId };
 
-         const response = await repository.clearAllWhere(query);
+         const result = await repository.clearAllWhere(query);
 
-         return { result: response };
+         return { result };
       } catch (error) {
          return { error };
       }

@@ -11,6 +11,7 @@ const vault = Object.freeze({
     }
   },
   host: {
+    APP_NAME: 'app name',
     BASE_URL: '',
     PORT: process.env.PORT || 5000,
   },
@@ -25,6 +26,7 @@ const vault = Object.freeze({
     PORT: 465
   },
   databse: {
+    DB_PREPEND: 'mongodb+srv://',
     DB_URI_PATH: process.env.DB_URI_PATH,
     DB_USERNAME: process.env.DB_USERNAME,
     DB_PASSWORD: process.env.DB_PASSWORD,
@@ -44,19 +46,19 @@ const vault = Object.freeze({
   },
   roles: {
     CODES: [
-      'asdfuhadfnzx6a42brq40qnf0q84tnm9',
-      'asdfuhadfnzx6a42brq40qnf0q84tnm9',
-      'asdfuhadfnzx6a42brq40qnf0q84tnm9',
-      'asdfuhadfnzx6a42brq40qnf0q84tnm9',
-      'asdfuhadfnzx6a42brq40qnf0q84tnm9'
+      'kYtm5dTddhQWGpB2WqqQMNCeqdwf5m7g',
+      'GHJNGFTfD7VtFwrg43ek3ERaJKQX3tTr',
+      'rAvyvtD8VjVZJmYWnvhd2NdrCHS58S6K',
+      'Mfgkn5QyP55u57a5NjMswSAWkQmVeNC7',
+      'RfZ7rtFQJef4FcaKuVmKKNdTtf5vX3Uh'
     ]
   },
   priviledges: {
     CODES: [
-      'hadfnzx6a42brq40qn',
-      'hadfnzx6a42brq40qn',
-      'hadfnzx6a42brq40qn',
-      'hadfnzx6a42brq40qn'
+      '4BbJ3kVmUdFHhJST',
+      'NZy3pHHmWDukNT3H',
+      'jstmYaN7HhUsR6pE',
+      'tAM28j4C7YCnka2z'
     ]
   },
   validation: {

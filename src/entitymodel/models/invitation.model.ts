@@ -7,5 +7,5 @@ export interface IInvitation extends Document {
    hostId: string,
    pending: boolean,
    expired: boolean,
-   expirationTime: Number,
+   expirationTime: Number | null,
 }

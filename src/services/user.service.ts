@@ -4,7 +4,9 @@ import InvitationService from './invitation.service';
 import EncryptionService from './encryption.service';
 import NotificationService from './notification.service';
 import AuthenticationService from './authentication.service';
+import RedisCacheHandler from '../handlers/cache.handler';
 import UserRepository from '../repositories/user.repository';
+import PasswordRepository from '../repositories/password.repository';
 
 import { randomString } from '../utilities/string.utility';
 import { UserMessages, NotificationMessages } from '../messages/message.response';
@@ -58,7 +60,7 @@ export default class UserService {
     * @returns the potential result represented as  user that matches the 
     * given email or the possible generated error.
     */
-   async getUserByEmail(email: string): Promise<{ result?: any[], error?: any }> {
+   async getUserByEmail(email: string): Promise<{ result?: any, error?: any }> {
       try {
          const repository = new UserRepository();
 
@@ -158,18 +160,18 @@ export default class UserService {
 
          if (!user) return { error: UserMessages.NO_SUCH_USER };
 
-         const update = {
-            password: randomPassword,
-         };
-
-         if (notificationService.canSendEmails()) {
-            await userRepository.updateUser(user.id, update);
-
-            await notificationService.sendPasswordRecoveryEmail(email, randomPassword);
-
-         } else {
-            throw new Error('No email SMTP service has been configured!');
+         const passwordData = {
+            oldPassword: null,
+            newPassword: randomPassword,
+            isTemp: true
          }
+
+         const { error } = await this.updateUserPassword(user.id, passwordData, true);
+
+         if (error) return { error };
+        
+         await notificationService.sendPasswordRecoveryEmail(email, randomPassword);
+         
          return { result: NotificationMessages.RECOVERY_EMAIL };
       } catch (error) {
          return { error };
@@ -189,35 +191,46 @@ export default class UserService {
 
       const currentPassword = passwordData.oldPassword;
       const newPassword = passwordData.newPassword;
+      const isTemp = passwordData.isTemp;
 
       try {
-         const repository = new UserRepository();
-
-         const user = await repository.getUser(userId, { dto: false });
-
+         const userRepository = new UserRepository();
+         const passwordRepository = new PasswordRepository();
          const encryptionService = new EncryptionService();
          const authenticationService = new AuthenticationService();
+
+         const user = await userRepository.getUser(userId, { dto: false });
+
+         if (user === null) return { error: UserMessages.NO_SUCH_USER };
 
          const isMatch = await encryptionService.comparePasswords(currentPassword, user.password);
 
          if (isMatch || internal) {
-            const { error, password } = await encryptionService.encryptPassword(newPassword);
+            const { error, hash } = await encryptionService.encryptPassword(newPassword);
 
             if (error) {
                return { error };
             }
             const update = {
-               password: password,
+               password: hash,
                updateDate: Date.now
             };
 
-            const result = await repository.updateUser(userId, update);
+            const passwordData = {
+               userId: user.id,
+               password: hash,
+               isTemp: isTemp || false
+            }
+
+            const result = await userRepository.updateUser(userId, update);
 
             if (!result) {
                return { error: UserMessages.NO_SUCH_USER };
             }
 
             const revokeResult = await authenticationService.invalidateTokens(result);
+
+            await passwordRepository.insertPassword(passwordData)
 
             return { result: result, error: revokeResult.error };
          } else {
@@ -240,6 +253,8 @@ export default class UserService {
 
       const encryptionService = new EncryptionService();
       const invitationService = new InvitationService();
+      const redisCacheHandler = new RedisCacheHandler();
+      const passwordRepository = new PasswordRepository();
       const authenticationService = new AuthenticationService();
 
       try {
@@ -257,11 +272,11 @@ export default class UserService {
 
          const encryptResult = await encryptionService.encryptPassword(userData.password);
 
-         if (!encryptResult.password) return { error: encryptResult.error };
+         if (!encryptResult.hash) return { error: encryptResult.error };
 
          const name = userData.name
          const roleCode = invitation.result.roleCode;
-         const password = encryptResult.password;
+         const password = encryptResult.hash;
 
          const data = {
             name: name,
@@ -274,7 +289,17 @@ export default class UserService {
 
          const user = await repository.insertUser(data);
 
-         const tokeResult = await authenticationService.createToken(user, repository);
+         if (user === null) return { error: UserMessages.NO_SUCH_USER };
+         
+         const passwordData = {
+            userId: user.id,
+            password: password,
+            isTemp: false
+         }
+
+         await passwordRepository.insertPassword(passwordData);
+         
+         const tokeResult = await authenticationService.createToken(user, redisCacheHandler);
 
          const { error } = await this.updateInviteStatus(invitation.id, invitationService);
 

@@ -8,7 +8,6 @@ import { Response, Request, NextFunction } from 'express';
 
 import { CREDENTIALS } from '../../validation/schemas/authentication/blueprint';
 
-
 import * as AuthSchema from '../../validation/schemas/authentication/blueprint';
 
 import {

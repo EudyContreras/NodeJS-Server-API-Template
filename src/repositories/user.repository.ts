@@ -1,20 +1,15 @@
 import User from '../entitymodel/entities/user.entity'
-import { IUser } from '../entitymodel/models/user.model'
+import { IUser } from '../entitymodel/models/user.model';
 
-function dataTransferDocument(user: any) {
-   const dto = {
-      id: user.id,
-      email: user.email,
-      name: user.name
-   };
-   return dto;
+function dataTransferDocument(user: IUser) {
+   return user;
 }
 
 /**
  * Data access layer Repository used
  * for interfacing with the user data.
  */
-class UserRepository {
+export default class UserRepository {
 
    private exclude: any;
    private options: any;
@@ -53,10 +48,10 @@ class UserRepository {
          .exec();
 
       if (options.dto === true) {
-         return users.map(x => dataTransferDocument((x as any).toClient()));
+         return users.map(x => dataTransferDocument(x));
       }
 
-      return users.map(x => (x as any).toClient());
+      return users;
    }
 
    async getAllUsersWhere(query: any, options = { dto: true }) {
@@ -66,10 +61,10 @@ class UserRepository {
          .exec();
 
       if (options.dto === true) {
-         return users.map(x => dataTransferDocument((x as any).toClient()));
+         return users.map(x => dataTransferDocument(x));
       }
 
-      return users.map(x => (x as any).toClient());
+      return users;
    }
 
    async getUser(userId: string, options = { dto: true }) {
@@ -78,7 +73,7 @@ class UserRepository {
          .select(this.exclude)
          .exec();
 
-      const result = user ? (user as any).toClient() : null;
+      const result = user ? user : null;
 
       if (options.dto === true && result != null) {
          return dataTransferDocument(result);
@@ -93,7 +88,7 @@ class UserRepository {
          .select(this.exclude)
          .exec();
 
-      const result = user ? (user as any).toClient() : null;
+      const result = user ? user : null;
 
       if (options.dto === true && result != null) {
          return dataTransferDocument(result);
@@ -108,7 +103,7 @@ class UserRepository {
          .select(select)
          .exec();
 
-      const result = user ? (user as any).toClient() : null;
+      const result = user ? user : null;
 
       return result;
    }
@@ -120,7 +115,7 @@ class UserRepository {
 
       const saved = await user.save(this.options);
 
-      const result = saved ? (saved as any).toClient() : null;
+      const result = saved ? saved : null;
 
       if (options.dto === true && result != null) {
          return dataTransferDocument(result);
@@ -135,7 +130,7 @@ class UserRepository {
          .select(this.exclude)
          .exec();
 
-      const result = user ? (user as any).toClient() : null;
+      const result = user ? user : null;
 
       if (options.dto === true && result != null) {
          return dataTransferDocument(result);
@@ -150,7 +145,7 @@ class UserRepository {
          .select(this.exclude)
          .exec();
 
-      const result = user ? (user as any).toClient() : null;
+      const result = user ? user : null;
 
       if (options.dto === true && result != null) {
          return dataTransferDocument(result);
@@ -164,7 +159,7 @@ class UserRepository {
          .findByIdAndDelete(userId)
          .exec();
 
-      const result = user ? (user as any).toClient() : null;
+      const result = user ? user : null;
 
       if (options.dto === true && result != null) {
          return dataTransferDocument(result);
@@ -178,7 +173,7 @@ class UserRepository {
          .findOneAndDelete(query)
          .exec();
 
-      const result = user ? (user as any).toClient() : null;
+      const result = user ? user : null;
 
       if (options.dto === true && result != null) {
          return dataTransferDocument(result);
@@ -199,5 +194,3 @@ class UserRepository {
          .exec();
    }
 }
-
-export default UserRepository;

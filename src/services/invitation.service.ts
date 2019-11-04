@@ -5,7 +5,6 @@ import RoleService from './role.service';
 
 import { InvitationMessages } from '../messages/message.response';
 
-
 export default class InviationService {
 
    /**
@@ -19,12 +18,11 @@ export default class InviationService {
       try {
          const repository = new InvitationRepository();
 
-         const invitation = await repository.hasInvitationWhere({ email: email });
+         const result = await repository.hasInvitationWhere({ email: email });
 
-         if (!invitation) {
-            return { error: InvitationMessages.NO_INVITATION }
-         }
-         return { result: invitation };
+         if (!result) return { error: InvitationMessages.NO_INVITATION }
+
+         return { result };
       } catch (error) {
          return { error }
       }
@@ -42,12 +40,11 @@ export default class InviationService {
       try {
          const repository = new InvitationRepository();
 
-         const invitation = await repository.hasInvitationWhere({ email: email, expired: false });
+         const result = await repository.hasInvitationWhere({ email: email, expired: false });
 
-         if (!invitation) {
-            return { error: InvitationMessages.EXPIRED }
-         }
-         return { result: invitation };
+         if (!result) return { error: InvitationMessages.EXPIRED }
+
+         return { result };
       } catch (error) {
          return { error }
       }
@@ -67,12 +64,11 @@ export default class InviationService {
 
          const repository = new InvitationRepository();
 
-         const invitation = await repository.getInvitationWhere(query);
+         const result = await repository.getInvitationWhere(query);
 
-         if (!invitation) {
-            return { error: InvitationMessages.NOT_PENDING }
-         }
-         return { result: invitation };
+         if (!result) return { error: InvitationMessages.NOT_PENDING }
+
+         return { result };
       } catch (error) {
          return { error }
       }
@@ -86,9 +82,9 @@ export default class InviationService {
       try {
          const repository = new InvitationRepository();
 
-         const invitations = await repository.getAllInvitations();
+         const result = await repository.getAllInvitations();
 
-         return { result: invitations };
+         return { result };
       } catch (error) {
          return { error }
       }
@@ -103,9 +99,9 @@ export default class InviationService {
       try {
          const repository = new InvitationRepository();
 
-         const invitations = await repository.getAllInvitationsWhere(criteria);
+         const result = await repository.getAllInvitationsWhere(criteria);
 
-         return { result: invitations };
+         return { result };
       } catch (error) {
          return { error }
       }
@@ -122,11 +118,11 @@ export default class InviationService {
       try {
          const repository = new InvitationRepository();
 
-         const invitation = await repository.getInvitationWhere(criteria);
+         const result = await repository.getInvitationWhere(criteria);
 
-         if (!invitation) return { error: InvitationMessages.NO_INVITATION }
+         if (!result) return { error: InvitationMessages.NO_INVITATION }
 
-         return { result: invitation };
+         return { result };
       } catch (error) {
          return { error }
       }
@@ -143,11 +139,11 @@ export default class InviationService {
       try {
          const repository = new InvitationRepository();
 
-         const invitation = await repository.getInvitation(inviteId);
+         const result = await repository.getInvitation(inviteId);
 
-         if (!invitation) return { error: InvitationMessages.NO_INVITATION }
+         if (!result) return { error: InvitationMessages.NO_INVITATION }
 
-         return { result: invitation };
+         return { result };
       } catch (error) {
          return { error }
       }
@@ -165,12 +161,11 @@ export default class InviationService {
       try {
          const repository = new InvitationRepository();
 
-         const invitation = await repository.updateInvitation(inviteId, data);
+         const result = await repository.updateInvitation(inviteId, data);
 
-         if (!invitation) {
-            return { error: InvitationMessages.NO_INVITATION }
-         }
-         return { result: invitation };
+         if (!result) return { error: InvitationMessages.NO_INVITATION }
+
+         return { result };
       } catch (error) {
          return { error }
       }
@@ -187,11 +182,11 @@ export default class InviationService {
       try {
          const repository = new InvitationRepository();
 
-         const invitation = await repository.updateInvitationWhere(criteria, update);
+         const result = await repository.updateInvitationWhere(criteria, update);
 
-         if (!invitation) return { error: InvitationMessages.NO_INVITATION }
+         if (!result) return { error: InvitationMessages.NO_INVITATION }
 
-         return { result: invitation };
+         return { result };
       } catch (error) {
          return { error }
       }
@@ -203,6 +198,7 @@ export default class InviationService {
     * @param creatorId The user that issued the invitaiton.
     * @param inviteData  The data containing the invitation details.
     * @returns The created invitation attached to the given id or the generated error.
+    * @throws 
     */
    async createInvitation(hostId: string, inviteData: any): Promise<{ result?: any, error?: any }> {
       const email = inviteData.email;
@@ -219,10 +215,7 @@ export default class InviationService {
 
          const exists = await repository.hasInvitationWhere({ email: email });
 
-         if (exists) {
-            const resolution = handleExisting(email, repository);
-            return resolution;
-         }
+         if (exists) return this.handleExisting(email, repository);
 
          const invitation = {
             email: email,
@@ -233,14 +226,14 @@ export default class InviationService {
 
          const invite = await repository.insertInvitation(invitation);
 
-         if (invite) {
+         if (result) {
             const emailService = await new NoticationService();
 
-            await emailService.sendInvitationEmail(invite);
+            await emailService.sendInvitationEmail(result);
          }
-         return { result: invite };
+         return { result };
       } catch (error) {
-         return { error }
+         return { error };
       }
    }
 
@@ -254,12 +247,11 @@ export default class InviationService {
       try {
          const repository = new InvitationRepository();
 
-         const invitation = await repository.deleteInvitationWhere({ email: email });
+         const result = await repository.deleteInvitationWhere({ email: email });
 
-         if (!invitation) {
-            return { error: InvitationMessages.NO_INVITATION }
-         }
-         return { result: invitation };
+         if (!result) return { error: InvitationMessages.NO_INVITATION };
+
+         return { result };
       } catch (error) {
          return { error }
       }
@@ -274,9 +266,9 @@ export default class InviationService {
       try {
          const repository = new InvitationRepository();
 
-         const invite = await repository.deleteInvitation(inviteId);
+         const result = await repository.deleteInvitation(inviteId);
 
-         return { result: invite };
+         return { result };
       } catch (error) {
          return { error }
       }
@@ -293,31 +285,33 @@ export default class InviationService {
 
          const result = await repository.clearAll();
 
-         return { result: result };
+         return { result };
       } catch (error) {
-         return { error: error }
+         return { error }
       }
    }
-}
 
-/**
- * @description Handles the case when there already exists
- * an invitation attached to the given email.
- * @param email The emai attached to the invitation.
- * @param repository The repository used for interfacing with the invivation data.
- */
-async function handleExisting(email: string, repository: InvitationRepository) {
-   try {
-      const invitation = await repository.getInvitationWhere({ email: email })
+   /**
+    * @description Handles the case when there already exists
+    * an invitation attached to the given email.
+    * @param email The emai attached to the invitation.
+    * @param repository The repository used for interfacing with the invivation data.
+    */
+   private async handleExisting(email: string, repository: InvitationRepository) {
+      try {
+         const invitation = await repository.getInvitationWhere({ email: email })
 
-      if (invitation.pending && !invitation.expired) {
-         return { error: InvitationMessages.IS_PENDING }
+         if (invitation === null) return { error: InvitationMessages.NO_INVITATION }
+         
+         if (invitation.pending && !invitation.expired) {
+            return { error: InvitationMessages.IS_PENDING }
+         }
+         if (!invitation.pending && !invitation.expired) {
+            return { error: InvitationMessages.IS_ACTIVE }
+         }
+         return { error: null }
+      } catch (error) {
+         return { error }
       }
-      if (!invitation.pending && !invitation.expired) {
-         return { error: InvitationMessages.IS_ACTIVE }
-      }
-      return { error: null }
-   } catch (error) {
-      return { error: error }
    }
 }

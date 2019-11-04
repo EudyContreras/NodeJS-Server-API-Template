@@ -23,6 +23,12 @@ export const PriviledgeValidation = {
    VALID_ACTIONS: (args: string[]) => `The valid actions are ${args}`
 };
 
+export const AccessRoleValidation = {
+   DENIED: 'Access for the specified role has been denied',
+   NONE_FOUND: 'No role with the given criteria was found for the user',
+   INVALID_CODE: 'The role code for the user is invalid',
+}
+
 export const RoleValidation = {
    ADD_ROLE: 'Please submit a role type name',
    UNDEFINED_ERROR: 'The role type name is undefined!',

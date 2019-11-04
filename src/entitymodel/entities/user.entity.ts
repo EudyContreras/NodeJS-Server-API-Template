@@ -23,13 +23,14 @@ const schema = new EntitySchema({
         required: true,
         default: null
     },
-    lastLogin: {
-        type: Date,
-    },
     active: {
         type: Boolean,
         required: false,
         default: true
+    },
+    lastLogin: {
+        type: Date,
+        required: false
     },
 }, { timestamps: true, strict: false, versionKey: false });
 

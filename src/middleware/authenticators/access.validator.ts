@@ -4,8 +4,8 @@ import httpCode from '../../definitions/httpCode';
 import priviledgeValidator from './priviledge.validator';
 import PermissionsService from '../../services/role.service';
 
-import { RoleMessages } from '../../messages/message.response';
 import { AccessResponse } from '../../responses/request.response';
+import { AccessRoleValidation } from '../../messages/message.validation';
 import { Response, NextFunction } from 'express'
 
 function allow(...allowed: string[]) {
@@ -16,13 +16,8 @@ function allow(...allowed: string[]) {
 
       const { error, result } = await service.getRoleByCode(roleCode);
 
-      if (error) {
-         return { error: error }
-      }
-      if (!result) {
-         return { error: RoleMessages.INVALID_CODE }
-      }
-
+      if (error) return { error: AccessRoleValidation.INVALID_CODE };
+      
       request.role = result;
       return { allowed: allowed.indexOf(result.name) > -1 };
    }
@@ -31,20 +26,13 @@ function allow(...allowed: string[]) {
 
       const { error, result } = await service.getUserRole(userId);
 
-      if (error) {
-         return { error: error }
-      }
-
-      if (!result) {
-         return { error: RoleMessages.NONE_FOUND }
-      }
+      if (error)  return { error: AccessRoleValidation.NONE_FOUND }
 
       return { match: result.code === roleCode };
    }
 
    return async (request: any, response: Response, next: NextFunction) => {
-      const userId = request.user.userId;
-      const roleCode = request.user.roleCode;
+      const { userId, roleCode } = request.user;
 
       const accessResponse = new AccessResponse();
 
@@ -65,7 +53,7 @@ function allow(...allowed: string[]) {
          await priviledgeValidator(request, response, next);
       else {
          accessResponse.granted = false;
-         accessResponse.errors.push(RoleMessages.DENIED);
+         accessResponse.errors.push(AccessRoleValidation.DENIED);
          return response.status(httpCode.FORBIDDEN_ACCESS).json(accessResponse);
       }
    }

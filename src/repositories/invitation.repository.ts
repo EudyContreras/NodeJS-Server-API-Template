@@ -1,20 +1,15 @@
 import Invitation from '../entitymodel/entities/invitation.entity'
-import { IInvitation } from '../entitymodel/models/invitation.model'
+import { IInvitation } from '../entitymodel/models/invitation.model';
 
-function dataTransferDocument(invitation: any) {
-   const dto = {
-      id: invitation.id,
-      email: invitation.email,
-      name: invitation.name
-   };
-   return dto;
+function dataTransferDocument(invitation: IInvitation) {
+   return invitation;
 }
 
 /**
  * Data access layer Repository used
  * for interfacing with the invitation data.
  */
-class InvitationRepository {
+export default class InvitationRepository {
 
    private exclude: any;
    private options: any;
@@ -53,10 +48,10 @@ class InvitationRepository {
          .exec();
 
       if (options.dto === true) {
-         return invitations.map(x => dataTransferDocument((x as any).toClient()));
+         return invitations.map(x => dataTransferDocument(x));
       }
 
-      return invitations.map(x => (x as any).toClient());
+      return invitations;
    }
 
    async getAllInvitationsWhere(query: any, options = { dto: true }) {
@@ -66,10 +61,10 @@ class InvitationRepository {
          .exec();
 
       if (options.dto === true) {
-         return invitations.map(x => dataTransferDocument((x as any).toClient()));
+         return invitations.map(x => dataTransferDocument(x));
       }
 
-      return invitations.map(x => (x as any).toClient());
+      return invitations;
    }
 
    async getInvitation(invitationId: string, options = { dto: true }) {
@@ -78,13 +73,11 @@ class InvitationRepository {
          .select(this.exclude)
          .exec();
 
-      const result = invitation ? (invitation as any).toClient() : null;
-
-      if (options.dto === true && result != null) {
-         return dataTransferDocument(result);
+      if (options.dto === true && invitation != null) {
+         return dataTransferDocument(invitation);
       }
 
-      return result;
+      return invitation;
    }
 
    async getInvitationWhere(criteria: any, options = { dto: true }) {
@@ -93,13 +86,11 @@ class InvitationRepository {
          .select(this.exclude)
          .exec();
 
-      const result = invitation ? (invitation as any).toClient() : null;
-
-      if (options.dto === true && result != null) {
-         return dataTransferDocument(result);
+      if (options.dto === true && invitation != null) {
+         return dataTransferDocument(invitation);
       }
 
-      return result;
+      return invitation;
    }
 
    async getFromInvitation(invitationId: string, select: any) {
@@ -108,9 +99,7 @@ class InvitationRepository {
          .select(select)
          .exec();
 
-      const result = invitation ? (invitation as any).toClient() : null;
-
-      return result;
+      return invitation;
    }
 
    async insertInvitation(data: any, options = { dto: true }) {
@@ -120,13 +109,11 @@ class InvitationRepository {
 
       const saved = await invitation.save(this.options);
 
-      const result = saved ? (saved as any).toClient() : null;
-
-      if (options.dto === true && result != null) {
-         return dataTransferDocument(result);
+      if (options.dto === true && saved != null) {
+         return dataTransferDocument(saved);
       }
 
-      return result;
+      return saved;
    }
 
    async updateInvitation(invitationId: string, update: any, options = { dto: true }) {
@@ -135,13 +122,11 @@ class InvitationRepository {
          .select(this.exclude)
          .exec();
 
-      const result = invitation ? (invitation as any).toClient() : null;
-
-      if (options.dto === true && result != null) {
-         return dataTransferDocument(result);
+      if (options.dto === true && invitation != null) {
+         return dataTransferDocument(invitation);
       }
 
-      return result;
+      return invitation;
    }
 
    async updateInvitationWhere(query: any, update: any, options = { dto: true }) {
@@ -150,13 +135,11 @@ class InvitationRepository {
          .select(this.exclude)
          .exec();
 
-      const result = invitation ? (invitation as any).toClient() : null;
-
-      if (options.dto === true && result != null) {
-         return dataTransferDocument(result);
+      if (options.dto === true && invitation != null) {
+         return dataTransferDocument(invitation);
       }
 
-      return result;
+      return invitation;
    }
 
    async deleteInvitation(invitationId: string, options = { dto: true }) {
@@ -164,7 +147,7 @@ class InvitationRepository {
          .findByIdAndDelete(invitationId)
          .exec();
 
-      const result = invitation ? (invitation as any).toClient() : null;
+      const result = invitation ? invitation : null;
 
       if (options.dto === true && result != null) {
          return dataTransferDocument(result);
@@ -178,7 +161,7 @@ class InvitationRepository {
          .findOneAndDelete(query)
          .exec();
 
-      const result = invitation ? (invitation as any).toClient() : null;
+      const result = invitation ? invitation : null;
 
       if (options.dto === true && result != null) {
          return dataTransferDocument(result);
@@ -199,5 +182,3 @@ class InvitationRepository {
          .exec();
    }
 }
-
-export default InvitationRepository;

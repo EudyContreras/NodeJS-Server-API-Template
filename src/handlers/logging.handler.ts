@@ -1,4 +1,4 @@
-class LoggingHandler {
+export default class LoggingHandler {
    /**
     * Loggs information using an injected dependency.
     * @param info The information to be logged
@@ -23,5 +23,3 @@ class LoggingHandler {
       console.error(error);
    }
 }
-
-export default LoggingHandler;

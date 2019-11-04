@@ -11,5 +11,6 @@ new Application([
    new UserController(),
    new PriviledgeController(),
    new AuthenticationController()
-], new Interceptor()
+],
+   new Interceptor()
 ).startlistening();

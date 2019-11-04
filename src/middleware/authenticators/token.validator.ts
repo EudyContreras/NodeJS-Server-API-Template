@@ -67,4 +67,4 @@ function getToken(req: Request) {
    return token;
 }
 
-module.exports = authenticate;
+export default authenticate;

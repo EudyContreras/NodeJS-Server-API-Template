@@ -7,7 +7,7 @@ import Logger from '../handlers/logging.handler';
 import Handler from '../handlers/error.handler';
 import Vault from '../config/vault';
 
-class DatabaseIntializer {
+export default class DatabaseIntializer {
 
    private logger: Logger;
    private handler: Handler;
@@ -39,12 +39,12 @@ class DatabaseIntializer {
          password: Vault.admin.ADMIN_PASSWORD
       };
 
-      const saved = await userService.registerUser(user);
+      const { result, error } = await userService.registerUser(user);
 
-      if (saved.error) {
-         this.logger.logInfo(saved.error);
+      if (error) {
+         this.logger.logInfo(error);
       } else {
-         this.logger.logInfo(saved.result);
+         this.logger.logInfo(result);
       }
    }
 
@@ -63,7 +63,7 @@ class DatabaseIntializer {
             name: type,
             code: code
          }
-         const { error } = await service.createAccessRole(role);
+         const { error } = await service.createRole(role);
 
          if (error) {
             this.handler.onError(error);
@@ -72,8 +72,4 @@ class DatabaseIntializer {
          this.logger.logInfo(`Initialized role of type: ${type}`);
       }
    }
-}
-
-module.exports = {
-   DatabaseIntializer
 }

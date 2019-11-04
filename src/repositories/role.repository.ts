@@ -1,20 +1,20 @@
 import Role from '../entitymodel/entities/role.entity'
-import { IRole } from '../entitymodel/models/role.model'
 
-function dataTransferDocument(role: any) {
-   const dto = {
-      id: role.id,
-      email: role.email,
-      name: role.name
-   };
-   return dto;
+import { IRole } from '../entitymodel/models/role.model';
+
+function dataTransferDocument(role: IRole) {
+   return {
+      id: role._id,
+      name: role.name,
+      code: role.code
+   }
 }
 
 /**
  * Data access layer Repository used
  * for interfacing with the role data.
  */
-class RoleRepository {
+export default class RoleRepository {
 
    private exclude: any;
    private options: any;
@@ -53,10 +53,10 @@ class RoleRepository {
          .exec();
 
       if (options.dto === true) {
-         return roles.map(x => dataTransferDocument((x as any).toClient()));
+         return roles.map(x => dataTransferDocument(x));
       }
 
-      return roles.map(x => (x as any).toClient());
+      return roles;
    }
 
    async getAllRolesWhere(query: any, options = { dto: true }) {
@@ -66,10 +66,10 @@ class RoleRepository {
          .exec();
 
       if (options.dto === true) {
-         return roles.map(x => dataTransferDocument((x as any).toClient()));
+         return roles.map(x => dataTransferDocument(x));
       }
 
-      return roles.map(x => (x as any).toClient());
+      return roles;
    }
 
    async getRole(roleId: string, options = { dto: true }) {
@@ -78,7 +78,7 @@ class RoleRepository {
          .select(this.exclude)
          .exec();
 
-      const result = role ? (role as any).toClient() : null;
+      const result = role ? role : null;
 
       if (options.dto === true && result != null) {
          return dataTransferDocument(result);
@@ -93,7 +93,7 @@ class RoleRepository {
          .select(this.exclude)
          .exec();
 
-      const result = role ? (role as any).toClient() : null;
+      const result = role ? role : null;
 
       if (options.dto === true && result != null) {
          return dataTransferDocument(result);
@@ -108,7 +108,7 @@ class RoleRepository {
          .select(select)
          .exec();
 
-      const result = role ? (role as any).toClient() : null;
+      const result = role ? role : null;
 
       return result;
    }
@@ -120,7 +120,7 @@ class RoleRepository {
 
       const saved = await role.save(this.options);
 
-      const result = saved ? (saved as any).toClient() : null;
+      const result = saved ? saved : null;
 
       if (options.dto === true && result != null) {
          return dataTransferDocument(result);
@@ -135,7 +135,7 @@ class RoleRepository {
          .select(this.exclude)
          .exec();
 
-      const result = role ? (role as any).toClient() : null;
+      const result = role ? role : null;
 
       if (options.dto === true && result != null) {
          return dataTransferDocument(result);
@@ -150,7 +150,7 @@ class RoleRepository {
          .select(this.exclude)
          .exec();
 
-      const result = role ? (role as any).toClient() : null;
+      const result = role ? role : null;
 
       if (options.dto === true && result != null) {
          return dataTransferDocument(result);
@@ -164,7 +164,7 @@ class RoleRepository {
          .findByIdAndDelete(roleId)
          .exec();
 
-      const result = role ? (role as any).toClient() : null;
+      const result = role ? role : null;
 
       if (options.dto === true && result != null) {
          return dataTransferDocument(result);
@@ -178,7 +178,7 @@ class RoleRepository {
          .findOneAndDelete(query)
          .exec();
 
-      const result = role ? (role as any).toClient() : null;
+      const result = role ? role : null;
 
       if (options.dto === true && result != null) {
          return dataTransferDocument(result);
@@ -199,5 +199,3 @@ class RoleRepository {
          .exec();
    }
 }
-
-export default RoleRepository;

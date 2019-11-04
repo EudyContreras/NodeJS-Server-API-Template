@@ -7,7 +7,7 @@ export default class EncryptionService {
     * hashed and salted password.
     * @param oldPassword The password input as plain text
     * @param currentPassword The current password as a hash.
-    * @returns {boolean} A boolean containing the result.
+    * @returns True if the passwords match otherwise false.
     */
    async comparePasswords(oldPassword: string, currentPassword: string) {
       return await becrypt.compare(oldPassword, currentPassword);
@@ -17,19 +17,18 @@ export default class EncryptionService {
     * @description Used for encrypting passwords by hashing using salt.
     * @param password The password to be encrypted
     * @param iterations The number of iterations used for creating the hash salt. 
-    * @returns {{password: string, error: Error}} The hashed and salted password
-    * or a generated error.
+    * @returns The hashed and salted password or a generated error.
     */
-   async encryptPassword(password?: string, iterations = vault.encryption.SALT_ITERATIONS): Promise<{ password?: string, error?: any }> {
+   async encryptPassword(password?: string, iterations = vault.encryption.SALT_ITERATIONS): Promise<{ hash?: string, error?: any }> {
       if (!password) return { error: new Error('The given password is empty or null') };
 
       try {
          const salt = await becrypt.genSaltSync(iterations);
          const hash = await becrypt.hashSync(password, salt);
 
-         return { password: hash };
+         return { hash };
       } catch (error) {
-         return { error: error };
+         return { error };
       }
    }
 }

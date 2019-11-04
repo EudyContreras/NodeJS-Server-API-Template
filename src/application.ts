@@ -6,25 +6,33 @@ import compression from 'compression';
 import vault from './config/vault';
 import Interceptor from './middleware/interceptor';
 import Controller from '../src/controllers/controller';
+import ErrorHandler from './handlers/error.handler';
+import LoggingHandler from './handlers/logging.handler';
+import DataInitializer from './initializers/database.initializer';
 
-class Application {
+export default class Application {
 
-   private dbOptions = {
+   public app: express.Application;
+
+   private loggHandler: LoggingHandler;
+   private errorHandler: ErrorHandler;
+
+   private dbOptions: any = {
       useUnifiedTopology: true,
       useNewUrlParser: true,
       useCreateIndex: true
    }
 
-   public app: express.Application;
-
    constructor(controllers: Controller[], middleware: Interceptor) {
       this.app = express();
+      this.loggHandler = new LoggingHandler();
+      this.errorHandler = new ErrorHandler(this.loggHandler)
 
       this.setupExpress();
       this.initializeMiddleware(middleware);
       this.initializeControllers(controllers);
       this.initializeErrorHandling(middleware);
-      this.connectToTheDatabase();
+      this.connectToTheDatabase(true);
       this.initializeWebjobs();
    }
 
@@ -70,19 +78,24 @@ class Application {
       dataCollector.scheduleC(scheduler);*/
    }
 
-   private connectToTheDatabase() {
+   private connectToTheDatabase(createInitialData: boolean = false) {
+      const dataInitializer = new DataInitializer(this.errorHandler, this.loggHandler);
+
+      const prepend = vault.databse.DB_PREPEND;
       const userName = vault.databse.DB_USERNAME;
       const password = vault.databse.DB_PASSWORD;
       const dbURIPath = vault.databse.DB_URI_PATH;
 
-      const connectionString = `mongodb+srv://${userName}:${password}${dbURIPath}`; 
+      const connectionString = `${prepend}${userName}:${password}${dbURIPath}`; 
 
       mongoose.connect(connectionString, this.dbOptions);
 
-      mongoose.connection.once('open', () => {
+      mongoose.connection.once('open', async () => {
          console.log('MongoDB connected successfully');
+         if (createInitialData) {
+            await dataInitializer.createInitialRoles();
+            await dataInitializer.createInitialAdministrators();
+         }     
       });
    }
 }
-
-export default Application;

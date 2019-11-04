@@ -1,20 +1,15 @@
 import Priviledge from '../entitymodel/entities/priviledge.entity'
-import { IPriviledge } from '../entitymodel/models/priviledge.model'
+import { IPriviledge } from '../entitymodel/models/priviledge.model';
 
-function dataTransferDocument(priviledge: any) {
-   const dto = {
-      id: priviledge.id,
-      email: priviledge.email,
-      name: priviledge.name
-   };
-   return dto;
+function dataTransferDocument(priviledge: IPriviledge) {
+   return priviledge;
 }
 
 /**
  * Data access layer Repository used
  * for interfacing with the priviledge data.
  */
-class PriviledgeRepository {
+export default class PriviledgeRepository {
 
    private exclude: any;
    private options: any;
@@ -53,10 +48,10 @@ class PriviledgeRepository {
          .exec();
 
       if (options.dto === true) {
-         return priviledges.map(x => dataTransferDocument((x as any).toClient()));
+         return priviledges.map(x => dataTransferDocument(x));
       }
 
-      return priviledges.map(x => (x as any).toClient());
+      return priviledges;
    }
 
    async getAllPriviledgesWhere(query: any, options = { dto: true }) {
@@ -66,10 +61,10 @@ class PriviledgeRepository {
          .exec();
 
       if (options.dto === true) {
-         return priviledges.map(x => dataTransferDocument((x as any).toClient()));
+         return priviledges.map(x => dataTransferDocument(x));
       }
 
-      return priviledges.map(x => (x as any).toClient());
+      return priviledges;
    }
 
    async getPriviledge(priviledgeId: string, options = { dto: true }) {
@@ -78,7 +73,7 @@ class PriviledgeRepository {
          .select(this.exclude)
          .exec();
 
-      const result = priviledge ? (priviledge as any).toClient() : null;
+      const result = priviledge ? priviledge : null;
 
       if (options.dto === true && result != null) {
          return dataTransferDocument(result);
@@ -93,7 +88,7 @@ class PriviledgeRepository {
          .select(this.exclude)
          .exec();
 
-      const result = priviledge ? (priviledge as any).toClient() : null;
+      const result = priviledge ? priviledge : null;
 
       if (options.dto === true && result != null) {
          return dataTransferDocument(result);
@@ -108,7 +103,7 @@ class PriviledgeRepository {
          .select(select)
          .exec();
 
-      const result = priviledge ? (priviledge as any).toClient() : null;
+      const result = priviledge ? priviledge : null;
 
       return result;
    }
@@ -120,7 +115,7 @@ class PriviledgeRepository {
 
       const saved = await priviledge.save(this.options);
 
-      const result = saved ? (saved as any).toClient() : null;
+      const result = saved ? saved : null;
 
       if (options.dto === true && result != null) {
          return dataTransferDocument(result);
@@ -143,7 +138,7 @@ class PriviledgeRepository {
          .select(this.exclude)
          .exec();
 
-      const result = priviledge ? (priviledge as any).toClient() : null;
+      const result = priviledge ? priviledge : null;
 
       if (options.dto === true && result != null) {
          return dataTransferDocument(result);
@@ -158,7 +153,7 @@ class PriviledgeRepository {
          .select(this.exclude)
          .exec();
 
-      const result = priviledge ? (priviledge as any).toClient() : null;
+      const result = priviledge ? priviledge : null;
 
       if (options.dto === true && result != null) {
          return dataTransferDocument(result);
@@ -172,7 +167,7 @@ class PriviledgeRepository {
          .findByIdAndDelete(priviledgeId)
          .exec();
 
-      const result = priviledge ? (priviledge as any).toClient() : null;
+      const result = priviledge ? priviledge : null;
 
       if (options.dto === true && result != null) {
          return dataTransferDocument(result);
@@ -186,7 +181,7 @@ class PriviledgeRepository {
          .findOneAndDelete(query)
          .exec();
 
-      const result = priviledge ? (priviledge as any).toClient() : null;
+      const result = priviledge ? priviledge : null;
 
       if (options.dto === true && result != null) {
          return dataTransferDocument(result);
@@ -207,5 +202,3 @@ class PriviledgeRepository {
          .exec();
    }
 }
-
-export default PriviledgeRepository;

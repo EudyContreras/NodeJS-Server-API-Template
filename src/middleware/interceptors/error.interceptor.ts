@@ -15,9 +15,7 @@ function intercept(error: HttpException, request: Request, response: Response, n
       }
    };
 
-   response
-      .status(status)
-      .json(apiResponse);
+   response.status(status).json(apiResponse);
 }
 
 
