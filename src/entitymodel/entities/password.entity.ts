@@ -11,11 +11,16 @@ const schema = new EntitySchema({
         type: String,
         required: true
     },
+    active: {
+        type: Boolean,
+        required: true,
+        default: false
+    },
     isTemp: {
         type: Boolean,
         required: true
     }
-}, { timestamps: false,  strict: false, versionKey: false });
+}, { timestamps: true,  strict: true, versionKey: false });
 
 const Password = schema.getModel<IPassword>('Password');
 

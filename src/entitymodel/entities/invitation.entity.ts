@@ -33,7 +33,7 @@ const schema = new EntitySchema({
       required: false,
       default: null
    }
-}, { timestamps: true, strict: false, versionKey: false });
+}, { timestamps: true, strict: true, versionKey: false });
 
 const Invitation = schema.getModel<IInvitation>('Invitation');
 

@@ -1,7 +1,8 @@
 import Joi from '@hapi/joi';
+
 import Vault from '../../../config/vault';
 
-import { AuthenticationValidation  } from '../../../messages/message.validation';
+import { SchemaValidation  } from '../../../messages/message.validation';
 
 export const CREDENTIALS = Symbol('credentials');
 
@@ -24,7 +25,11 @@ export const validateCredentials = (data: any) => {
    });
    
    return {
-      message: AuthenticationValidation.CREDENTIALS,
-      result: schema.validate(data)
+      message: SchemaValidation.CREATE_DATA('credentials'),
+      result: schema.validate(data, {
+         abortEarly: false
+      })
    }
 }
+
+export default schamaType;

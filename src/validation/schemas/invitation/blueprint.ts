@@ -1,6 +1,7 @@
 import Joi from '@hapi/joi';
+
 import { ALL } from '../../../localstore/accessrole.store';
-import { InvitationValidation  } from '../../../messages/message.validation';
+import { SchemaValidation  } from '../../../messages/message.validation';
 
 export const INVITATION_CREATE = Symbol('invitation_create');
 export const INVITATION_UPDATE = Symbol('invitation_update');
@@ -30,7 +31,7 @@ export const validateInviteCreate = (data: any) => {
    });
    
    return {
-      message: InvitationValidation.INVITE_CREATE_DATA,
+      message: SchemaValidation.CREATE_DATA('invitation'),
       result: schema.validate(data, {
          abortEarly: false
       })
@@ -55,7 +56,7 @@ export const validateInviteUpdate = (data: any) => {
    });
    
    return {
-      message: InvitationValidation.INVITE_UPDATE_DATA,
+      message: SchemaValidation.UPDATE_DATA('invitation'),
       result: schema.validate(data, {
          abortEarly: false
       })
@@ -94,7 +95,7 @@ export const validateInviteQuery = (data: any) => {
    .or('_id', 'email');
    
    return {
-      message: InvitationValidation.INVITE_FETCH_DATA,
+      message: SchemaValidation.FETCH_DATA('invitation'),
       result: schema.validate(data, {
          abortEarly: false
       })

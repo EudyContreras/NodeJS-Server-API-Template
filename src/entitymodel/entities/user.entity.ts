@@ -32,7 +32,7 @@ const schema = new EntitySchema({
         type: Date,
         required: false
     },
-}, { timestamps: true, strict: false, versionKey: false });
+}, { timestamps: true, strict: true, versionKey: false });
 
 const User = schema.getModel<IUser>('User');
 

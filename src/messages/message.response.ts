@@ -6,6 +6,10 @@ export const UserMessages = {
    EMAIL_TAKEN: 'The given email is already taken'
 }
 
+export const PasswordMessages = {
+   NO_SUCH_PASSWORD: ''
+}
+
 export const PriviledgeMessages = {
    NOT_GRANTED: 'You do not have sufficient priviledges to perform this action',
    ACCESS_DENIED: 'You do not have sufficient priviledges to perform this action',
@@ -35,9 +39,13 @@ export const AuthorizationMessages = {
 }
 
 export const AuthenticationMessages = {
+   FAILURE: 'Something went wrong! Please try again later.',
    NO_USER_FOUND: 'No user with a matching user id was found',
    NO_USER_EMAIL: 'No user with the given email was found',
-   WRONG_PASSWORD: 'The given password did not match our records'
+   WRONG_PASSWORD: 'The given password did not match our records',
+   NOT_FETCHED: 'Could not retrieved the user information',
+   NOT_AUTHORIZED: 'Could not authorized the user',
+   NOT_RECOVERED: 'Could not perform a password recovery'
 }
 
 export const AccessRoleMessages = {

@@ -12,7 +12,7 @@ import { Router, Request, Response } from 'express';
 
 class Invitations extends Controller {
 
-   private invitationService = new InvitationService();
+   private invitationService: InvitationService = new InvitationService();
    private routing: string = '/rest/api/invitations';
    private router: Router;
    private roles: string[];
@@ -33,14 +33,14 @@ class Invitations extends Controller {
    }
 
    private setupRoutes(router: Router) {
-      router.get('/', validate(schemaType.INVITATION_QUERY), this.get);
-      router.put('/', validate(schemaType.INVITATION_CREATE), this.create);
-      router.patch('/', validate(schemaType.INVITATION_UPDATE), this.update);
-      router.delete('/', this.delete);
+      router.get('/', authenticate, allowed(...this.roles), validate(schemaType.INVITATION_QUERY), this.get);
+      router.put('/', authenticate, allowed(...this.roles), validate(schemaType.INVITATION_CREATE), this.create);
+      router.patch('/', authenticate, allowed(...this.roles), validate(schemaType.INVITATION_UPDATE), this.update);
+      router.delete('/', authenticate, allowed(...this.roles), this.delete);
    }
 
    private get = async (request: any, response: Response) => {
-      const hasProps = Object.keys(request.data).length > 0;
+      const hasProps = request.data ? Object.keys(request.data).length > 0 : null;
 
       if (hasProps) {
          return this.getOne(request.data, response)
@@ -62,18 +62,15 @@ class Invitations extends Controller {
    }
 
    private create = async (request: any, response: Response) => {
-      const data = request.data;
-
-      const { result, error } = await this.invitationService.createInvitation(null, data);
+      const { result, error } = await this.invitationService.createInvitation(null, request.data);
 
       return this.buildResult(result, error, response, RequestAction.CREATE)
    }
 
    private update = async (request: any, response: Response) => {
-      const data = request.data;
       const inviteId = request.query.inviteId
 
-      const { result, error } = await this.invitationService.updateInvitation(inviteId, data);
+      const { result, error } = await this.invitationService.updateInvitation(inviteId, request.data);
 
       return this.buildResult(result, error, response, RequestAction.UPDATE)
    }

@@ -6,6 +6,7 @@ import { ValidationResponse } from '../../responses/request.response'
 import { Response, Request, NextFunction } from 'express';
 
 import * as AuthSchema from '../../validation/schemas/authentication/blueprint';
+import * as UserSchema from '../../validation/schemas/user/blueprint';
 import * as InviteSchema from '../../validation/schemas/invitation/blueprint';
 
 import {
@@ -53,15 +54,15 @@ function handleRetrieval(schemaType: Symbol, data: any, query: any) {
          case InviteSchema.INVITATION_QUERY:
             return InviteSchema.validateInviteQuery(query);
       }
-   } else {
-      
-   }
+   } 
 
    return null;
 }
 
 function handleCreation(schemaType: Symbol, data: any) {
    switch (schemaType) {
+      case UserSchema.USER_CREATE: 
+         return UserSchema.validateUserCreate(data);
       case InviteSchema.INVITATION_CREATE: 
          return InviteSchema.validateInviteCreate(data);
    }

@@ -7,7 +7,7 @@ function dataTransferDocument(data: IPassword) {
 }
 
 /**
- * Data access layer Repository used
+ * @description Data access layer Repository used
  * for interfacing with the password data.
  */
 export default class PasswordRepository {

@@ -7,7 +7,7 @@ function dataTransferDocument(data: IPriviledge) {
 }
 
 /**
- * Data access layer Repository used
+ * @description Data access layer Repository used
  * for interfacing with the priviledge data.
  */
 export default class PriviledgeRepository {

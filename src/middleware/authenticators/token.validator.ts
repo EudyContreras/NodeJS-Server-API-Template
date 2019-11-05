@@ -38,7 +38,7 @@ async function authenticate(req: any, res: Response, next: NextFunction) {
    } catch (error) {
       response.authorized = false;
       response.message = AuthorizationMessages.NO_VALID_TOKEN;
-      response.errors.push(`${error}`)
+      response.errors.push(error.message)
       return res.status(httpCode.UNAUTHORIZED).json(response);
    }
 }

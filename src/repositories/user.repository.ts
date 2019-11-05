@@ -1,12 +1,26 @@
-import User from '../entitymodel/entities/user.entity'
+import User from '../entitymodel/entities/user.entity';
+import dateUtility from '../utilities/date.utility';
 import { IUser } from '../entitymodel/models/user.model';
 
 function dataTransferDocument(user: IUser) {
+   return {
+      id: user._id,
+      name: user.name,
+      email: user.email,
+      lastLogin: user.lastLogin,
+      roleCode: user.roleCode,
+      active: user.active,
+      createdAt: dateUtility.normalize(new Date((user as any).createdAt)),
+      updatedAt: dateUtility.normalize(new Date((user as any).updatedAt))
+   }
+}
+
+function normalized(user: IUser) {
    return user;
 }
 
 /**
- * Data access layer Repository used
+ * @description Data access layer Repository used
  * for interfacing with the user data.
  */
 export default class UserRepository {

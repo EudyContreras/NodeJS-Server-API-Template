@@ -4,7 +4,8 @@ enum RequestAction {
    CREATE,
    UPDATE,
    DELETE,
-   RECOVER
+   RECOVER,
+   AUTHENTICATE
 };
 
 export default RequestAction;

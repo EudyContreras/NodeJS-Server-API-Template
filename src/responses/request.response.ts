@@ -4,7 +4,8 @@
  */
 export class AuthenticationResponse {
    authorized: boolean = false;
-   message?: any = null;
+   content?: any | null;
+   message?: any | null;
    errors: any[] = []
 }
 /**

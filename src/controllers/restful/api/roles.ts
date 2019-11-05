@@ -7,10 +7,11 @@ import Controller from '../../controller';
 import express from 'express';
 
 import { Router, Request, Response } from 'express';
+import RequestAction from '../../../definitions/requestAction';
 
 class Roles extends Controller {
    
-   private roleService = new RoleService();
+   private service = new RoleService();
    private routing: string = '/rest/api/roles';
    private router: Router;
    private roles: string[];
@@ -31,10 +32,7 @@ class Roles extends Controller {
    }
 
    private setupRoutes(router: Router) {
-      router.get('/', authenticate, allowed(...this.roles), this.get);
-      router.put('/', authenticate, allowed(...this.roles), this.create);
-      router.patch('/', authenticate, allowed(...this.roles), this.update);
-      router.delete('/', authenticate, allowed(...this.roles), this.delete);
+      router.get('/', authenticate, allowed(...this.roles), this.get);;
    }
 
    private get = async (request: Request, response: Response) => {
@@ -48,36 +46,15 @@ class Roles extends Controller {
    }
 
    private getOne = async (id: string, request: Request, response: Response) => {
-      const roles = await this.roleService.getRole(id);
+      const { result, error } = await this.service.getRole(id);
 
-      return response.json(roles);
+      return this.buildResult(result, error, response, RequestAction.GET)
    }
 
    private getAll = async (request: Request, response: Response) => {
-      const roles = await this.roleService.getAllRoles();
+      const { result, error } = await this.service.getAllRoles();
 
-      return response.json(roles);
-   }
-
-   private create = async (request: Request, response: Response) => {
-      const apiResponse = {
-         message: 'roles create one'
-      };
-      return response.json(apiResponse);
-   }
-
-   private update = async (request: Request, response: Response) => {
-      const apiResponse = {
-         message: 'roles update one'
-      };
-      return response.json(apiResponse);
-   }
-
-   private delete = async (request: Request, response: Response) => {
-      const apiResponse = {
-         message: 'roles delete one'
-      };
-      return response.json(apiResponse);
+      return this.buildResult(result, error, response, RequestAction.GET_ALL)
    }
 }
 

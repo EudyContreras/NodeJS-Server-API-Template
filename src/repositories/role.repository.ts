@@ -8,7 +8,7 @@ function dataTransferDocument(role: IRole) {
 }
 
 /**
- * Data access layer Repository used
+ * @description Data access layer Repository used
  * for interfacing with the role data.
  */
 export default class RoleRepository {

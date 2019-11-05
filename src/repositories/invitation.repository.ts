@@ -13,7 +13,7 @@ function dataTransferDocument(data: IInvitation) {
 }
 
 /**
- * Data access layer Repository used
+ * @description Data access layer Repository used
  * for interfacing with the invitation data.
  */
 export default class InvitationRepository {

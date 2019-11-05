@@ -21,7 +21,7 @@ const schema = new EntitySchema({
         minlength: 3,
         required: true,
     }
-}, { strict: false, versionKey: false });
+}, { timestamps: false, strict: false, versionKey: false });
 
 schema.index({userId: 1, actionId: 1, controllerId: 1,}, {unique: true});
 

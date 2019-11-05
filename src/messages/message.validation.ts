@@ -27,10 +27,22 @@ export const AuthenticationValidation = {
    CREDENTIALS: ''
 }
 
+export const SchemaValidation = {
+   FETCH_DATA: (arg: string) => `The ${arg} query data is invalid`,
+   CREATE_DATA: (arg: string) => `The ${arg} creation data is invalid`,
+   UPDATE_DATA: (arg: string) => `The ${arg} update data is invalid`
+}
+
 export const InvitationValidation = {
    INVITE_FETCH_DATA: 'The invitation query data is invalid',
    INVITE_CREATE_DATA: 'The invitation creation data is invalid',
    INVITE_UPDATE_DATA: 'The invitation update data is invalid'
+};
+
+export const UserValidation = {
+   USER_FETCH_DATA: 'The user query data is invalid',
+   USER_CREATE_DATA: 'The user creation data is invalid',
+   USER_UPDATE_DATA: 'The user update data is invalid'
 };
 
 export const AccessRoleValidation = {

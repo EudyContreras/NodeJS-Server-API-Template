@@ -9,7 +9,7 @@ import AuthenticationController from './controllers/restful/api/authentication';
 
 import { ROOT, ADMIN, USER, ALL} from './localstore/accessrole.store'
 
-const roleController = new RoleController(ROOT, ADMIN);
+const roleController = new RoleController(ROOT);
 const userController = new UserController(ROOT, ADMIN, USER);
 const inviteController = new InviteController(ROOT, ADMIN);
 const priviledgeController = new PriviledgeController(ROOT, ADMIN);
