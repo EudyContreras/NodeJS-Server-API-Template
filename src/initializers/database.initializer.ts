@@ -18,7 +18,7 @@ export default class DatabaseIntializer {
    }
 
    /**
-    * Populates the invitation collection with some
+    * @description Populates the invitation collection with some
     * initital invitation related data.
     */
    async createInitialInvitation() {
@@ -26,7 +26,7 @@ export default class DatabaseIntializer {
    }
 
    /**
-    * Populates the user collection with some
+    * @description Populates the user collection with some
     * initital user related data for users with
     * role admin.
     */
@@ -49,7 +49,7 @@ export default class DatabaseIntializer {
    }
 
    /**
-    * Populates the role collection with some
+    * @description Populates the role collection with some
     * initital role related data.
     */
    async createInitialRoles() {

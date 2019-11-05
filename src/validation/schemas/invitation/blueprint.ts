@@ -4,10 +4,12 @@ import { InvitationValidation  } from '../../../messages/message.validation';
 
 export const INVITATION_CREATE = Symbol('invitation_create');
 export const INVITATION_UPDATE = Symbol('invitation_update');
+export const INVITATION_QUERY = Symbol('invitation_query');
 
 export const schamaType = {
    INVITATION_CREATE,
-   INVITATION_UPDATE
+   INVITATION_UPDATE,
+   INVITATION_QUERY
 }
 
 export const validateInviteCreate = (data: any) => {
@@ -54,6 +56,45 @@ export const validateInviteUpdate = (data: any) => {
    
    return {
       message: InvitationValidation.INVITE_UPDATE_DATA,
+      result: schema.validate(data, {
+         abortEarly: false
+      })
+   };
+}
+
+export const validateInviteQuery = (data: any) => {
+   const { id, inviteId } = data;
+
+   if (id) {
+      data._id = id;
+      delete data.id;
+   }
+   if (inviteId) {
+      data._id = inviteId;
+      delete data.inviteId;
+   }
+
+   const schema = Joi.object({
+      _id: Joi
+         .string()
+         .optional(),
+      inviteId: Joi
+         .string()
+         .optional(),
+      email: Joi
+         .string()
+         .optional()
+         .email(),
+      role: Joi
+         .string()
+         .optional()
+         .allow(...ALL)
+         .only(),
+   })
+   .or('_id', 'email');
+   
+   return {
+      message: InvitationValidation.INVITE_FETCH_DATA,
       result: schema.validate(data, {
          abortEarly: false
       })

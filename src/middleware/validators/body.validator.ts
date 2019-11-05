@@ -19,13 +19,14 @@ import {
 function validate(schemaType: Symbol) {
    return (request: Request, response: Response, next: NextFunction) => {
       const data = request.body;
+      const query = request.query;
       const method = request.method;
 
       if (!data) return next({ error: 'No data has been specified in the body' });
 
       switch (method) {
          case GET:     
-            return buildResponse(handleRetrieval(schemaType, data), request, response, next);
+            return buildResponse(handleRetrieval(schemaType, data, query), request, response, next);
          case PUT:
             return buildResponse(handleCreation(schemaType, data), request, response, next);
          case POST:
@@ -44,10 +45,18 @@ function handlePosting(schemaType: Symbol, data: any){
    return null;
 }
 
-function handleRetrieval(schemaType: Symbol, data: any) {
-   switch (schemaType) {
+function handleRetrieval(schemaType: Symbol, data: any, query: any) {
+   const hasProps = Object.keys(query).length > 0;
+
+   if (hasProps) {
+      switch (schemaType) {
+         case InviteSchema.INVITATION_QUERY:
+            return InviteSchema.validateInviteQuery(query);
+      }
+   } else {
       
    }
+
    return null;
 }
 

@@ -1,6 +1,6 @@
 
 /**
- * Throttles a repeated action so that there is
+ * @description Throttles a repeated action so that there is
  * a pause between repetions. 
  * @param action The action to be performed
  * @param interval The time interval at which the
@@ -16,7 +16,7 @@ export default function throttle(action: Function, interval: number, max: number
 }
 
 /**
- * Internal throttle a repeated action so that there is
+ * @description Internal throttle a repeated action so that there is
  * a pause between repetions. 
  * @param action The action to be performed
  * @param interval The time interval at which the

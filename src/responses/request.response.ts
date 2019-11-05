@@ -1,5 +1,5 @@
 /**
- * Response produced when an authentication
+ * @description Response produced when an authentication
  * is requested by a user.
  */
 export class AuthenticationResponse {
@@ -8,7 +8,7 @@ export class AuthenticationResponse {
    errors: any[] = []
 }
 /**
- * Response produced when a request for user
+ * @description Response produced when a request for user
  * credential data is requested by a user.
  */
 export class CredentialsResponse {
@@ -17,7 +17,7 @@ export class CredentialsResponse {
 }
 
 /**
- * Response produced when validation of
+ * @description Response produced when validation of
  * data takes place.
  */
 export class ValidationResponse {
@@ -27,7 +27,7 @@ export class ValidationResponse {
 }
 
 /**
- * Response produced when a permission is
+ * @description Response produced when a permission is
  * requested for access to certain resource.
  */
 export class AccessResponse {
@@ -36,7 +36,7 @@ export class AccessResponse {
 }
 
 /**
- * Response produced when a priviledge is requested
+ * @description Response produced when a priviledge is requested
  * to perform a certain action within a resouce.
  */
 export class PriviledgeResponse {
@@ -47,7 +47,7 @@ export class PriviledgeResponse {
 }
 
 /**
- * Response produced when a registration takes
+ * @description Response produced when a registration takes
  * place.
  */
 export class RegistrationResponse {
@@ -57,7 +57,7 @@ export class RegistrationResponse {
 }
 
 /**
- * A common api response to a request.
+ * @description A common api response to a request.
  */
 export class ApiResponse {
    message?: any | null;

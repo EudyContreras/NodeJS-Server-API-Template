@@ -25,7 +25,7 @@ export default class UserRepository {
       };
    }
 
-   async hasUser(userId: string) {
+   async hasUser(userId: string): Promise<boolean> {
       const count = await User
          .countDocuments({ _id: userId })
          .exec();
@@ -33,7 +33,7 @@ export default class UserRepository {
       return count > 0;
    }
 
-   async hasUserWhere(query: any) {
+   async hasUserWhere(query: any): Promise<boolean> {
       const count = await User
          .countDocuments(query)
          .exec();
@@ -41,7 +41,7 @@ export default class UserRepository {
       return count > 0;
    }
 
-   async getAllUsers(options = { dto: true }) {
+   async getAllUsers(options = { dto: true }): Promise<IUser[] | any[]>  {
       const users = await User
          .find()
          .select(this.exclude)
@@ -54,7 +54,7 @@ export default class UserRepository {
       return users;
    }
 
-   async getAllUsersWhere(query: any, options = { dto: true }) {
+   async getAllUsersWhere(query: any, options = { dto: true }): Promise<IUser[] | any[]>  {
       const users = await User
          .find(query)
          .select(this.exclude)
@@ -67,7 +67,7 @@ export default class UserRepository {
       return users;
    }
 
-   async getUser(userId: string, options = { dto: true }) {
+   async getUser(userId: string, options = { dto: true }): Promise<IUser | any>  {
       const user = await User
          .findById(userId)
          .select(this.exclude)
@@ -82,7 +82,7 @@ export default class UserRepository {
       return result;
    }
 
-   async getUserWhere(criteria: any, options = { dto: true }) {
+   async getUserWhere(criteria: any, options = { dto: true }): Promise<IUser | any>  {
       const user = await User
          .findOne(criteria)
          .select(this.exclude)
@@ -97,7 +97,7 @@ export default class UserRepository {
       return result;
    }
 
-   async getFromUser(userId: string, select: any) {
+   async getFromUser(userId: string, select: any): Promise<IUser | any>  {
       const user = await User
          .findById(userId)
          .select(select)
@@ -108,7 +108,7 @@ export default class UserRepository {
       return result;
    }
 
-   async insertUser(data: any, options = { dto: true }) {
+   async insertUser(data: any, options = { dto: true }): Promise<IUser | any>  {
       const user = new User(data);
 
       await user.validate();
@@ -124,7 +124,7 @@ export default class UserRepository {
       return result;
    }
 
-   async updateUser(userId: string, update: any, options = { dto: true }) {
+   async updateUser(userId: string, update: any, options = { dto: true }): Promise<IUser | any>  {
       const user = await User
          .findByIdAndUpdate(userId, update, this.options)
          .select(this.exclude)
@@ -139,7 +139,7 @@ export default class UserRepository {
       return result;
    }
 
-   async updateUserWhere(query: any, update: any, options = { dto: true }) {
+   async updateUserWhere(query: any, update: any, options = { dto: true }): Promise<IUser | any>  {
       const user = await User
          .findOneAndUpdate(query, update, this.options)
          .select(this.exclude)
@@ -154,7 +154,7 @@ export default class UserRepository {
       return result;
    }
 
-   async deleteUser(userId: string, options = { dto: true }) {
+   async deleteUser(userId: string, options = { dto: true }): Promise<IUser | any>  {
       const user = await User
          .findByIdAndDelete(userId)
          .exec();
@@ -168,7 +168,7 @@ export default class UserRepository {
       return result;
    }
 
-   async deleteUserWhere(query: any, options = { dto: true }) {
+   async deleteUserWhere(query: any, options = { dto: true }): Promise<IUser | any>  {
       const user = await User
          .findOneAndDelete(query)
          .exec();

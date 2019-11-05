@@ -26,7 +26,7 @@ export default class PasswordRepository {
       };
    }
 
-   async hasPassword(passwordId: string) {
+   async hasPassword(passwordId: string): Promise<boolean> {
       const count = await Password
          .countDocuments({ _id: passwordId })
          .exec();
@@ -34,7 +34,7 @@ export default class PasswordRepository {
       return count > 0;
    }
 
-   async hasPasswordWhere(query: any) {
+   async hasPasswordWhere(query: any): Promise<boolean> {
       const count = await Password
          .countDocuments(query)
          .exec();
@@ -42,7 +42,7 @@ export default class PasswordRepository {
       return count > 0;
    }
 
-   async getAllPasswords(options = { dto: true }) {
+   async getAllPasswords(options = { dto: true }): Promise<IPassword[] | any[]>  {
       const passwords = await Password
          .find()
          .select(this.exclude)
@@ -55,7 +55,7 @@ export default class PasswordRepository {
       return passwords;
    }
 
-   async getAllPasswordsWhere(query: any, options = { dto: true }) {
+   async getAllPasswordsWhere(query: any, options = { dto: true }): Promise<IPassword[] | any[]>  {
       const passwords = await Password
          .find(query)
          .select(this.exclude)
@@ -68,7 +68,7 @@ export default class PasswordRepository {
       return passwords;
    }
 
-   async getPassword(passwordId: string, options = { dto: true }) {
+   async getPassword(passwordId: string, options = { dto: true }): Promise<IPassword | any>  {
       const password = await Password
          .findById(passwordId)
          .select(this.exclude)
@@ -83,7 +83,7 @@ export default class PasswordRepository {
       return result;
    }
 
-   async getPasswordWhere(criteria: any, options = { dto: true }) {
+   async getPasswordWhere(criteria: any, options = { dto: true }): Promise<IPassword | any>  {
       const password = await Password
          .findOne(criteria)
          .select(this.exclude)
@@ -98,7 +98,7 @@ export default class PasswordRepository {
       return result;
    }
 
-   async getFromPassword(passwordId: string, select: any) {
+   async getFromPassword(passwordId: string, select: any): Promise<IPassword | any>  {
       const password = await Password
          .findById(passwordId)
          .select(select)
@@ -109,7 +109,7 @@ export default class PasswordRepository {
       return result;
    }
 
-   async insertPassword(data: any, options = { dto: true }) {
+   async insertPassword(data: any, options = { dto: true }): Promise<IPassword | any>  {
       const password = new Password(data);
 
       await password.validate();
@@ -125,7 +125,7 @@ export default class PasswordRepository {
       return result;
    }
 
-   async updatePassword(passwordId: string, update: any, options = { dto: true }) {
+   async updatePassword(passwordId: string, update: any, options = { dto: true }): Promise<IPassword | any>  {
       const password = await Password
          .findByIdAndUpdate(passwordId, update, this.options)
          .select(this.exclude)
@@ -140,7 +140,7 @@ export default class PasswordRepository {
       return result;
    }
 
-   async updatePasswordWhere(query: any, update: any, options = { dto: true }) {
+   async updatePasswordWhere(query: any, update: any, options = { dto: true }): Promise<IPassword | any>  {
       const password = await Password
          .findOneAndUpdate(query, update, this.options)
          .select(this.exclude)
@@ -155,7 +155,7 @@ export default class PasswordRepository {
       return result;
    }
 
-   async deletePassword(passwordId: string, options = { dto: true }) {
+   async deletePassword(passwordId: string, options = { dto: true }): Promise<IPassword | any>  {
       const password = await Password
          .findByIdAndDelete(passwordId)
          .exec();
@@ -169,7 +169,7 @@ export default class PasswordRepository {
       return result;
    }
 
-   async deletePasswordWhere(query: any, options = { dto: true }) {
+   async deletePasswordWhere(query: any, options = { dto: true }): Promise<IPassword | any>  {
       const password = await Password
          .findOneAndDelete(query)
          .exec();

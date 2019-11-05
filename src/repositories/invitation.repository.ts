@@ -32,7 +32,7 @@ export default class InvitationRepository {
       };
    }
 
-   async hasInvitation(invitationId: string) {
+   async hasInvitation(invitationId: string): Promise<boolean> {
       const count = await Invitation
          .countDocuments({ _id: invitationId })
          .exec();
@@ -40,7 +40,7 @@ export default class InvitationRepository {
       return count > 0;
    }
 
-   async hasInvitationWhere(query: any) {
+   async hasInvitationWhere(query: any): Promise<boolean> {
       const count = await Invitation
          .countDocuments(query)
          .exec();
@@ -48,7 +48,7 @@ export default class InvitationRepository {
       return count > 0;
    }
 
-   async getAllInvitations(options = { dto: true }) {
+   async getAllInvitations(options = { dto: true }): Promise<IInvitation[] | any[]>  {
       const invitations = await Invitation
          .find()
          .select(this.exclude)
@@ -61,7 +61,7 @@ export default class InvitationRepository {
       return invitations;
    }
 
-   async getAllInvitationsWhere(query: any, options = { dto: true }) {
+   async getAllInvitationsWhere(query: any, options = { dto: true }): Promise<IInvitation[] | any[]>  {
       const invitations = await Invitation
          .find(query)
          .select(this.exclude)
@@ -74,7 +74,7 @@ export default class InvitationRepository {
       return invitations;
    }
 
-   async getInvitation(invitationId: string, options = { dto: true }) {
+   async getInvitation(invitationId: string, options = { dto: true }): Promise<IInvitation | any> {
       const invitation = await Invitation
          .findById(invitationId)
          .select(this.exclude)
@@ -87,7 +87,7 @@ export default class InvitationRepository {
       return invitation;
    }
 
-   async getInvitationWhere(criteria: any, options = { dto: true }) {
+   async getInvitationWhere(criteria: any, options = { dto: true }): Promise<IInvitation | any> {
       const invitation = await Invitation
          .findOne(criteria)
          .select(this.exclude)
@@ -100,7 +100,7 @@ export default class InvitationRepository {
       return invitation;
    }
 
-   async getFromInvitation(invitationId: string, select: any) {
+   async getFromInvitation(invitationId: string, select: any): Promise<IInvitation | any> {
       const invitation = await Invitation
          .findById(invitationId)
          .select(select)
@@ -109,7 +109,7 @@ export default class InvitationRepository {
       return invitation;
    }
 
-   async insertInvitation(data: any, options = { dto: true }) {
+   async insertInvitation(data: any, options = { dto: true }): Promise<IInvitation | any> {
       const invitation = new Invitation(data);
 
       await invitation.validate();
@@ -123,7 +123,7 @@ export default class InvitationRepository {
       return saved;
    }
 
-   async updateInvitation(invitationId: string, update: any, options = { dto: true }) {
+   async updateInvitation(invitationId: string, update: any, options = { dto: true }): Promise<IInvitation | any> {
       const invitation = await Invitation
          .findByIdAndUpdate(invitationId, update, this.options)
          .select(this.exclude)
@@ -136,7 +136,7 @@ export default class InvitationRepository {
       return invitation;
    }
 
-   async updateInvitationWhere(query: any, update: any, options = { dto: true }) {
+   async updateInvitationWhere(query: any, update: any, options = { dto: true }): Promise<IInvitation | any> {
       const invitation = await Invitation
          .findOneAndUpdate(query, update, this.options)
          .select(this.exclude)
@@ -149,7 +149,7 @@ export default class InvitationRepository {
       return invitation;
    }
 
-   async deleteInvitation(invitationId: string, options = { dto: true }) {
+   async deleteInvitation(invitationId: string, options = { dto: true }): Promise<IInvitation | any> {
       const invitation = await Invitation
          .findByIdAndDelete(invitationId)
          .exec();
@@ -163,7 +163,7 @@ export default class InvitationRepository {
       return result;
    }
 
-   async deleteInvitationWhere(query: any, options = { dto: true }) {
+   async deleteInvitationWhere(query: any, options = { dto: true }): Promise<IInvitation | any> {
       const invitation = await Invitation
          .findOneAndDelete(query)
          .exec();

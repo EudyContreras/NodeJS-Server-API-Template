@@ -6,7 +6,7 @@ import InvitationService from '../../../services/invitation.service';
 import authenticate from '../../../middleware/authenticators/token.validator'
 import allowed from '../../../middleware/authenticators/access.validator'
 import validate from '../../../middleware/validators/body.validator'
-import schemaType, { schamaType } from '../../../validation/schemas/invitation/blueprint'
+import schemaType from '../../../validation/schemas/invitation/blueprint'
 
 import { Router, Request, Response } from 'express';
 
@@ -33,24 +33,24 @@ class Invitations extends Controller {
    }
 
    private setupRoutes(router: Router) {
-      router.get('/', this.get);
-      router.put('/', validate(schamaType.INVITATION_CREATE), this.create);
-      router.patch('/', validate(schamaType.INVITATION_UPDATE), this.update);
+      router.get('/', validate(schemaType.INVITATION_QUERY), this.get);
+      router.put('/', validate(schemaType.INVITATION_CREATE), this.create);
+      router.patch('/', validate(schemaType.INVITATION_UPDATE), this.update);
       router.delete('/', this.delete);
    }
 
-   private get = async (request: Request, response: Response) => {
-      const inviteId = request.query.inviteId;
+   private get = async (request: any, response: Response) => {
+      const hasProps = Object.keys(request.data).length > 0;
 
-      if (inviteId) {
-         return this.getOne(inviteId, request, response)
+      if (hasProps) {
+         return this.getOne(request.data, response)
       } else {
          return this.getAll(response)
       }
    }
 
-   private getOne = async (id: string, request: Request, response: Response) => {
-      const { result, error } = await this.invitationService.getInvitation(id);
+   private getOne = async (query: any, response: Response) => {
+      const { result, error } = await this.invitationService.getInvitationWhere(query);
 
       return this.buildResult(result, error, response, RequestAction.GET)
    }
@@ -61,21 +61,21 @@ class Invitations extends Controller {
       return this.buildResult(result, error, response, RequestAction.GET_ALL)
    }
 
-   private create = async (request: Request, response: Response) => {
-      const data = request.body;
+   private create = async (request: any, response: Response) => {
+      const data = request.data;
 
       const { result, error } = await this.invitationService.createInvitation(null, data);
 
-      return this.buildResult(result, error, response, RequestAction.GET)
+      return this.buildResult(result, error, response, RequestAction.CREATE)
    }
 
-   private update = async (request: Request, response: Response) => {
-      const data = request.body;
+   private update = async (request: any, response: Response) => {
+      const data = request.data;
       const inviteId = request.query.inviteId
 
       const { result, error } = await this.invitationService.updateInvitation(inviteId, data);
 
-      return this.buildResult(result, error, response, RequestAction.GET)
+      return this.buildResult(result, error, response, RequestAction.UPDATE)
    }
 
    private delete = async (request: Request, response: Response) => {
@@ -83,7 +83,7 @@ class Invitations extends Controller {
 
       const { result, error } = await this.invitationService.deleteInvitation(inviteId);
 
-      return this.buildResult(result, error, response, RequestAction.GET)
+      return this.buildResult(result, error, response, RequestAction.DELETE)
    }
 }
 

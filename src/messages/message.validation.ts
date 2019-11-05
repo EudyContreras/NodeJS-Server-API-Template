@@ -28,6 +28,7 @@ export const AuthenticationValidation = {
 }
 
 export const InvitationValidation = {
+   INVITE_FETCH_DATA: 'The invitation query data is invalid',
    INVITE_CREATE_DATA: 'The invitation creation data is invalid',
    INVITE_UPDATE_DATA: 'The invitation update data is invalid'
 };
