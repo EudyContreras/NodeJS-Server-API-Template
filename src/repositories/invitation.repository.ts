@@ -1,8 +1,15 @@
 import Invitation from '../entitymodel/entities/invitation.entity'
 import { IInvitation } from '../entitymodel/models/invitation.model';
 
-function dataTransferDocument(invitation: IInvitation) {
-   return invitation;
+function dataTransferDocument(data: IInvitation) {
+   return {
+      id: data.id,
+      email: data.email,
+      pending: data.pending,
+      expired: data.expired,
+      roleCode: data.roleCode,
+      expirationTime: data.expirationTime
+   };
 }
 
 /**

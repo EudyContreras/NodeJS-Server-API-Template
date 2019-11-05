@@ -54,7 +54,7 @@ export default class AccessRoleService {
 
          if (!result) return { error: AccessRoleMessages.NO_SUCH_ROLE }
 
-         return { result };
+         return { result: result.code };
       } catch (error) {
          return { error };
       }
@@ -116,12 +116,7 @@ export default class AccessRoleService {
 
          if (exists) return { error: AccessRoleMessages.ROLE_EXIST };
 
-         const data = {
-            name: role.name,
-            code: role.code
-         }
-
-         const result = await repository.insertRole(data);
+         const result = await repository.insertRole(role);
 
          return { result };
       } catch (error) {

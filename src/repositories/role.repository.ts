@@ -3,11 +3,8 @@ import Role from '../entitymodel/entities/role.entity'
 import { IRole } from '../entitymodel/models/role.model';
 
 function dataTransferDocument(role: IRole) {
-   return {
-      id: role._id,
-      name: role.name,
-      code: role.code
-   }
+   const { id, name, code, level } = role;
+   return { id, name, code, level}
 }
 
 /**

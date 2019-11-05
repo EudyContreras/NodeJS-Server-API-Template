@@ -1,8 +1,9 @@
 import Priviledge from '../entitymodel/entities/priviledge.entity'
 import { IPriviledge } from '../entitymodel/models/priviledge.model';
 
-function dataTransferDocument(priviledge: IPriviledge) {
-   return priviledge;
+function dataTransferDocument(data: IPriviledge) {
+   const { userId, actionId, controllerId } = data;
+   return { userId, actionId, controllerId };
 }
 
 /**

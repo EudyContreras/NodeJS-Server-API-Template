@@ -23,6 +23,15 @@ export const PriviledgeValidation = {
    VALID_ACTIONS: (args: string[]) => `The valid actions are ${args}`
 };
 
+export const AuthenticationValidation = {
+   CREDENTIALS: ''
+}
+
+export const InvitationValidation = {
+   INVITE_CREATE_DATA: 'The invitation creation data is invalid',
+   INVITE_UPDATE_DATA: 'The invitation update data is invalid'
+};
+
 export const AccessRoleValidation = {
    DENIED: 'Access for the specified role has been denied',
    NONE_FOUND: 'No role with the given criteria was found for the user',

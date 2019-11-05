@@ -3,12 +3,15 @@ import { Router, NextFunction, Request, Response } from 'express';
 import Controller from '../../controller';
 import express from 'express';
 
-class Authentication implements Controller {
+class Authentication extends Controller {
    
    private routing: string = '/rest/api/authentication';
    private router: Router;
+   private roles: string[];
 
-   constructor() {
+   constructor(...allowedRoles: string[]) {
+      super('authentication')
+      this.roles = allowedRoles;
       this.router = express.Router();
       this.setupRoutes(this.router);
    }

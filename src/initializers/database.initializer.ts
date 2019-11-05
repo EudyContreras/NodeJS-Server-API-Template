@@ -58,10 +58,12 @@ export default class DatabaseIntializer {
       for (let i = 0; i < RoleStore.ACCESS_ROLES.length; i++) {
          const type = RoleStore.ACCESS_ROLES[i].type;
          const code = RoleStore.ACCESS_ROLES[i].code;
+         const level = RoleStore.ACCESS_ROLES[i].level;
 
          const role = {
             name: type,
-            code: code
+            code: code,
+            level: level
          }
          const { error } = await service.createRole(role);
 

@@ -1,8 +1,9 @@
 import Password from '../entitymodel/entities/password.entity'
 import { IPassword } from '../entitymodel/models/password.model';
 
-function dataTransferDocument(password: IPassword) {
-   return password;
+function dataTransferDocument(data: IPassword) {
+   const { userId, password, isTemp} = data;
+   return { userId, password, isTemp};
 }
 
 /**

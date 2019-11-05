@@ -1,10 +1,10 @@
 enum RequestAction {
-   GET = 'get',
-   GET_ALL = 'get_all',
-   CREATE = 'create',
-   UPDATE = 'update',
-   DELETE = 'delete',
-   RECOVER = 'recover'
+   GET,
+   GET_ALL,
+   CREATE,
+   UPDATE,
+   DELETE,
+   RECOVER
 };
 
 export default RequestAction;

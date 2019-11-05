@@ -1,7 +1,13 @@
 import Joi from '@hapi/joi';
 import Vault from '../../../config/vault';
 
+import { AuthenticationValidation  } from '../../../messages/message.validation';
+
 export const CREDENTIALS = Symbol('credentials');
+
+export const schamaType = {
+   CREDENTIALS
+}
 
 export const validateCredentials = (data: any) => {
 
@@ -17,5 +23,8 @@ export const validateCredentials = (data: any) => {
          .max(Vault.validation.passwords.MAX_LEGHTH)
    });
    
-   return schema.validate(data);
+   return {
+      message: AuthenticationValidation.CREDENTIALS,
+      result: schema.validate(data)
+   }
 }

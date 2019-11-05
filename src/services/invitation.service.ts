@@ -157,10 +157,20 @@ export default class InviationService {
     * @returns {{result: any, error: string}} The invitation
     * attached to the given id or the generated error.
     */
-   async updateInvitation(inviteId: any, data: { pending: boolean; }): Promise<{ result?: any; error?: any; }> {
+   async updateInvitation(inviteId: any, data: any): Promise<{ result?: any; error?: any; }> {
       try {
          const repository = new InvitationRepository();
 
+         if (data.role) {
+            const service = new RoleService();
+
+            const { result } = await service.getRoleCode(data.role);
+   
+            delete data.role;
+
+            if (result) data.roleCode = result;
+         }
+         
          const result = await repository.updateInvitation(inviteId, data);
 
          if (!result) return { error: InvitationMessages.NO_INVITATION }
@@ -200,7 +210,7 @@ export default class InviationService {
     * @returns The created invitation attached to the given id or the generated error.
     * @throws 
     */
-   async createInvitation(hostId: string, inviteData: any): Promise<{ result?: any, error?: any }> {
+   async createInvitation(hostId: string | null, inviteData: any): Promise<{ result?: any, error?: any }> {
       const email = inviteData.email;
       const roleName = inviteData.role;
       const expirationTime = inviteData.expirationTime;
@@ -226,12 +236,12 @@ export default class InviationService {
 
          const invite = await repository.insertInvitation(invitation);
 
-         if (result) {
+         if (invite) {
             const emailService = await new NoticationService();
 
-            await emailService.sendInvitationEmail(result);
+            await emailService.sendInvitationEmail(invite);
          }
-         return { result };
+         return { result: invite };
       } catch (error) {
          return { error };
       }

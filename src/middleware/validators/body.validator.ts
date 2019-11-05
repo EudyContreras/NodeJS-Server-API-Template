@@ -1,14 +1,12 @@
 
 import httpCodes from '../../definitions/httpCode';
 
-import { ValidationResponse } from '../../responses/request.response'
 import { ValidationResult } from '@hapi/joi';
-
+import { ValidationResponse } from '../../responses/request.response'
 import { Response, Request, NextFunction } from 'express';
 
-import { CREDENTIALS } from '../../validation/schemas/authentication/blueprint';
-
 import * as AuthSchema from '../../validation/schemas/authentication/blueprint';
+import * as InviteSchema from '../../validation/schemas/invitation/blueprint';
 
 import {
    GET,
@@ -19,40 +17,34 @@ import {
 
 
 function validate(schemaType: Symbol) {
-   return (req: Request, res: Response, next: NextFunction) => {
-      const data = req.body;
-      const method = req.method;
+   return (request: Request, response: Response, next: NextFunction) => {
+      const data = request.body;
+      const method = request.method;
 
       if (!data) return next({ error: 'No data has been specified in the body' });
 
       switch (method) {
          case GET:     
-            return buildResponse(handleRetrieval(schemaType, data), req, res, next);
+            return buildResponse(handleRetrieval(schemaType, data), request, response, next);
          case PUT:
-            return buildResponse(handleCreation(schemaType, data), req, res, next);
+            return buildResponse(handleCreation(schemaType, data), request, response, next);
          case POST:
-            return buildResponse(handlePosting(schemaType, data), req, res, next);
+            return buildResponse(handlePosting(schemaType, data), request, response, next);
          case PATCH:
-            return buildResponse(handleUpdate(schemaType, data), req, res, next);
+            return buildResponse(handleUpdate(schemaType, data), request, response, next);
       }
    };
 }
-function handlePosting(schemaType: Symbol, data: any) {
+
+function handlePosting(schemaType: Symbol, data: any){
    switch (schemaType) {
-     case CREDENTIALS: 
+     case AuthSchema.CREDENTIALS: 
          return AuthSchema.validateCredentials(data);
    }
    return null;
 }
 
 function handleRetrieval(schemaType: Symbol, data: any) {
-   switch (schemaType) {
-   
-   }
-   return null;
-}
-
-function handleUpdate(schemaType: Symbol, data: any) {
    switch (schemaType) {
       
    }
@@ -61,7 +53,16 @@ function handleUpdate(schemaType: Symbol, data: any) {
 
 function handleCreation(schemaType: Symbol, data: any) {
    switch (schemaType) {
-     
+      case InviteSchema.INVITATION_CREATE: 
+         return InviteSchema.validateInviteCreate(data);
+   }
+   return null;
+}
+
+function handleUpdate(schemaType: Symbol, data: any){
+   switch (schemaType) {
+      case InviteSchema.INVITATION_UPDATE: 
+         return InviteSchema.validateInviteUpdate(data);
    }
    return null;
 }
@@ -75,31 +76,32 @@ function isEmptyObject(obj: any) {
    return true;
 }
 
-function buildResponse(validation: ValidationResult | null , req: any, res: Response, next: NextFunction) {
+function buildResponse(validation: { message: string, result: ValidationResult } | null, request: any, response: Response, next: NextFunction) {
    if (validation === null) return next();
 
-   const { error, errors, value} = validation;
+   const { error, value } = validation.result;
 
-   if (error || errors) {
-      const response = new ValidationResponse();
+   if (error) {
+      const validateResponse = new ValidationResponse();
 
-      if (errors != null) {
-         const errors = error.message.split('.');
-         const messages = errors.map(x => x.trim().replace('"', ''));
-         response.errors.push(...messages);
+      const errors = error.message.split('.');
+
+      if (errors.length > 0) {
+         const messages = errors.map(x => x.trim().replace(/"/g, ''));
+         validateResponse.errors.push(...messages);
       } else {
          const message = error.message.replace(/"/g, '');
-         response.errors.push(message);
+         validateResponse.errors.push(message);
       }
 
-      response.message = 'Invalid body data';
-      response.valid = false
+      validateResponse.message = validation.message;
+      validateResponse.valid = false
 
-      return res.status(httpCodes.BAD_REQUEST).json(response);
+      return response.status(httpCodes.BAD_REQUEST).json(validateResponse);
    }
 
    if (value) {
-      req.data = value
+      request.data = value
    }
 
    return next();

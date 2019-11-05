@@ -1,16 +1,23 @@
 
-import { Router, NextFunction, Request, Response } from 'express';
+import authenticate from '../../../middleware/authenticators/token.validator'
+import allowed from '../../../middleware/authenticators/access.validator'
+import validate from '../../../middleware/validators/body.validator'
 import RoleService from '../../../services/role.service';
 import Controller from '../../controller';
 import express from 'express';
 
-class Roles implements Controller {
+import { Router, Request, Response } from 'express';
+
+class Roles extends Controller {
    
    private roleService = new RoleService();
    private routing: string = '/rest/api/roles';
    private router: Router;
+   private roles: string[];
 
-   constructor() {
+   constructor(...allowedRoles: string[]) {
+      super('role')
+      this.roles = allowedRoles;
       this.router = express.Router();
       this.setupRoutes(this.router);
    }
@@ -24,10 +31,10 @@ class Roles implements Controller {
    }
 
    private setupRoutes(router: Router) {
-      router.get('/', this.get);
-      router.put('/', this.create);
-      router.patch('/', this.update);
-      router.delete('/', this.delete);
+      router.get('/', authenticate, allowed(...this.roles), this.get);
+      router.put('/', authenticate, allowed(...this.roles), this.create);
+      router.patch('/', authenticate, allowed(...this.roles), this.update);
+      router.delete('/', authenticate, allowed(...this.roles), this.delete);
    }
 
    private get = async (request: Request, response: Response) => {
@@ -66,7 +73,7 @@ class Roles implements Controller {
       return response.json(apiResponse);
    }
 
-   private delete = async (request: Request, response: Response, next: NextFunction) => {
+   private delete = async (request: Request, response: Response) => {
       const apiResponse = {
          message: 'roles delete one'
       };

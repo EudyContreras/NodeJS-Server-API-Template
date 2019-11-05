@@ -40,9 +40,9 @@ export class AccessResponse {
  * to perform a certain action within a resouce.
  */
 export class PriviledgeResponse {
-   hasAccess: boolean = false;
-   actionId: string = '';
-   message: string = '';
+   hasAccess?: boolean | null;
+   actionId?: string | null;
+   message?: string | null;
    errors: any[] = []
 }
 
@@ -51,8 +51,8 @@ export class PriviledgeResponse {
  * place.
  */
 export class RegistrationResponse {
-   token: string = '';
-   email: string = '';
+   token?: string | null;
+   email?: string | null;
    errors: any[] = []
 }
 
@@ -60,6 +60,7 @@ export class RegistrationResponse {
  * A common api response to a request.
  */
 export class ApiResponse {
-   content: any = '';
+   message?: any | null;
+   content: any | null;
    errors: any[] = []
 }
