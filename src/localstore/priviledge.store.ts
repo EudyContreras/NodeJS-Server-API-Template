@@ -23,16 +23,25 @@ const PRIVILEDGES = [
    new PriviledgeData(DELETE, CODES[3]),
 ];
 
-export default Object.freeze({
+const ALL = [
+   READ,
+   CREATE,
+   UPDATE,
+   DELETE
+];
+
+export{
    PRIVILEDGES,
    READ,
    CREATE,
    UPDATE,
    DELETE,
-   ALL: [
-      READ,
-      CREATE,
-      UPDATE,
-      DELETE
-   ]
-});
+   ALL
+};
+
+export default {
+   READ,
+   CREATE,
+   UPDATE,
+   DELETE
+}

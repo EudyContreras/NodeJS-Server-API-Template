@@ -7,26 +7,23 @@ const schema = new EntitySchema({
         type: String,
         required: true
     },
-    actionId: {
+    permissions: [{
         type: String,
         trim: true,
         lowercase: true,
-        minlength: 3,
-        required: [true, 'The action Id required']
-    },
-    controllerId: {
+        required: true
+    }],
+    controller: {
         type: String,
         trim: true,
         lowercase: true,
         minlength: 3,
         required: true,
     }
-}, { strict: false, versionKey: false });
+}, { timestamps: false, strict: false, versionKey: false });
 
-schema.index({userId: 1, actionId: 1, controllerId: 1,}, {unique: true});
+schema.index({userId: 1, controller: 1,}, {unique: true});
 
 const Priviledge = schema.getModel<IPriviledge>('Priviledge');
 
-export const PriviledgeEntity = Priviledge;
-export const PriviledgeSchema = schema;
-export default PriviledgeEntity;
+export default Priviledge;

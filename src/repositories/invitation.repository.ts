@@ -1,29 +1,29 @@
 import Invitation from '../entitymodel/entities/invitation.entity'
-import { IInvitation } from '../entitymodel/models/invitation.model'
+import { IInvitation } from '../entitymodel/models/invitation.model';
 
-function dataTransferDocument(invitation: any) {
-   const dto = {
-      id: invitation.id,
-      email: invitation.email,
-      name: invitation.name
+function dataTransferDocument(data: IInvitation) {
+   return {
+      id: data.id,
+      email: data.email,
+      pending: data.pending,
+      expired: data.expired,
+      roleCode: data.roleCode,
+      expirationTime: data.expirationTime
    };
-   return dto;
 }
 
 /**
- * Data access layer Repository used
+ * @description Data access layer Repository used
  * for interfacing with the invitation data.
  */
-class InvitationRepository {
+export default class InvitationRepository {
 
    private exclude: any;
    private options: any;
 
    constructor() {
-      this.exclude = {
-         invitations: false,
-         invitationId: false
-      };
+      this.exclude = null;
+
       this.options = {
          new: true,
          upsert: false,
@@ -32,7 +32,7 @@ class InvitationRepository {
       };
    }
 
-   async hasInvitation(invitationId: string) {
+   async hasInvitation(invitationId: string): Promise<boolean> {
       const count = await Invitation
          .countDocuments({ _id: invitationId })
          .exec();
@@ -40,7 +40,7 @@ class InvitationRepository {
       return count > 0;
    }
 
-   async hasInvitationWhere(query: any) {
+   async hasInvitationWhere(query: any): Promise<boolean> {
       const count = await Invitation
          .countDocuments(query)
          .exec();
@@ -48,127 +48,113 @@ class InvitationRepository {
       return count > 0;
    }
 
-   async getAllInvitations(options = { dto: true }) {
+   async getAllInvitations(options = { dto: true }): Promise<IInvitation[] | any[]>  {
       const invitations = await Invitation
          .find()
          .select(this.exclude)
          .exec();
 
       if (options.dto === true) {
-         return invitations.map(x => dataTransferDocument((x as any).toClient()));
+         return invitations.map(x => dataTransferDocument(x));
       }
 
-      return invitations.map(x => (x as any).toClient());
+      return invitations;
    }
 
-   async getAllInvitationsWhere(query: any, options = { dto: true }) {
+   async getAllInvitationsWhere(query: any, options = { dto: true }): Promise<IInvitation[] | any[]>  {
       const invitations = await Invitation
          .find(query)
          .select(this.exclude)
          .exec();
 
       if (options.dto === true) {
-         return invitations.map(x => dataTransferDocument((x as any).toClient()));
+         return invitations.map(x => dataTransferDocument(x));
       }
 
-      return invitations.map(x => (x as any).toClient());
+      return invitations;
    }
 
-   async getInvitation(invitationId: string, options = { dto: true }) {
+   async getInvitation(invitationId: string, options = { dto: true }): Promise<IInvitation | any> {
       const invitation = await Invitation
          .findById(invitationId)
          .select(this.exclude)
          .exec();
 
-      const result = invitation ? (invitation as any).toClient() : null;
-
-      if (options.dto === true && result != null) {
-         return dataTransferDocument(result);
+      if (options.dto === true && invitation != null) {
+         return dataTransferDocument(invitation);
       }
 
-      return result;
+      return invitation;
    }
 
-   async getInvitationWhere(criteria: any, options = { dto: true }) {
+   async getInvitationWhere(criteria: any, options = { dto: true }): Promise<IInvitation | any> {
       const invitation = await Invitation
          .findOne(criteria)
          .select(this.exclude)
          .exec();
 
-      const result = invitation ? (invitation as any).toClient() : null;
-
-      if (options.dto === true && result != null) {
-         return dataTransferDocument(result);
+      if (options.dto === true && invitation != null) {
+         return dataTransferDocument(invitation);
       }
 
-      return result;
+      return invitation;
    }
 
-   async getFromInvitation(invitationId: string, select: any) {
+   async getFromInvitation(invitationId: string, select: any): Promise<IInvitation | any> {
       const invitation = await Invitation
          .findById(invitationId)
          .select(select)
          .exec();
 
-      const result = invitation ? (invitation as any).toClient() : null;
-
-      return result;
+      return invitation;
    }
 
-   async insertInvitation(data: IInvitation, options = { dto: true }) {
+   async insertInvitation(data: any, options = { dto: true }): Promise<IInvitation | any> {
       const invitation = new Invitation(data);
 
       await invitation.validate();
 
-      const saved = await invitation
-         .save(this.options)
-         .then();
+      const saved = await invitation.save(this.options);
 
-      const result = saved ? (saved as any).toClient() : null;
-
-      if (options.dto === true && result != null) {
-         return dataTransferDocument(result);
+      if (options.dto === true && saved != null) {
+         return dataTransferDocument(saved);
       }
 
-      return result;
+      return saved;
    }
 
-   async updateInvitation(invitationId: string, update: any, options = { dto: true }) {
+   async updateInvitation(invitationId: string, update: any, options = { dto: true }): Promise<IInvitation | any> {
       const invitation = await Invitation
          .findByIdAndUpdate(invitationId, update, this.options)
          .select(this.exclude)
          .exec();
 
-      const result = invitation ? (invitation as any).toClient() : null;
-
-      if (options.dto === true && result != null) {
-         return dataTransferDocument(result);
+      if (options.dto === true && invitation != null) {
+         return dataTransferDocument(invitation);
       }
 
-      return result;
+      return invitation;
    }
 
-   async updateInvitationWhere(query: any, update: any, options = { dto: true }) {
+   async updateInvitationWhere(query: any, update: any, options = { dto: true }): Promise<IInvitation | any> {
       const invitation = await Invitation
          .findOneAndUpdate(query, update, this.options)
          .select(this.exclude)
          .exec();
 
-      const result = invitation ? (invitation as any).toClient() : null;
-
-      if (options.dto === true && result != null) {
-         return dataTransferDocument(result);
+      if (options.dto === true && invitation != null) {
+         return dataTransferDocument(invitation);
       }
 
-      return result;
+      return invitation;
    }
 
-   async deleteInvitation(invitationId: string, options = { dto: true }) {
+   async deleteInvitation(invitationId: string, options = { dto: true }): Promise<IInvitation | any> {
       const invitation = await Invitation
          .findByIdAndDelete(invitationId)
          .exec();
 
-      const result = invitation ? (invitation as any).toClient() : null;
+      const result = invitation ? invitation : null;
 
       if (options.dto === true && result != null) {
          return dataTransferDocument(result);
@@ -177,12 +163,12 @@ class InvitationRepository {
       return result;
    }
 
-   async deleteInvitationWhere(query: any, options = { dto: true }) {
+   async deleteInvitationWhere(query: any, options = { dto: true }): Promise<IInvitation | any> {
       const invitation = await Invitation
          .findOneAndDelete(query)
          .exec();
 
-      const result = invitation ? (invitation as any).toClient() : null;
+      const result = invitation ? invitation : null;
 
       if (options.dto === true && result != null) {
          return dataTransferDocument(result);
@@ -203,5 +189,3 @@ class InvitationRepository {
          .exec();
    }
 }
-
-export default InvitationRepository;

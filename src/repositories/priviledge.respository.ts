@@ -1,38 +1,42 @@
 import Priviledge from '../entitymodel/entities/priviledge.entity'
-import { IPriviledge } from '../entitymodel/models/priviledge.model'
+import { IPriviledge } from '../entitymodel/models/priviledge.model';
 
-function dataTransferDocument(priviledge: any) {
-   const dto = {
-      id: priviledge.id,
-      email: priviledge.email,
-      name: priviledge.name
-   };
-   return dto;
+function dataTransferDocument(data: IPriviledge): PriviledgeDTO {
+   const { userId, permissions, controller } = data;
+   return new PriviledgeDTO(userId, permissions, controller);
 }
 
+export class PriviledgeDTO {
+   public userId: string;
+   public permissions: string[];
+   public controller: string;
+   constructor(userId: string, permissions: string[], controller: string) {
+      this.userId = userId;
+      this.permissions = permissions;
+      this.controller = controller;
+   }
+}
 /**
- * Data access layer Repository used
+ * @description Data access layer Repository used
  * for interfacing with the priviledge data.
  */
-class PriviledgeRepository {
+export default class PriviledgeRepository {
 
    private exclude: any;
    private options: any;
 
    constructor() {
-      this.exclude = {
-         priviledges: false,
-         priviledgeId: false
-      };
+      this.exclude = null;
+      
       this.options = {
          new: true,
-         upsert: false,
+         upsert: true,
          useFindAndModify: false,
          runValidators: true
       };
    }
 
-   async hasPriviledge(priviledgeId: string) {
+   async hasPriviledge(priviledgeId: string): Promise<boolean> {
       const count = await Priviledge
          .countDocuments({ _id: priviledgeId })
          .exec();
@@ -40,7 +44,7 @@ class PriviledgeRepository {
       return count > 0;
    }
 
-   async hasPriviledgeWhere(query: any) {
+   async hasPriviledgeWhere(query: any): Promise<boolean> {
       const count = await Priviledge
          .countDocuments(query)
          .exec();
@@ -48,39 +52,39 @@ class PriviledgeRepository {
       return count > 0;
    }
 
-   async getAllPriviledges(options = { dto: true }) {
+   async getAllPriviledges(options = { dto: true }): Promise<IPriviledge[] | PriviledgeDTO[]>  {
       const priviledges = await Priviledge
          .find()
          .select(this.exclude)
          .exec();
 
       if (options.dto === true) {
-         return priviledges.map(x => dataTransferDocument((x as any).toClient()));
+         return priviledges.map(x => dataTransferDocument(x));
       }
 
-      return priviledges.map(x => (x as any).toClient());
+      return priviledges;
    }
 
-   async getAllPriviledgesWhere(query: any, options = { dto: true }) {
+   async getAllPriviledgesWhere(query: any, options = { dto: true }): Promise<IPriviledge[] | PriviledgeDTO[]>  {
       const priviledges = await Priviledge
          .find(query)
          .select(this.exclude)
          .exec();
 
       if (options.dto === true) {
-         return priviledges.map(x => dataTransferDocument((x as any).toClient()));
+         return priviledges.map(x => dataTransferDocument(x));
       }
 
-      return priviledges.map(x => (x as any).toClient());
+      return priviledges;
    }
 
-   async getPriviledge(priviledgeId: string, options = { dto: true }) {
+   async getPriviledge(priviledgeId: string, options = { dto: true }): Promise<IPriviledge | PriviledgeDTO | null>  {
       const priviledge = await Priviledge
          .findById(priviledgeId)
          .select(this.exclude)
          .exec();
 
-      const result = priviledge ? (priviledge as any).toClient() : null;
+      const result = priviledge ? priviledge : null;
 
       if (options.dto === true && result != null) {
          return dataTransferDocument(result);
@@ -89,13 +93,13 @@ class PriviledgeRepository {
       return result;
    }
 
-   async getPriviledgeWhere(criteria: any, options = { dto: true }) {
+   async getPriviledgeWhere(criteria: any, options = { dto: true }): Promise<IPriviledge | PriviledgeDTO | null>  {
       const priviledge = await Priviledge
          .findOne(criteria)
          .select(this.exclude)
          .exec();
 
-      const result = priviledge ? (priviledge as any).toClient() : null;
+      const result = priviledge ? priviledge : null;
 
       if (options.dto === true && result != null) {
          return dataTransferDocument(result);
@@ -104,27 +108,25 @@ class PriviledgeRepository {
       return result;
    }
 
-   async getFromPriviledge(priviledgeId: string, select: any) {
+   async getFromPriviledge(priviledgeId: string, select: any): Promise<IPriviledge | PriviledgeDTO | null>  {
       const priviledge = await Priviledge
          .findById(priviledgeId)
          .select(select)
          .exec();
 
-      const result = priviledge ? (priviledge as any).toClient() : null;
+      const result = priviledge ? priviledge : null;
 
       return result;
    }
 
-   async insertPriviledge(data: IPriviledge, options = { dto: true }) {
+   async insertPriviledge(data: any, options = { dto: true }): Promise<IPriviledge | PriviledgeDTO | null>  {
       const priviledge = new Priviledge(data);
 
       await priviledge.validate();
 
-      const saved = await priviledge
-         .save(this.options)
-         .then();
+      const saved = await priviledge.save(this.options);
 
-      const result = saved ? (saved as any).toClient() : null;
+      const result = saved ? saved : null;
 
       if (options.dto === true && result != null) {
          return dataTransferDocument(result);
@@ -133,13 +135,21 @@ class PriviledgeRepository {
       return result;
    }
 
-   async updatePriviledge(priviledgeId: string, update: any, options = { dto: true }) {
+   async updateOrInsertPriviledge(query: any, update: any): Promise<IPriviledge | PriviledgeDTO | null>  {
+      const priviledge = await Priviledge
+         .updateOne(query, update, this.options)
+         .select(this.exclude);
+
+      return priviledge;
+   }
+
+   async updatePriviledge(priviledgeId: string, update: any, options = { dto: true }): Promise<IPriviledge | PriviledgeDTO | null>  {
       const priviledge = await Priviledge
          .findByIdAndUpdate(priviledgeId, update, this.options)
          .select(this.exclude)
          .exec();
 
-      const result = priviledge ? (priviledge as any).toClient() : null;
+      const result = priviledge ? priviledge : null;
 
       if (options.dto === true && result != null) {
          return dataTransferDocument(result);
@@ -148,13 +158,13 @@ class PriviledgeRepository {
       return result;
    }
 
-   async updatePriviledgeWhere(query: any, update: any, options = { dto: true }) {
+   async updatePriviledgeWhere(query: any, update: any, options = { dto: true }): Promise<IPriviledge | PriviledgeDTO | null>  {
       const priviledge = await Priviledge
          .findOneAndUpdate(query, update, this.options)
          .select(this.exclude)
          .exec();
 
-      const result = priviledge ? (priviledge as any).toClient() : null;
+      const result = priviledge ? priviledge : null;
 
       if (options.dto === true && result != null) {
          return dataTransferDocument(result);
@@ -163,12 +173,12 @@ class PriviledgeRepository {
       return result;
    }
 
-   async deletePriviledge(priviledgeId: string, options = { dto: true }) {
+   async deletePriviledge(priviledgeId: string, options = { dto: true }): Promise<IPriviledge | PriviledgeDTO | null>  {
       const priviledge = await Priviledge
          .findByIdAndDelete(priviledgeId)
          .exec();
 
-      const result = priviledge ? (priviledge as any).toClient() : null;
+      const result = priviledge ? priviledge : null;
 
       if (options.dto === true && result != null) {
          return dataTransferDocument(result);
@@ -177,12 +187,12 @@ class PriviledgeRepository {
       return result;
    }
 
-   async deletePriviledgeWhere(query: any, options = { dto: true }) {
+   async deletePriviledgeWhere(query: any, options = { dto: true }): Promise<IPriviledge | PriviledgeDTO | null>  {
       const priviledge = await Priviledge
          .findOneAndDelete(query)
          .exec();
 
-      const result = priviledge ? (priviledge as any).toClient() : null;
+      const result = priviledge ? priviledge : null;
 
       if (options.dto === true && result != null) {
          return dataTransferDocument(result);
@@ -203,5 +213,3 @@ class PriviledgeRepository {
          .exec();
    }
 }
-
-export default PriviledgeRepository;

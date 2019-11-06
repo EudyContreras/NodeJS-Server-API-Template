@@ -1,13 +1,26 @@
 
-import { Router, NextFunction, Request, Response } from 'express';
-import Controller from '../../controller';
 import express from 'express';
+import Controller from '../../controller';
+import RequestAction from '../../../definitions/requestAction';
+import UserService from '../../../services/user.service';
+import authenticate from '../../../middleware/authenticators/token.validator'
+import allowed from '../../../middleware/authenticators/access.validator'
+import validate from '../../../middleware/validators/body.validator'
+import schemaType from '../../../validation/schemas/user/blueprint'
 
-class Users implements Controller {
+import { ROOT, ADMIN } from '../../../localstore/accessrole.store'
+import { Router, Request, Response } from 'express';
+
+class Users extends Controller {
+
+   private userService = new UserService();
    private routing: string = '/rest/api/users';
    private router: Router;
+   private roles: string[];
 
-   constructor() {
+   constructor(...allowedRoles: string[]) {
+      super('user')
+      this.roles = allowedRoles;
       this.router = express.Router();
       this.setupRoutes(this.router);
    }
@@ -21,27 +34,68 @@ class Users implements Controller {
    }
 
    private setupRoutes(router: Router) {
-      router.get('/', this.getOne);
+      router.get('/',authenticate, allowed(...this.roles), validate(schemaType.USER_QUERY), this.get);
+      router.put('/',authenticate, allowed(...this.roles), validate(schemaType.USER_CREATE), this.create);
+      router.delete('/',authenticate, allowed(...this.roles), this.delete);
+
+      router.patch('/',authenticate, allowed(ROOT, ADMIN), validate(schemaType.USER_UPDATE), this.update);
+      router.put('/password',authenticate, allowed(ROOT, ADMIN), validate(schemaType.USER_PASSORD), this.updatePassword);
    }
 
-   private getOne = async (request: Request, response: Response) => {
-      const apiResponse = {
-         message: 'ursers'
-      };
-      return response.json(apiResponse);
+   private get = async (request: any, response: Response) => {
+      const hasProps = request.data ? Object.keys(request.data).length > 0 : null;
+
+      if (hasProps) {
+         return this.getOne(request.data, response)
+      } else {
+         return this.getAll(response)
+      }
    }
 
-   private getAll = async (request: Request, response: Response) => {
+   private getOne = async (query: any, response: Response) => {
+      const { result, error } = await this.userService.getUserWhere(query);
 
+      return this.buildResult(result, error, response, RequestAction.GET)
    }
 
-   private create = async (request: Request, response: Response) => {
+   private getAll = async (response: Response) => {
+      const { result, error } = await this.userService.getAllUsers();
 
+      return this.buildResult(result, error, response, RequestAction.GET_ALL)
    }
 
-   private delete = async (request: Request, response: Response, next: NextFunction) => {
+   private create = async (request: any, response: Response) => {
+      const data = request.data;
 
+      const { result, error } = await this.userService.registerUser(data);
+
+      return this.buildResult(result, error, response, RequestAction.CREATE)
    }
+
+   private update = async (request: any, response: Response) => {
+      const userId = request.query.userId || request.user.userId;
+
+      const { result, error } = await this.userService.updateUser(userId, request.data);
+
+      return this.buildResult(result, error, response, RequestAction.UPDATE)
+   }
+
+   private delete = async (request: Request, response: Response) => {
+      const userId = request.query.userId;
+
+      const { result, error } = await this.userService.deleteUser(userId);
+
+      return this.buildResult(result, error, response, RequestAction.DELETE)
+   }
+
+   private updatePassword = async (request: any, response: Response) => {
+      const userId = request.query.userId || request.user.userId;
+
+      const { result, error } = await this.userService.updateUserPassword(userId, request.data);
+
+      return this.buildResult(result, error, response, RequestAction.UPDATE)
+   }
+
 }
 
 export default Users;

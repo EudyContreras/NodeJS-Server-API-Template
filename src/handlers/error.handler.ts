@@ -1,6 +1,6 @@
 import Logger from './logging.handler';
 
-class ErrorHandler {
+export default class ErrorHandler {
    private logger: Logger;
    /**
     * Constructs an ErrorHandler with an error logger.
@@ -14,16 +14,14 @@ class ErrorHandler {
    /**
     * Handles a produce error and logs information about 
     * the error.
-    * @param {Error} error The error that was produced.
-    * @param {string} type The type of error to handle.
+    * @param error The error that was produced.
+    * @param type The type of error to handle.
     */
    onError(error: any) {
       if (error instanceof Error) {
-         this.logger.logError(error);
+         this.logger.logError(error.message);
       } else {
-         this.logger.logError(Error(error));
+         this.logger.logError(error);
       }
    }
 }
-
-export default ErrorHandler;

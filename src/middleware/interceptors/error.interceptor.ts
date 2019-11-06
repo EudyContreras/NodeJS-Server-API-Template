@@ -1,7 +1,7 @@
 
 import HttpCodes from '../../definitions/httpCode'
-import HttpException from '../../exceptions/http.exception';
 
+import { HttpException } from '../../exceptions/http.exceptions';
 import { NextFunction, Response, Request } from 'express';
 
 function intercept(error: HttpException, request: Request, response: Response, next: NextFunction) {
@@ -15,9 +15,7 @@ function intercept(error: HttpException, request: Request, response: Response, n
       }
    };
 
-   response
-      .status(status)
-      .json(apiResponse);
+   response.status(status).json(apiResponse);
 }
 
 

@@ -1,18 +1,7 @@
 import EntitySchema from '../entitySchema';
-import { PriviledgeSchema } from './priviledge.entity';
 import { IUser } from '../models/user.model';
 
 const schema = new EntitySchema({
-    invitationId: {
-        type: String,
-        required: false,
-        trim: true,
-    },
-    roleCode: {
-        type: String,
-        required: true,
-        default: null
-    },
     name: {
         type: String,
         required: true,
@@ -29,16 +18,21 @@ const schema = new EntitySchema({
         type: String,
         required: true
     },
-    lastLogin: {
-        type: Date,
+    roleCode: {
+        type: String,
+        required: true,
+        default: null
     },
     active: {
         type: Boolean,
         required: false,
         default: true
     },
-    priviledges: [PriviledgeSchema]
-}, { timestamps: true, strict: false, versionKey: false });
+    lastLogin: {
+        type: Date,
+        required: false
+    },
+}, { timestamps: true, strict: true, versionKey: false });
 
 const User = schema.getModel<IUser>('User');
 

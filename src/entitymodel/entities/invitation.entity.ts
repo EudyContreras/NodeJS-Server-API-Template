@@ -5,18 +5,18 @@ import { IInvitation } from '../models/invitation.model';
 const schema = new EntitySchema({
    email: {
       type: String,
-      required: [true, 'The user email is required'],
+      required: true,
       trim: true,
-      unique: [true, 'The email of the invited user must be unique!']
+      unique: true
    },
    roleCode: {
       type: String,
-      required: [true, 'The user role code is required'],
+      required: true,
       default: null
    },
    hostessId: {
       type: String,
-      required: true,
+      required: false,
    },
    pending: {
       type: Boolean,
@@ -33,7 +33,7 @@ const schema = new EntitySchema({
       required: false,
       default: null
    }
-}, { timestamps: true, strict: false, versionKey: false });
+}, { timestamps: true, strict: true, versionKey: false });
 
 const Invitation = schema.getModel<IInvitation>('Invitation');
 

@@ -1,7 +1,17 @@
 require('dotenv').config();
 
 const vault = Object.freeze({
+  application: {
+    FILE_DIRECTORY: '../node-template-server/src/'
+  },
+  self: {
+    headers: {
+      AUTHORIZATION: 'authorization',
+      TOKEN_HEADER: 'x-auth-token',
+    }
+  },
   host: {
+    APP_NAME: 'app name',
     BASE_URL: '',
     PORT: process.env.PORT || 5000,
   },
@@ -10,14 +20,20 @@ const vault = Object.freeze({
     PORT: '6379',
     KEY_PREFIX: 'eudcon-template-server.'
   },
+  smtpService: {
+    EMAIL: null,
+    HOST: 'smtp.ethereal.email',
+    PORT: 465
+  },
   databse: {
+    DB_PREPEND: 'mongodb+srv://',
     DB_URI_PATH: process.env.DB_URI_PATH,
     DB_USERNAME: process.env.DB_USERNAME,
     DB_PASSWORD: process.env.DB_PASSWORD,
   },
   api: {
     someapi: {
-      baseUrl: function(endpoint: string) {
+      baseUrl: function (endpoint: string) {
         return `/${endpoint}`
       },
       auth: {
@@ -29,19 +45,29 @@ const vault = Object.freeze({
     },
   },
   roles: {
+    CLEARANCE: {
+      ROOT: 10,
+      VERY_HIGH: 5,
+      HIGH: 4,
+      NORMAL: 3,
+      LOW: 2,
+      VERY_LOW: 1,
+      NONE: 0
+    },
     CODES: [
-      'asdfuhadfnzx6a42brq40qnf0q84tnm9',
-      'asdfuhadfnzx6a42brq40qnf0q84tnm9',
-      'asdfuhadfnzx6a42brq40qnf0q84tnm9',
-      'asdfuhadfnzx6a42brq40qnf0q84tnm9'
+      'kYtm5dTddhQWGpB2WqqQMNCeqdwf5m7g',
+      'GHJNGFTfD7VtFwrg43ek3ERaJKQX3tTr',
+      'rAvyvtD8VjVZJmYWnvhd2NdrCHS58S6K',
+      'Mfgkn5QyP55u57a5NjMswSAWkQmVeNC7',
+      'RfZ7rtFQJef4FcaKuVmKKNdTtf5vX3Uh'
     ]
   },
   priviledges: {
     CODES: [
-      'hadfnzx6a42brq40qn',
-      'hadfnzx6a42brq40qn',
-      'hadfnzx6a42brq40qn',
-      'hadfnzx6a42brq40qn'
+      '4BbJ3kVmUdFHhJST',
+      'NZy3pHHmWDukNT3H',
+      'jstmYaN7HhUsR6pE',
+      'tAM28j4C7YCnka2z'
     ]
   },
   validation: {
@@ -60,15 +86,23 @@ const vault = Object.freeze({
   },
   jwt: {
     PREFIX: 'Bearer ',
-    TOKEN_SECRET: process.env.JWT_SECRET,
-    EXPIRATION_TIME: '2h',
+    TOKEN_SECRET: process.env.JWT_SECRET || '',
+    EXPIRATION_TIME: '600d',
   },
   encryption: {
     SALT_ITERATIONS: 12
   },
+  admin: {
+    ADMIN_NAME: 'admin',
+    ADMIN_USERNAME: process.env.ADMIN_USERNAME,
+    ADMIN_PASSWORD: process.env.ADMIN_PASSWORD,
+  },
   agenda: {
-     PRIORITY: 'high', 
-     CONCURRENCY: 10
+    PRIORITY: 'high',
+    CONCURRENCY: 10
+  },
+  webjobs: {
+    RUN_IMMIDIATELY: false
   }
 });
 

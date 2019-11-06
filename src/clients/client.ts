@@ -35,7 +35,7 @@ class Client {
          }
       } catch (error) {
          if (onError) {
-            onError(error);
+            onError(error.message);
          }
       }
    }

@@ -12,9 +12,16 @@ const schema = new EntitySchema({
     },
     code: {
         type: String,
-        unique: [true, 'The role code must be unique']
+        unique: true
     },
-}, { timestamps: true,  strict: false, versionKey: false });
+    level: {
+        type: Number,
+        required: true,
+        default: 0,
+        min: 0,
+        max: 10,
+    }
+}, { timestamps: true,  strict: true, versionKey: false });
 
 const Role = schema.getModel<IRole>('Role');
 
