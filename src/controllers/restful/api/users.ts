@@ -36,9 +36,9 @@ class Users extends Controller {
    private setupRoutes(router: Router) {
       router.get('/',authenticate, allowed(...this.roles), validate(schemaType.USER_QUERY), this.get);
       router.put('/',authenticate, allowed(...this.roles), validate(schemaType.USER_CREATE), this.create);
-      router.patch('/',authenticate, allowed(...this.roles), validate(schemaType.USER_UPDATE), this.update);
       router.delete('/',authenticate, allowed(...this.roles), this.delete);
 
+      router.patch('/',authenticate, allowed(ROOT, ADMIN), validate(schemaType.USER_UPDATE), this.update);
       router.put('/password',authenticate, allowed(ROOT, ADMIN), validate(schemaType.USER_PASSORD), this.updatePassword);
    }
 

@@ -14,17 +14,35 @@ export const schamaType = {
 }
 
 export const validatePriviledgeCreate = (data: any) => {
+   if (data.permissions) {
+      const permissionSchema = Joi.object({
+         permission: Joi
+            .string()
+            .required()
+            .allow(...ALL)
+            .only()
+      });
+      for (const permission of data.permissions) {
+         const result = permissionSchema.validate({ permission }, {
+            abortEarly: false
+         });
+         if (result.error) {
+            return  {
+               message: SchemaValidation.CREATE_DATA('priviledge'),
+               result: result
+            }
+         }
+      };
+   }
 
    const schema = Joi.object({
       userId: Joi
          .string()
          .required(),
-      actionId: Joi
-         .string()
-         .required()
-         .allow(...ALL)
-         .only(),
-      controllerId: Joi
+      permissions: Joi
+         .array()
+         .required(),
+      controller: Joi
          .string()
          .required()
    });
@@ -42,15 +60,13 @@ export const validatePriviledgeUpdate = (data: any) => {
    const schema = Joi.object({
       userId: Joi
          .string()
-         .optional(),
-      actionId: Joi
+         .required(),
+      permissions: Joi
+         .array()
+         .required(),
+      controller: Joi
          .string()
-         .optional()
-         .allow(...ALL)
-         .only(),
-      controllerId: Joi
-         .string()
-         .optional()
+         .required()
    });
 
    return {
@@ -67,7 +83,7 @@ export const validatePriviledgeQuery = (data: any) => {
       userId: Joi
          .string()
          .required(),
-      controllerId: Joi
+      controller: Joi
          .string()
          .optional()
    })

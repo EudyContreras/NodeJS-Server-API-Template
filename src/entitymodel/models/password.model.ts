@@ -5,5 +5,6 @@ export interface IPassword extends Document {
    userId: string,
    password: string,
    active: boolean,
-   isTemp: boolean
+   isTemp: boolean,
+   expiresIn: number
 }

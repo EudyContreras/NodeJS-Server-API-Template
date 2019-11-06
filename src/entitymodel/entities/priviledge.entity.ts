@@ -7,14 +7,13 @@ const schema = new EntitySchema({
         type: String,
         required: true
     },
-    actionId: {
+    permissions: [{
         type: String,
         trim: true,
         lowercase: true,
-        minlength: 3,
         required: true
-    },
-    controllerId: {
+    }],
+    controller: {
         type: String,
         trim: true,
         lowercase: true,
@@ -23,7 +22,7 @@ const schema = new EntitySchema({
     }
 }, { timestamps: false, strict: false, versionKey: false });
 
-schema.index({userId: 1, actionId: 1, controllerId: 1,}, {unique: true});
+schema.index({userId: 1, controller: 1,}, {unique: true});
 
 const Priviledge = schema.getModel<IPriviledge>('Priviledge');
 

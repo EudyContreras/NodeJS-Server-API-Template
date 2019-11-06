@@ -37,11 +37,11 @@ async function controlAccess(request: any, response: Response, next: NextFunctio
 
       const query = createQuery(method, controller);
 
-      const { error, result } = await priviledges.hasPriviledges(userId, query)
+      const { error, result } = await priviledges.hasPermission(userId, query)
 
       if (error) {
          priviledgeResponse.hasAccess = false;
-         priviledgeResponse.actionId = query.actionId;
+         priviledgeResponse.permission = query.permission;
          priviledgeResponse.message = PriviledgeMessages.NOT_GRANTED;
          priviledgeResponse.errors.push(error);
          
@@ -50,7 +50,7 @@ async function controlAccess(request: any, response: Response, next: NextFunctio
 
       if (result === false) {
          priviledgeResponse.hasAccess = false;
-         priviledgeResponse.actionId = query.actionId;
+         priviledgeResponse.permission = query.permission;
          priviledgeResponse.message = PriviledgeMessages.NOT_GRANTED;
          priviledgeResponse.errors.push(PriviledgeMessages.ACCESS_DENIED);
          
@@ -63,15 +63,15 @@ async function controlAccess(request: any, response: Response, next: NextFunctio
 function createQuery(method: HttpMethod, controller: string) {
    switch (method) {
       case GET:
-         return { controllerId: controller, actionId: actions.READ }
+         return { controller: controller, permission: actions.READ }
       case PUT:
-         return { controllerId: controller, actionId: actions.UPDATE }
+         return { controller: controller, permission: actions.UPDATE }
       case POST:
-         return { controllerId: controller, actionId: actions.CREATE }
+         return { controller: controller, permission: actions.CREATE }
       case DELETE:
-         return { controllerId: controller, actionId: actions.DELETE }
+         return { controller: controller, permission: actions.DELETE }
    }
-   return { controllerId: '', actionId: '' }
+   return { controller: null, permission: null }
 }
 
 export default controlAccess;

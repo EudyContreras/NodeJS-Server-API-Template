@@ -152,6 +152,7 @@ export default class UserService {
 
       try {
          const userRepository = new UserRepository();
+         const passwordRepository = new PasswordRepository();
          const encryptionService = new EncryptionService();
          const authenticationService = new AuthenticationService();
 
@@ -179,6 +180,8 @@ export default class UserService {
             }
 
             const revokeResult = await authenticationService.invalidateTokens(result);
+            
+            await passwordRepository.clearAllWhere({ userId: user.id });
 
             return { result: result, error: revokeResult.error };
          } else {

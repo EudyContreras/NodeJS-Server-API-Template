@@ -1,22 +1,19 @@
 
 import PriviledgeRespository from '../repositories/priviledge.respository';
 
-import { UserMessages, PriviledgeMessages } from '../messages/message.response';
+import {PriviledgeMessages } from '../messages/message.response';
 
 export default class AccessPriviledgeService {
 
    /**
     * @description Retrieves the priviledges for the user matching the given
     * user id which also match the specified query criteria.
-    * @param userId The user id attached to the priviledges to retrieve.
     * @param  query The criteria that the priviledges need to fulfill.
     * @returns A list of the matched priviledges or a produced error.
     */
-   async getPriviledges(userId: string, query: any): Promise<{ result?: any[], error?: any }> {
+   async getPriviledges(query: any): Promise<{ result?: any[], error?: any }> {
       try {
          const repository = new PriviledgeRespository();
-
-         query.userId = userId
 
          const result = await repository.getAllPriviledgesWhere(query);
 
@@ -33,15 +30,20 @@ export default class AccessPriviledgeService {
     * @param queryData The criteria that the priviledges need to fulfill.
     * @returns A list of the matched priviledges or a produced error.
     */
-   async hasPriviledges(userId: any, query: any): Promise<{ result?: any, error?: any }> {
+   async hasPermission(userId: any, query: any): Promise<{ result?: any, error?: any }> {
       try {
          const repository = new PriviledgeRespository();
 
-         query.userId = userId
+         const controller = query.controller;
 
-         const hasPriviledge = await repository.hasPriviledgeWhere(query);
+         const priviledge = await repository.getPriviledgeWhere({ userId, controller })
 
-         return { result: hasPriviledge };
+         if (!priviledge) {
+            return { error: PriviledgeMessages.ACCESS_DENIED}
+         }
+         const hasPermission =  priviledge.permissions.some(x => x === query.permission);
+
+         return { result: hasPermission };
       } catch (error) {
          return { error };
       }
@@ -52,21 +54,30 @@ export default class AccessPriviledgeService {
     * @param priviledge The data containing information about the new priviledge.
     * @returns The newly created priviledge or a produced error.
     */
-   async addPriviledge(priviledge: any): Promise<{ result?: any, error?: any }> {
-      const userId = priviledge.userId;
-      const actionId = priviledge.actionId;
-      const controllerId = priviledge.controllerId;
-
-      const data = {
-         userId,
-         actionId,
-         controllerId
-      };
-
+   async createPriviledge(priviledge: any): Promise<{ result?: any, error?: any }> {
       try {
          const repository = new PriviledgeRespository();
 
-         const result = await repository.updateOrInsertPriviledge(data, data);
+         const result = await repository.insertPriviledge(priviledge);
+
+         return { result };
+      } catch (error) {
+         return { error };
+      }
+   }
+
+   /**
+    * @description Updates a priviledge based on the given data.
+    * @param priviledge The data containing information about the priviledge.
+    * @returns The newly created priviledge or a produced error.
+    */
+   async updatePriviledge(priviledge: any): Promise<{ result?: any, error?: any }> {
+      try {
+         const repository = new PriviledgeRespository();
+
+         const { controller, userId } = priviledge;
+
+         const result = await repository.updatePriviledgeWhere({ userId, controller}, priviledge);
 
          return { result };
       } catch (error) {
@@ -77,16 +88,13 @@ export default class AccessPriviledgeService {
    /**
     * @description Revokes/deletes a new priviledge that matches the specified
     * action data for the specified user id.
-    * @param userId The user id attached to the priviledges to revoke.
     * @param actionData The data containing information about the priviledge.
     * @returns The revoked priviledge 
     * or a produced error.
     */
-   async revokePriviledge(userId: string, data: any): Promise<{ result?: any, error?: any }> {
+   async revokePriviledge(data: any): Promise<{ result?: any, error?: any }> {
       try {
          const repository = new PriviledgeRespository();
-
-         data.userId = userId
 
          const result = await repository.deletePriviledgeWhere(data);
 

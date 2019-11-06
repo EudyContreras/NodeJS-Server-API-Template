@@ -9,7 +9,7 @@ import RequestAction from '../../../definitions/requestAction';
 
 import { Router, Request, Response } from 'express';
 import { AuthenticationResponse } from '../../../responses/request.response';
-import { ResponseMessages, AuthenticationMessages } from '../../../messages/message.response';
+import { AuthenticationMessages } from '../../../messages/message.response';
 import HttpCode from '../../../definitions/httpCode';
 
 class Authentication extends Controller {
@@ -36,8 +36,8 @@ class Authentication extends Controller {
 
    private setupRoutes(router: Router) {
       router.get('/', authenticate, this.getCredentials);
-      router.post('/', validate(schemaType.CREDENTIALS), this.performAuthentication);
       router.put('/recover', this.recoverPassword)
+      router.post('/', validate(schemaType.CREDENTIALS), this.performAuthentication);
    }
 
    private getCredentials = async (request: any, response: Response) => {

@@ -1,5 +1,6 @@
 
 import PasswordRepository from '../repositories/password.repository';
+
 import { PasswordMessages } from '../messages/message.response'
 export default class PasswordService {
    /**
@@ -23,52 +24,14 @@ export default class PasswordService {
     * @param passwordId The id of the password to retrieve
     * @returns The password that matches the given id or a produced error.
     */
-   async getPassword(passwordId: string): Promise<{ result?: any, error?: any }> {
+   async getPasswordFor(userId: string): Promise<{ result?: any, error?: any }> {
       try {
          const repository = new PasswordRepository();
 
-         const result = await repository.getPassword(passwordId);
+         const result = await repository.getPasswordWhere({ userId });
 
          if (!result) return { error: PasswordMessages.NO_SUCH_PASSWORD }
          
-         return { result };
-      } catch (error) {
-         return { error };
-      }
-   }
-
-   /**
-    * @description Retrives the password code for the password with the matching name.
-    * @param name The type name of the password to retrieve.
-    * @returns The password that matches the given name or a produced error.
-    */
-   async getPasswordCode(name: string): Promise<{ result?: any, error?: any }> {
-      try {
-         const repository = new PasswordRepository();
-
-         const result = await repository.getPasswordWhere({ name: name });
-
-         if (!result) return { error: PasswordMessages.NO_SUCH_PASSWORD }
-
-         return { result: result.code };
-      } catch (error) {
-         return { error };
-      }
-   }
-
-   /**
-    * @description Retrives the password with the matching code.
-    * @param passwordCode The code of the password to retrieve.
-    * @returns The password that matches the given password code or a produced error.
-    */
-   async getPasswordByCode(passwordCode: string): Promise<{ result?: any, error?: any }> {
-      try {
-         const repository = new PasswordRepository();
-
-         const result = await repository.getPasswordWhere({ code: passwordCode });
-
-         if (!result) return { error: PasswordMessages.NO_SUCH_PASSWORD }
-
          return { result };
       } catch (error) {
          return { error };
@@ -85,29 +48,6 @@ export default class PasswordService {
          const repository = new PasswordRepository();
 
          const result = await repository.insertPassword(password);
-
-         return { result };
-      } catch (error) {
-         return { error };
-      }
-   }
-
-   /**
-    * @description Updates the password that matches the specified password id.
-    * @param passwordId The password id of the password to be updated.
-    * @param password The data to use for updating the password.
-    * @returns The password that has just been updated or a produced error.
-    */
-   async updatePassword(passwordId: string, data: any): Promise<{ result?: any, error?: any }> {
-      try {
-         const update = {
-            name: data.name,
-            code: data.code
-         };
-
-         const repository = new PasswordRepository();
-
-         const result = await repository.updatePassword(passwordId, update);
 
          return { result };
       } catch (error) {

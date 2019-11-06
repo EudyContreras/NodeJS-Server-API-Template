@@ -16,6 +16,11 @@ const schema = new EntitySchema({
         required: true,
         default: false
     },
+    expiresIn: {
+        type: Number,
+        required: false,
+        default: 172800
+    },
     isTemp: {
         type: Boolean,
         required: true

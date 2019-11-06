@@ -1,11 +1,21 @@
 import Priviledge from '../entitymodel/entities/priviledge.entity'
 import { IPriviledge } from '../entitymodel/models/priviledge.model';
 
-function dataTransferDocument(data: IPriviledge) {
-   const { userId, actionId, controllerId } = data;
-   return { userId, actionId, controllerId };
+function dataTransferDocument(data: IPriviledge): PriviledgeDTO {
+   const { userId, permissions, controller } = data;
+   return new PriviledgeDTO(userId, permissions, controller);
 }
 
+export class PriviledgeDTO {
+   public userId: string;
+   public permissions: string[];
+   public controller: string;
+   constructor(userId: string, permissions: string[], controller: string) {
+      this.userId = userId;
+      this.permissions = permissions;
+      this.controller = controller;
+   }
+}
 /**
  * @description Data access layer Repository used
  * for interfacing with the priviledge data.
@@ -42,7 +52,7 @@ export default class PriviledgeRepository {
       return count > 0;
    }
 
-   async getAllPriviledges(options = { dto: true }): Promise<IPriviledge[] | any[]>  {
+   async getAllPriviledges(options = { dto: true }): Promise<IPriviledge[] | PriviledgeDTO[]>  {
       const priviledges = await Priviledge
          .find()
          .select(this.exclude)
@@ -55,7 +65,7 @@ export default class PriviledgeRepository {
       return priviledges;
    }
 
-   async getAllPriviledgesWhere(query: any, options = { dto: true }): Promise<IPriviledge[] | any[]>  {
+   async getAllPriviledgesWhere(query: any, options = { dto: true }): Promise<IPriviledge[] | PriviledgeDTO[]>  {
       const priviledges = await Priviledge
          .find(query)
          .select(this.exclude)
@@ -68,7 +78,7 @@ export default class PriviledgeRepository {
       return priviledges;
    }
 
-   async getPriviledge(priviledgeId: string, options = { dto: true }): Promise<IPriviledge | any>  {
+   async getPriviledge(priviledgeId: string, options = { dto: true }): Promise<IPriviledge | PriviledgeDTO | null>  {
       const priviledge = await Priviledge
          .findById(priviledgeId)
          .select(this.exclude)
@@ -83,7 +93,7 @@ export default class PriviledgeRepository {
       return result;
    }
 
-   async getPriviledgeWhere(criteria: any, options = { dto: true }): Promise<IPriviledge | any>  {
+   async getPriviledgeWhere(criteria: any, options = { dto: true }): Promise<IPriviledge | PriviledgeDTO | null>  {
       const priviledge = await Priviledge
          .findOne(criteria)
          .select(this.exclude)
@@ -98,7 +108,7 @@ export default class PriviledgeRepository {
       return result;
    }
 
-   async getFromPriviledge(priviledgeId: string, select: any): Promise<IPriviledge | any>  {
+   async getFromPriviledge(priviledgeId: string, select: any): Promise<IPriviledge | PriviledgeDTO | null>  {
       const priviledge = await Priviledge
          .findById(priviledgeId)
          .select(select)
@@ -109,7 +119,7 @@ export default class PriviledgeRepository {
       return result;
    }
 
-   async insertPriviledge(data: any, options = { dto: true }): Promise<IPriviledge | any>  {
+   async insertPriviledge(data: any, options = { dto: true }): Promise<IPriviledge | PriviledgeDTO | null>  {
       const priviledge = new Priviledge(data);
 
       await priviledge.validate();
@@ -125,7 +135,7 @@ export default class PriviledgeRepository {
       return result;
    }
 
-   async updateOrInsertPriviledge(query: any, update: any): Promise<IPriviledge | any>  {
+   async updateOrInsertPriviledge(query: any, update: any): Promise<IPriviledge | PriviledgeDTO | null>  {
       const priviledge = await Priviledge
          .updateOne(query, update, this.options)
          .select(this.exclude);
@@ -133,7 +143,7 @@ export default class PriviledgeRepository {
       return priviledge;
    }
 
-   async updatePriviledge(priviledgeId: string, update: any, options = { dto: true }): Promise<IPriviledge | any>  {
+   async updatePriviledge(priviledgeId: string, update: any, options = { dto: true }): Promise<IPriviledge | PriviledgeDTO | null>  {
       const priviledge = await Priviledge
          .findByIdAndUpdate(priviledgeId, update, this.options)
          .select(this.exclude)
@@ -148,7 +158,7 @@ export default class PriviledgeRepository {
       return result;
    }
 
-   async updatePriviledgeWhere(query: any, update: any, options = { dto: true }): Promise<IPriviledge | any>  {
+   async updatePriviledgeWhere(query: any, update: any, options = { dto: true }): Promise<IPriviledge | PriviledgeDTO | null>  {
       const priviledge = await Priviledge
          .findOneAndUpdate(query, update, this.options)
          .select(this.exclude)
@@ -163,7 +173,7 @@ export default class PriviledgeRepository {
       return result;
    }
 
-   async deletePriviledge(priviledgeId: string, options = { dto: true }): Promise<IPriviledge | any>  {
+   async deletePriviledge(priviledgeId: string, options = { dto: true }): Promise<IPriviledge | PriviledgeDTO | null>  {
       const priviledge = await Priviledge
          .findByIdAndDelete(priviledgeId)
          .exec();
@@ -177,7 +187,7 @@ export default class PriviledgeRepository {
       return result;
    }
 
-   async deletePriviledgeWhere(query: any, options = { dto: true }): Promise<IPriviledge | any>  {
+   async deletePriviledgeWhere(query: any, options = { dto: true }): Promise<IPriviledge | PriviledgeDTO | null>  {
       const priviledge = await Priviledge
          .findOneAndDelete(query)
          .exec();

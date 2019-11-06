@@ -42,7 +42,7 @@ export class AccessResponse {
  */
 export class PriviledgeResponse {
    hasAccess?: boolean | null;
-   actionId?: string | null;
+   permission?: string | null;
    message?: string | null;
    errors: any[] = []
 }

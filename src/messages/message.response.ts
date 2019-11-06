@@ -1,3 +1,5 @@
+import CronJob from "../webjobs/cronJob"
+
 export const UserMessages = {
    NO_SUCH_ID: 'No user with the given id was found',
    NO_SUCH_EMAIL: 'No user with the give email was found',
@@ -56,6 +58,15 @@ export const AccessRoleMessages = {
 export const NotificationMessages = {
    RECOVERY_EMAIL: 'A recovery email has been sent to the given email address'
 }
+
+export const SchedulerMessages = {
+   LABEL_REQUIRED: 'A job label must be provided',
+   INTERVAL_REQUIRED: 'A job interval must be provided',
+
+   notifyStart: (job: CronJob) => {
+      return `Satarted job: '${job.label}' to run at: '${job.interval}'`
+   }
+};
 
 export const ResponseMessages = {
    NOT_CREATED: (name: string) => `The ${name} could not be created`,

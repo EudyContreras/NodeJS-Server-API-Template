@@ -8,11 +8,13 @@ import { Response, Request, NextFunction } from 'express';
 import * as AuthSchema from '../../validation/schemas/authentication/blueprint';
 import * as UserSchema from '../../validation/schemas/user/blueprint';
 import * as InviteSchema from '../../validation/schemas/invitation/blueprint';
+import * as PriviledgeSchema from '../../validation/schemas/priviledge/blueprint';
 
 import {
    GET,
    POST,
    PUT,
+   DELETE,
    PATCH,
 } from '../../definitions/httpMethod';
 
@@ -34,6 +36,8 @@ function validate(schemaType: Symbol) {
             return buildResponse(handlePosting(schemaType, data), request, response, next);
          case PATCH:
             return buildResponse(handleUpdate(schemaType, data), request, response, next);
+         case DELETE:
+            return buildResponse(handleDeletion(schemaType, data), request, response, next);
       }
    };
 }
@@ -46,6 +50,14 @@ function handlePosting(schemaType: Symbol, data: any){
    return null;
 }
 
+function handleDeletion(schemaType: Symbol, data: any){
+   switch (schemaType) {
+     case PriviledgeSchema.PRIVILEDGE_QUERY: 
+         return PriviledgeSchema.validatePriviledgeQuery(data);
+   }
+   return null;
+}
+
 function handleRetrieval(schemaType: Symbol, data: any, query: any) {
    const hasProps = Object.keys(query).length > 0;
 
@@ -53,6 +65,8 @@ function handleRetrieval(schemaType: Symbol, data: any, query: any) {
       switch (schemaType) {
          case InviteSchema.INVITATION_QUERY:
             return InviteSchema.validateInviteQuery(query);
+         case PriviledgeSchema.PRIVILEDGE_QUERY: 
+            return PriviledgeSchema.validatePriviledgeQuery(data);
       }
    } 
 
@@ -65,6 +79,8 @@ function handleCreation(schemaType: Symbol, data: any) {
          return UserSchema.validateUserCreate(data);
       case InviteSchema.INVITATION_CREATE: 
          return InviteSchema.validateInviteCreate(data);
+      case PriviledgeSchema.PRIVILEDGE_CREATE: 
+         return PriviledgeSchema.validatePriviledgeCreate(data);
    }
    return null;
 }
@@ -73,6 +89,8 @@ function handleUpdate(schemaType: Symbol, data: any){
    switch (schemaType) {
       case InviteSchema.INVITATION_UPDATE: 
          return InviteSchema.validateInviteUpdate(data);
+      case PriviledgeSchema.PRIVILEDGE_UPDATE: 
+         return PriviledgeSchema.validatePriviledgeUpdate(data);
    }
    return null;
 }

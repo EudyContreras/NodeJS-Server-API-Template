@@ -29,6 +29,7 @@ export default class AuthenticationService {
          const { email, password } = credentials;
 
          const repository = new UserRepository();
+         const passwordRepository = new PasswordRepository();
          const encryptionService = new EncryptionService();
 
          const user = await repository.getUserWhere({ email: email }, { dto: false });
@@ -37,7 +38,21 @@ export default class AuthenticationService {
 
          const isMatch = await encryptionService.comparePasswords(password, user.password);
 
-         if (!isMatch) return { error: AuthenticationMessages.WRONG_PASSWORD };
+         if (!isMatch) {
+            const tempPasswords = await passwordRepository.getAllPasswordsWhere({ userId: user.id });
+
+            if (tempPasswords.length > 0) {
+
+               var noMatch: boolean = true;
+
+               for(const tempPassword of tempPasswords) {
+                  const isMatch = await encryptionService.comparePasswords(password, tempPassword.password);
+                  
+                  if (isMatch) noMatch = false; 
+               }
+               if(noMatch) return { error: AuthenticationMessages.WRONG_PASSWORD };         
+            }
+         }
 
          const { token, error } = await this.createToken(user);
 
@@ -88,7 +103,7 @@ export default class AuthenticationService {
 
          const password = await passwordRepository.insertPassword(passwordData);
 
-         if (password) return { error: AuthenticationMessages.FAILURE };
+         if (!password) return { error: AuthenticationMessages.FAILURE };
         
          await notificationService.sendPasswordRecoveryEmail(email, randomPassword);
          
