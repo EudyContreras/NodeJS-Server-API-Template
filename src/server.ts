@@ -3,24 +3,25 @@ import Application from './application';
 import Interceptor from './middleware/interceptor';
 import RoleController from './controllers/restful/api/roles';
 import UserController from './controllers/restful/api/users';
+import IndexController from './presentation/controllers/index';
 import InviteController from './controllers/restful/api/invitations';
 import PriviledgeController from './controllers/restful/api/priviledges';
 import AuthenticationController from './controllers/restful/api/authentication';
 
-import { ROOT, ADMIN, USER, ALL} from './localstore/accessrole.store'
+import { ROOT, ADMIN, USER, ALL } from './localstore/accessrole.store'
 
-const roleController = new RoleController(ROOT);
-const userController = new UserController(ROOT, ADMIN, USER);
-const inviteController = new InviteController(ROOT, ADMIN);
-const priviledgeController = new PriviledgeController(ROOT, ADMIN);
-const authenticationController = new AuthenticationController(...ALL);
+const args = {
+   controllers: [
+      new RoleController(ROOT),
+      new UserController(ROOT, ADMIN, USER),
+      new InviteController(ROOT, ADMIN),
+      new PriviledgeController(ROOT, ADMIN),
+      new AuthenticationController(...ALL)
+   ],
+   viewControllers: [
+      new IndexController()
+   ],
+   interceptor: new Interceptor()
+}
 
-new Application([
-   roleController,
-   userController,
-   inviteController,
-   priviledgeController,
-   authenticationController
-],
-   new Interceptor()
-).startlistening();
+new Application(args).startlistening();

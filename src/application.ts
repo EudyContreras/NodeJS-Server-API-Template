@@ -2,13 +2,16 @@ import cors from 'cors';
 import helmet from 'helmet';
 import express from 'express';
 import mongoose from 'mongoose';
-import compression from 'compression';
 import vault from './config/vault';
+import compression from 'compression';
 import Interceptor from './middleware/interceptor';
 import Controller from '../src/controllers/controller';
 import ErrorHandler from './handlers/error.handler';
 import LoggingHandler from './handlers/logging.handler';
+import ViewController from './presentation/controller.view';
 import DataInitializer from './initializers/database.initializer';
+
+const reactRender = require('express-react-views');
 
 export default class Application {
 
@@ -23,15 +26,16 @@ export default class Application {
       useCreateIndex: true
    }
 
-   constructor(controllers: Controller[], middleware: Interceptor) {
+   constructor(args: { controllers: Controller[], viewControllers: ViewController[], interceptor: Interceptor }) {
       this.app = express();
       this.loggHandler = new LoggingHandler();
       this.errorHandler = new ErrorHandler(this.loggHandler)
 
       this.setupExpress();
-      this.initializeMiddleware(middleware);
-      this.initializeControllers(controllers);
-      this.initializeErrorHandling(middleware);
+      this.initializeMiddleware(args.interceptor);
+      this.initializeViewControllers(args.viewControllers);
+      this.initializeControllers(args.controllers);
+      this.initializeErrorHandling(args.interceptor);
       this.connectToTheDatabase(true);
       this.initializeWebjobs();
    }
@@ -51,6 +55,9 @@ export default class Application {
       this.app.use(express.json());
       this.app.use(express.urlencoded({ extended: false }))
       this.app.use(express.static(vault.application.FILE_DIRECTORY));
+      this.app.set('views', vault.presentation.vieEngine.path(__dirname));
+      this.app.set('view engine', vault.presentation.vieEngine.type);
+      this.app.engine(vault.presentation.vieEngine.type, reactRender.createEngine());
    }
 
    private initializeMiddleware(middleware: Interceptor) {
@@ -60,6 +67,12 @@ export default class Application {
    }
 
    private initializeControllers(controllers: Controller[]) {
+      controllers.forEach((controller) => {
+         this.app.use(controller.getRoute(), controller.getRouter());
+      });
+   }
+
+   private initializeViewControllers(controllers: ViewController[]) {
       controllers.forEach((controller) => {
          this.app.use(controller.getRoute(), controller.getRouter());
       });

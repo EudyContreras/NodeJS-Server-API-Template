@@ -4,6 +4,12 @@ const vault = Object.freeze({
   application: {
     FILE_DIRECTORY: '../node-template-server/src/'
   },
+  presentation: {
+    vieEngine: {
+      type: 'jsx',
+      path: (directory: string) => directory + '/presentation/views'
+    }
+  },
   self: {
     headers: {
       AUTHORIZATION: 'authorization',
@@ -33,7 +39,7 @@ const vault = Object.freeze({
   },
   api: {
     someapi: {
-      baseUrl: function (endpoint: string) {
+      baseUrl: (endpoint: string) => {
         return `/${endpoint}`
       },
       auth: {
