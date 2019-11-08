@@ -7,7 +7,7 @@ const vault = Object.freeze({
   presentation: {
     vieEngine: {
       type: 'jsx',
-      path: (directory: string) => directory + '/presentation/views'
+      path: (directory: string) => directory + '/presentation/components'
     }
   },
   self: {
