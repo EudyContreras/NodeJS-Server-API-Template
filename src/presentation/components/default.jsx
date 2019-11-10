@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-class DefaultLayout extends PureComponent {
+export default class DefaultLayout extends PureComponent {
 
   render() {
     return (
@@ -11,22 +11,24 @@ class DefaultLayout extends PureComponent {
           <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Roboto&display=swap' />
           <link rel='stylesheet' href='/presentation/stylesheets/index.css' />
           <link rel="shortcut icon" type="image/png" href="/presentation/resources/images/favicon.png" />
-          {/* <link rel='stylesheet' href='/presentation/stylesheets/submenu.css' /> */}
           <link rel='stylesheet' href='/presentation/stylesheets/menu.css' />
           <link rel='stylesheet' href='/presentation/stylesheets/search.css' />
           <link rel='stylesheet' href='/presentation/stylesheets/content.css' />
           <link rel='stylesheet' href='/presentation/stylesheets/footer.css' />
           <link rel='stylesheet' href='/presentation/stylesheets/navbar.css' />
           <link rel='stylesheet' href='/presentation/stylesheets/sandbox.css' />
+          <link rel='stylesheet' href='/presentation/stylesheets/submenu.css' />
         </head>
         <body>
-          <div className='container'>
+          <div id='content' className='container'>
             {this.props.children}
           </div>
           <script src='https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js' />
           <script src='/presentation/scripts/sticky.js' />
           <script src='/presentation/scripts/ripple.js' />
           <script src='/presentation/scripts/submenu.js' />
+          <script src='/presentation/scripts/sidemenu.js' />
+          <script src='/presentation/scripts/search.js' />
           <script src='/presentation/scripts/main.js' />
         </body>
       </html>
@@ -34,4 +36,4 @@ class DefaultLayout extends PureComponent {
   }
 }
 
-export default DefaultLayout;
+module.exports = DefaultLayout;

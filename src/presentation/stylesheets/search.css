@@ -3,7 +3,7 @@
 .search-form {
   outline: 0;
   margin-left: 1.4em;
-  margin-right: 1.2em;
+  margin-right: 1.4em;
   margin-bottom: 2em !important;
   margin-top: 2.5em;
   width: auto;
@@ -20,7 +20,7 @@
   justify-self: center;
   align-self: center;
   font-size: 14px;
-  width: 82%;
+  width: 80%;
   line-height: 42px;
   padding: 0 16px;
   background-color: rgba(255, 255, 255, 1);
@@ -41,7 +41,7 @@
   outline: 0;
   float: left;
   height: 38px;
-  width: 15%;
+  width: 13%;
   background-color: rgba(92, 96, 100, 1);
   text-align: center;
   line-height: 42px;
@@ -68,7 +68,7 @@
 .search-form>.button:hover {
   transform: scale(1.05);
   background-color: rgba(112, 116, 120, 1);
-  width: 20%;
+  width: 13%;
 }
 
 .search-form>.button:active {

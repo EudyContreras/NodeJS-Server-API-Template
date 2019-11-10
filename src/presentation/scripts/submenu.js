@@ -1,43 +1,58 @@
-/*************************************************
 
-     MOBILE DROPDOWN MENU USING HTML/CSS/JS
 
-*************************************************/
+$('.menu-item').click(function(){
+ 
+  const subMenu = $(this).next('.sub-menu');
+  const expanded = subMenu.hasClass('sm-expanded');
 
-var two = 0;
-var three = 0;
-
-function TwoSubOpen(){
-  $sub_menu_two = document.getElementById('two_sub_menu');
-  if(!two){
-    if(three){
-      ThreeSubOpen();
-    }
-    $sub_menu_two.style.height = "68px";
-    two++;
-  }else{
-    $sub_menu_two.style.height = "0";
-    two--;
+  if (expanded) {
+    collapse(this, subMenu)
+  } else {
+    expand(this, subMenu)
   }
+});
+
+function expand(source, subMenu) {
+  $(source).addClass('active');
+  
+  subMenu.css({
+    height: 'auto',
+    position: 'absolute', 
+    visibility: 'hidden',
+  });
+
+  const height = subMenu.height();
+
+  subMenu.css({
+    height: '0px',
+    position: 'relative', 
+    visibility: 'visible',
+  });
+
+  subMenu.addClass('sm-expanded');
+
+  setTimeout(()=>{
+    subMenu.css({ height: height });
+  }, 20);
 }
 
-function ThreeSubOpen(){
-  $sub_menu_three = document.getElementById('three_sub_menu');
-  if(!three){
-    if(two){
-      TwoSubOpen();
-    }
-    $sub_menu_three.style.height = "102px";
-    three++;
-  }else{
-    $sub_menu_three.style.height = "0";
-    three--;
-  }  
-}
+function collapse(source, subMenu) {
+  $(source).removeClass('active');
+  
+  subMenu.css({ height: 0 });
+  setTimeout(() => {
+    subMenu.removeClass('sm-expanded');
+  },250);
 
-function DisplayVariables(){
-  $textbox = document.getElementById('box1');
-  $textbox.innerHTML = two;
-  $textboxtwo = document.getElementById('box2');
-  $textboxtwo.innerHTML = three;
+  // console.log('collapsing')
+  // subMenu.animate({ height: '0px'}, 300, "linear", function() {
+  //   subMenu.removeClass('sm-expanded');
+  //   console.log('collapsed')
+  //   subMenu.css({
+  //     display: 'none',
+  //     position: 'relative', 
+  //     visibility: 'visinible',
+  //     heigth: height
+  //   });
+  //});
 }

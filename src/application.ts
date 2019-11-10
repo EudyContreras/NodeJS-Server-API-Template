@@ -8,7 +8,7 @@ import Interceptor from './middleware/interceptor';
 import Controller from '../src/controllers/controller';
 import ErrorHandler from './handlers/error.handler';
 import LoggingHandler from './handlers/logging.handler';
-import ViewController from './presentation/controller.view';
+import ViewController from './controllers/controller.view';
 import DataInitializer from './initializers/database.initializer';
 
 const reactRender = require('express-react-views');

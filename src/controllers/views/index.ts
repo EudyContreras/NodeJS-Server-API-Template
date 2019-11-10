@@ -24,10 +24,15 @@ class IndexController extends ViewController {
 
    private setupRoutes(router: Router) {
       router.get('/', this.render);
+      router.post('/', this.handlePost);
    }
 
    private render = (request: any, response: Response) => {
       response.render('index', { title: 'Template API', name: 'Eudy Contreras' });
+   }
+
+   private handlePost = (request: any, response: Response) => {
+      response.send('What');
    }
 }
 

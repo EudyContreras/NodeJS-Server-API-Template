@@ -8,7 +8,7 @@ import NavbarMenu from './navbar/navbar.menu';
 import NavbarPadder from './navbar/navbar.padder';
 import DefaultLayout from './default';
 
-class IndexLayout extends PureComponent {
+export default class IndexLayout extends PureComponent {
 
   render() {
     var routes = [
@@ -29,5 +29,3 @@ class IndexLayout extends PureComponent {
     );
   }
 }
-
-export default IndexLayout;

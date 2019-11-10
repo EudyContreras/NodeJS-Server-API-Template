@@ -7,7 +7,7 @@ export default class ContentArea extends PureComponent {
 
    render() {
       return (
-         <div>
+         <div className='content-wrapper'>
             <Section />
             <Section />
             <Section />
