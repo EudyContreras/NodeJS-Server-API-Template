@@ -1,0 +1,3 @@
+
+setupSticky();
+addRipple($('.button'));

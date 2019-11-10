@@ -1,14 +1,16 @@
 
 import React, { PureComponent } from 'react';
-import DocsLayout from './documentation/documentation';
-import NavLayout from './navbar/navbar';
+import ContentArea from './content/content.area';
+import FooterArea from './footer/footer.area';
+import SideMenu from './sidebar/sidebar.menu.panel';
+import SandBox from './sandbox/sandbox.area';
+import NavbarMenu from './navbar/navbar.menu';
+import NavbarPadder from './navbar/navbar.padder';
 import DefaultLayout from './default';
 
 class IndexLayout extends PureComponent {
-  componentDidUpdate() { }
-  componentDidMount() { }
-  render() {
 
+  render() {
     var routes = [
       { label: 'Documentation', link: '/documentation' },
       { label: 'About', link: '/about' },
@@ -17,9 +19,12 @@ class IndexLayout extends PureComponent {
 
     return (
       <DefaultLayout title={this.props.title}>
-        <NavLayout brandName={'Template Engine'} routings={routes} />
-        <br />
-        <DocsLayout/>
+        <NavbarPadder/>
+        <SideMenu />
+        <SandBox />
+        <ContentArea />
+        <FooterArea />
+        <NavbarMenu brandName={''} routings={routes} />
       </DefaultLayout>
     );
   }

@@ -1,0 +1,115 @@
+/*************************************************
+
+     MOBILE DROPDOWN MENU USING HTML/CSS/JS
+
+*************************************************/
+
+.page_container{
+   position: fixed;
+   top: 0;
+   left: 0;
+   width: 100%;
+   height: 100%;
+   overflow: hidden;
+   background: #f0e9e1;
+ }
+ 
+ .desktop_menu{
+   position: fixed;
+   top: 0;
+   left: 0;
+   width: 300px;
+   height: 100%;
+   overflow-x: hidden;
+   overflow-y: auto;
+   background: #222220;
+ }
+ /*
+   ::scrollbar{width:6px;}
+   ::scrollbar-track{background:transparent;}
+   ::scrollbar-thumb{background:#191919;opacity:0.8;}
+   ::-o-scrollbar{width:6px;}
+   ::-o-scrollbar-track{background:transparent;}
+   ::-o-scrollbar-thumb{background:#191919;-o-opacity:0.8;}
+   ::-ms-scrollbar{width:6px;}
+   ::-ms-scrollbar-track{background:transparent;}
+   ::-ms-scrollbar-thumb{background:#191919;-ms-opacity:0.8;}
+   ::-moz-scrollbar{width:6px;}
+   ::-moz-scrollbar-track{background:transparent;}
+   ::-moz-scrollbar-thumb{background:#191919;-moz-opacity:0.8;}
+   ::-webkit-scrollbar{width:6px;}
+   ::-webkit-scrollbar-track{background:transparent;}
+   ::-webkit-scrollbar-thumb{background:#191919;-webkit-opacity:0.8;}
+ */
+   header{
+     width: 100%;
+     height: 30px;
+     font-size: 24px;
+     color: #f0e9e1;
+     font-family: 'Helvetica';
+     font-weight: 100; 
+     text-align: center;
+     padding: 10px 0;
+   }
+   hr{
+     width: 60%;
+   }
+ 
+   ul.main_menu{
+     list-style: none;
+     padding: 0 0;
+     position: relative;
+     float: left;
+     width: 100%;
+     height: auto;
+   }
+     ul.main_menu a{
+       display: inline-block;
+       width: 90%;
+       height: 30px;
+       padding: 5px 5%;
+       font-size: 21px;
+       color: #f0e9e1;
+       font-family: 'Helvetica';
+       font-weight: 100;
+       text-decoration: none;
+     }
+       ul.main_menu a:hover{
+         color: #b7cfd9;
+         cursor: pointer;
+       }
+ 
+   ul.sub_menu{
+     list-style: none;
+     padding: 0 0;
+     position: relative;
+     float: left;
+     width: 100%;
+     height: 0;
+     background: #383836;
+ /*    box-shadow: 0 0 4px #000;*/
+     overflow: hidden;
+     transition: all ease 250ms;
+   }
+     ul.sub_menu a{
+       display: inline-block;
+       width: 80%;
+       height: 24px;
+       padding: 5px 10%;
+       font-size: 18px;
+       color: #f0e9e1;
+       font-family: 'Helvetica';
+       font-weight: 100;
+       text-decoration: none;
+     }
+ 
+ .page_content{
+   position: fixed;
+   top: 0;
+   left: 300px;
+   width: 300px;
+   height: 100%;
+   overflow-x: hidden;
+   overflow-y: auto;
+   background: transparent;
+ }

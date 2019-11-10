@@ -1,0 +1,80 @@
+
+
+.search-form {
+  outline: 0;
+  margin-left: 1.4em;
+  margin-right: 1.2em;
+  margin-bottom: 2em !important;
+  margin-top: 2.5em;
+  width: auto;
+  display: flex;
+  border-radius:4px;
+  border: 0px;
+}
+
+.search-form>.textbox {
+  outline: 0;
+  height: 38px;
+  display: flex;
+  font-size: 14px;
+  justify-self: center;
+  align-self: center;
+  font-size: 14px;
+  width: 82%;
+  line-height: 42px;
+  padding: 0 16px;
+  background-color: rgba(255, 255, 255, 1);
+  color: #212121;
+  border: 0;
+  border-width: 0px;
+  float: left;
+  -webkit-border-radius: 4px 0 0 4px;
+  border-radius: 4px 0 0 4px;
+}
+
+.search-form>.button {
+  display: flex;
+  overflow: hidden;
+  transform: scale(1.08);
+  justify-self: center;
+  align-self: center;
+  outline: 0;
+  float: left;
+  height: 38px;
+  width: 15%;
+  background-color: rgba(92, 96, 100, 1);
+  text-align: center;
+  line-height: 42px;
+  border: 0;
+  color: #EEE;
+  text-rendering: auto;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+  -webkit-transition: all .2s ease-in-out ;
+  transition: all .2s ease-in-out ;
+  -webkit-border-radius: 0 4px 4px 0;
+  border-radius: 0 4px 4px 0;
+}
+
+.search-form>.textbox:focus {
+  outline: 0;
+  background-color: #FFF;
+}
+
+.search-form>.button .search-icon {
+  font-size: 18px;
+  margin: auto;
+}
+
+.search-form>.button:hover {
+  transform: scale(1.05);
+  background-color: rgba(112, 116, 120, 1);
+  width: 20%;
+}
+
+.search-form>.button:active {
+  transform: scale(1);
+}
+
+.search-form>.button:hover > .search-icon  {
+  color: #FFF;
+}
