@@ -22,7 +22,7 @@ class IndexLayout extends PureComponent {
         <NavbarPadder/>
         <SideMenu />
         <SandBox />
-        <ContentArea />
+        <ContentArea /> 
         <FooterArea />
         <NavbarMenu brandName={''} routings={routes} />
       </DefaultLayout>

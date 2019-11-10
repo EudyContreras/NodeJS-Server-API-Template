@@ -5,7 +5,7 @@ export default class SandboxArea extends PureComponent {
 	render() {
 
 		return (
-			<aside class='sandbox-area natural-sb'>
+			<aside className='sandbox-area natural-sb'>
 			</aside>
 		)
 	}

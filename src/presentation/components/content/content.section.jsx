@@ -4,9 +4,7 @@ export default class ContentSection extends PureComponent {
    
    render() {
       return (
-         <article class='content'>
-
-         </article>
+         <article className='content'></article>
       );
    }
 } 

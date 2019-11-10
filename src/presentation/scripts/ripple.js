@@ -15,7 +15,7 @@ function addRipple(element) {
          buttonHeight = $(this).height();
 
       // Add the element
-      $(this).prepend('<span class="ripple"></span>');
+      $(this).prepend('<span className="ripple"></span>');
 
 
       // Make it round!

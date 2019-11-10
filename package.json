@@ -7,7 +7,7 @@
   "main": "src/server.ts",
   "scripts": {
     "install": "npm install --prefix start",
-    "start": "node dist/server.ts",
+    "start": "node dist/server.js",
     "dev": "nodemon src/server.ts",
     "build": "tsc -p ."
   },
@@ -21,6 +21,7 @@
   "dependencies": {
     "@hapi/joi": "^16.1.7",
     "@types/agenda": "^2.0.6",
+    "express-react-views": "^0.11.0",
     "agenda": "^2.1.0",
     "bcryptjs": "^2.4.3",
     "compression": "^1.7.4",
@@ -28,7 +29,6 @@
     "dotenv": "^8.2.0",
     "envalid": "^5.0.0",
     "express": "^4.17.1",
-    "express-react-views": "^0.11.0",
     "helmet": "^3.21.2",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.7.5",
@@ -40,6 +40,15 @@
     "winston": "^3.2.1"
   },
   "devDependencies": {
+    "@babel/cli": "^7.7.0",
+    "@babel/core": "^7.7.2",
+    "@babel/node": "^7.7.0",
+    "@babel/plugin-proposal-class-properties": "^7.7.0",
+    "@babel/plugin-transform-runtime": "^7.6.2",
+    "@babel/polyfill": "^7.7.0",
+    "@babel/preset-env": "^7.7.1",
+    "@babel/preset-react": "^7.7.0",
+    "@babel/preset-typescript": "^7.7.2",
     "@types/bcryptjs": "^2.4.2",
     "@types/compression": "^1.0.1",
     "@types/cors": "^2.8.6",
@@ -51,15 +60,14 @@
     "@types/node": "^12.11.1",
     "@types/nodemailer": "^6.2.2",
     "@types/request": "^2.48.3",
-    "css-loader": "^3.2.0",
+    "babelify": "^10.0.0",
+    "browserify": "^16.5.0",
     "eslint": "^6.6.0",
     "eslint-plugin-react": "^7.16.0",
-    "node-sass": "^4.13.0",
     "nodemon": "^1.19.4",
-    "sass-loader": "^8.0.0",
-    "style-loader": "^1.0.0",
     "ts-node": "^8.4.1",
     "typescript": "^3.6.4",
-    "webpack": "^4.41.2"
+    "webpack": "^4.41.2",
+    "webpack-cli": "^3.3.10"
   }
 }

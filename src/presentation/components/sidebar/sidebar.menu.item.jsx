@@ -12,9 +12,9 @@ export default class SideMenuItem extends PureComponent {
 		const label = this.props.label;
 	
 		return (
-			<li class='menu-item'>
+			<li className='menu-item'>
 				<a href={hash}>{label}</a>
-				<i class='material-icons'>chevron_right</i>
+				<i className='material-icons'>chevron_right</i>
 			</li>
 			
 		)

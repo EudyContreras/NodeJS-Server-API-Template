@@ -5,7 +5,7 @@ export default class NavbarPadder extends PureComponent {
 	
 	render() {
 		return (
-			<header class='nav-padder'></header>
+			<header className='nav-padder'></header>
 		)
 	}
 }

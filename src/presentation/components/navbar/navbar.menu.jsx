@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import config from '../../config';
 
-const logo = config.directories.images('logo_alt.png');
+const logo = config.directories.images('brandlogo.png');
 
 const classes = {
 	nav: 'nav',
@@ -21,14 +21,14 @@ export default class NavbarMenu extends PureComponent {
 		const links = [];
 
 		routes.forEach((element, index) => {
-			links.push(<li><a class={classes.link} href={element.link}>{element.label}</a></li>)
+			links.push(<li><a className={classes.link} href={element.link}>{element.label}</a></li>)
 		});
 
 		return (
-			<header id='navbar' class={classes.nav}>
-				<div class={classes.logo.self}>
-					<img class={classes.logo.image} src={logo} />
-					<div class={classes.logo.text}><a href='../../'>{this.props.brandName}</a>
+			<header id='navbar' className={classes.nav}>
+				<div className={classes.logo.self}>
+					<img className={classes.logo.image} src={logo} />
+					<div className={classes.logo.text}><a href='../../'>{this.props.brandName}</a>
 					</div>
 				</div>
 				<ul>

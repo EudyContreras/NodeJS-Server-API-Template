@@ -9,7 +9,7 @@ export default class SidebarSubMenu extends PureComponent {
 		const links = ['Register user', 'Get all users', 'Update user', 'Delete user'];
 
 		return (
-			<ul class='sub-menu'>
+			<ul className='sub-menu'>
 				{links.map(x => <SidebarSubItem hash={'#' + x} label={x} />)}
 			</ul>
 		)

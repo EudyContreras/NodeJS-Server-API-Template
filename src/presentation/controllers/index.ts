@@ -26,7 +26,7 @@ class IndexController extends ViewController {
       router.get('/', this.render);
    }
 
-   private render = async (request: any, response: Response) => {
+   private render = (request: any, response: Response) => {
       response.render('index', { title: 'Template API', name: 'Eudy Contreras' });
    }
 }

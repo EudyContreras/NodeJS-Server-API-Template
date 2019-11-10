@@ -8,9 +8,9 @@ export default class SidebarSubItem extends PureComponent {
 
 		return (
 			<a>
-				<li class='menu-item'>
+				<li className='menu-item'>
 					<a href={hash}>{label}</a>
-					<i class='material-icons'>chevron_right</i>
+					<i className='material-icons'>chevron_right</i>
 				</li>
 			</a>
 		)
