@@ -1,21 +1,23 @@
 import React from "react";
-import { Switch, Route, StaticRouter } from 'react-router';
+import { Switch, Route } from 'react-router';
 import routes from '../routes';
 
-export default class Routing extends React.PureComponent {
+export default class App extends React.PureComponent {
+
   constructor(props, context) {
     super(props, context)
+    this.state = {
+      url: props.url,
+    }
   }
 
   render() {
     return (
-      <StaticRouter location={this.props.url}>
-        <Switch>
-          {routes.map((route, idx) => (
-            <Route exact key={idx} {...route} />
-          ))}
-        </Switch>
-      </StaticRouter>
+      <Switch>
+        {routes.map((route, idx) => (
+          <Route exact key={idx} {...route} />
+        ))}
+      </Switch>
     )
   }
 }
