@@ -56,9 +56,9 @@ export default class Application {
       this.app.use(express.urlencoded({ extended: false }))
       this.app.use(express.static(vault.application.FILE_DIRECTORY));
       this.app.use(express.static('presentation'));
-      this.app.set('views', vault.presentation.vieEngine.path(__dirname));
+      this.app.use('/static', express.static('public'));
+      this.app.set('views', 'src/presentation/views');
       this.app.set('view engine', vault.presentation.vieEngine.type);
-      this.app.engine(vault.presentation.vieEngine.type, reactRender.createEngine());
    }
 
    private initializeMiddleware(middleware: Interceptor) {

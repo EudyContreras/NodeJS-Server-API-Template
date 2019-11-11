@@ -2,12 +2,12 @@ require('dotenv').config();
 
 const vault = Object.freeze({
   application: {
-    FILE_DIRECTORY: '../node-template-server/src/'
+    FILE_DIRECTORY: '../node-template-server/dist/'
   },
   presentation: {
     vieEngine: {
-      type: 'jsx',
-      path: (directory: string) => directory + '/presentation/components'
+      type: 'ejs',
+      path: (directory: string) => directory + '/presentation/views'
     }
   },
   self: {
