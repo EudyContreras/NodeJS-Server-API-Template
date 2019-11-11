@@ -5,6 +5,9 @@ export default class ContentSection extends PureComponent {
    render() {
       return (
          <article className='content'>
+            <div >
+               
+            </div>
             {/* <h2>Some Header</h2>
             <br></br>
             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem mollis aliquam ut porttitor leo a diam sollicitudin. Ultricies mi eget mauris pharetra. Sed nisi lacus sed viverra tellus in hac habitasse platea. Ultrices tincidunt arcu non sodales neque sodales. Purus in massa tempor nec feugiat nisl pretium. Hac habitasse platea dictumst vestibulum rhoncus est. Tristique sollicitudin nibh sit amet commodo nulla facilisi nullam. Scelerisque felis imperdiet proin fermentum leo vel. At imperdiet dui accumsan sit amet nulla facilisi morbi tempus. Nulla pellentesque dignissim enim sit amet venenatis urna cursus eget. Sed elementum tempus egestas sed. Magna fermentum iaculis eu non diam phasellus vestibulum lorem. Venenatis urna cursus eget nunc scelerisque. Sed odio morbi quis commodo odio aenean sed adipiscing. Fermentum leo vel orci porta non pulvinar neque.</p>

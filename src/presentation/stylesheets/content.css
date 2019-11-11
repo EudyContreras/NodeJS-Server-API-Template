@@ -1,18 +1,20 @@
 .content-wrapper {
    margin-left: 17%;
    margin-right: 30%;
+   padding-bottom: 3em;
+   background-color: rgb(48,53,56);
    transition: all 0.3s cubic-bezier(.25,.8,.25,1);
 }
 
 .content {
    padding-top: 3em;
-   padding-bottom: 3em;
+   padding-bottom: 0em;
    padding-left: 3em;
    padding-right: 3em;
    min-height: 400px;
+   height: 400px;
    width: auto;
    position: relative;
-   height: auto;
    background-color: rgba(37, 42, 45, 1);
    background-color: rgb(48,53,56);
 }
@@ -31,4 +33,11 @@
 
 .content > .params-table tr {
    height: 40px;
+}
+
+.content div {
+   display: flex;
+   background-color: #373c3f;
+   height: -webkit-fill-available;
+   border-radius: 8px;
 }

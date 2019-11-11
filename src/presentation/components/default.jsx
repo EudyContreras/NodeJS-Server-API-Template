@@ -12,6 +12,7 @@ export default class DefaultLayout extends PureComponent {
           <link rel='stylesheet' href='/presentation/stylesheets/index.css' />
           <link rel="shortcut icon" type="image/png" href="/presentation/resources/images/favicon.png" />
           <link rel='stylesheet' href='/presentation/stylesheets/menu.css' />
+          <link rel='stylesheet' href='/presentation/stylesheets/restful.css' />
           <link rel='stylesheet' href='/presentation/stylesheets/search.css' />
           <link rel='stylesheet' href='/presentation/stylesheets/content.css' />
           <link rel='stylesheet' href='/presentation/stylesheets/footer.css' />
