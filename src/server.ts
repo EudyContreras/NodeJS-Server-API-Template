@@ -1,14 +1,14 @@
 
-import Application from './application';
-import Interceptor from './middleware/interceptor';
-import RoleController from './controllers/restful/api/roles';
-import UserController from './controllers/restful/api/users';
-import IndexController from './presentation/controllers/index';
-import InviteController from './controllers/restful/api/invitations';
-import PriviledgeController from './controllers/restful/api/priviledges';
-import AuthenticationController from './controllers/restful/api/authentication';
+import Application from './server/application';
+import Interceptor from './server/middleware/interceptor';
+import RoleController from './server/controllers/restful/api/roles';
+import UserController from './server/controllers/restful/api/users';
+import IndexController from './client/controllers/index';
+import InviteController from './server/controllers/restful/api/invitations';
+import PriviledgeController from './server/controllers/restful/api/priviledges';
+import AuthenticationController from './server/controllers/restful/api/authentication';
 
-import { ROOT, ADMIN, USER, ALL } from './localstore/accessrole.store'
+import { ROOT, ADMIN, USER, ALL } from './server/localstore/accessrole.store'
 
 const args = {
    controllers: [
