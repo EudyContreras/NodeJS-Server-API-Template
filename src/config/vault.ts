@@ -5,9 +5,10 @@ const vault = Object.freeze({
     FILE_DIRECTORY: '../node-template-server/dist/'
   },
   presentation: {
-    vieEngine: {
-      type: 'ejs',
-      path: (directory: string) => directory + '/presentation/views'
+    viewEngine: {
+      label: 'view engine',
+      type: 'jsx',
+      path: 'src/presentation/views'
     }
   },
   self: {

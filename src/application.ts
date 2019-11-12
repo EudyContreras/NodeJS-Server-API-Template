@@ -49,6 +49,8 @@ export default class Application {
    }
 
    private setupExpress() {
+      const render = vault.presentation;
+
       this.app.use(cors());
       this.app.use(helmet());
       this.app.use(compression());
@@ -57,8 +59,9 @@ export default class Application {
       this.app.use(express.static(vault.application.FILE_DIRECTORY));
       this.app.use(express.static('presentation'));
       this.app.use('/static', express.static('public'));
-      this.app.set('views', 'src/presentation/views');
-      this.app.set('view engine', vault.presentation.vieEngine.type);
+      this.app.set('views', render.viewEngine.path);
+      this.app.set(render.viewEngine.label, render.viewEngine.type);
+      this.app.engine(render.viewEngine.type, reactRender.createEngine());
    }
 
    private initializeMiddleware(middleware: Interceptor) {

@@ -4,6 +4,7 @@ import ReactDOMServer from 'react-dom/server'
 import ViewController from '../../controllers/controller.view';
 import configureStore from '../store';
 import appSaga from '../saga';
+import template from '../views/template'
 import Application from '../components/app';
 import { Provider } from 'react-redux';
 import { StaticRouter } from 'react-router'
@@ -15,7 +16,9 @@ class IndexController extends ViewController {
    constructor() {
       super('index')
       this.routing = '/';
+      this.context = {};
       this.router = express.Router();
+      this.store = configureStore({});
       this.setupRoutes(this.router);
    }
 
@@ -28,25 +31,34 @@ class IndexController extends ViewController {
    }
 
    setupRoutes(router) {
-      router.get('*', this.render);
+      router.get('/', this.render);
+      router.get('/topics', this.renderTopics);
       router.post('/', this.handlePost);
    }
 
-   render = async (req, res) => {
+   renderTopics = async (req, res) => {
+      await this.store.runSaga(appSaga).done;
+      const state = this.store.getState();
 
-      const context = {};
-      const store = configureStore({});
+      res.render('default', {
+         title: 'React app',
+         state: JSON.stringify(state),
+         content: ReactDOMServer.renderToString(CLIENT_ONLY ? '' : template(req.url, this.store, this.context))
+      });
+   }
+
+   render = async (req, res) => {
       // run saga sync
-      await store.runSaga(appSaga).done;
-      const state = store.getState();
-      res.render('layout', {
+      await this.store.runSaga(appSaga).done;
+      const state = this.store.getState();
+      res.render('default', {
          state: JSON.stringify(state),
          content: ReactDOMServer.renderToString(
             CLIENT_ONLY
                ? ''
                : (
-                  <Provider store={store}>
-                     <StaticRouter location={req.url} context={context}>
+                  <Provider store={this.store}>
+                     <StaticRouter location={req.url} context={this.context}>
                         <Application />
                      </StaticRouter>
                   </Provider>

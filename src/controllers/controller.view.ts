@@ -1,7 +1,7 @@
 
 import { Router } from 'express'
 
-abstract class Controller {
+abstract class ViewController {
    protected name: string;
 
    constructor(name: string) {
@@ -12,4 +12,4 @@ abstract class Controller {
    abstract getRouter(): Router;
 }
 
-export default Controller;
+export default ViewController;
