@@ -32,11 +32,11 @@ class IndexController extends ViewController {
 
    setupRoutes(router) {
       router.get('/', this.render);
-      router.get('/topics', this.renderTopics);
+      router.get('/topics', this.render);
       router.post('/', this.handlePost);
    }
 
-   renderTopics = async (req, res) => {
+   render = async (req, res) => {
       await this.store.runSaga(appSaga).done;
       const state = this.store.getState();
 
@@ -44,26 +44,6 @@ class IndexController extends ViewController {
          title: 'React app',
          state: JSON.stringify(state),
          content: ReactDOMServer.renderToString(CLIENT_ONLY ? '' : template(req.url, this.store, this.context))
-      });
-   }
-
-   render = async (req, res) => {
-      // run saga sync
-      await this.store.runSaga(appSaga).done;
-      const state = this.store.getState();
-      res.render('default', {
-         state: JSON.stringify(state),
-         content: ReactDOMServer.renderToString(
-            CLIENT_ONLY
-               ? ''
-               : (
-                  <Provider store={this.store}>
-                     <StaticRouter location={req.url} context={this.context}>
-                        <Application />
-                     </StaticRouter>
-                  </Provider>
-               )
-         )
       });
    }
 
