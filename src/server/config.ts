@@ -5,10 +5,16 @@ const config = Object.freeze({
     FILE_DIRECTORY: '../node-template-server/dist/'
   },
   presentation: {
+    path: 'client',
     viewEngine: {
-      label: 'view engine',
       type: 'jsx',
-      path: 'src/client/views'
+      alias: 'views',
+      label: 'view engine',
+      path: 'src/client/views',
+      client: {
+        path: 'public',
+        alias: '/static'
+      }
     }
   },
   self: {

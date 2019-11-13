@@ -1,5 +1,6 @@
 {
   "name": "template-server",
+  "private": true,
   "version": "1.0.0",
   "author": "Eudy Contreras",
   "license": "ISC",

@@ -33,8 +33,8 @@ export default class Application {
 
       this.setupExpress();
       this.initializeMiddleware(args.interceptor);
-      this.initializeViewControllers(args.viewControllers);
       this.initializeControllers(args.controllers);
+      this.initializeViewControllers(args.viewControllers);
       this.initializeErrorHandling(args.interceptor);
       this.connectToTheDatabase(true);
       this.initializeWebjobs();
@@ -50,6 +50,7 @@ export default class Application {
 
    private setupExpress() {
       const render = config.presentation;
+      const clientRender = render.viewEngine.client;
 
       this.app.use(cors());
       this.app.use(helmet());
@@ -57,9 +58,9 @@ export default class Application {
       this.app.use(express.json());
       this.app.use(express.urlencoded({ extended: false }))
       this.app.use(express.static(config.application.FILE_DIRECTORY));
-      this.app.use(express.static('client'));
-      this.app.use('/static', express.static('public'));
-      this.app.set('views', render.viewEngine.path);
+      this.app.use(express.static(render.path));
+      this.app.use(clientRender.alias, express.static(clientRender.path));
+      this.app.set(render.viewEngine.alias, render.viewEngine.path);
       this.app.set(render.viewEngine.label, render.viewEngine.type);
       this.app.engine(render.viewEngine.type, reactRender.createEngine());
    }
