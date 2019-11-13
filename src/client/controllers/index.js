@@ -1,10 +1,10 @@
-import React from 'react';
+
 import config from '../config';
 import express from 'express';
-import routes from '../routes';
+import routes from '../test/routes';
 import ReactDOMServer from 'react-dom/server'
 import ViewController from '../../server/controllers/controller.view';
-import configureStore from '../store';
+import configureStore from '../test/store';
 import appSaga from '../saga';
 import template from '../views/template'
 
@@ -35,7 +35,7 @@ class IndexController extends ViewController {
    }
 
    renderRoutes = async (req, res) => {
-      await this.store.runSaga(appSaga).done;
+     // await this.store.runSaga(appSaga).done;
    
       const state = this.store.getState();
 

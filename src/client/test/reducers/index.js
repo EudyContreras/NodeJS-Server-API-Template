@@ -3,6 +3,6 @@ import employeeReducer from './employee/employeeReducer';
 import reportReducer from './report/reportReducer';
 
 export default combineReducers({
-   employee: employeeReducer,
-   report: reportReducer
+   employees: employeeReducer,
+   reports: reportReducer
 })

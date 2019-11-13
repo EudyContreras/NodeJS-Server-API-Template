@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import StyleContext from 'isomorphic-style-loader/StyleContext'
-import Application from './client/components/app'
-import configureStore from './client/store';
+import Application from './client/test/app'
+import configureStore from './client/test/store';
 import appSaga from './client/saga';
 
 import { BrowserRouter } from 'react-router-dom';
@@ -16,7 +16,7 @@ const insertCss = (...styles) => {
   return () => removeCss.forEach(dispose => dispose())
 }
 
-store.runSaga(appSaga);
+// store.runSaga(appSaga);
 
 ReactDOM.hydrate(
   <Provider store={store}>

@@ -12,10 +12,5 @@ export const EmployeeService = {
 }
 
 async function getAll() {
-   try {
-      
-      return { employees: ['Jose','Anette','Joe'] }
-   } catch (error) {
-      return { error: error }
-   }
+   return { employees: ['Jose','Anette','Joe'] };
 }

@@ -1,5 +1,5 @@
 import React from 'react';
-import Application from '../components/app';
+import Application from '../test/app';
 import StyleContext from 'isomorphic-style-loader/StyleContext'
 import { Provider } from 'react-redux';
 import { StaticRouter } from 'react-router'

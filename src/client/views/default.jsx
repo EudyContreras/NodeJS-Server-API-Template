@@ -15,7 +15,7 @@ export default class DefaultLayout extends React.PureComponent {
           <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossOrigin="anonymous"></link>
           <style>${[...this.props.css].join('')}</style>
         </head>
-        <body className="container">
+        <body >
           <section id="content">{this.props.content}</section>
           <script
             dangerouslySetInnerHTML={{ __html: `var __REDUX_STATE__ = ${this.props.state};` }}
