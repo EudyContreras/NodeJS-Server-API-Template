@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Application from './client/components/app';
+import StyleContext from 'isomorphic-style-loader/StyleContext'
+import Application from './client/components/app'
 import configureStore from './client/store';
 import appSaga from './client/saga';
 
@@ -10,11 +11,20 @@ import { Provider } from 'react-redux';
 const initialState = window.__REDUX_STATE__ || {};
 const store = configureStore(initialState);
 
+const insertCss = (...styles) => {
+  const removeCss = styles.map(style => style._insertCss())
+  return () => removeCss.forEach(dispose => dispose())
+}
+
 store.runSaga(appSaga);
 
 ReactDOM.hydrate(
   <Provider store={store}>
-    <BrowserRouter><Application/></BrowserRouter>
+    <BrowserRouter>
+      <StyleContext.Provider value={{ insertCss }}>
+        <Application />
+      </StyleContext.Provider>
+    </BrowserRouter>
   </Provider>,
   document.getElementById('content')
 );
