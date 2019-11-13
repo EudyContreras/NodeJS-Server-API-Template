@@ -5,9 +5,6 @@ import ViewController from '../../server/controllers/controller.view';
 import configureStore from '../store';
 import appSaga from '../saga';
 import template from '../views/template'
-import Application from '../components/app';
-import { Provider } from 'react-redux';
-import { StaticRouter } from 'react-router'
 
 const { CLIENT_ONLY } = process.env;
 
@@ -39,11 +36,14 @@ class IndexController extends ViewController {
    render = async (req, res) => {
       await this.store.runSaga(appSaga).done;
       const state = this.store.getState();
-
+      const css = new Set() // CSS for all rendered React components
+      const insertCss = (...styles) => styles.forEach(style => css.add(style._getCss()))
+      
       res.render('default', {
+         css: css,
          title: 'React app',
          state: JSON.stringify(state),
-         content: ReactDOMServer.renderToString(CLIENT_ONLY ? '' : template(req.url, this.store, this.context))
+         content: ReactDOMServer.renderToString(CLIENT_ONLY ? '' : template(req.url, this.store, this.context, insertCss))
       });
    }
 

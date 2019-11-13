@@ -9,7 +9,4 @@ const Topics = ({ items }) => (
   </ul>
 );
 
-export default connect(
-  state => ({ items: topicsSelector(state) }),
-  {}
-)(Topics);
+export default connect(state => ({ items: topicsSelector(state) }), {})(Topics);
