@@ -7,6 +7,10 @@ import configureStore from './client/store';
 import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 
+if (typeof window === 'undefined') {
+  global.window = {}
+}
+
 const initialState = window.__REDUX_STATE__ || {};
 const store = configureStore(initialState);
 

@@ -10,6 +10,7 @@ import AuthenticationController from './server/controllers/restful/api/authentic
 
 import { ROOT, ADMIN, USER, ALL } from './server/localstore/accessrole.store'
 
+
 const args = {
    controllers: [
       new RoleController(ROOT),

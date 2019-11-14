@@ -2,6 +2,9 @@
 const path = require('path');
 
 module.exports = {
+  name: 'client',
+  target: 'web',
+  mode: 'production',
   entry: './src/client.jsx',
   output: {
     path: path.join(__dirname, './public'),
@@ -9,8 +12,12 @@ module.exports = {
     publicPath: "/",
     chunkFilename: '[id].[name].[chunkhash:8].js'
   },
+  optimization: {
+    minimize: false
+  },
   module: {
     rules: [
+      { test: /\.txt$/, use: 'raw-loader' },
       { test: /\.(js|jsx|tsx|ts)$/, loader: 'babel-loader', exclude: /node_modules/ },
       {
         test: /\.(gif|jpe?g|png|ico)$/,

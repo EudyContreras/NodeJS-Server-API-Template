@@ -2,6 +2,9 @@ const path = require('path');
 const nodeExternals = require('webpack-node-externals');
 
 module.exports = {
+  name: 'server',
+  target: 'node',
+  mode: 'production',
   entry: [
     '@babel/polyfill', './src/server.ts'
   ],
@@ -9,10 +12,13 @@ module.exports = {
     path: path.join(__dirname, './dist'),
     filename: 'server.js'
   },
-  target: 'node',
+  optimization: {
+    minimize: false
+  },
   externals: [ nodeExternals() ],
   module: {
     rules: [
+      { test: /\.txt$/, use: 'raw-loader' },
       { test: /\.(js|jsx|tsx|ts)$/, loader: 'babel-loader', exclude: /node_modules/ },
       {
         test: /\.(gif|jpe?g|png|ico)$/,

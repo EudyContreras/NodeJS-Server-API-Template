@@ -1,10 +1,11 @@
 import React from 'react';
-import { ListGroup, ListGroupItem } from 'reactstrap';
-import { connect } from 'react-redux';
-import { getAllEmployees } from '../../actions/employee.action';
 import styles from './stylings.css';
 import PropTypes from 'prop-types';
 import withStyles from 'isomorphic-style-loader/withStyles';
+
+import { connect } from 'react-redux';
+import { ListGroup, ListGroupItem } from 'reactstrap';
+import { getAllEmployees } from '../../actions/employee.action';
 
 class Employees extends React.PureComponent {
    

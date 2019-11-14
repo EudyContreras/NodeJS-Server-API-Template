@@ -39,6 +39,7 @@ build/Release
 
 # Dependency directories
 /dist
+/build
 /public
 /.history
 node_modules/

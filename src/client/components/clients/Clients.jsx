@@ -7,7 +7,7 @@ export default class Clients extends React.PureComponent {
    render() {
       return (
          <div className="container">
-            <p className="title">Example clients component</p>
+            <p className="title">Example Clients component</p>
          </div>
       );
    }
