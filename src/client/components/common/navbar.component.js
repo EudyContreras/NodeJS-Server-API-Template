@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { Link } from 'react-router-dom';
 import styles from './stylings.css';
-import logo from '../../../resources/images/brandlogo.png';
+import logo from '../../resources/images/brandlogo.png';
 import withStyles from 'isomorphic-style-loader/withStyles';
 
 import {
@@ -41,7 +41,7 @@ class AppNavbar extends PureComponent {
 
 		var logoImage = (
 			<span class="navbar-logo">
-			  <a href="https:knowit.se">
+			  <a target="_blank" href="https://github.com/EudyContreras">
 				 <img src={logo} height="33" width="33" alt="text here"/></a>
 			</span>
 		 );

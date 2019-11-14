@@ -17,9 +17,7 @@ export default class DefaultLayout extends React.PureComponent {
         </head>
         <body >
           <section id="content">{this.props.content}</section>
-          <script
-            dangerouslySetInnerHTML={{ __html: `var __REDUX_STATE__ = ${this.props.state};` }}
-          />
+          <script dangerouslySetInnerHTML={{ __html: `var __REDUX_STATE__ = ${this.props.state};` }} />
           <script src="/static/client.js"></script>
         </body>
       </html>

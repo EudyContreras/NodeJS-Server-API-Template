@@ -1,15 +1,14 @@
 import React from 'react';
 import { Switch, Route } from 'react-router-dom';
 import axios from 'axios';
-import appstyle from './App.css';
-
+import styling from './styles/app.css';
+import config from './config'
 import routes from './routes';
 
 import Navbar from './components/common/navbar.component';
 import withStyles from 'isomorphic-style-loader/withStyles';
 
 axios.defaults.baseURL = 'http://localhost:5000';
-
 
 function App() {
    var routings = [
@@ -20,7 +19,7 @@ function App() {
 
    return (
       <div className='App'>
-         <Navbar brandName={'TrackIt'} routings={routings} />
+         <Navbar brandName={config.app.NAME} routings={routings} />
          <br />
          <Switch>
             {routes.map((route, idx) => (
@@ -31,4 +30,4 @@ function App() {
    );
 }
 
-export default withStyles(appstyle)(App) // <--
+export default withStyles(styling)(App) 

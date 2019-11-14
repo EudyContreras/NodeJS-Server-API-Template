@@ -1,14 +1,12 @@
 
 import config from '../config';
 import express from 'express';
-import routes from '../test/routes';
+import routes from '../routes';
 import ReactDOMServer from 'react-dom/server'
 import ViewController from '../../server/controllers/controller.view';
-import configureStore from '../test/store';
-import appSaga from '../saga';
-import template from '../views/template'
+import configureStore from '../store';
 
-const { CLIENT_ONLY } = process.env;
+import { server } from '../views/template'
 
 class IndexController extends ViewController {
 
@@ -35,8 +33,7 @@ class IndexController extends ViewController {
    }
 
    renderRoutes = async (req, res) => {
-     // await this.store.runSaga(appSaga).done;
-   
+      const client =  process.env.CLIENT_ONLY;
       const state = this.store.getState();
 
       const insertCss = (...styles) => styles.forEach(style => this.css.add(style._getCss()))
@@ -45,7 +42,7 @@ class IndexController extends ViewController {
          css: this.css,
          title: config.app.NAME,
          state: JSON.stringify(state),
-         content: ReactDOMServer.renderToString(CLIENT_ONLY ? '' : template(req.url, this.store, this.context, insertCss))
+         content: ReactDOMServer.renderToString(client ? '' : server(req.url, this.store, this.context, insertCss))
       });
    }
 }

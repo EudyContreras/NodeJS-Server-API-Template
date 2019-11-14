@@ -1,8 +1,8 @@
 import { combineReducers } from 'redux';
-import topicsReducer from './topicsReducer';
+import employeeReducer from './common/employeeReducer';
+import reportReducer from './common/reportReducer';
 
-const allReducers = combineReducers({
-  topicsReducer
-});
-
-export default allReducers;
+export default combineReducers({
+   employees: employeeReducer,
+   reports: reportReducer
+})

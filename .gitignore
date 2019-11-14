@@ -40,6 +40,7 @@ build/Release
 # Dependency directories
 /dist
 /public
+/.history
 node_modules/
 jspm_packages/
 
