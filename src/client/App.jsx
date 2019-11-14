@@ -5,7 +5,7 @@ import styling from './styles/app.css';
 import config from './config'
 import routes from './routes';
 
-import Navbar from './components/common/navbar.component';
+import Navbar from './components/common/Navbar';
 import withStyles from 'isomorphic-style-loader/withStyles';
 
 axios.defaults.baseURL = 'http://localhost:5000';

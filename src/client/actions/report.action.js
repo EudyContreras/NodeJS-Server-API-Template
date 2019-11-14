@@ -1,10 +1,6 @@
-import axios from 'axios';
-
-import { 
-   LOADING_REPORTS,
-   GET_ALL_REPORTS, 
-   GET_REPORT
-} from './types';
+export const LOADING_REPORTS = 'LOADING_REPORT'
+export const GET_ALL_REPORTS = 'GET_ALL_REPORTS'
+export const GET_REPORT = 'GET_REPORT'
 
 export const getReport = (id) => {
    return {

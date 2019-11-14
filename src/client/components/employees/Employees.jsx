@@ -1,12 +1,12 @@
-import React, { PureComponent } from 'react';
+import React from 'react';
 import { ListGroup, ListGroupItem } from 'reactstrap';
 import { connect } from 'react-redux';
-import { getAllEmployees } from '../../actions/employee/actions';
+import { getAllEmployees } from '../../actions/employee.action';
 import styles from './stylings.css';
 import PropTypes from 'prop-types';
 import withStyles from 'isomorphic-style-loader/withStyles';
 
-class Employees extends PureComponent {
+class Employees extends React.PureComponent {
    
    componentDidMount() {
       this.props.getAllEmployees();

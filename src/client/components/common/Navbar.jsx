@@ -1,8 +1,9 @@
-import React, { PureComponent } from 'react';
-import { Link } from 'react-router-dom';
+import React from 'react';
 import styles from './stylings.css';
 import logo from '../../resources/images/brandlogo.png';
 import withStyles from 'isomorphic-style-loader/withStyles';
+
+import { Link } from 'react-router-dom';
 
 import {
 	Collapse,
@@ -10,11 +11,10 @@ import {
 	NavbarToggler,
 	NavbarBrand,
 	Nav,
-	NavItem,
-	Container
+	NavItem
 } from 'reactstrap';
 
-class AppNavbar extends PureComponent {
+class AppNavbar extends React.PureComponent {
 
 	constructor(props) {
 		super(props);
@@ -33,12 +33,6 @@ class AppNavbar extends PureComponent {
 	render() {
 		const routes = this.props.routings;
 
-		var links = [];
-
-		routes.forEach((element, index) => {
-			links.push(<NavItem key={index}><Link className="nav-link" to={element.link}>{element.text}</Link></NavItem>)
-		});
-
 		var logoImage = (
 			<span class="navbar-logo">
 			  <a target="_blank" href="https://github.com/EudyContreras">
@@ -54,7 +48,7 @@ class AppNavbar extends PureComponent {
 					<NavbarToggler onClick={this.toggle} />
 					<Collapse isOpen={this.state.isOpen} navbar>
 						<Nav className="ml-auto" navbar>
-							{links}
+							{routes.map((element, idx) => <NavItem key={idx}><Link className="nav-link" to={element.link}>{element.text}</Link></NavItem>)}
 						</Nav>
 					</Collapse>
 				</Navbar>

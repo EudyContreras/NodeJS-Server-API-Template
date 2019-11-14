@@ -1,9 +1,8 @@
 import {
    LOADING_EMPLOYEES,
    GET_ALL_EMPLOYEES,
-   ERROR_EVENT,
-   GET_EMPLOYEE
-} from '../../actions/employee/types';
+   ERROR_EVENT
+} from '../../actions/employee.action';
 
 const initialState = {
    employees: [],
@@ -11,7 +10,7 @@ const initialState = {
    error: null
 }
 
-export default function name(state = initialState, action) {
+export default function (state = initialState, action) {
    switch (action.type) {
       case LOADING_EMPLOYEES:
          return {
@@ -19,12 +18,6 @@ export default function name(state = initialState, action) {
             loading: true
          }
       case GET_ALL_EMPLOYEES:
-         return {
-            ...state,
-            employees: action.payload,
-            loading: false
-         };
-      case GET_EMPLOYEE:
          return {
             ...state,
             employees: action.payload,

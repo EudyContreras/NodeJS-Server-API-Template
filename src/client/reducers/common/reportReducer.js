@@ -2,14 +2,14 @@ import {
    LOADING_REPORTS,
    GET_ALL_REPORTS,
    GET_REPORT
-} from '../../actions/report/types';
+} from '../../actions/report.action';
 
 const initialState = {
    reports: [],
    loading: false
 }
 
-export default function name(state = initialState, action) {
+export default function (state = initialState, action) {
    switch (action.type) {
       case LOADING_REPORTS:
          return {

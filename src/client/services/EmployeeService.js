@@ -1,10 +1,7 @@
 import axios from 'axios';
 
 const endpoints = {
-   GET_EMPLOYEES: 'api/employees/v2',
-   getEmployee: function (id) {
-      return `api/employees/${id}`
-   }
+   GET_EMPLOYEES: 'rest/api/employees/v2',
 }
 
 export const EmployeeService = {
@@ -12,5 +9,5 @@ export const EmployeeService = {
 }
 
 async function getAll() {
-   return { employees: ['Jose','Anette','Joe'] };
+   return { employees: ['Jose','Anette','Joe', 'Maria'] };
 }
