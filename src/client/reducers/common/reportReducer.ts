@@ -9,7 +9,7 @@ const initialState = {
    loading: false
 }
 
-export default function (state = initialState, action) {
+export default function (state = initialState, action: {type: string, payload: any}) {
    switch (action.type) {
       case LOADING_REPORTS:
          return {

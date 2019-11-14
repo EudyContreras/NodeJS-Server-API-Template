@@ -1,15 +1,17 @@
-const { EmployeeService } = require('../services/EmployeeService');
+import EmployeeService from '../services/EmployeeService'
 
 export const LOADING_EMPLOYEES = 'LOADING_EMPLOYEES';
 export const GET_ALL_EMPLOYEES = 'GET_ALL_EMPLOYEES';
 export const ERROR_EVENT = 'EMPLOYEE_ERROR_EVENT';
 
-export const getAllEmployees = () => async dispatch => {
-   dispatch(loading(true))
+export const getAllEmployees = () => async (dispatch:Function) => {
+   dispatch(loading())
 
-   const { error, employees } = await EmployeeService.getAll();
+   const service = new EmployeeService();
    
-   if (error) return dispatch(error(error));
+   const { error, employees } = await service.getAll();
+   
+   if (error) return dispatch(onError(error));
 
    dispatch({
       type: GET_ALL_EMPLOYEES,
@@ -23,7 +25,7 @@ export const loading = () => {
    };
 }
 
-export const error = (error) => {
+export const onError = (error: any) => {
    return {
       type: ERROR_EVENT,
       payload: error

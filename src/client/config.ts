@@ -6,7 +6,7 @@ const config = Object.freeze({
     TEMPLATE: 'default'
   },
   directories: {
-    images: (file) => `client/resources/images/${file}`
+    images: (file: string) => `client/resources/images/${file}`
   },
   httpMethods: {
     GET: 'get',
@@ -17,4 +17,4 @@ const config = Object.freeze({
   }
 })
 
-module.exports = config;
+export default config;

@@ -2,7 +2,7 @@ export const LOADING_REPORTS = 'LOADING_REPORT'
 export const GET_ALL_REPORTS = 'GET_ALL_REPORTS'
 export const GET_REPORT = 'GET_REPORT'
 
-export const getReport = (id) => {
+export const getReport = (id: string) => {
    return {
       type: GET_REPORT
    };

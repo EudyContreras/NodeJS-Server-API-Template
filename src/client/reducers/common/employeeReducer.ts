@@ -10,7 +10,7 @@ const initialState = {
    error: null
 }
 
-export default function (state = initialState, action) {
+export default function (state = initialState, action: { type: string, payload: any }) {
    switch (action.type) {
       case LOADING_EMPLOYEES:
          return {

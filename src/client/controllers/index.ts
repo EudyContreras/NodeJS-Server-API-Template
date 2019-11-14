@@ -1,18 +1,24 @@
-
+import React from 'react';
 import config from '../config';
-import express from 'express';
 import routes from '../routes';
 import ReactDOMServer from 'react-dom/server'
 import ViewController from '../../server/controllers/controller.view';
 import configureStore from '../store';
 
+import { Store } from 'redux'
 import { server } from '../views/template'
+import express, { Router, Request, Response } from 'express';
 
 class IndexController extends ViewController {
 
+   private routing: string = '/';
+   private router: Router;
+   private context: any;
+   private store: Store;
+   private css: Set<any>;
+
    constructor() {
       super('index')
-      this.routing = '/';
       this.context = {};
       this.router = express.Router();
       this.store = configureStore({});
@@ -28,21 +34,21 @@ class IndexController extends ViewController {
       return this.router;
    }
 
-   setupRoutes(router) {
+   setupRoutes(router: Router) {
       routes.map(x => router.get(x.path, this.renderRoutes))
    }
 
-   renderRoutes = async (req, res) => {
+   renderRoutes = async (req: Request, res: Response) => {
       const client =  process.env.CLIENT_ONLY;
       const state = this.store.getState();
 
-      const insertCss = (...styles) => styles.forEach(style => this.css.add(style._getCss()))
+      const insertCss = (...styles: any[]) => styles.forEach(style => this.css.add(style._getCss()))
       
       res.render(config.layout.TEMPLATE, {
          css: this.css,
          title: config.app.NAME,
          state: JSON.stringify(state),
-         content: ReactDOMServer.renderToString(client ? '' : server(req.url, this.store, this.context, insertCss))
+         content: ReactDOMServer.renderToString(client ?  React.createElement('') : server(req.url, this.store, this.context, insertCss))
       });
    }
 }
