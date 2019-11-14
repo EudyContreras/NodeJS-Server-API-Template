@@ -26,7 +26,7 @@ export default class Application {
       useCreateIndex: true
    }
 
-   constructor(args: { controllers: Controller[], viewControllers: ViewController[], interceptor: Interceptor }) {
+   constructor(args: { controllers: Controller[], viewControllers?: ViewController[], interceptor: Interceptor }) {
       this.app = express();
       this.loggHandler = new LoggingHandler();
       this.errorHandler = new ErrorHandler(this.loggHandler)
@@ -77,10 +77,12 @@ export default class Application {
       });
    }
 
-   private initializeViewControllers(controllers: ViewController[]) {
-      controllers.forEach((controller) => {
-         this.app.use(controller.getRoute(), controller.getRouter());
-      });
+   private initializeViewControllers(controllers?: ViewController[]) {
+      if (controllers != undefined) {
+         controllers.forEach((controller) => {
+            this.app.use(controller.getRoute(), controller.getRouter());
+         });
+      }
    }
 
    private initializeErrorHandling(middleware: Interceptor) {

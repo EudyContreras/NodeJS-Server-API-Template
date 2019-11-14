@@ -75,7 +75,7 @@
   "exclude": [
     "node_modules",
     "webpack.client.config.js",
-    "webpack.config.js",
+    "webpack.server.config.js",
     "public",
     "dist"
   ]

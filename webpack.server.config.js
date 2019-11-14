@@ -1,20 +1,21 @@
-
 const path = require('path');
+const nodeExternals = require('webpack-node-externals');
 
 module.exports = {
-  name: 'client',
-  target: 'web',
+  name: 'server',
+  target: 'node',
   mode: 'production',
-  entry: './src/client.jsx',
+  entry: [
+    '@babel/polyfill', './src/server.ts'
+  ],
   output: {
-    path: path.join(__dirname, './public'),
-    filename: 'client.js',
-    publicPath: "/",
-    chunkFilename: '[id].[name].[chunkhash:8].js'
+    path: path.join(__dirname, './dist'),
+    filename: 'server.js'
   },
   optimization: {
     minimize: false
   },
+  externals: [ nodeExternals() ],
   module: {
     rules: [
       { test: /\.txt$/, use: 'raw-loader' },
