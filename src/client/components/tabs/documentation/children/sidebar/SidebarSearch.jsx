@@ -1,6 +1,6 @@
-import React, { PureComponent } from 'react';
+import React from 'react';
 
-export default class SideMenuSearch extends PureComponent {
+class SidebarSearch extends React.PureComponent {
 
 	render() {
 		return (
@@ -13,3 +13,5 @@ export default class SideMenuSearch extends PureComponent {
 		)
 	}
 }
+
+export default SidebarSearch;

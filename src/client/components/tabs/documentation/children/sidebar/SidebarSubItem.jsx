@@ -1,6 +1,6 @@
-import React, { PureComponent } from 'react';
+import React from 'react';
 
-export default class SidebarSubItem extends PureComponent {
+class SidebarSubItem extends React.PureComponent {
 
 	render() {
 		const hash = this.props.hash;
@@ -16,3 +16,5 @@ export default class SidebarSubItem extends PureComponent {
 		)
 	}
 }
+
+export default SidebarSubItem;

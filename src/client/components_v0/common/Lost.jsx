@@ -1,6 +1,6 @@
 import React from 'react';
 
-class Lost extends React.PureComponent {
+export default class Clients extends React.PureComponent {
    
    componentDidMount() {}
 
@@ -10,5 +10,3 @@ class Lost extends React.PureComponent {
       );
    }
 } 
-
-export default Lost;

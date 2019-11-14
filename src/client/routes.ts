@@ -1,15 +1,15 @@
 
 
-import Home from './components/Home';
-import Clients from './components/clients/Clients';
-import Reports from './components/reports/Reports';
-import Employees from './components/employees/Employees';
-import NotFound from './components/common/Lost';
+import Home from './components/tabs/documentation/DocsPage';
+import Docs from  './components/tabs/documentation/DocsPage';
+import About from './components/tabs/information/AboutPage';
+import Admin from './components/tabs/administration/AdminPage';
+import Lost from './components/common/Lost';
 
 export default [
   {path: '/', component: Home},
-  {path: '/consultants', component: Employees},
-  {path: '/clients', component: Clients},
-  {path: '/reports', component: Reports},
-  {path: '*', component: NotFound}
+  {path: '/documentation', component: Docs},
+  {path: '/about', component: About},
+  {path: '/admin', component: Admin},
+  {path: '*', component: Lost}
 ]

@@ -1,7 +1,7 @@
-import React, { PureComponent } from 'react';
-import Section from './content.section';
+import React from 'react';
+import Section from './ContentSection';
 
-export default class ContentArea extends PureComponent {
+class ContentArea extends React.PureComponent {
 
    componentDidMount() { }
 
@@ -18,3 +18,5 @@ export default class ContentArea extends PureComponent {
       );
    }
 } 
+
+export default ContentArea;

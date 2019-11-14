@@ -1,13 +1,10 @@
-import React, { PureComponent } from 'react';
-import config from '../../config';
+import React from 'react';
+import config from '../../../../../config';
+import SidebarSubItem from './SidebarSubItem';
 
-import SidebarSubItem from './sidebar.sub.item';
-
-export default class SidebarSubMenu extends PureComponent {
-
+class SidebarSubMenu extends React.PureComponent {
 
 	render() {
-
 		const links = [
 			{
 				label: 'Register dfsd sfsds sdssssuser',
@@ -37,3 +34,5 @@ export default class SidebarSubMenu extends PureComponent {
 		)
 	}
 }
+
+export default SidebarSubMenu;

@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import StyleContext from 'isomorphic-style-loader/StyleContext'
-import Application from './client/App'
+import StyleContext from 'isomorphic-style-loader/StyleContext';
+import Application from './client/components/App';
 import configureStore from './client/store';
 
 import { BrowserRouter } from 'react-router-dom';

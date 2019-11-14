@@ -71,3 +71,10 @@ code {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+body::-webkit-scrollbar {
+  height: 16px;
+  overflow: visible;
+  width: 16px;
+  display: none;
+}

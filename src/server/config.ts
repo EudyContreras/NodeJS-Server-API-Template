@@ -2,7 +2,7 @@ require('dotenv').config();
 
 const config = Object.freeze({
   application: {
-    FILE_DIRECTORY: '../node-template-server/dist/'
+    FILE_DIRECTORY: '../node-template-server/src/'
   },
   presentation: {
     path: 'client',
@@ -14,6 +14,18 @@ const config = Object.freeze({
       client: {
         path: 'public',
         alias: '/static'
+      },
+      styles: {
+        path: 'src/client/styles',
+        alias: '/styles'
+      },
+      scripts: {
+        path: 'src/client/scripts',
+        alias: '/scripts'
+      },
+      resources: {
+        path: 'src/client/resources',
+        alias: '/res'
       }
     }
   },

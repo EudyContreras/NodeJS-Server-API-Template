@@ -1,11 +1,10 @@
 import React from 'react';
 import { Switch, Route } from 'react-router-dom';
-import axios from 'axios';
 import styling from './styles/app.css';
 import config from './config'
 import routes from './routes';
 
-import Navbar from './components/common/Navbar';
+import Navbar from './components_v0/common/Navbar';
 import withStyles from 'isomorphic-style-loader/withStyles';
 
 axios.defaults.baseURL = 'http://localhost:5000';

@@ -4,7 +4,7 @@
   position: relative;
   width: 100%;
   height: 0;
-  background: rgba(45, 49, 52, 1);
+  background: rgba(45, 49, 53, 1);
   overflow: hidden;
 }
 
@@ -39,7 +39,7 @@
 }
 
 .sub-menu-item:hover {
-  background-color: rgba(48, 53, 55, 1);
+  background-color: rgba(39, 44, 48, 1);
 }
 
 .sub-menu-item:hover>a {

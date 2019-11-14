@@ -1,8 +1,8 @@
-import React, { PureComponent } from 'react';
-import MenuItem from './sidebar.menu.item';
-import SideMenuSearch from './sidebar.menu.search';
+import React from 'react';
+import MenuItem from './SidebarMenuItem';
+import SideMenuSearch from './SidebarSearch';
 
-export default class SideMenuPanel extends PureComponent {
+class SidebarMenu extends React.PureComponent {
 
 	render() {
 
@@ -35,3 +35,5 @@ export default class SideMenuPanel extends PureComponent {
 		)
 	}
 }
+
+export default SidebarMenu;

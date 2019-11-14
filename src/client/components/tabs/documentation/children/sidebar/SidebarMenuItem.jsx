@@ -1,11 +1,10 @@
-import React, { PureComponent } from 'react';
-import SidebarSubMenu from './sidebar.sub menu';
-import config from '../../config';
-import SidebarSubItem from './sidebar.sub.item';
+import React from 'react';
+import config from '../../../../../config';
+import SidebarSubMenu from './SidebarSubMenu';
 
 const classes = {}
 
-export default class SideMenuItem extends PureComponent {
+class SidebarMenuItem extends React.PureComponent {
 
 	render() {
 		const hash = this.props.hash;
@@ -22,3 +21,5 @@ export default class SideMenuItem extends PureComponent {
 		)
 	}
 }
+
+export default SidebarMenuItem

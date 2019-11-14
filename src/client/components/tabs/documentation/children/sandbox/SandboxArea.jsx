@@ -1,7 +1,7 @@
-import React, { PureComponent } from 'react';
-import SandboxSection from './sandbox.area.section';
+import React from 'react';
+import SandboxSection from './SandboxSection';
 
-export default class SandboxArea extends PureComponent {
+class SandboxArea extends React.PureComponent {
 
 	render() {
 
@@ -16,3 +16,5 @@ export default class SandboxArea extends PureComponent {
 		)
 	}
 }
+
+export default SandboxArea;

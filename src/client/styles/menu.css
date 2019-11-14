@@ -8,7 +8,7 @@
    margin: 0;
    z-index: 1000;
    color: rgba(165, 167, 168, 1);
-   background-color: rgba(55, 60, 63, 1);
+   background-color: rgba(55, 60, 64, 1);
    -webkit-box-shadow: 1px 0px 2px 0px rgba(0, 0, 0, 0.3);
    -moz-box-shadow: 1px 0px 2px 0px rgba(0, 0, 0, 0.3);
    box-shadow: 2px 0px 6px 0px rgba(0, 0, 0, 0.3);
@@ -68,7 +68,7 @@
    padding-left: 30px;
    padding-top: 30px;
    padding-bottom: 30px;
-   background-color: rgba(72, 76, 80, 1);
+   background-color: rgba(72, 76, 81, 1);
    border-bottom-width: 1px;
    border-bottom-style: solid;
    border-bottom-color: rgba(0, 0, 0, 0.3);
@@ -128,7 +128,7 @@
 
 
 .top-section h2 {
-   font-weight: 100;
+   font-weight: 300;
    font-size: 20px;
    color: #eee;
 }
