@@ -1,26 +1,21 @@
 import {
-   LOADING_REPORTS,
-   GET_ALL_REPORTS,
-   GET_REPORT
-} from '../../actions/report.action';
+   LOADING_NAVBAR,
+   GET_NAVBAR_ITEMS
+} from '../../actions/navbar.action';
 
 const initialState = {
-   reports: [],
+   items: [],
    loading: false
 }
 
 export default function (state = initialState, action: {type: string, payload: any}) {
    switch (action.type) {
-      case LOADING_REPORTS:
+      case LOADING_NAVBAR:
          return {
             ...state,
             loading: true
          }
-      case GET_ALL_REPORTS:
-         return {
-            ...state
-         };
-      case GET_REPORT:
+      case GET_NAVBAR_ITEMS:
          return {
             ...state
          };

@@ -1,8 +1,8 @@
 import { combineReducers } from 'redux';
-import employeeReducer from './common/employeeReducer';
-import reportReducer from './common/reportReducer';
+import routingsReducer from './common/routings.reducer';
+import navbarReducer from './common/navbar.reducer';
 
 export default combineReducers({
-   employees: employeeReducer,
-   reports: reportReducer
+   routings: routingsReducer,
+   items: navbarReducer
 })

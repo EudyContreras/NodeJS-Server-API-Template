@@ -1,26 +1,26 @@
 import {
-   LOADING_EMPLOYEES,
-   GET_ALL_EMPLOYEES,
+   GET_ALL_ROUTINGS,
+   LOADING_ROUTINGS,
    ERROR_EVENT
-} from '../../actions/employee.action';
+} from '../../actions/router.action';
 
 const initialState = {
-   employees: [],
+   routings: [],
    loading: false,
    error: null
 }
 
 export default function (state = initialState, action: { type: string, payload: any }) {
    switch (action.type) {
-      case LOADING_EMPLOYEES:
+      case LOADING_ROUTINGS:
          return {
             ...state,
             loading: true
          }
-      case GET_ALL_EMPLOYEES:
+      case GET_ALL_ROUTINGS:
          return {
             ...state,
-            employees: action.payload,
+            routings: action.payload,
             loading: false
          };
       case ERROR_EVENT:

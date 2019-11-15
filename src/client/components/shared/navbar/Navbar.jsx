@@ -19,12 +19,6 @@ class Navbar extends React.PureComponent {
 	render() {
 		const routes = this.props.routings;
 
-		// const links = [];
-
-		// routes.forEach((element, index) => {
-		// 	routes.push(<li><a className={classes.link} href={element.link}>{element.label}</a></li>)
-		// });
-
 		return (
 			<header id='navbar' className={classes.nav}>
 				<div className={classes.logo.self}>
@@ -33,7 +27,6 @@ class Navbar extends React.PureComponent {
 					</div>
 				</div>
 				<ul>
-					{/* {links} */}
 					{routes.map((element, idx) => <li key={idx}><Link className={classes.link} to={element.link}>{element.label}</Link></li>)}
 				</ul>
 			</header>
