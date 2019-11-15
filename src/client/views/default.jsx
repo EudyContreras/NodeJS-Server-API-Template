@@ -11,7 +11,7 @@ export default class DefaultLayout extends React.PureComponent {
           <meta name="viewport" content="width=device-width, initial-scale=1" />
           <meta name="theme-color" content="#000000" />
           <meta name="description" content="Template Web site generated the server api routing" />
-          <link rel="shortcut icon" type="image/png" href="/res/images/favicon.png" />
+          <link rel="shortcut icon" type="image/png" href="/resources/images/favicon.png" />
           <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css' />
           <link rel='stylesheet' href='https://fonts.googleapis.com/icon?family=Material+Icons' />
           <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Roboto&display=swap' />

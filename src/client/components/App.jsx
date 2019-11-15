@@ -1,6 +1,7 @@
 
 import React from 'react';
 import config from '../config'
+import Wrapper from './common/Wrapper';
 import NavbarMenu from './shared/navbar/Navbar';
 import NavbarPadder from './shared/navbar/NavbarPadder';
 import withStyles from 'isomorphic-style-loader/withStyles';
@@ -18,24 +19,14 @@ const routings = [
 class App extends React.PureComponent {
 
   render() {
-
     return (
-      // <DefaultLayout title={this.props.title}>
-      //   <NavbarPadder />
-      //   <SideMenu />
-      //   <SandBox />
-      //   <ContentArea />
-      //   <FooterArea />
-      //   <NavbarMenu brandName={config.app.NAME} routings={routes} />
-      // </DefaultLayout>
-
-      <div className='App'>
+      <Wrapper className='App'>
         <NavbarPadder />
         <Switch> 
           {routes.map((route, idx) => (<Route exact key={idx} {...route} /> ))}
         </Switch>
         <NavbarMenu brandName={config.app.NAME} routings={routings} />
-      </div>
+      </Wrapper>
     );
   }
 }
