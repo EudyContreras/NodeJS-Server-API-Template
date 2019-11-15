@@ -10,7 +10,7 @@ import Interceptor from './middleware/interceptor';
 import Controller from './controllers/controller';
 import ErrorHandler from './handlers/error.handler';
 import LoggingHandler from './handlers/logging.handler';
-import ViewController from './controllers/controller.view';
+import ViewRenderer from './middleware/renderer';
 import DataInitializer from './initializers/database.initializer';
 
 const reactRender = require('express-react-views');
@@ -28,7 +28,7 @@ export default class Application {
       useCreateIndex: true
    }
 
-   constructor(args: { controllers: Controller[], viewControllers?: ViewController[], interceptor: Interceptor }) {
+   constructor(args: { controllers: Controller[], viewRenderer?: ViewRenderer[], interceptor: Interceptor }) {
       this.app = express();
       this.loggHandler = new LoggingHandler();
       this.errorHandler = new ErrorHandler(this.loggHandler)
@@ -36,7 +36,7 @@ export default class Application {
       this.setupExpress();
       this.initializeMiddleware(args.interceptor);
       this.initializeControllers(args.controllers);
-      this.initializeViewControllers(args.viewControllers);
+      this.initializeViewRenderers(args.viewRenderer);
       this.initializeErrorHandling(args.interceptor);
       this.connectToTheDatabase(true);
       this.initializeWebjobs();
@@ -84,10 +84,10 @@ export default class Application {
       });
    }
 
-   private initializeViewControllers(controllers?: ViewController[]) {
-      if (controllers != undefined) {
-         controllers.forEach((controller) => {
-            this.app.use(controller.getRoute(), controller.getRouter());
+   private initializeViewRenderers(viewRenderers?: ViewRenderer[]) {
+      if (viewRenderers != undefined) {
+         viewRenderers.forEach((renderer) => {
+            this.app.use(renderer.getRoute(), renderer.getRouter());
          });
       }
    }

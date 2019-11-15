@@ -31,4 +31,4 @@ class App extends React.PureComponent {
   }
 }
 
-export default withStyles(styling)(App) 
+export default withStyles(styling)(App);

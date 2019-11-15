@@ -2,14 +2,14 @@ import React from 'react';
 import config from '../config';
 import routes from '../routes';
 import ReactDOMServer from 'react-dom/server'
-import ViewController from '../../server/controllers/controller.view';
+import ViewRenderer from '../../server/middleware/renderer';
 import configureStore from '../store';
 
 import { Store } from 'redux'
 import { server } from '../views/template'
 import express, { Router, Request, Response } from 'express';
 
-class IndexController extends ViewController {
+class IndexViewRenderer extends ViewRenderer {
 
    private routing: string = '/';
    private router: Router;
@@ -18,7 +18,7 @@ class IndexController extends ViewController {
    private css: Set<any>;
 
    constructor() {
-      super('index')
+      super();
       this.context = {};
       this.router = express.Router();
       this.store = configureStore({});
@@ -55,4 +55,4 @@ class IndexController extends ViewController {
    }
 }
 
-export default IndexController;
+export default IndexViewRenderer;

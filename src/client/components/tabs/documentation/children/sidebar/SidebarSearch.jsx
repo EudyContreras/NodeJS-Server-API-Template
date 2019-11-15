@@ -1,8 +1,10 @@
 import React from 'react';
+import Style from './styles/SidebarSearch.style.scss';
+import withStyles from 'isomorphic-style-loader/withStyles';
 
 class SidebarSearch extends React.PureComponent {
 
-		/**
+	/**
 	 * @param {React.MouseEvent<HTMLElement, MouseEvent>} e
 	 */
 	performSearch = (e) => {
@@ -12,14 +14,14 @@ class SidebarSearch extends React.PureComponent {
 
 	render() {
 		return (
-			<form className='search-form shadow-elevate' method='post'>
-				<input type='text' className='textbox' placeholder='Search' />
-				<button id='search' title='Search' value='' className='button' onClick={this.performSearch}>
-					<i className='material-icons search-icon'>search</i>
+			<form className={Style.searchForm} method='post'>
+				<input type='text' className={Style.searchTextbox} placeholder='Search' />
+				<button id='search' title='Search' value='' className={Style.searchButton} onClick={this.performSearch}>
+					<i className={['material-icons', Style.searchIcon]}>search</i>
 				</button>
 			</form>
 		)
 	}
 }
 
-export default SidebarSearch;
+export default withStyles(Style)(SidebarSearch);
