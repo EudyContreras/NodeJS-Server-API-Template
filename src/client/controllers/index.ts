@@ -38,12 +38,14 @@ class IndexController extends ViewController {
       routes.map(x => router.get(x.path, this.renderRoutes))
    }
 
-   renderRoutes = async (req: Request, res: Response) => {
-      const client =  process.env.CLIENT_ONLY;
+   renderRoutes = (req: Request, res: Response) => {
+      const client =  config.app.CSR;
       const state = this.store.getState();
 
-      const insertCss = (...styles: any[]) => styles.forEach(style => this.css.add(style._getCss()))
-      
+      const insertCss = (...styles: any[]) => styles.forEach(style => this.css.add(style._getCss()));
+
+      res.type(config.layout.CONTENT_TYPE);
+      res.header(config.header.LABEL, config.header.VALUE);
       res.render(config.layout.TEMPLATE, {
          css: this.css,
          title: config.app.NAME,

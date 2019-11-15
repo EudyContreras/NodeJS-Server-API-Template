@@ -21,7 +21,7 @@ export default class DefaultLayout extends React.PureComponent {
           <link rel='stylesheet' href='/styles/search.css' />
           <link rel='stylesheet' href='/styles/content.css' />
           <link rel='stylesheet' href='/styles/footer.css' />
-          <link rel='stylesheet' href='/styles/navbar.css' />
+          {/* <link rel='stylesheet' href='/styles/navbar.css' /> */}
           <link rel='stylesheet' href='/styles/sandbox.css' />
           <link rel='stylesheet' href='/styles/submenu.css' />
           <style>${[...this.props.css].join('')}</style>

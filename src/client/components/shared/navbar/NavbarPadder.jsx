@@ -1,13 +1,14 @@
 import React from 'react';
-import config from '../../../config';
+import style from './stylings.scss';
+import withStyles from 'isomorphic-style-loader/withStyles';
 
 class NavbarPadder extends React.PureComponent {
 	
 	render() {
 		return (
-			<header className='nav-padder'></header>
+			<header className={style.navPadder}></header>
 		)
 	}
 }
 
-export default NavbarPadder;
+export default withStyles(style)(NavbarPadder);

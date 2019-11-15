@@ -2,7 +2,7 @@ require('dotenv').config();
 
 const config = Object.freeze({
   application: {
-    FILE_DIRECTORY: '../node-template-server/src/'
+    FILE_DIRECTORY: '../node-template-server/dist/'
   },
   presentation: {
     path: 'client',

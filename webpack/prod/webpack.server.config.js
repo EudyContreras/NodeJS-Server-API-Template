@@ -1,3 +1,4 @@
+
 const path = require('path');
 const nodeExternals = require('webpack-node-externals');
 
@@ -18,11 +19,16 @@ module.exports = {
   externals: [ nodeExternals() ],
   module: {
     rules: [
-      { test: /\.txt$/, use: 'raw-loader' },
-      { test: /\.(js|jsx|tsx|ts)$/, loader: 'babel-loader', exclude: /node_modules/ },
+      { 
+        test: /\.txt$/, 
+        use: 'raw-loader' },
+      { 
+        test: /\.(js|jsx|tsx|ts)$/, 
+        loader: 'babel-loader', 
+        exclude: /node_modules/ },
       {
-        test: /\.(gif|jpe?g|png|ico)$/,
-        loader: 'url-loader?limit=10000'
+        test: /\.(jpe?g|png|gif|svg)$/i,
+        loader: 'file-loader'
       },
       {
         test: /\.(css|scss)$/,
@@ -31,7 +37,11 @@ module.exports = {
           {
             loader: 'css-loader',
             options: {
-              modules: true,
+              modules: {
+                mode: 'global',
+                localIdentName: '[hash:base64:5]'
+              },	
+              localsConvention: 'camelCase',
               importLoaders: 1,
               sourceMap: true
             }
