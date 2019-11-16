@@ -8,8 +8,8 @@ import Lost from './components/common/Lost';
 
 export default [
   {path: '/', component: Home},
-  {path: '/documentation', component: Docs},
-  {path: '/about', component: About},
-  {path: '/admin', component: Admin},
+  {path: '/documentation', component: Docs, label: 'Documentation', navLink: true},
+  {path: '/about', component: About, label: 'About', navLink: true},
+  {path: '/admin', component: Admin, label: 'Admin', navLink: true},
   {path: '*', component: Lost}
 ]

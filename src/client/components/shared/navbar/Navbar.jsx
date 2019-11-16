@@ -11,7 +11,9 @@ class Navbar extends React.PureComponent {
 		super(props);
 		this.state = this.props;
 	}
-
+	componentDidMount() {
+	
+	}
 	/**
 	 * @param {React.MouseEvent<HTMLElement, MouseEvent>} e
 	 */

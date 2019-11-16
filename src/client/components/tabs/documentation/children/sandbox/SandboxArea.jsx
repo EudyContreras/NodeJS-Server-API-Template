@@ -1,17 +1,22 @@
 import React from 'react';
 import SandboxSection from './SandboxSection';
+import { classes } from '../../../../utililties/styling.utils';
 
 class SandboxArea extends React.PureComponent {
 
-	render() {
+	constructor(props) {
+		super(props)
+	}
 
+	render() {
+		const style = this.props.styling;
 		return (
-			<aside className='sandbox-area natural-sb bottom-sb'>
-				<SandboxSection/>
-				<SandboxSection/>
-				<SandboxSection/>
-				<SandboxSection/>
-				<SandboxSection/>
+			<aside className={classes(style.sandboxArea, style.natural)}>
+				<SandboxSection styling={style}/>
+				<SandboxSection styling={style}/>
+				<SandboxSection styling={style}/>
+				<SandboxSection styling={style}/>
+				<SandboxSection styling={style}/>
 			</aside>
 		)
 	}

@@ -1,0 +1,12 @@
+@import '../../../../styles/partials/ripple';
+@import '../../../../styles/partials/elevate';
+@import './partials/sandbox/sandbox';
+@import './partials/content/content';
+@import './partials/sidebar/sideMenu';
+@import './partials/footer/footer';
+
+.natural { display: block; }
+
+.fixed { position: fixed; }
+
+.bottom{ display: block; }

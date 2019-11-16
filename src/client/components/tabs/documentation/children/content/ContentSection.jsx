@@ -2,9 +2,15 @@ import React from 'react';
 
 class ContentSection extends React.PureComponent {
 
+   constructor(props) {
+      super(props)
+   }
+
    render() {
+      const style = this.props.styling;
+
       return (
-         <article className='content'>
+         <article className={style.content}>
             <div >
                
             </div>

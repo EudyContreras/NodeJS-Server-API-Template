@@ -1,0 +1,42 @@
+.content-wrapper {
+   margin-left: 17%;
+   margin-right: 30%;
+   padding-bottom: 3em;
+   background-color: rgb(48,53,57);
+   transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+}
+
+.content {
+   padding-top: 3em;
+   padding-bottom: 0em;
+   padding-left: 3em;
+   padding-right: 3em;
+   min-height: 400px;
+   height: 400px;
+   width: auto;
+   position: relative;
+   background-color: rgb(48,53,57);
+}
+
+.content > .params-table {
+   width: 100%;
+   text-align: left;
+   padding-left: 1em;
+   padding-right: 1em;
+   background-color: rgba(37, 42, 46, 1);
+}
+
+.content > .params-table th {
+   height: 40px;
+}
+
+.content > .params-table tr {
+   height: 40px;
+}
+
+.content div {
+   display: flex;
+   background-color: rgb(55, 60, 64);
+   height: -webkit-fill-available;
+   border-radius: 8px;
+}

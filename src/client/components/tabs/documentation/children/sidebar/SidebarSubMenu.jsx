@@ -7,7 +7,7 @@ class SidebarSubMenu extends React.PureComponent {
 	render() {
 		const links = [
 			{
-				label: 'Register dfsd sfsds sdssssuser',
+				label: 'Register a user',
 				method: { label: 'PUT' }
 			}
 			, 

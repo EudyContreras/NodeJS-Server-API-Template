@@ -1,19 +1,21 @@
 import React from 'react';
-import style from './styles/SidebarSearch.style.scss';
-import withStyles from 'isomorphic-style-loader/withStyles';
 import rippleEffect from '../../../../../appliers/ripple.applier';
 
 class SidebarSearch extends React.PureComponent {
 
+	constructor(props) {
+		super(props)
+	}
 	/**
 	 * @param {React.MouseEvent<HTMLElement, MouseEvent>} event
 	 */
 	performSearch = (event) => {
 		event.preventDefault();
-		rippleEffect(event, style);
+		rippleEffect(event, this.props.styling);
 	};
 
 	render() {
+		const style = this.props.styling;
 		return (
 			<form className={`${style.search} ${style.shadowElevate}`} method='post'>
 				<input type='text' className={style.searchTextbox} placeholder='Search' />
@@ -25,4 +27,4 @@ class SidebarSearch extends React.PureComponent {
 	}
 }
 
-export default withStyles(style)(SidebarSearch);
+export default SidebarSearch;

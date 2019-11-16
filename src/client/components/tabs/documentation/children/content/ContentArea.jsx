@@ -3,17 +3,21 @@ import Section from './ContentSection';
 
 class ContentArea extends React.PureComponent {
 
-   componentDidMount() { }
+   constructor(props) {
+      super(props)
+   }
 
    render() {
+      const style = this.props.styling;
+
       return (
-         <div className='content-wrapper'>
-            <Section />
-            <Section />
-            <Section />
-            <Section />
-            <Section />
-            <Section />
+         <div className={style.contentWrapper}>
+            <Section styling={style}/>
+            <Section styling={style}/>
+            <Section styling={style}/>
+            <Section styling={style}/>
+            <Section styling={style}/>
+            <Section styling={style}/>
          </div>
       );
    }

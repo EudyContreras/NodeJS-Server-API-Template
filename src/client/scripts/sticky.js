@@ -7,7 +7,7 @@ function setupSticky() {
 
    var margin = 0;
 
-   var offtop1 = sideMenu.offset().top;
+   var offtop1 = sideMenu.offset();
    var offtop2 = sandBox.offset().top;
    var offbtm = footer.offset().top - sandBox.height();
 

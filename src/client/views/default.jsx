@@ -16,11 +16,8 @@ export default class DefaultLayout extends React.PureComponent {
           <link rel='stylesheet' href='https://fonts.googleapis.com/icon?family=Material+Icons' />
           <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Roboto&display=swap' />
           <link rel='stylesheet' href='/styles/index.css' />
-          <link rel='stylesheet' href='/styles/menu.css' />
+          {/* <link rel='stylesheet' href='/styles/menu.css' /> */}
           <link rel='stylesheet' href='/styles/restful.css' />
-          <link rel='stylesheet' href='/styles/content.css' />
-          <link rel='stylesheet' href='/styles/footer.css' />
-          <link rel='stylesheet' href='/styles/sandbox.css' />
           <link rel='stylesheet' href='/styles/submenu.css' />
           <style>${[...this.props.css].join('')}</style>
         </head>
@@ -30,11 +27,9 @@ export default class DefaultLayout extends React.PureComponent {
           <script src='/scripts/global.js' />
           <script dangerouslySetInnerHTML={{ __html: `var __REDUX_STATE__ = ${this.props.state};` }} />
           <script src='https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js' />
-          <script src='/scripts/sticky.js' />
           <script src='/scripts/submenu.js' />
-          <script src='/scripts/sidemenu.js' />
+          {/* <script src='/scripts/sidemenu.js' /> */}
           <script src='/scripts/main.js' />
-          <script src="/static/client.js"></script>
         </body>
       </html>
     );

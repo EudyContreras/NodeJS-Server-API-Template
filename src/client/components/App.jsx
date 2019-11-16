@@ -10,22 +10,26 @@ import routes from '../routes';
 
 import { Switch, Route } from 'react-router-dom';
 
-const routings = [
-  { label: 'Documentation', link: '/documentation' },
-  { label: 'About', link: '/about' },
-  { label: 'Admin', link: '/admin' },
-];
-
 class App extends React.PureComponent {
 
+  componentDidMount() {
+
+  }
+  
   render() {
+    const elements = routes.filter(x => x.navLink === true).map(x => {
+      return { link: x.path, label: x.label }
+    });
+
+    const routings = routes.map((route, idx) => (<Route exact key={idx} {...route} /> ));
+
     return (
       <Wrapper className='App'>
         <NavbarPadder />
         <Switch> 
-          {routes.map((route, idx) => (<Route exact key={idx} {...route} /> ))}
+          {routings}
         </Switch>
-        <NavbarMenu brandName={config.app.NAME} routings={routings} />
+        <NavbarMenu brandName={config.app.NAME} routings={ elements } />
       </Wrapper>
     );
   }

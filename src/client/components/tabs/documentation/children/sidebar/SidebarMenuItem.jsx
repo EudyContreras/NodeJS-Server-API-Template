@@ -1,21 +1,33 @@
 import React from 'react';
-import config from '../../../../../config';
 import SidebarSubMenu from './SidebarSubMenu';
 
-const classes = {}
-
 class SidebarMenuItem extends React.PureComponent {
+
+	constructor(props) {
+		super(props)
+		this.state = {
+			menuOpen: false
+		}
+	}
+
+	openSubMenu = (event) => {
+		this.setState(state => {
+			menuOpen: !state.menuOpen
+		});
+	}
 
 	render() {
 		const hash = this.props.hash;
 		const label = this.props.label;
+		const style = this.props.styling;
+
 		return (
 			<div>
-				<li className='menu-item'>
+				<li className={style.menuItem} onClick={(e) => openSubMenu(e, style)}>
 					<a href={hash}>{label}</a>
 					<i className='material-icons'>chevron_right</i>
 				</li>
-				<SidebarSubMenu/>
+				<SidebarSubMenu styling={style}/>
 			</div>
 
 		)

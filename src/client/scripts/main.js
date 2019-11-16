@@ -1,7 +1,6 @@
 
 
 $(document).ready(function(){
-   setupSticky();
-   setupSidebar();
-   setupSubMenu();
+   //setupSticky();
+   //setupSubMenu();
 });
