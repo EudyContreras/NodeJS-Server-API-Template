@@ -1,7 +1,11 @@
 
-@import '../../../../../../styles/rippleEffect.scss', '../../../../../../styles/elevate.scss';
+@import '../../../../../../styles/partials/rippleEffect.scss';
+@import '../../../../../../styles/partials/elevate.scss';
 
-.search-form {
+$buttonColor: rgba(92, 96, 100, 1);
+$fieldColor: rgba(255, 255, 255, 1);
+
+.search {
   outline: 0;
   margin-left: 1.4em;
   margin-right: 1.4em;
@@ -11,71 +15,71 @@
   display: flex;
   border-radius:4px;
   border: 0px;
-}
 
-.search-textbox {
-  outline: 0;
-  height: 38px;
-  display: flex;
-  font-size: 14px;
-  justify-self: center;
-  align-self: center;
-  font-size: 14px;
-  width: 80%;
-  line-height: 42px;
-  padding: 0 16px;
-  background-color: rgba(255, 255, 255, 1);
-  color: #212121;
-  border: 0;
-  border-width: 0px;
-  float: left;
-  -webkit-border-radius: 4px 0 0 4px;
-  border-radius: 4px 0 0 4px;
-}
+  &-textbox {
+    outline: 0;
+    height: 38px;
+    display: flex;
+    font-size: 14px;
+    justify-self: center;
+    align-self: center;
+    font-size: 14px;
+    width: 80%;
+    line-height: 42px;
+    padding: 0 16px;
+    background-color: $fieldColor;
+    color: #212121;
+    border: 0;
+    border-width: 0px;
+    float: left;
+    border-radius: 4px 0 0 4px;
+  
+    &:focus {
+      outline: 0;
+      background-color: #FFF;
+    }
+  
+    &:active {
+      outline: 0;
+      background-color: #FFF;
+    }
+  }
 
-.search-button {
-  display: flex;
-  overflow: hidden;
-  transform: scale(1.08);
-  justify-self: center;
-  align-self: center;
-  outline: 0;
-  float: left;
-  height: 38px;
-  width: 13%;
-  background-color: rgba(92, 96, 100, 1);
-  text-align: center;
-  line-height: 42px;
-  border: 0;
-  color: #EEE;
-  text-rendering: auto;
-  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
-  -webkit-transition: all .2s ease-in-out ;
-  transition: all .2s ease-in-out ;
-  -webkit-border-radius: 0 4px 4px 0;
-  border-radius: 0 4px 4px 0;
-}
+  &-button {
+    display: flex;
+    overflow: hidden;
+    transform: scale(1.08);
+    justify-self: center;
+    align-self: center;
+    outline: 0;
+    height: 38px;
+    background-color: $buttonColor;
+    text-align: center;
+    line-height: 42px;
+    border: 0;
+    color: #EEE;
+    text-rendering: auto;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+    transition: all .2s ease-in-out ;
+    border-radius: 0 4px 4px 0;
+  
+    &:hover {
+      transform: scale(1.05);
+      background-color: rgba(112, 116, 120, 1);
+    }
+  
+    &:active {
+      transform: scale(1);
+    }
+  
+    &:hover &-icon  {
+      color: rgb(255, 255, 255);
+    }
 
-.search-textbox:focus {
-  outline: 0;
-  background-color: #FFF;
-}
-
-.search-icon {
-  font-size: 18px;
-  margin: auto;
-}
-
-.search-button:hover {
-  transform: scale(1.05);
-  background-color: rgba(112, 116, 120, 1);
-  width: 13%;
-}
-
-.search-button:active {
-  transform: scale(1);
-}
-
-.search-button:hover > .search-icon  {
-  color: #FFF;
+    &-icon {
+      transition: all .2s ease-in-out ;
+      font-size: 18px;
+      margin: auto;
+    }
+  }
 }

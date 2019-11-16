@@ -38,8 +38,9 @@ module.exports = {
             loader: 'css-loader',
             options: {
               modules: {
-                mode: 'global',
-                localIdentName: '[path][name]__[local]',
+                mode: 'local',
+                localIdentName: '[name]__[local]',
+                context: path.resolve(__dirname, '../../src/client/components'),
               },
               localsConvention: 'camelCase',
               importLoaders: 1,
@@ -52,6 +53,6 @@ module.exports = {
     ]
   },
   resolve: {
-    extensions: ['*', '.js', '.jsx', '.tsx', '.ts']
+    extensions: ['*', '.js', '.jsx', '.tsx', '.ts', '.scss', '.css']
   },
 };

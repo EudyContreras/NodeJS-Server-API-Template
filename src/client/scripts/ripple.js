@@ -36,6 +36,6 @@ function addRipple(element) {
          height: buttonHeight,
          top: y + 'px',
          left: x + 'px'
-      }).addClass('rippleEffect');
+      }).addClass('ripple-effect');
    });
 }

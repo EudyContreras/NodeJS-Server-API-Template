@@ -18,10 +18,8 @@ export default class DefaultLayout extends React.PureComponent {
           <link rel='stylesheet' href='/styles/index.css' />
           <link rel='stylesheet' href='/styles/menu.css' />
           <link rel='stylesheet' href='/styles/restful.css' />
-          <link rel='stylesheet' href='/styles/search.css' />
           <link rel='stylesheet' href='/styles/content.css' />
           <link rel='stylesheet' href='/styles/footer.css' />
-          {/* <link rel='stylesheet' href='/styles/navbar.css' /> */}
           <link rel='stylesheet' href='/styles/sandbox.css' />
           <link rel='stylesheet' href='/styles/submenu.css' />
           <style>${[...this.props.css].join('')}</style>
@@ -29,13 +27,12 @@ export default class DefaultLayout extends React.PureComponent {
         <body >
           <section id='content'>{this.props.content}</section>
           <script src='/static/client.js' />
+          <script src='/scripts/global.js' />
           <script dangerouslySetInnerHTML={{ __html: `var __REDUX_STATE__ = ${this.props.state};` }} />
           <script src='https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js' />
           <script src='/scripts/sticky.js' />
-          <script src='/scripts/ripple.js' />
           <script src='/scripts/submenu.js' />
           <script src='/scripts/sidemenu.js' />
-          <script src='/scripts/search.js' />
           <script src='/scripts/main.js' />
           <script src="/static/client.js"></script>
         </body>
