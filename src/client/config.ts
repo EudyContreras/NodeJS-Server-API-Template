@@ -10,7 +10,7 @@ const config = Object.freeze({
   },
   layout: {
     CONTENT_TYPE: 'html',
-    TEMPLATE: 'default'
+    TEMPLATE: 'template'
   },
   directories: {
     images: (file: string) => `client/resources/images/${file}`

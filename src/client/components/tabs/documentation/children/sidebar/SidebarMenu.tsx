@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import PropTypes from 'prop-types';
+import PropTypes, { any } from 'prop-types';
 import MenuItem from './SidebarMenuItem';
 import SideMenuToggle from './SidebarToggle';
 import SideMenuSearch from './SidebarSearch';
@@ -11,37 +11,42 @@ const links = ['Quickstart', 'Basics'];
 const headers = ['Introduction', 'Endpoints']
 const routes = ['Users', 'Privideles', 'Roles', 'Invitation', 'Users', 'Privideles', 'Roles', 'Invitation'];
 
-const classes = (...names) => {
-   return names.join(' ');
+const classes = (...names: string[]) => {
+	return names.join(' ');
 }
 
-class SidebarMenu extends React.PureComponent {
+class SidebarMenu extends React.PureComponent<any, any> {
 
-	constructor(props) {
+	constructor(props: any) {
 		super(props);
 		this.state = {
 			expanded: true
 		}
 	}
 
-	/**
-	 * @param {HTMLElement} element
-	 */
-	closeSidebar = (style) => {
-		ReactDOM.findDOMNode(this).classList.add(style.closed);
-   }
-	
-	/**
-	 * @param {HTMLElement} element
-	 */
-   openSidebar = (style) => {
-		ReactDOM.findDOMNode(this).classList.remove(style.closed);
+	closeSidebar = (style: any) => {
+		(ReactDOM.findDOMNode(this) as Element).classList.add(style.closed);
 	}
-	
-	/**
-	 * @param {React.MouseEvent<HTMLElement, MouseEvent>} event
-	 */
-	handleToggle = (event) => {
+
+	openSidebar = (style: any) => {
+		(ReactDOM.findDOMNode(this) as Element).classList.remove(style.closed);
+	}
+
+	onMouseEnter = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
+		const expanded = this.state.expanded;
+		if (!expanded) {
+			this.openSidebar(this.props.styling)
+		}
+	}
+
+	onMouseExit = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
+		const expanded = this.state.expanded;
+		if (!expanded) {
+			this.closeSidebar(this.props.styling)
+		}
+	}
+
+	handleToggle = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
 		const style = this.props.styling;
 		const expanded = this.state.expanded;
 
@@ -50,29 +55,33 @@ class SidebarMenu extends React.PureComponent {
 		} else {
 			this.openSidebar(style)
 		}
-		this.setState(state => ({
+		this.setState((state: any) => ({
 			expanded: !state.expanded
 		}));
 	}
 
-	componentDidMount() {}
+	componentDidMount() { }
 
 	render() {
 		const style = this.props.styling;
 
+		const props = {
+			onMouseEnter: this.onMouseEnter,
+			onMouseLeave: this.onMouseExit,
+		}
 		return (
-			<aside className={classes(style.sideMenu, style.natural)}>
-				< TopSection styling={style} expanded={this.state.expanded} onSidebarToggle={this.handleToggle}/>
-				< SideMenuSearch styling={style}/>
-				< MiddleSection styling={style} header={headers[0]}/>
-				< MainSection styling={style} header={headers[1]}/>
+			<aside {...props} className={classes(style.sideMenu, style.natural)}>
+				< TopSection styling={style} expanded={this.state.expanded} onSidebarToggle={this.handleToggle} />
+				< SideMenuSearch styling={style} />
+				< MiddleSection styling={style} header={headers[0]} />
+				< MainSection styling={style} header={headers[1]} />
 			</aside>
 		)
 	}
 }
 
-class VersionInfo extends React.PureComponent {
-	constructor(props) {
+class VersionInfo extends React.PureComponent<any, any> {
+	constructor(props: any) {
 		super(props);
 	}
 	render() {
@@ -85,8 +94,8 @@ class VersionInfo extends React.PureComponent {
 	}
 }
 
-class TopSection extends React.PureComponent {
-	constructor(props) {
+class TopSection extends React.PureComponent<any, any> {
+	constructor(props: any) {
 		super(props);
 	}
 	render() {
@@ -94,15 +103,15 @@ class TopSection extends React.PureComponent {
 
 		return (
 			<div className={style.topSection}>
-				<VersionInfo styling={style}/>
+				<VersionInfo styling={style} />
 				<SideMenuToggle styling={style} expanded={this.props.expanded} onSidebarToggle={this.props.onSidebarToggle} />
 			</div>
 		)
 	}
 }
 
-class MiddleSection extends React.PureComponent {
-	constructor(props) {
+class MiddleSection extends React.PureComponent<any, any> {
+	constructor(props: any) {
 		super(props);
 	}
 	render() {
@@ -119,8 +128,8 @@ class MiddleSection extends React.PureComponent {
 	}
 }
 
-class MainSection extends React.PureComponent {
-	constructor(props) {
+class MainSection extends React.PureComponent<any, any> {
+	constructor(props: any) {
 		super(props);
 	}
 	render() {
@@ -135,11 +144,6 @@ class MainSection extends React.PureComponent {
 			</Wrapper>
 		)
 	}
-}
-
-SidebarMenu.propTypes = {
-	expanded: PropTypes.bool.isRequired,
-	toggleSidebar: PropTypes.func.isRequired
 }
 
 // const mapStateToProps = (state) => ({

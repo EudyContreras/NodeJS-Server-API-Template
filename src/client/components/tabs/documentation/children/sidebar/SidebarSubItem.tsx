@@ -1,6 +1,6 @@
 import React from 'react';
 
-class SidebarSubItem extends React.PureComponent {
+class SidebarSubItem extends React.PureComponent<any, any> {
 
 	render() {
 		const hash = this.props.hash;

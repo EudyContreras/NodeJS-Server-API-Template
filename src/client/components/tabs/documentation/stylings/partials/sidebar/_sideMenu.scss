@@ -21,10 +21,13 @@
       padding-inline-start: 0px;
       list-style-type: none;
    }
+   &:hover {
+      box-shadow: 6px 0px 12px 0px rgba(0,0,0,0.3);
+   }
 }
 
 .closed {
-   transform: translateX(-94%);
+   transform: translateX(calc(-100% + 20px));
 }
 
 .closed ~ .content-wrapper {

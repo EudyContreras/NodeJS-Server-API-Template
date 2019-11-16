@@ -2,7 +2,7 @@ import React from 'react';
 import config from '../../../../../config';
 import SidebarSubItem from './SidebarSubItem';
 
-class SidebarSubMenu extends React.PureComponent {
+class SidebarSubMenu extends React.PureComponent<any, any> {
 
 	render() {
 		const links = [

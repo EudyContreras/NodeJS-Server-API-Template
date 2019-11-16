@@ -1,15 +1,13 @@
 import React from 'react';
 import rippleEffect from '../../../../../appliers/ripple.applier';
 
-class SidebarSearch extends React.PureComponent {
+class SidebarSearch extends React.PureComponent<any, any> {
 
-	constructor(props) {
+	constructor(props: any) {
 		super(props)
 	}
-	/**
-	 * @param {React.MouseEvent<HTMLElement, MouseEvent>} event
-	 */
-	performSearch = (event) => {
+	
+	performSearch = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
 		event.preventDefault();
 		rippleEffect(event, this.props.styling);
 	};

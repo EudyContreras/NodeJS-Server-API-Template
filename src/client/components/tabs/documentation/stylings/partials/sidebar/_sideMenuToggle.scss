@@ -21,8 +21,12 @@
    }
 
    &-icon {
-      transition: all 0.3s cubic-bezier(.25, .8, .25, 1);
+      transition: font-size 0.3s cubic-bezier(.25, .8, .25, 1);
       transform: rotate(-180deg);
       margin: auto;
+   }
+
+   &-active > .expand-icon {
+      font-size: 18px;
    }
 }

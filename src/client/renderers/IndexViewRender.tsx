@@ -1,12 +1,13 @@
 import React from 'react';
 import config from '../config';
 import routes from '../routes';
-import ReactDOMServer from 'react-dom/server'
+import Template from '../views/template'
+
 import ViewRenderer from '../../server/middleware/renderer';
 import configureStore from '../store';
 
 import { Store } from 'redux'
-import { server } from '../views/template'
+import { server } from '../views'
 import express, { Router, Request, Response } from 'express';
 
 class IndexViewRenderer extends ViewRenderer {
@@ -44,14 +45,14 @@ class IndexViewRenderer extends ViewRenderer {
 
       const insertCss = (...styles: any[]) => styles.forEach(style => this.css.add(style._getCss()));
 
-      res.type(config.layout.CONTENT_TYPE);
-      res.header(config.header.LABEL, config.header.VALUE);
-      res.render(config.layout.TEMPLATE, {
+      const args = {
          css: this.css,
          title: config.app.NAME,
          state: JSON.stringify(state),
-         content: ReactDOMServer.renderToString(client ?  React.createElement('') : server(req.url, this.store, this.context, insertCss))
-      });
+         content: server(req.url, this.store, this.context, insertCss)
+      }
+
+      res.send(Template(args));
    }
 }
 
