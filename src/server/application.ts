@@ -58,7 +58,7 @@ export default class Application {
 
       this.app.use(cors());
       this.app.use(helmet());
-      this.app.use(morgan('combined'));
+      //this.app.use(morgan('combined'));
       this.app.use(compression());
       this.app.use(express.json());
       this.app.use(express.urlencoded({ extended: false }))

@@ -1,52 +1,64 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-import PropTypes, { any } from 'prop-types';
 import MenuItem from './SidebarMenuItem';
 import SideMenuToggle from './SidebarToggle';
 import SideMenuSearch from './SidebarSearch';
 import Wrapper from '../../../../common/Wrapper';
+
+import { classes, getElement } from '../../../../utililties/styling.utils';
 
 const version = '1.3.5';
 const links = ['Quickstart', 'Basics'];
 const headers = ['Introduction', 'Endpoints']
 const routes = ['Users', 'Privideles', 'Roles', 'Invitation', 'Users', 'Privideles', 'Roles', 'Invitation'];
 
-const classes = (...names: string[]) => {
-	return names.join(' ');
+interface State {
+	expanded: boolean,
+	hovered: boolean
 }
 
-class SidebarMenu extends React.PureComponent<any, any> {
+class SidebarMenu extends React.PureComponent<any, State> {
 
 	constructor(props: any) {
 		super(props);
 		this.state = {
-			expanded: true
+			expanded: true,
+			hovered: false
 		}
 	}
 
 	closeSidebar = (style: any) => {
-		(ReactDOM.findDOMNode(this) as Element).classList.add(style.closed);
+		getElement(this).classList.add(style.sideMenuClosed);
+		getElement(this).classList.remove(style.sideMenuPeak);
 	}
 
 	openSidebar = (style: any) => {
-		(ReactDOM.findDOMNode(this) as Element).classList.remove(style.closed);
+		getElement(this).classList.remove(style.sideMenuClosed);
+		getElement(this).classList.remove(style.sideMenuPeak);
 	}
 
-	onMouseEnter = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
+	onMouseEnter = () => {
+		const style = this.props.styling;
 		const expanded = this.state.expanded;
 		if (!expanded) {
-			this.openSidebar(this.props.styling)
+			getElement(this).classList.add(style.sideMenuPeek);
 		}
+		this.setState(() => ({
+			hovered: true
+		}));
 	}
 
-	onMouseExit = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
+	onMouseExit = () => {
+		const style = this.props.styling;
 		const expanded = this.state.expanded;
 		if (!expanded) {
-			this.closeSidebar(this.props.styling)
+			getElement(this).classList.remove(style.sideMenuPeek);
 		}
+		this.setState(() => ({
+			hovered: false
+		}));
 	}
 
-	handleToggle = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
+	handleToggle = () => {
 		const style = this.props.styling;
 		const expanded = this.state.expanded;
 
@@ -55,7 +67,7 @@ class SidebarMenu extends React.PureComponent<any, any> {
 		} else {
 			this.openSidebar(style)
 		}
-		this.setState((state: any) => ({
+		this.setState((state: State) => ({
 			expanded: !state.expanded
 		}));
 	}
@@ -71,7 +83,7 @@ class SidebarMenu extends React.PureComponent<any, any> {
 		}
 		return (
 			<aside {...props} className={classes(style.sideMenu, style.natural)}>
-				< TopSection styling={style} expanded={this.state.expanded} onSidebarToggle={this.handleToggle} />
+				< TopSection hovered={this.state.hovered} styling={style} expanded={this.state.expanded} onSidebarToggle={this.handleToggle} />
 				< SideMenuSearch styling={style} />
 				< MiddleSection styling={style} header={headers[0]} />
 				< MainSection styling={style} header={headers[1]} />
@@ -99,12 +111,13 @@ class TopSection extends React.PureComponent<any, any> {
 		super(props);
 	}
 	render() {
+		console.log('UPDATE 2')
 		const style = this.props.styling;
 
 		return (
 			<div className={style.topSection}>
 				<VersionInfo styling={style} />
-				<SideMenuToggle styling={style} expanded={this.props.expanded} onSidebarToggle={this.props.onSidebarToggle} />
+				<SideMenuToggle hovered={this.props.hovered} styling={style} expanded={this.props.expanded} onSidebarToggle={this.props.onSidebarToggle} />
 			</div>
 		)
 	}

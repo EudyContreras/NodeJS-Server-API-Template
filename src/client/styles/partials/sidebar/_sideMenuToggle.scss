@@ -1,3 +1,8 @@
+$expandColor: #484c50;
+$expandColorActive: rgba(0, 0, 0, 0.3);
+
+$interpolator: cubic-bezier(.25, .8, .25, 1);
+
 .expand {
    display: flex;
    justify-items: center;
@@ -5,10 +10,15 @@
    width: 30px;
    height: 30px;
    border-radius: 50%;
-   background-color: #484c50;
+   background-color: $expandColor;
    transform: translateX(15px);
    box-shadow: 0 2px 4px 1px rgba(0, 0, 0, 0.4);
-   transition: all 0.3s cubic-bezier(.25, .8, .25, 1);
+   transition: all 0.3s $interpolator;
+
+   &-hidden {
+      opacity: 0;
+      transition: opacity 0.5s ease-in-out 1s;
+   }
 
    &:hover {
       box-shadow: 0 8px 18px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
@@ -17,16 +27,17 @@
 
    &:active {
       transform: translateX(15px) scale(0.9);
-      box-shadow: 1px 0px 1px 0px rgba(0, 0, 0, 0.3);
+      box-shadow: 1px 0px 1px 0px $expandColorActive;
    }
 
    &-icon {
-      transition: font-size 0.3s cubic-bezier(.25, .8, .25, 1);
+      font-size: 20px;
+      transition: font-size 0.3s $interpolator;
       transform: rotate(-180deg);
       margin: auto;
    }
 
-   &-active > .expand-icon {
-      font-size: 18px;
+   &-icon-active {
+      font-size: 16px;
    }
 }

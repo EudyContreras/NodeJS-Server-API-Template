@@ -1,0 +1,3 @@
+TODO: 
+
+* Store theme colors in variables.

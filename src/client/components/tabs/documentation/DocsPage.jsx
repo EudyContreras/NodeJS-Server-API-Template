@@ -5,13 +5,13 @@ import ContentArea from './children/content/ContentArea';
 import FooterArea from './children/footer/FooterArea';
 import SideMenu from './children/sidebar/SidebarMenu';
 import SandBox from './children/sandbox/SandboxArea';
-import withStyles from 'isomorphic-style-loader/withStyles';
-import style from './stylings/main.scss';
 import stickEffect, { ScrollListener } from '../../../appliers/sticky.applier';
 
 class DocsPage extends React.PureComponent {
  
    componentDidMount() {
+      const style = this.props.styling;
+
       const element = ReactDom.findDOMNode(this);
 
       const footer = element.getElementsByClassName(style.footerArea)[0];
@@ -25,6 +25,7 @@ class DocsPage extends React.PureComponent {
    }
 
    render() {
+      const style = this.props.styling;
       return (
          <Wrapper>
             <SideMenu styling={style} />
@@ -36,4 +37,4 @@ class DocsPage extends React.PureComponent {
    }
 } 
 
-export default withStyles(style)(DocsPage)
+export default DocsPage;

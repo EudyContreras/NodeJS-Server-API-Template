@@ -1,10 +1,6 @@
+import ReactDom from 'react-dom';
 
-/**
- * 
- * @param {string} tag 
- * @param {string[]} classes 
- * @returns { HTMLElement}
- */
+
 export const element = (tag: string, classes: string[]) => {
    const element = document.createElement(tag);
    classes.forEach(x => element.classList.add(x));
@@ -16,4 +12,8 @@ export const element = (tag: string, classes: string[]) => {
  */
 export const classes = (...names: string[]): string => {
    return names.join(' ');
+}
+
+export const getElement = (component: React.PureComponent) => {
+	return (ReactDom.findDOMNode(component) as Element);
 }

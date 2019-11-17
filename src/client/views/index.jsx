@@ -18,7 +18,7 @@ export const server = (url, store, context, insertCss) => (
    <Provider store={store}>
       <StaticRouter location={url} context={context}>
          <StyleContext.Provider value={{ insertCss }}>
-            <Application />
+            <Application location={url} />
          </StyleContext.Provider>
       </StaticRouter>
    </Provider>

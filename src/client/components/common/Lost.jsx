@@ -1,14 +1,9 @@
 import React from 'react';
 
-class Lost extends React.PureComponent {
-   
-   componentDidMount() {}
-
+export default class Lost extends React.PureComponent {
    render() {
       return (
         <h2>404 Not Found</h2>
       );
    }
 } 
-
-export default Lost;

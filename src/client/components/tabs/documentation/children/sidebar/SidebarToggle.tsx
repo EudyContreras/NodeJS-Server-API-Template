@@ -1,21 +1,20 @@
 import React from 'react';
-import ReactDom from 'react-dom';
 import rippleEffect from '../../../../../appliers/ripple.applier';
+import { MaterialIcons } from '../../../../../stores/icon.library';
+import { classes, getElement } from '../../../../utililties/styling.utils';
 
-const classes = (...names: string[]) => {
-	return names.join(' ');
-}
+interface State {
+	sidebarHovered: boolean,
+	expanded: boolean
+};
 
-const getElement = (component: React.PureComponent) => {
-	return (ReactDom.findDOMNode(component) as Element);
-}
-
-class SidebarToggle extends React.PureComponent<any, any> {
+class SidebarToggle extends React.PureComponent<any, State> {
 
 	constructor(props: any) {
 		super(props);
 		this.state = {
-			expanded: props.expanded,
+			sidebarHovered: props.hovered,
+			expanded: props.expanded
 		};
 	}
 
@@ -29,20 +28,19 @@ class SidebarToggle extends React.PureComponent<any, any> {
 		} else {
 			getElement(this).classList.remove(style.expandActive)
 		}
-		this.setState((state: any) => ({
+		this.setState((state: State) => ({
 			expanded: !state.expanded
 		}));
 
 		this.props.onSidebarToggle(this.state.expanded);
 	};
 
-	onMouseOver = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
-		console.log('mouse in')
-
-	}
-
-	onMouseOut = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
-		console.log('mouse out')
+	componentWillReceiveProps(nextProps: any) {
+		if (nextProps.hovered !== this.state.sidebarHovered) {
+			this.setState(() => ({
+				sidebarHovered: nextProps.hovered
+			}));
+		}
 	}
 
 	render() {
@@ -53,17 +51,25 @@ class SidebarToggle extends React.PureComponent<any, any> {
 			id: 'sidebar-toggle',
 			title: elementTitle,
 			value: this.state.expanded,
-			className: style.expand,
-			onMouseEnter: this.onMouseOver,
-			onMouseLeave: this.onMouseOut,
 			onClick: this.toggleSidebar
 		}
 
-		const text = this.state.expanded ? 'chevron_right' : 'menu';
+		const iconText = this.state.expanded ? MaterialIcons.icons.CHEV_RIGHT : MaterialIcons.icons.MENU;
+
+		const classNamesToggle = [style.expand];
+		const classnamesIcon = [MaterialIcons.className, style.expandIcon];
+
+		if (!this.state.sidebarHovered && this.state.expanded) {
+			classNamesToggle.push(style.expandHidden);
+		}
+
+		if (!this.state.expanded) {
+			classnamesIcon.push(style.expandIconActive);
+		}
 
 		return (
-			<div {...props}>
-				<i className={classes('material-icons', style.expandIcon)}>{text}</i>
+			<div className={classes(...classNamesToggle)} {...props}>
+				<i className={classes(...classnamesIcon)}>{iconText}</i>
 			</div>
 		)
 	}

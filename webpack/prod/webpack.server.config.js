@@ -10,7 +10,7 @@ module.exports = {
     '@babel/polyfill', './src/server.ts'
   ],
   output: {
-    path: path.join(__dirname, './dist'),
+    path: path.join(__dirname, '../../build'),
     filename: 'server.js'
   },
   optimization: {

@@ -2,7 +2,7 @@
 const config = Object.freeze({
   app: {
     CSR: process.env.CLIENT_ONLY,
-    NAME: 'React app'
+    NAME: ''
   },
   header: {
     LABEL: 'Set-Cookie',

@@ -18,12 +18,12 @@
    }
 
    & a {
-      color: rgb(168, 167, 165);
+      color: rgba(152, 156, 160, 1);
       font-size: 14px;
       display: block;
       padding: 8px 16px;
-      text-decoration: none;
-      font-weight: 100;
+      letter-spacing: 0.6px;
+      font-weight: 400;
       transition: color 0.2s cubic-bezier(.25, .8, .25, 1);
    }
 

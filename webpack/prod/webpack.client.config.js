@@ -7,7 +7,7 @@ module.exports = {
   mode: 'production',
   entry: './src/client.jsx',
   output: {
-    path: path.join(__dirname, './public'),
+    path: path.join(__dirname, '../../public'),
     filename: 'client.js',
     publicPath: "/",
     chunkFilename: '[id].[name].[chunkhash:8].js'

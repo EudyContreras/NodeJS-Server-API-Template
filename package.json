@@ -21,8 +21,8 @@
     "build:watch:server": "webpack --config webpack/dev/webpack.server.config.js/ --watch",
     "build:watch:client": "webpack --config webpack/dev/webpack.client.config.js/ --watch",
     "build:prod": "npm run build:server && npm run build:client",
-    "server": "node dist/server.js",
-    "start:prod": "npm run build:prod && NODE_ENV=production node ./dist/server.js",
+    "server": "node build/server.js",
+    "start:prod": "npm run build:prod && NODE_ENV=production node ./build/server.js",
     "start:dev": "concurrently \"npm run build:watch:server\" \"npm run build:watch:client\" \"nodemon ./dist/server.js\"",
     "start": "npm run build:prod && npm run server"
   },

@@ -1,29 +1,24 @@
-import React from 'react';
-import config from '../config';
-import routes from '../routes';
-import Template from '../views/template'
 
-import ViewRenderer from '../../server/middleware/renderer';
+import config from '../config';
+import template from '../views/template'
 import configureStore from '../store';
+import ViewRenderer from '../../server/middleware/renderer';
 
 import { Store } from 'redux'
 import { server } from '../views'
+import { routes } from '../components/Routes';
 import express, { Router, Request, Response } from 'express';
 
 class IndexViewRenderer extends ViewRenderer {
 
    private routing: string = '/';
    private router: Router;
-   private context: any;
    private store: Store;
-   private css: Set<any>;
 
    constructor() {
       super();
-      this.context = {};
       this.router = express.Router();
       this.store = configureStore({});
-      this.css = new Set()
       this.setupRoutes(this.router);
    }
 
@@ -40,19 +35,21 @@ class IndexViewRenderer extends ViewRenderer {
    }
 
    renderRoutes = (req: Request, res: Response) => {
+      const css = new Set()
       const client =  config.app.CSR;
       const state = this.store.getState();
 
-      const insertCss = (...styles: any[]) => styles.forEach(style => this.css.add(style._getCss()));
+      const insertCss = (...styles: any[]) => styles.forEach(style => css.add(style._getCss()));
 
+      console.log(req.url);
       const args = {
-         css: this.css,
+         css: css,
          title: config.app.NAME,
          state: JSON.stringify(state),
-         content: server(req.url, this.store, this.context, insertCss)
+         content: server(req.url, this.store, {}, insertCss)
       }
 
-      res.send(Template(args));
+      res.send(template(args));
    }
 }
 

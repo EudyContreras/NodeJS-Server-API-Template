@@ -1,0 +1,171 @@
+$navLinkColorAccent: rgb(238, 150, 2);
+$navLinkColorPrimary: rgb(125, 125, 125);
+$navLinkShadow: rgba(0, 0, 0, 0.3);
+
+.nav {
+   box-shadow: 0 2px 4px 2px rgba(0, 0, 0, 0.4);
+   align-items: center;
+   background-color: rgba(39, 43, 46, 1);
+   padding: {
+      top: 0.8em;
+      bottom: 0.8em;
+      left: 1.5em;
+      right: 2em;
+   }
+   position: absolute;
+   color: #eee;
+   display: flex;
+   height: 50px;
+   top: 0;
+   left: 0;
+   right: 0;
+   z-index: 2000;
+
+   ul {
+      margin-left: auto;
+      list-style: none;
+      display: flex;
+      font-size: 0.8em;
+      text-transform: uppercase;
+
+      li {
+         display: inline;
+         padding: 0 20px;
+         letter-spacing: 1px
+      }
+   }
+
+   &-logo {
+      display: inline-flex;
+      text-align: center;
+
+      &-image {
+         width: 40px;
+         height: 40px;
+         margin-right: 1em;
+         //filter: drop-shadow(0px 0px 8px rgba(238, 150, 2, 1));
+      }
+
+      &-text {
+         margin: auto;
+         font-size: 1.2em;
+         display: inline;
+         font-weight: bold;
+
+         a {
+            text-decoration: none;
+            color: #eee;
+         }
+      }
+   }
+}
+
+.nav-sticky {
+   position: fixed;
+   top: -65px;
+}
+
+.nav-padder {
+   position: static;
+   padding: {
+      top: 0.8em;
+      bottom: 0.8em;
+      left: 1.5em;
+      right: 3em;
+   }
+   height: 50px;
+}
+
+@mixin transition($property) {
+   -webkit-transition: $property;
+   -ms-transition: $property;
+   transition: $property;
+}
+
+@mixin scaleY($property) {
+   -webkit-transform: scaleY($property);
+   -ms-transform: scaleY($property);
+   transform: scaleY($property);
+}
+
+@mixin scaleXY($propertyX, $propertyY) {
+   -webkit-transform: scaleX($propertyX), scaleY($propertyY);
+   -ms-transform: scaleX($propertyX) scaleY($propertyY);
+   transform: scaleX($propertyX) scaleY($propertyY);
+}
+
+@mixin translateY($property) {
+   -webkit-transform: translateY($property);
+   -ms-transform: translateY($property);
+   transform: translateY($property);
+}
+
+@mixin link() {
+   content: "";
+   bottom: 0;
+   left: 0px;
+   clear: both;
+   height: 6px;
+   width: 100%;
+   background-color: $navLinkColorAccent;
+   background-color: $navLinkColorPrimary;
+   position: absolute;
+   @include scaleXY(0.7, 0);
+   @include transition(.25s);
+}
+
+@mixin linkHovered() {
+   
+}
+
+@mixin linkActive($showShadow: false, $shadowColor: $navLinkShadow) {
+   @include scaleXY(1, 1);
+   @if $showShadow { 
+      box-shadow: 0px 4px 8px 2px $shadowColor;
+   }
+}
+
+.nav-link {
+   margin: 0 0px;
+   padding: {
+      top: 0px;
+      bottom: 35px;
+      left: 1.5em;
+      right: 1.5em;
+   }
+   position: relative;
+   font-weight: 500;
+   text-decoration: none;
+   color: rgb(171, 172, 174);
+   @include transition(.25s);
+
+   &:hover {
+      color: white;
+      font-weight: 500;
+   }
+
+   &::after {
+      transform-origin: bottom;
+      border-radius: 8px;
+      @include link();
+   }
+}
+
+.nav-link-active {
+   font-weight: 600;
+   color: rgb(204, 205, 206);
+
+   &:hover {
+      &::after {
+         @include linkHovered();
+      }
+   }
+
+   &::after {
+      @include linkActive(true);
+   }
+
+   &::before {
+      @include linkActive(true);
+   }
+}
