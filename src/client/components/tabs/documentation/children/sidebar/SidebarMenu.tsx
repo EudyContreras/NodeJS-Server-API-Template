@@ -111,7 +111,6 @@ class TopSection extends React.PureComponent<any, any> {
 		super(props);
 	}
 	render() {
-		console.log('UPDATE 2')
 		const style = this.props.styling;
 
 		return (

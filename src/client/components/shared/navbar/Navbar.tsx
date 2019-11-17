@@ -1,24 +1,67 @@
 import React from 'react';
-import logo from '../../../resources/images/logo.png';
+import ReactDom from 'react-dom';
+import logo from '../../../resources/images/brandlogo.png';
 import { Link } from 'react-router-dom';
-import { classes, getElement } from '../../utililties/styling.utils';
+import { classes, getHTMLElement } from '../../utililties/styling.utils';
+import { ScrollListener, addAnchor } from '../../../appliers/sticky.applier';
 
-class Navbar extends React.PureComponent<any, any> {
+interface State {
+	activeTab: any,
+	anchored: boolean
+}
+
+class Navbar extends React.PureComponent<any, State> {
 	constructor(props: any) {
 		super(props)
 		this.state = {
-			activeTab: null
+			activeTab: null,
+			anchored: false
 		}
 	}
 
 	componentDidMount() {
-		console.log(this.state.activeTab);
-	}
+      const style = this.props.styling;
 
-	handleLinkClick = (event: React.MouseEvent<HTMLElement, MouseEvent>, tab: any) => {
+		const element = getHTMLElement(this);
+		
+		const listener = new ScrollListener(element, undefined, -65);
+
+      addAnchor(style, listener, (anchored: boolean) => {
+			if (!anchored) {
+				element.classList.remove(style.navTransition);
+			} 
+			this.setState(()  => ({
+				anchored: anchored
+			}));
+		});
+	}
+	
+	onMouseEnter = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
+		const element = event.currentTarget;
 		const style = this.props.styling;
 
-		this.setState((state: any)  => ({
+		if (!this.state.anchored) return;
+
+		if (!element.classList.contains(style.navTransition)) {
+			element.classList.add(style.navTransition);
+		}
+
+		if (!element.classList.contains(style.navPeeky)) {
+			element.classList.add(style.navPeeky);
+		}
+	}
+
+	onMouseExit = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
+		const element = event.currentTarget;
+		const style = this.props.styling;
+
+		if (element.classList.contains(style.navPeeky)) {
+			element.classList.remove(style.navPeeky);
+		}
+	}
+
+	handleLinkClick = (tab: any) => {
+		this.setState(()  => ({
 			activeTab: tab
 		}));
 	};
@@ -27,9 +70,8 @@ class Navbar extends React.PureComponent<any, any> {
 		const activeTab = this.state.activeTab;
 		const location = this.props.location;
 
-		console.log(location);
-		const linkClick = (event: React.MouseEvent<HTMLElement, MouseEvent>, element: any, idx: number) => {
-			this.handleLinkClick(event, { label: element.label, index: idx });
+		const linkClick = (element: any, idx: number) => {
+			this.handleLinkClick({ label: element.label, index: idx });
 		}
 
 		const navClasses: string[] = [style.navLink];
@@ -42,17 +84,26 @@ class Navbar extends React.PureComponent<any, any> {
 			navClasses.push(style.navLinkActive);
 		}
 
-		return (	<Link onClick={(e) => linkClick(e, element, idx)} className={classes(...navClasses)} to={element.link}>{element.label}</Link>)
+		return (	<Link onClick={(e) => linkClick(element, idx)} className={classes(...navClasses)} to={element.link}>{element.label}</Link>)
 	}
 
 	render() {
 		const style = this.props.styling;
 		const routes = this.props.routings;
+		const classNames = [style.nav]
+
+		const properties = {
+			id: 'navbar',
+			className: classes(...classNames),
+			onMouseEnter: this.onMouseEnter,
+			onMouseLeave: this.onMouseExit
+		}
 
 		return (
-			<header id='navbar' className={style.nav}>
+			<header { ...properties }>
 				<div className={style.navLogo}>
-					<img className={style.navLogoImage} src={logo}/>
+					<div className={style.status} />
+					{/* <img className={style.navLogoImage} src={logo}/> */}
 					<div className={style.navLogoText}>
 						<a href='/'>{this.props.brandName}</a>
 					</div>

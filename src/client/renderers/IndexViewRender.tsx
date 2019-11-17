@@ -1,4 +1,5 @@
 
+import React from 'react';
 import config from '../config';
 import template from '../views/template'
 import configureStore from '../store';
@@ -41,7 +42,6 @@ class IndexViewRenderer extends ViewRenderer {
 
       const insertCss = (...styles: any[]) => styles.forEach(style => css.add(style._getCss()));
 
-      console.log(req.url);
       const args = {
          css: css,
          title: config.app.NAME,
@@ -49,7 +49,7 @@ class IndexViewRenderer extends ViewRenderer {
          content: server(req.url, this.store, {}, insertCss)
       }
 
-      res.send(template(args));
+      res.send(client ? React.createElement('') : template(args));
    }
 }
 

@@ -4,14 +4,14 @@ import StyleContext from 'isomorphic-style-loader/StyleContext'
 import { Provider } from 'react-redux';
 import { StaticRouter, BrowserRouter } from 'react-router'
 
-export const client = (store, insertCss) => (
+export default (store, insertCss, window) => (
    <Provider store={store}>
-      <BrowserRouter>
-         <StyleContext.Provider value={{ insertCss }}>
-            <Application />
-         </StyleContext.Provider>
-      </BrowserRouter>
-   </Provider>
+   <BrowserRouter>
+     <StyleContext.Provider value={{ insertCss }}>
+       <Application location={window.location.pathname}/>
+     </StyleContext.Provider>
+   </BrowserRouter>    
+ </Provider>
 );
 
 export const server = (url, store, context, insertCss) => (

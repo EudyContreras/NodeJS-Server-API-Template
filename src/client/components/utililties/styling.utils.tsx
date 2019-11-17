@@ -17,3 +17,7 @@ export const classes = (...names: string[]): string => {
 export const getElement = (component: React.PureComponent) => {
 	return (ReactDom.findDOMNode(component) as Element);
 }
+
+export const getHTMLElement = (component: React.PureComponent) => {
+	return (ReactDom.findDOMNode(component) as HTMLElement);
+}

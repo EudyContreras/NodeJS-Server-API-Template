@@ -6,14 +6,14 @@ interface IScrollListener {
 }
 
 export class ScrollListener implements IScrollListener {
-   private top: number;
-   private bottom?: number;
-   private margin: number;
+   public top: number;
+   public bottom?: number;
+   public margin: number;
 
-   private sticker: JQuery<HTMLElement>;
-   private anchor?: JQuery<HTMLElement>;
+   public sticker: JQuery<HTMLElement>;
+   public anchor?: JQuery<HTMLElement>;
 
-   constructor(sticker: HTMLElement, anchor?: HTMLElement, topMargin: number = 0) {
+   constructor(sticker: HTMLElement, anchor?: HTMLElement | null, topMargin: number = 0) {
       this.sticker = $(sticker);
       this.top = this.sticker.offset()!.top - topMargin;
       this.margin = topMargin;
@@ -35,11 +35,30 @@ export class ScrollListener implements IScrollListener {
 }
 
 export default (style: any, ...listeners: IScrollListener[]) => {
-   $(window).scroll(x => {
+   $(window).on('scroll', () => {
       const scroll = $(window).scrollTop();
       for (var i = 0, len = listeners.length; i < len; i++) {
          const listener = listeners[i];
          listener.onScroll(style, scroll!)
+      }
+   });
+}
+
+
+export const addAnchor = (style: any, listener: ScrollListener, stickyCallBack: (stuck: boolean) => void) => {
+   $(window).on('scroll', () => {
+      const scroll = $(window).scrollTop();
+  
+      const sticker = listener.sticker;
+
+      if (scroll! >= listener.top && !sticker.hasClass(style.navSticky)) {
+         sticker.addClass(style.navSticky);
+         stickyCallBack(true);
+      }
+
+      if (scroll! < listener.top && sticker.hasClass(style.navSticky)) {
+         sticker.removeClass(style.navSticky);
+         stickyCallBack(false);
       }
    });
 }

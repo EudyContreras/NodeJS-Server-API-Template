@@ -18,8 +18,8 @@ class DocsPage extends React.PureComponent {
       const sideBar = element.getElementsByClassName(style.sideMenu)[0];
       const sandBox = element.getElementsByClassName(style.sandboxArea)[0];
 
-      const sandboxListener = new ScrollListener(sandBox, footer);
-      const sidebarListener = new ScrollListener(sideBar);
+      const sandboxListener = new ScrollListener(sandBox, footer, 10);
+      const sidebarListener = new ScrollListener(sideBar, null ,10);
 
       stickEffect(style, sidebarListener, sandboxListener);
    }
