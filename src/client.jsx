@@ -20,7 +20,7 @@ const insertCss = (...styles) => {
 }
 
 ReactDOM.hydrate(
-  <Provider store={store}>
+  <Provider store={store} suppressHydrationWarning={true}>
     <BrowserRouter>
       <StyleContext.Provider value={{ insertCss }}>
         <Application location={window.location.pathname} />

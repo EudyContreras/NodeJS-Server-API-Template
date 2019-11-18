@@ -44,7 +44,7 @@ class IndexViewRenderer extends ViewRenderer {
 
       const args = {
          css: css,
-         title: config.app.NAME,
+         title: config.app.TITLE,
          state: JSON.stringify(state),
          content: server(req.url, this.store, {}, insertCss)
       }

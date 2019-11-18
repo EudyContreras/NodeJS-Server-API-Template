@@ -8,7 +8,7 @@ module.exports = {
   entry: './src/client.jsx',
   output: {
     path: path.join(__dirname, '../../public'),
-    filename: 'client.js',
+    filename: 'bundle.js',
     publicPath: "/",
     chunkFilename: '[id].[name].[chunkhash:8].js'
   },

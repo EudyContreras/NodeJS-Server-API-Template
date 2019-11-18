@@ -2,6 +2,7 @@
 const config = Object.freeze({
   app: {
     CSR: process.env.CLIENT_ONLY,
+    TITLE: 'React App',
     NAME: ''
   },
   header: {

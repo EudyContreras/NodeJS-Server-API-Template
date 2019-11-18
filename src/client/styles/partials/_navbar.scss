@@ -1,6 +1,3 @@
-$navLinkColorAccent: rgb(238, 150, 2);
-$navLinkColorPrimary: rgb(125, 125, 125);
-$navLinkShadow: rgba(0, 0, 0, 0.3);
 
 $peekyHeight: 65;
 
@@ -25,6 +22,7 @@ $peekyHeight: 65;
 
    ul {
       margin-left: auto;
+      margin-right: 1em;
       list-style: none;
       display: flex;
       font-size: 0.8em;
@@ -32,7 +30,7 @@ $peekyHeight: 65;
 
       li {
          display: inline;
-         padding: 0 20px;
+         padding: 0 2em;
          letter-spacing: 1px
       }
    }
@@ -87,97 +85,4 @@ $peekyHeight: 65;
       right: 3em;
    }
    height: 50px;
-}
-
-@mixin transition($property) {
-   -webkit-transition: $property;
-   -ms-transition: $property;
-   transition: $property;
-}
-
-@mixin scaleY($property) {
-   -webkit-transform: scaleY($property);
-   -ms-transform: scaleY($property);
-   transform: scaleY($property);
-}
-
-@mixin scaleXY($propertyX, $propertyY) {
-   -webkit-transform: scaleX($propertyX), scaleY($propertyY);
-   -ms-transform: scaleX($propertyX) scaleY($propertyY);
-   transform: scaleX($propertyX) scaleY($propertyY);
-}
-
-@mixin translateY($property) {
-   -webkit-transform: translateY($property);
-   -ms-transform: translateY($property);
-   transform: translateY($property);
-}
-
-@mixin link() {
-   content: "";
-   bottom: 0;
-   left: 0px;
-   clear: both;
-   height: 6px;
-   width: 100%;
-   background-color: $navLinkColorAccent;
-   background-color: $navLinkColorPrimary;
-   position: absolute;
-   @include scaleXY(0.7, 0);
-   @include transition(.25s);
-}
-
-@mixin linkHovered() {
-   
-}
-
-@mixin linkActive($showShadow: false, $shadowColor: $navLinkShadow) {
-   @include scaleXY(1, 1);
-   @if $showShadow { 
-      box-shadow: 0px 4px 8px 2px $shadowColor;
-   }
-}
-
-.nav-link {
-   margin: 0 0px;
-   padding: {
-      top: 0px;
-      bottom: 35px;
-      left: 1.5em;
-      right: 1.5em;
-   }
-   position: relative;
-   font-weight: 500;
-   text-decoration: none;
-   color: rgb(171, 172, 174);
-   @include transition(.25s);
-
-   &:hover {
-      color: white;
-   }
-
-   &::after {
-      transform-origin: bottom;
-      border-radius: 8px;
-      @include link();
-   }
-}
-
-.nav-link-active {
-   font-weight: 600;
-   color: rgb(204, 205, 206);
-
-   &:hover {
-      &::after {
-         @include linkHovered();
-      }
-   }
-
-   &::after {
-      @include linkActive(true);
-   }
-
-   &::before {
-      @include linkActive(true);
-   }
 }
