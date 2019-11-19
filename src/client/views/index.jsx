@@ -1,17 +1,17 @@
 import React from 'react';
 import Application from '../components/App';
-import StyleContext from 'isomorphic-style-loader/StyleContext'
+import StyleContext from 'isomorphic-style-loader/StyleContext';
 import { Provider } from 'react-redux';
-import { StaticRouter, BrowserRouter } from 'react-router'
+import { StaticRouter, BrowserRouter } from 'react-router';
 
-export default (store, insertCss, window) => (
+export const client = (store, insertCss, window) => (
    <Provider store={store}>
-   <BrowserRouter>
-     <StyleContext.Provider value={{ insertCss }}>
-       <Application location={window.location.pathname}/>
-     </StyleContext.Provider>
-   </BrowserRouter>    
- </Provider>
+      <BrowserRouter>
+         <StyleContext.Provider value={{ insertCss }}>
+            <Application location={window.location.pathname}/>
+         </StyleContext.Provider>
+      </BrowserRouter>    
+   </Provider>
 );
 
 export const server = (url, store, context, insertCss) => (

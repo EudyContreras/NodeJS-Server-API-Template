@@ -3,13 +3,13 @@
 import config from '../config';
 import webtoken from 'jsonwebtoken';
 import UserService from './user.service';
-import PasswordRepository from '../repositories/password.repository'
+import PasswordRepository from '../repositories/password.repository';
 import NotificationService from './notification.service';
 import UserRepository from '../repositories/user.repository';
 import RedisCacheHandler from '../handlers/cache.handler';
 import EncryptionService from './encryption.service';
 
-import { IUser } from '../entitymodel/models/user.model'
+import { IUser } from '../entitymodel/models/user.model';
 import { AuthenticationMessages, NotificationMessages} from '../messages/message.response';
 import { randomString } from '../utilities/string.utility';
 
@@ -23,7 +23,7 @@ export default class AuthenticationService {
     * @param credentials The email and password used for athentication
     * @returns The possible user id and token or an error that has been produced.
     */
-   async authenticate(credentials: { email: string, password: string }): Promise<{ result?: any, error?: any }> {
+   public async authenticate(credentials: { email: string, password: string }): Promise<{ result?: any, error?: any }> {
 
       try {
          const { email, password } = credentials;
@@ -73,7 +73,7 @@ export default class AuthenticationService {
     * @returns the potential result represented as a message indicating that
     * a recovery email was succesfully sent or the possible generated error.
     */
-   async recoverPassword(data: any): Promise<{ result?: any, error?: any }> {
+   public async recoverPassword(data: any): Promise<{ result?: any, error?: any }> {
       const email = data.email;
       const passwordLength = 32;
 
@@ -99,7 +99,7 @@ export default class AuthenticationService {
             userId: user.id,
             password: hash,
             isTemp: true
-         }
+         };
 
          const password = await passwordRepository.insertPassword(passwordData);
 
@@ -122,7 +122,7 @@ export default class AuthenticationService {
    * be returned
    * @returns The possible user or an error that has been produced.
    */
-   async getUser(userId: string, getDTO: boolean = true): Promise<{ result?: IUser, error?: any }> {
+  public async getUser(userId: string, getDTO: boolean = true): Promise<{ result?: IUser, error?: any }> {
       try {
          const repository = new UserRepository();
 
@@ -132,7 +132,7 @@ export default class AuthenticationService {
 
          return { result };
       } catch (error) {
-         return { error }
+         return { error };
       }
    }
 
@@ -143,7 +143,7 @@ export default class AuthenticationService {
     * @returns {{token: string, error: string}} The possible token
     * or an error that has been produced.
     */
-   async createToken(user: IUser): Promise<{ token?: string, error?: any }> {
+   public async createToken(user: IUser): Promise<{ token?: string, error?: any }> {
       try {
          const payload = {
             userId: user.id,
@@ -175,11 +175,11 @@ export default class AuthenticationService {
     * @returns true if the token is found in the blacklist
     * records and false if it isnt.
     */
-   async isBlackListed(token: string): Promise<{ result?: boolean; error: any; }> {
+   public async isBlackListed(token: string): Promise<{ result?: boolean; error: any; }> {
       if (this.redisCacheHandler.available()) {
-         return Promise.resolve(false).then()
+         return Promise.resolve(false).then();
       }
-      return Promise.resolve(false).then()
+      return Promise.resolve(false).then();
    }
 
    /**
@@ -188,7 +188,7 @@ export default class AuthenticationService {
     * @param user The user to invalidate the tokens for.
     * @returns The flag indicating token invalidation an error that has been produced.
     */
-   async invalidateTokens(user: IUser): Promise<{ result?: boolean, error?: any }> {
+   public async invalidateTokens(user: IUser): Promise<{ result?: boolean, error?: any }> {
       return new Promise<any>(() => { });
    }
 }

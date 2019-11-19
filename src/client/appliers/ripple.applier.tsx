@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 import $ from 'jquery';
 
 export default (event: React.MouseEvent<HTMLElement, MouseEvent>, style: any) => {
@@ -32,4 +32,4 @@ export default (event: React.MouseEvent<HTMLElement, MouseEvent>, style: any) =>
       top: y,
       left: x
    }).addClass(style.rippleEffect);
-}
+};

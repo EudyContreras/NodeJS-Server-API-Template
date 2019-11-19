@@ -1,7 +1,7 @@
 
-import authenticate from '../../../middleware/authenticators/token.validator'
-import allowed from '../../../middleware/authenticators/access.validator'
-import validate from '../../../middleware/validators/body.validator'
+import authenticate from '../../../middleware/authenticators/token.validator';
+import allowed from '../../../middleware/authenticators/access.validator';
+import validate from '../../../middleware/validators/body.validator';
 import RoleService from '../../../services/role.service';
 import Controller from '../../controller';
 import express from 'express';
@@ -17,44 +17,44 @@ class Roles extends Controller {
    private roles: string[];
 
    constructor(...allowedRoles: string[]) {
-      super('role')
+      super('role');
       this.roles = allowedRoles;
       this.router = express.Router();
       this.setupRoutes(this.router);
    }
 
-   getRoute(): string {
+   public getRoute(): string {
       return this.routing;
    }
 
-   getRouter(): Router {
+   public getRouter(): Router {
       return this.router;
    }
 
    private setupRoutes(router: Router) {
-      router.get('/', authenticate, allowed(...this.roles), this.get);;
+      router.get('/', authenticate, allowed(...this.roles), this.get);
    }
 
    private get = async (request: Request, response: Response) => {
       const roleId = request.query.roleId;
       
       if (roleId) {
-         return this.getOne(roleId, request, response)
+         return this.getOne(roleId, request, response);
       } else {
-         return this.getAll(request, response)
+         return this.getAll(request, response);
       }
    }
 
    private getOne = async (id: string, request: Request, response: Response) => {
       const { result, error } = await this.service.getRole(id);
 
-      return this.buildResult(result, error, response, RequestAction.GET)
+      return this.buildResult(result, error, response, RequestAction.GET);
    }
 
    private getAll = async (request: Request, response: Response) => {
       const { result, error } = await this.service.getAllRoles();
 
-      return this.buildResult(result, error, response, RequestAction.GET_ALL)
+      return this.buildResult(result, error, response, RequestAction.GET_ALL);
    }
 }
 

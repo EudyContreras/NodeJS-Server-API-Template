@@ -4,12 +4,12 @@ const nodeExternals = require('webpack-node-externals');
 module.exports = {
   name: 'server',
   target: 'node',
-  mode: 'production',
+  mode: 'development',
   entry: [
     '@babel/polyfill', './src/server.ts'
   ],
   output: {
-    path: path.join(__dirname, '../../dist'),
+    path: path.join(__dirname, '../../build'),
     filename: 'server.js'
   },
   optimization: {
@@ -42,8 +42,7 @@ module.exports = {
                 context: path.resolve(__dirname, '../../src/client/components'),
               },	
               localsConvention: 'camelCase',
-              importLoaders: 1,
-              sourceMap: true
+              importLoaders: 1
             }
           },
           'sass-loader'

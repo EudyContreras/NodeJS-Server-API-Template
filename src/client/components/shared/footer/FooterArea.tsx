@@ -2,7 +2,7 @@ import React from 'react';
 
 class FooterArea extends React.PureComponent {
    
-   render() {
+   public render() {
       return (
          <footer className='footer'></footer>
       );

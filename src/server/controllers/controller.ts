@@ -2,7 +2,7 @@
 import HttpCode from '../definitions/httpCode';
 import RequestAction from '../definitions/requestAction';
 
-import { Router, Response} from 'express'
+import { Router, Response} from 'express';
 import { ApiResponse } from '../responses/request.response';
 import { ResponseMessages } from '../messages/message.response';
 
@@ -13,8 +13,8 @@ abstract class Controller {
       this.name = name;
    }
 
-   abstract getRoute(): string
-   abstract getRouter(): Router;
+   public abstract getRoute(): string;
+   public abstract getRouter(): Router;
 
    /**
     * Builds a response to send to the client
@@ -26,7 +26,7 @@ abstract class Controller {
     * @returns  The response produced based
     * on the given arguements and the controller type.
     */
-   buildResult(result: any, error: any, response: Response, requestAction: RequestAction): Response {
+   public buildResult(result: any, error: any, response: Response, requestAction: RequestAction): Response {
       const apiResponse = new ApiResponse();
 
       if (error) {
@@ -46,6 +46,7 @@ abstract class Controller {
             case RequestAction.DELETE:
                apiResponse.message = ResponseMessages.NOT_DELETED(this.name);
                break;
+            default:
          }
 
          apiResponse.errors.push(error);

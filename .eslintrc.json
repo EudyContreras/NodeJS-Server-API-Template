@@ -1,28 +1,61 @@
 {
-   "env": {
-       "browser": true,
-       "es6": true,
-       "node": true
-   },
-   "extends": [
-       "plugin:@typescript-eslint/eslint-recommended"
-   ],
-   "globals": {
-       "Atomics": "readonly",
-       "SharedArrayBuffer": "readonly"
-   },
-   "parser": "@typescript-eslint/parser",
-   "parserOptions": {
-       "ecmaFeatures": {
-           "jsx": true
-       },
-       "ecmaVersion": 2018,
-       "sourceType": "module"
-   },
-   "plugins": [
-       "react",
-       "@typescript-eslint"
-   ],
-   "rules": {
-   }
+    "env": {
+        "browser": true,
+        "es6": true,
+        "node": true
+    },
+    "extends": [
+        "eslint:recommended",
+        "plugin:react/recommended",
+        "plugin:@typescript-eslint/recommended",
+        "plugin:@typescript-eslint/eslint-recommended"
+    ],
+    "globals": {
+        "Atomics": "readonly",
+        "SharedArrayBuffer": "readonly"
+    },
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+        "ecmaFeatures": {
+            "jsx": true,
+            "tsx": true,
+            "ts": true
+        },
+        "ecmaVersion": 6,
+        "sourceType": "module"
+    },
+    "plugins": [
+        "react",
+        "@typescript-eslint"
+    ],
+    "rules": {
+        "indent": ["warn", 3],
+        "linebreak-style": [
+            "error",
+            "unix"
+        ],
+        "quotes": [
+            "error",
+            "single"
+        ],
+        "semi": [
+            "error",
+            "always"
+        ],
+        "no-console": ["warn"],
+        "prefer-const":["warn"],
+        "comma-dangle": ["warn"],
+        "comma-spacing": ["error", { "before": false, "after": true }],
+        "@typescript-eslint/explicit-function-return-type": "off",
+        "react/prop-types": ["warn", { "ignore": ["Any"] }],
+        "no-shadow": ["warn", { "builtinGlobals": false, "hoist": "functions", "allow": [] }]
+    },
+    "overrides": [
+        {
+          "files": ["*.ts", "*.tsx"],
+          "rules": {
+            "@typescript-eslint/explicit-function-return-type": ["warn"]
+          }
+        }
+      ]
 }

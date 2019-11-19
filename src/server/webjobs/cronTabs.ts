@@ -7,6 +7,6 @@ const tabs = {
       JOB: 'remove old teporary passwords',
       TAB: '30 3 * * *'
    },
-}
+};
 
 export default tabs;

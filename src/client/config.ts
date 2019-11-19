@@ -23,6 +23,6 @@ const config = Object.freeze({
     PATCH: 'patch',
     DELETE: 'delete',
   }
-})
+});
 
 export default config;

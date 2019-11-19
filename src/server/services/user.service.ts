@@ -6,7 +6,7 @@ import AuthenticationService from './authentication.service';
 import UserRepository from '../repositories/user.repository';
 import PasswordRepository from '../repositories/password.repository';
 
-import { UserMessages, NotificationMessages } from '../messages/message.response';
+import { UserMessages } from '../messages/message.response';
 
 
 export default class UserService {
@@ -17,7 +17,7 @@ export default class UserService {
     * @returns the potential result represented as a list of users or 
     * the possible generated error.
     */
-   async getAllUsers(): Promise<{ result?: any[], error?: any }> {
+   public async getAllUsers(): Promise<{ result?: any[], error?: any }> {
       try {
          const repository = new UserRepository();
 
@@ -36,13 +36,13 @@ export default class UserService {
     * @returns the potential result represented as the user that matches
     * the given id or the possible generated error.
     */
-   async getUser(userId: string): Promise<{ result?: any, error?: any }> {
+   public async getUser(userId: string): Promise<{ result?: any, error?: any }> {
       try {
          const repository = new UserRepository();
 
          const user = await repository.getUser(userId);
 
-         if (!user) return { error: UserMessages.NO_SUCH_ID }
+         if (!user) return { error: UserMessages.NO_SUCH_ID };
 
          return { result: user };
       } catch (error) {
@@ -57,13 +57,13 @@ export default class UserService {
     * @returns the potential result represented as  user that matches the 
     * given email or the possible generated error.
     */
-   async getUserByEmail(email: string): Promise<{ result?: any, error?: any }> {
+   public async getUserByEmail(email: string): Promise<{ result?: any, error?: any }> {
       try {
          const repository = new UserRepository();
 
          const user = await repository.getUserWhere({ email: email });
 
-         if (!user) return { error: UserMessages.NO_SUCH_EMAIL }
+         if (!user) return { error: UserMessages.NO_SUCH_EMAIL };
 
          return { result: user };
       } catch (error) {
@@ -78,13 +78,13 @@ export default class UserService {
     * @returns the potential result represented as  user that matches the 
     * given email or the possible generated error.
     */
-   async getUserWhere(criteria: any): Promise<{ result?: any, error?: any }> {
+   public async getUserWhere(criteria: any): Promise<{ result?: any, error?: any }> {
       try {
          const repository = new UserRepository();
 
          const user = await repository.getUserWhere(criteria);
 
-         if (!user) return { error: UserMessages.NO_SUCH_USER }
+         if (!user) return { error: UserMessages.NO_SUCH_USER };
 
          return { result: user };
       } catch (error) {
@@ -101,13 +101,13 @@ export default class UserService {
     * @returns the potential result represented as the user who has been
     * updated or the possible generated error.
     */
-   async updateUser(userId: string, update: any): Promise<{ result?: any, error?: any }> {
+   public async updateUser(userId: string, update: any): Promise<{ result?: any, error?: any }> {
       try {
          const repository = new UserRepository();
 
-         const user = await repository.updateUser(userId, update)
+         const user = await repository.updateUser(userId, update);
 
-         if (!user) return { error: UserMessages.NO_SUCH_ID }
+         if (!user) return { error: UserMessages.NO_SUCH_ID };
 
          return { result: user };
       } catch (error) {
@@ -122,7 +122,7 @@ export default class UserService {
     * @returns the potential result represented as the user whose role was 
     * updated or the possible generated error.
     */
-   async updateUserRole(userId: string, update: any): Promise<{ result?: any, error?: any }> {
+   public async updateUserRole(userId: string, update: any): Promise<{ result?: any, error?: any }> {
       try {
          const repository = new UserRepository();
 
@@ -145,7 +145,7 @@ export default class UserService {
     * @returns the potential result represented as the user whose password 
     * was updated or the possible generated error.
     */
-   async updateUserPassword(userId: string, passwordData: any, internal = false): Promise<{ result?: any, error?: any }> {
+   public async updateUserPassword(userId: string, passwordData: any, internal = false): Promise<{ result?: any, error?: any }> {
 
       const currentPassword = passwordData.oldPassword;
       const newPassword = passwordData.newPassword;
@@ -199,7 +199,7 @@ export default class UserService {
     * @returns the potential result represented as the user who was just 
     * created or the possible generated error.
     */
-   async registerUser(userData: any): Promise<{ result?: any, error?: any }> {
+   public async registerUser(userData: any): Promise<{ result?: any, error?: any }> {
       const email = userData.email;
 
       const encryptionService = new EncryptionService();
@@ -212,7 +212,7 @@ export default class UserService {
 
          if (result.error) return { error: result.error };
 
-         const invitation = result.result
+         const invitation = result.result;
 
          const repository = new UserRepository();
 
@@ -224,7 +224,7 @@ export default class UserService {
 
          if (!encryptResult.hash) return { error: encryptResult.error };
 
-         const name = userData.name
+         const name = userData.name;
          const roleCode = invitation.roleCode;
          const password = encryptResult.hash;
 
@@ -245,7 +245,7 @@ export default class UserService {
 
          const { error } = await this.updateInviteStatus(invitation.id, invitationService);
 
-         if (error) return { error }
+         if (error) return { error };
 
          return { result: { user: user, token: tokeResult.token, error: tokeResult.error } };
       } catch (error) {
@@ -256,7 +256,7 @@ export default class UserService {
    private async updateInviteStatus(inviteId: string, invitationService: InvitationService): Promise<{ result?: any, error?: any }> {
       const data = {
          pending: false
-      }
+      };
 
       return await invitationService.updateInvitation(inviteId, data);
    }
@@ -268,7 +268,7 @@ export default class UserService {
     * @returns the potential result represented as the user who was just 
     * removed or the possible generated error.
     */
-   async deleteUser(userId: string): Promise<{ result?: any, error?: any }> {
+   public async deleteUser(userId: string): Promise<{ result?: any, error?: any }> {
       try {
          const repository = new UserRepository();
 
@@ -285,7 +285,7 @@ export default class UserService {
     * @returns the potential result represented as number of deleted users
     * or the possible generated error.
     */
-   async clearUsers(): Promise<{ result?: any, error?: any }> {
+   public async clearUsers(): Promise<{ result?: any, error?: any }> {
       try {
          const repository = new UserRepository();
 

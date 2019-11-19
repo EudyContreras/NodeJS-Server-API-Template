@@ -1,29 +1,34 @@
 import React from 'react';
-import ReactDom from 'react-dom';
-import logo from '../../../resources/images/brandlogo.png';
 import { Link } from 'react-router-dom';
-import { classes, getHTMLElement } from '../../utililties/styling.utils';
+import { classes } from '../../utililties/styling.utils';
 import { ScrollListener, addAnchor } from '../../../appliers/sticky.applier';
 
 interface State {
-	activeTab: any,
-	anchored: boolean
+	activeTab: any;
+	anchored: boolean;
 }
 
 class Navbar extends React.PureComponent<any, State> {
+	private navbar: React.RefObject<HTMLElement>
+
 	constructor(props: any) {
-		super(props)
+		super(props);
+		this.navbar = React.createRef();
 		this.state = {
 			activeTab: null,
 			anchored: false
-		}
+		};
 	}
 
-	componentDidMount() {
-      const style = this.props.styling;
+	public componentDidMount() {
+		const navbar = this.navbar.current!;
+		console.log(navbar);
+		this.applyAnchor(navbar);
+	}
 
-		const element = getHTMLElement(this);
-		
+	private applyAnchor(element: HTMLElement) {
+		const style = this.props.styling;
+
 		const listener = new ScrollListener(element, undefined, -65);
 
       addAnchor(style, listener, (anchored: boolean) => {
@@ -36,7 +41,7 @@ class Navbar extends React.PureComponent<any, State> {
 		});
 	}
 	
-	onMouseEnter = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
+	private onMouseEnter = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
 		const element = event.currentTarget;
 		const style = this.props.styling;
 
@@ -51,7 +56,7 @@ class Navbar extends React.PureComponent<any, State> {
 		}
 	}
 
-	onMouseExit = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
+	private onMouseExit = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
 		const element = event.currentTarget;
 		const style = this.props.styling;
 
@@ -60,19 +65,19 @@ class Navbar extends React.PureComponent<any, State> {
 		}
 	}
 
-	handleLinkClick = (tab: any) => {
+	private handleLinkClick = (tab: any) => {
 		this.setState(()  => ({
 			activeTab: tab
 		}));
-	};
+	}
 
-	applyLinkState(style: any, element: any, idx: number) {
+	private applyLinkState(style: any, element: any, idx: number) {
 		const activeTab = this.state.activeTab;
 		const location = this.props.location;
 
 		const linkClick = (element: any, idx: number) => {
 			this.handleLinkClick({ label: element.label, index: idx });
-		}
+		};
 
 		const navClasses: string[] = [style.navLink];
 
@@ -84,20 +89,21 @@ class Navbar extends React.PureComponent<any, State> {
 			navClasses.push(style.navLinkActive);
 		}
 
-		return (	<Link onClick={(e) => linkClick(element, idx)} className={classes(...navClasses)} to={element.link}>{element.label}</Link>)
+		return (	<Link onClick={(e) => linkClick(element, idx)} className={classes(...navClasses)} to={element.link}>{element.label}</Link>);
 	}
 
-	render() {
+	public render() {
 		const style = this.props.styling;
 		const routes = this.props.routings;
-		const classNames = [style.nav]
+		const classNames = [style.nav];
 
 		const properties = {
 			id: 'navbar',
+			ref: this.navbar,
 			className: classes(...classNames),
 			onMouseEnter: this.onMouseEnter,
 			onMouseLeave: this.onMouseExit
-		}
+		};
 
 		return (
 			<header { ...properties }>
@@ -114,7 +120,7 @@ class Navbar extends React.PureComponent<any, State> {
 					)}
 				</ul>
 			</header>
-		)
+		);
 	}
 }
 

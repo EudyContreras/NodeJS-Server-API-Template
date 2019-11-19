@@ -1,6 +1,5 @@
 /**
  * @description Gets a simple readable string for a specified date.
- * @param date 
  */
 export function normalize(date: Date) {
 

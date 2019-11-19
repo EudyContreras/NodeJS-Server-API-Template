@@ -1,13 +1,13 @@
 import React from 'react';
 import Section from './ContentSection';
 
-class ContentArea extends React.PureComponent {
+class ContentArea extends React.PureComponent<any, any> {
 
-   constructor(props) {
-      super(props)
+   constructor(props: any) {
+      super(props);
    }
 
-   render() {
+   public render() {
       const style = this.props.styling;
 
       return (

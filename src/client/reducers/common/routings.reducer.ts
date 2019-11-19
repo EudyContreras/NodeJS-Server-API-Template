@@ -8,7 +8,7 @@ const initialState = {
    routings: [],
    loading: false,
    error: null
-}
+};
 
 export default function (state = initialState, action: { type: string, payload: any }) {
    switch (action.type) {
@@ -16,7 +16,7 @@ export default function (state = initialState, action: { type: string, payload: 
          return {
             ...state,
             loading: true
-         }
+         };
       case GET_ALL_ROUTINGS:
          return {
             ...state,

@@ -2,11 +2,11 @@ import React from 'react';
 
 class AdminPage extends React.PureComponent {
    
-   componentDidMount() {
+   public componentDidMount() {
       
    }
 
-   render() {
+   public render() {
       return (<></>);
    }
 }

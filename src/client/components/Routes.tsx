@@ -1,5 +1,5 @@
 
-import React from 'react'
+import React from 'react';
 import Home from './tabs/documentation/DocsPage';
 import Docs from './tabs/documentation/DocsPage';
 import About from './tabs/information/AboutPage';
@@ -28,7 +28,7 @@ export const routes = [
   {
     path: '*'
   }
-]
+];
 
 export default (styling: any) => [
   {...routes[0], render: ((props: any) => <Home {...props}  styling={styling}/>)},
@@ -36,4 +36,4 @@ export default (styling: any) => [
   {...routes[2], render: ((props: any) => <About {...props}  styling={styling}/>)},
   {...routes[3], render: ((props: any) => <Admin {...props}  styling={styling}/>)},
   {...routes[4], render: ((props: any) => <Lost {...props}  styling={styling}/>)}
-]
+];

@@ -2,11 +2,7 @@ import React from 'react';
 
 class AboutPage extends React.PureComponent {
    
-   componentDidMount() {
-      
-   }
-
-   render() {
+   public render() {
       return (<></>);
    }
 }

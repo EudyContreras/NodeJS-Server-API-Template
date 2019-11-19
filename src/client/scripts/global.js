@@ -19,10 +19,10 @@ const asId = (name) => '#'+name;
  * @returns { HTMLElement}
  */
 const spanElement = (name) => {
- const element = document.createElement('span');
- element.classList.add(name);
- return element;
-}
+   const element = document.createElement('span');
+   element.classList.add(name);
+   return element;
+};
 
 /**
  * 
@@ -31,7 +31,7 @@ const spanElement = (name) => {
  * @returns { HTMLElement}
  */
 const element = (tag, classes) => {
-   const element = document.createElement(tag);
-   classes.forEach(x => element.classList.add(x));
-   return element;
-}
+   const html = document.createElement(tag);
+   classes.forEach(x => html.classList.add(x));
+   return html;
+};

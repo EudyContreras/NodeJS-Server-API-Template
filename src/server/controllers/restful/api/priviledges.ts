@@ -3,10 +3,10 @@ import express from 'express';
 import Controller from '../../controller';
 import RequestAction from '../../../definitions/requestAction';
 import PriviledgeService from '../../../services/priviledge.service';
-import authenticate from '../../../middleware/authenticators/token.validator'
-import allowed from '../../../middleware/authenticators/access.validator'
-import validate from '../../../middleware/validators/body.validator'
-import schemaType from '../../../validation/schemas/priviledge/blueprint'
+import authenticate from '../../../middleware/authenticators/token.validator';
+import allowed from '../../../middleware/authenticators/access.validator';
+import validate from '../../../middleware/validators/body.validator';
+import schemaType from '../../../validation/schemas/priviledge/blueprint';
 
 import { Router, Response } from 'express';
 
@@ -18,17 +18,17 @@ class Priviledges extends Controller {
    private roles: string[];
 
    constructor(...allowedRoles: string[]) {
-      super('priviledge')
+      super('priviledge');
       this.roles = allowedRoles;
       this.router = express.Router();
       this.setupRoutes(this.router);
    }
 
-   getRoute(): string {
+   public getRoute(): string {
       return this.routing;
    }
 
-   getRouter(): Router {
+   public getRouter(): Router {
       return this.router;
    }
 
@@ -42,25 +42,25 @@ class Priviledges extends Controller {
    private getAll = async (request: any, response: Response) => {
       const { result, error } = await this.priviledgeService.getPriviledges(request.data);
 
-      return this.buildResult(result, error, response, RequestAction.GET_ALL)
+      return this.buildResult(result, error, response, RequestAction.GET_ALL);
    }
 
    private create = async (request: any, response: Response) => {
       const { result, error } = await this.priviledgeService.createPriviledge(request.data);
 
-      return this.buildResult(result, error, response, RequestAction.CREATE)
+      return this.buildResult(result, error, response, RequestAction.CREATE);
    }
 
    private update = async (request: any, response: Response) => {
       const { result, error } = await this.priviledgeService.updatePriviledge(request.data);
 
-      return this.buildResult(result, error, response, RequestAction.UPDATE)
+      return this.buildResult(result, error, response, RequestAction.UPDATE);
    }
 
    private delete = async (request: any, response: Response) => {
       const { result, error } = await this.priviledgeService.revokePriviledge(request.data);
 
-      return this.buildResult(result, error, response, RequestAction.DELETE)
+      return this.buildResult(result, error, response, RequestAction.DELETE);
    }
 }
 

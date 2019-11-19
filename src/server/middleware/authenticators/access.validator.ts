@@ -6,7 +6,7 @@ import PermissionsService from '../../services/role.service';
 
 import { AccessResponse } from '../../responses/request.response';
 import { AccessRoleValidation } from '../../messages/message.validation';
-import { Response, NextFunction } from 'express'
+import { Response, NextFunction } from 'express';
 
 function allow(...allowed: string[]) {
 
@@ -20,16 +20,16 @@ function allow(...allowed: string[]) {
       
       request.role = result;
       return { allowed: allowed.indexOf(result.name) > -1 };
-   }
+   };
 
    const doRolesMatch = async (userId: string, roleCode: string) => {
 
       const { error, result } = await service.getUserRole(userId);
 
-      if (error)  return { error: AccessRoleValidation.NONE_FOUND }
+      if (error)  return { error: AccessRoleValidation.NONE_FOUND };
 
       return { match: result.code === roleCode };
-   }
+   };
 
    return async (request: any, response: Response, next: NextFunction) => {
       const { userId, roleCode } = request.user;
@@ -50,13 +50,13 @@ function allow(...allowed: string[]) {
       }
 
       if (request.user && isAllowed.allowed && rolesMatch.match)
-         await priviledgeValidator(request, response, next);
+         return await priviledgeValidator(request, response, next);
       else {
          accessResponse.granted = false;
          accessResponse.errors.push(AccessRoleValidation.DENIED);
          return response.status(httpCode.FORBIDDEN_ACCESS).json(accessResponse);
       }
-   }
+   };
 }
 
 export default allow;

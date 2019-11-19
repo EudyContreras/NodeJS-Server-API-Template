@@ -8,24 +8,24 @@ import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 
 if (typeof window === 'undefined') {
-  global.window = {}
+   global.window = {};
 }
 
 const initialState = window.__REDUX_STATE__ || {};
 const store = configureStore(initialState);
 
 const insertCss = (...styles) => {
-  const removeCss = styles.map(style => style._insertCss())
-  return () => removeCss.forEach(dispose => dispose())
-}
+   const removeCss = styles.map(style => style._insertCss());
+   return () => removeCss.forEach(dispose => dispose());
+};
 
 ReactDOM.hydrate(
-  <Provider store={store} suppressHydrationWarning={true}>
-    <BrowserRouter>
-      <StyleContext.Provider value={{ insertCss }}>
-        <Application location={window.location.pathname} />
-      </StyleContext.Provider>
-    </BrowserRouter>
-  </Provider>,
-  document.getElementById('content')
+   <Provider store={store} suppressHydrationWarning={true}>
+      <BrowserRouter>
+         <StyleContext.Provider value={{ insertCss }}>
+            <Application location={window.location.pathname} />
+         </StyleContext.Provider>
+      </BrowserRouter>
+   </Provider>,
+   document.getElementById('content')
 );

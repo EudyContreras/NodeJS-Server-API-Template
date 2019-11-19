@@ -1,4 +1,4 @@
-import Password from '../entitymodel/entities/password.entity'
+import Password from '../entitymodel/entities/password.entity';
 import { IPassword } from '../entitymodel/models/password.model';
 
 function dataTransferDocument(data: IPassword) {
@@ -39,7 +39,7 @@ export default class PasswordRepository {
       };
    }
 
-   async hasPassword(passwordId: string): Promise<boolean> {
+   public async hasPassword(passwordId: string): Promise<boolean> {
       const count = await Password
          .countDocuments({ _id: passwordId })
          .exec();
@@ -47,7 +47,7 @@ export default class PasswordRepository {
       return count > 0;
    }
 
-   async hasPasswordWhere(query: any): Promise<boolean> {
+   public async hasPasswordWhere(query: any): Promise<boolean> {
       const count = await Password
          .countDocuments(query)
          .exec();
@@ -55,33 +55,33 @@ export default class PasswordRepository {
       return count > 0;
    }
 
-   async getAllPasswords(options = { dto: true }): Promise<IPassword[] | PasswordDTO []>  {
+   public async getAllPasswords(options = { dto: true }): Promise<IPassword[] | PasswordDTO []>  {
       const passwords = await Password
          .find()
          .select(this.exclude)
          .exec();
 
       if (options.dto === true) {
-         return passwords.map(x => dataTransferDocument(x));
+         return passwords.map((x) => dataTransferDocument(x));
       }
 
       return passwords;
    }
 
-   async getAllPasswordsWhere(query: any, options = { dto: true }): Promise<IPassword[] | PasswordDTO []>  {
+   public async getAllPasswordsWhere(query: any, options = { dto: true }): Promise<IPassword[] | PasswordDTO []>  {
       const passwords = await Password
          .find(query)
          .select(this.exclude)
          .exec();
 
       if (options.dto === true) {
-         return passwords.map(x => dataTransferDocument(x));
+         return passwords.map((x) => dataTransferDocument(x));
       }
 
       return passwords;
    }
 
-   async getPassword(passwordId: string, options = { dto: true }): Promise<IPassword | PasswordDTO | null>  {
+   public async getPassword(passwordId: string, options = { dto: true }): Promise<IPassword | PasswordDTO | null>  {
       const password = await Password
          .findById(passwordId)
          .select(this.exclude)
@@ -96,7 +96,7 @@ export default class PasswordRepository {
       return result;
    }
 
-   async getPasswordWhere(criteria: any, options = { dto: true }): Promise<IPassword | PasswordDTO | null>  {
+   public async getPasswordWhere(criteria: any, options = { dto: true }): Promise<IPassword | PasswordDTO | null>  {
       const password = await Password
          .findOne(criteria)
          .select(this.exclude)
@@ -111,7 +111,7 @@ export default class PasswordRepository {
       return result;
    }
 
-   async getFromPassword(passwordId: string, select: any): Promise<IPassword | PasswordDTO | null>  {
+   public async getFromPassword(passwordId: string, select: any): Promise<IPassword | PasswordDTO | null>  {
       const password = await Password
          .findById(passwordId)
          .select(select)
@@ -122,7 +122,7 @@ export default class PasswordRepository {
       return result;
    }
 
-   async insertPassword(data: any, options = { dto: true }): Promise<IPassword | PasswordDTO | null>  {
+   public async insertPassword(data: any, options = { dto: true }): Promise<IPassword | PasswordDTO | null>  {
       const password = new Password(data);
 
       await password.validate();
@@ -138,7 +138,7 @@ export default class PasswordRepository {
       return result;
    }
 
-   async updatePassword(passwordId: string, update: any, options = { dto: true }): Promise<IPassword | PasswordDTO | null>  {
+   public async updatePassword(passwordId: string, update: any, options = { dto: true }): Promise<IPassword | PasswordDTO | null>  {
       const password = await Password
          .findByIdAndUpdate(passwordId, update, this.options)
          .select(this.exclude)
@@ -153,7 +153,7 @@ export default class PasswordRepository {
       return result;
    }
 
-   async updatePasswordWhere(query: any, update: any, options = { dto: true }): Promise<IPassword | PasswordDTO | null>  {
+   public async updatePasswordWhere(query: any, update: any, options = { dto: true }): Promise<IPassword | PasswordDTO | null>  {
       const password = await Password
          .findOneAndUpdate(query, update, this.options)
          .select(this.exclude)
@@ -168,7 +168,7 @@ export default class PasswordRepository {
       return result;
    }
 
-   async deletePassword(passwordId: string, options = { dto: true }): Promise<IPassword | PasswordDTO | null>  {
+   public async deletePassword(passwordId: string, options = { dto: true }): Promise<IPassword | PasswordDTO | null>  {
       const password = await Password
          .findByIdAndDelete(passwordId)
          .exec();
@@ -182,7 +182,7 @@ export default class PasswordRepository {
       return result;
    }
 
-   async deletePasswordWhere(query: any, options = { dto: true }): Promise<IPassword | PasswordDTO | null>  {
+   public async deletePasswordWhere(query: any, options = { dto: true }): Promise<IPassword | PasswordDTO | null>  {
       const password = await Password
          .findOneAndDelete(query)
          .exec();
@@ -196,13 +196,13 @@ export default class PasswordRepository {
       return result;
    }
 
-   async clearAllWhere(query: any) {
+   public async clearAllWhere(query: any) {
       return await Password
          .deleteMany(query)
          .exec();
    }
 
-   async clearAll() {
+   public async clearAll() {
       return await Password
          .deleteMany({})
          .exec();

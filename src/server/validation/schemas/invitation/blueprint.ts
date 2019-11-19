@@ -11,7 +11,7 @@ export const schamaType = {
    INVITATION_CREATE,
    INVITATION_UPDATE,
    INVITATION_QUERY
-}
+};
 
 export const validateInviteCreate = (data: any) => {
 
@@ -36,7 +36,7 @@ export const validateInviteCreate = (data: any) => {
          abortEarly: false
       })
    };
-}
+};
 
 export const validateInviteUpdate = (data: any) => {
 
@@ -61,7 +61,7 @@ export const validateInviteUpdate = (data: any) => {
          abortEarly: false
       })
    };
-}
+};
 
 export const validateInviteQuery = (data: any) => {
    const { id, inviteId } = data;
@@ -100,6 +100,6 @@ export const validateInviteQuery = (data: any) => {
          abortEarly: false
       })
    };
-}
+};
 
 export default schamaType;

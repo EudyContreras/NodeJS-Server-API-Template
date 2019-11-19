@@ -21,7 +21,7 @@ export default class DatabaseIntializer {
     * @description Populates the invitation collection with some
     * initital invitation related data.
     */
-   async createInitialInvitation() {
+   public async createInitialInvitation() {
       const inviteService = new InvitationService();
    }
 
@@ -30,7 +30,7 @@ export default class DatabaseIntializer {
     * initital user related data for users with
     * role admin.
     */
-   async createInitialAdministrators() {
+   public async createInitialAdministrators() {
       const userService = new UserService();
 
       const user = {
@@ -52,7 +52,7 @@ export default class DatabaseIntializer {
     * @description Populates the role collection with some
     * initital role related data.
     */
-   async createInitialRoles() {
+   public async createInitialRoles() {
       const service = new PermissionsService();
 
       for (let i = 0; i < RoleStore.ACCESS_ROLES.length; i++) {
@@ -64,7 +64,7 @@ export default class DatabaseIntializer {
             name: type,
             code: code,
             level: level
-         }
+         };
          const { error } = await service.createRole(role);
 
          if (error) {

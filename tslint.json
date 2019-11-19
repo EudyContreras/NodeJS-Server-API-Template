@@ -3,13 +3,13 @@
    "rules": {
        "arrow-parens": true,
        "class-name": true,
-       "eofline": true,
+       "eofline": false,
        "member-access": true,
        "semicolon": [true, "always"],
        "switch-default": true,
-       "no-unused-variable": true,
+       "no-unused-variable": false,
        "arrow-return-shorthand": [true],
        "import-spacing": true,
-       "newline-before-return": true
+       "newline-before-return": false
    }
 }

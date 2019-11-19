@@ -6,7 +6,7 @@ import { Job } from "agenda";
 
 export class PasswordTask implements CronTask {
 
-   performTask(logger: LoggingHandler, errorHandler: ErrorHandler, job: Job | null): void {
+   public performTask(logger: LoggingHandler, errorHandler: ErrorHandler, job: Job | null): void {
       throw new Error("Method not implemented.");
    }
 

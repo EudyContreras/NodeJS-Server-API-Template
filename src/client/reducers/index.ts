@@ -5,4 +5,4 @@ import navbarReducer from './common/navbar.reducer';
 export default combineReducers({
    routings: routingsReducer,
    items: navbarReducer
-})
+});

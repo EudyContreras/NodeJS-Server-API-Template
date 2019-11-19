@@ -44,4 +44,4 @@ export default {
    CREATE,
    UPDATE,
    DELETE
-}
+};

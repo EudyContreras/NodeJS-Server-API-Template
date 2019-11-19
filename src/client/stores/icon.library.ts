@@ -6,4 +6,4 @@ export const MaterialIcons = {
       CHEV_LEFT: 'chevron_left',
       MENU: 'menu'
    }
-}
+};

@@ -6,7 +6,7 @@ import {
 const initialState = {
    items: [],
    loading: false
-}
+};
 
 export default function (state = initialState, action: {type: string, payload: any}) {
    switch (action.type) {
@@ -14,7 +14,7 @@ export default function (state = initialState, action: {type: string, payload: a
          return {
             ...state,
             loading: true
-         }
+         };
       case GET_NAVBAR_ITEMS:
          return {
             ...state

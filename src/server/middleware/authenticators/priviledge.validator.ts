@@ -7,7 +7,7 @@ import PriviledgeService from '../../services/priviledge.service';
 import { PriviledgeMessages } from '../../messages/message.response';
 import { PriviledgeResponse } from '../../responses/request.response';
 
-import { Response, NextFunction } from 'express'
+import { Response, NextFunction } from 'express';
 import HttpMethod from '../../definitions/httpMethod';
 
 import {
@@ -37,7 +37,7 @@ async function controlAccess(request: any, response: Response, next: NextFunctio
 
       const query = createQuery(method, controller);
 
-      const { error, result } = await priviledges.hasPermission(userId, query)
+      const { error, result } = await priviledges.hasPermission(userId, query);
 
       if (error) {
          priviledgeResponse.hasAccess = false;
@@ -63,15 +63,16 @@ async function controlAccess(request: any, response: Response, next: NextFunctio
 function createQuery(method: HttpMethod, controller: string) {
    switch (method) {
       case GET:
-         return { controller: controller, permission: actions.READ }
+         return { controller: controller, permission: actions.READ };
       case PUT:
-         return { controller: controller, permission: actions.UPDATE }
+         return { controller: controller, permission: actions.UPDATE };
       case POST:
-         return { controller: controller, permission: actions.CREATE }
+         return { controller: controller, permission: actions.CREATE };
       case DELETE:
-         return { controller: controller, permission: actions.DELETE }
+         return { controller: controller, permission: actions.DELETE };
+      default:
    }
-   return { controller: null, permission: null }
+   return { controller: null, permission: null };
 }
 
 export default controlAccess;

@@ -1,13 +1,13 @@
 
 import PasswordRepository from '../repositories/password.repository';
 
-import { PasswordMessages } from '../messages/message.response'
+import { PasswordMessages } from '../messages/message.response';
 export default class PasswordService {
    /**
     * @description Retrieves all the available passwords 
     * @returns A list containing all the passwords or a produced error.
     */
-   async getAllPasswords(): Promise<{ result?: any[], error?: any }> {
+   public async getAllPasswords(): Promise<{ result?: any[], error?: any }> {
       try {
          const repository = new PasswordRepository();
 
@@ -24,13 +24,13 @@ export default class PasswordService {
     * @param passwordId The id of the password to retrieve
     * @returns The password that matches the given id or a produced error.
     */
-   async getPasswordFor(userId: string): Promise<{ result?: any, error?: any }> {
+   public async getPasswordFor(userId: string): Promise<{ result?: any, error?: any }> {
       try {
          const repository = new PasswordRepository();
 
          const result = await repository.getPasswordWhere({ userId });
 
-         if (!result) return { error: PasswordMessages.NO_SUCH_PASSWORD }
+         if (!result) return { error: PasswordMessages.NO_SUCH_PASSWORD };
          
          return { result };
       } catch (error) {
@@ -43,7 +43,7 @@ export default class PasswordService {
     * @param password The password data to use for creating the new password.
     * @returns The password that has just been created or a produced error.
     */
-   async createPassword(password: any): Promise<{ result?: any, error?: any }> {
+   public async createPassword(password: any): Promise<{ result?: any, error?: any }> {
       try {
          const repository = new PasswordRepository();
 
@@ -60,7 +60,7 @@ export default class PasswordService {
     * @param passwordId The id of the password to be deleted.
     * @returns The password that has just been deleted or a produced error.
     */
-   async deletePassword(passwordId: string): Promise<{ result?: any, error?: any }> {
+   public async deletePassword(passwordId: string): Promise<{ result?: any, error?: any }> {
       try {
          const repository = new PasswordRepository();
 

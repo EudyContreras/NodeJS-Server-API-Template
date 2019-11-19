@@ -25,13 +25,13 @@ export const PriviledgeValidation = {
 
 export const AuthenticationValidation = {
    CREDENTIALS: ''
-}
+};
 
 export const SchemaValidation = {
    FETCH_DATA: (arg: string) => `The ${arg} query data is invalid`,
    CREATE_DATA: (arg: string) => `The ${arg} creation data is invalid`,
    UPDATE_DATA: (arg: string) => `The ${arg} update data is invalid`
-}
+};
 
 export const InvitationValidation = {
    INVITE_FETCH_DATA: 'The invitation query data is invalid',
@@ -49,7 +49,7 @@ export const AccessRoleValidation = {
    DENIED: 'Access for the specified role has been denied',
    NONE_FOUND: 'No role with the given criteria was found for the user',
    INVALID_CODE: 'The role code for the user is invalid',
-}
+};
 
 export const RoleValidation = {
    ADD_ROLE: 'Please submit a role type name',

@@ -1,9 +1,9 @@
 
-import { Router } from 'express'
+import { Router } from 'express';
 
 abstract class ViewRenderer {
-   abstract getRoute(): string
-   abstract getRouter(): Router;
+   public abstract getRoute(): string;
+   public abstract getRouter(): Router;
 }
 
 export default ViewRenderer;

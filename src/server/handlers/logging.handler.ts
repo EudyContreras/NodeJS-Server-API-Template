@@ -3,7 +3,7 @@ export default class LoggingHandler {
     * Loggs information using an injected dependency.
     * @param info The information to be logged
     */
-   logInfo(info: any) {
+   public logInfo(info: any) {
       console.log(info);
    }
 
@@ -11,7 +11,7 @@ export default class LoggingHandler {
     * Loggs debug information using an injected dependency.
     * @param info The debug information to be logged
     */
-   logDebug(text: any) {
+   public logDebug(text: any) {
       console.debug(text);
    }
 
@@ -19,7 +19,7 @@ export default class LoggingHandler {
     * Loggs error using an injected dependency.
     * @param info The error to be logged
     */
-   logError(error: any) {
+   public logError(error: any) {
       console.error(error);
    }
 }

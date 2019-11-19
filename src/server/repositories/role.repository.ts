@@ -1,10 +1,10 @@
-import Role from '../entitymodel/entities/role.entity'
+import Role from '../entitymodel/entities/role.entity';
 
 import { IRole } from '../entitymodel/models/role.model';
 
 function dataTransferDocument(role: IRole) {
    const { id, name, code, level } = role;
-   return { id, name, code, level}
+   return { id, name, code, level};
 }
 
 /**
@@ -27,7 +27,7 @@ export default class RoleRepository {
       };
    }
 
-   async hasRole(roleId: string): Promise<boolean> {
+   public async hasRole(roleId: string): Promise<boolean> {
       const count = await Role
          .countDocuments({ _id: roleId })
          .exec();
@@ -35,7 +35,7 @@ export default class RoleRepository {
       return count > 0;
    }
 
-   async hasRoleWhere(query: any): Promise<boolean> {
+   public async hasRoleWhere(query: any): Promise<boolean> {
       const count = await Role
          .countDocuments(query)
          .exec();
@@ -43,33 +43,33 @@ export default class RoleRepository {
       return count > 0;
    }
 
-   async getAllRoles(options = { dto: true }): Promise<IRole[] | any[]>  {
+   public async getAllRoles(options = { dto: true }): Promise<IRole[] | any[]>  {
       const roles = await Role
          .find()
          .select(this.exclude)
          .exec();
 
       if (options.dto === true) {
-         return roles.map(x => dataTransferDocument(x));
+         return roles.map((x) => dataTransferDocument(x));
       }
 
       return roles;
    }
 
-   async getAllRolesWhere(query: any, options = { dto: true }): Promise<IRole[] | any[]>  {
+   public async getAllRolesWhere(query: any, options = { dto: true }): Promise<IRole[] | any[]>  {
       const roles = await Role
          .find(query)
          .select(this.exclude)
          .exec();
 
       if (options.dto === true) {
-         return roles.map(x => dataTransferDocument(x));
+         return roles.map((x) => dataTransferDocument(x));
       }
 
       return roles;
    }
 
-   async getRole(roleId: string, options = { dto: true }): Promise<IRole | any>  {
+   public async getRole(roleId: string, options = { dto: true }): Promise<IRole | any>  {
       const role = await Role
          .findById(roleId)
          .select(this.exclude)
@@ -84,7 +84,7 @@ export default class RoleRepository {
       return result;
    }
 
-   async getRoleWhere(criteria: any, options = { dto: true }): Promise<IRole | any>  {
+   public async getRoleWhere(criteria: any, options = { dto: true }): Promise<IRole | any>  {
       const role = await Role
          .findOne(criteria)
          .select(this.exclude)
@@ -99,7 +99,7 @@ export default class RoleRepository {
       return result;
    }
 
-   async getFromRole(roleId: string, select: any): Promise<IRole | any>  {
+   public async getFromRole(roleId: string, select: any): Promise<IRole | any>  {
       const role = await Role
          .findById(roleId)
          .select(select)
@@ -110,7 +110,7 @@ export default class RoleRepository {
       return result;
    }
 
-   async insertRole(data: any, options = { dto: true }): Promise<IRole | any>  {
+   public async insertRole(data: any, options = { dto: true }): Promise<IRole | any>  {
       const role = new Role(data);
 
       await role.validate();
@@ -126,7 +126,7 @@ export default class RoleRepository {
       return result;
    }
 
-   async updateRole(roleId: string, update: any, options = { dto: true }): Promise<IRole | any>  {
+   public async updateRole(roleId: string, update: any, options = { dto: true }): Promise<IRole | any>  {
       const role = await Role
          .findByIdAndUpdate(roleId, update, this.options)
          .select(this.exclude)
@@ -141,7 +141,7 @@ export default class RoleRepository {
       return result;
    }
 
-   async updateRoleWhere(query: any, update: any, options = { dto: true }): Promise<IRole | any>  {
+   public async updateRoleWhere(query: any, update: any, options = { dto: true }): Promise<IRole | any>  {
       const role = await Role
          .findOneAndUpdate(query, update, this.options)
          .select(this.exclude)
@@ -156,7 +156,7 @@ export default class RoleRepository {
       return result;
    }
 
-   async deleteRole(roleId: string, options = { dto: true }): Promise<IRole | any>  {
+   public async deleteRole(roleId: string, options = { dto: true }): Promise<IRole | any>  {
       const role = await Role
          .findByIdAndDelete(roleId)
          .exec();
@@ -170,7 +170,7 @@ export default class RoleRepository {
       return result;
    }
 
-   async deleteRoleWhere(query: any, options = { dto: true }): Promise<IRole | any>  {
+   public async deleteRoleWhere(query: any, options = { dto: true }): Promise<IRole | any>  {
       const role = await Role
          .findOneAndDelete(query)
          .exec();
@@ -184,13 +184,13 @@ export default class RoleRepository {
       return result;
    }
 
-   async clearAllWhere(query: any) {
+   public async clearAllWhere(query: any) {
       return await Role
          .deleteMany(query)
          .exec();
    }
 
-   async clearAll() {
+   public async clearAll() {
       return await Role
          .deleteMany({})
          .exec();

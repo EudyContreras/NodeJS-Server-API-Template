@@ -2,7 +2,7 @@
 import httpCodes from '../../definitions/httpCode';
 
 import { ValidationResult } from '@hapi/joi';
-import { ValidationResponse } from '../../responses/request.response'
+import { ValidationResponse } from '../../responses/request.response';
 import { Response, Request, NextFunction } from 'express';
 
 import * as AuthSchema from '../../validation/schemas/authentication/blueprint';
@@ -28,7 +28,7 @@ function validate(schemaType: Symbol) {
       if (!data) return next({ error: 'No data has been specified in the body' });
 
       switch (method) {
-         case GET:     
+         case GET:
             return buildResponse(handleRetrieval(schemaType, data, query), request, response, next);
          case PUT:
             return buildResponse(handleCreation(schemaType, data), request, response, next);
@@ -38,22 +38,25 @@ function validate(schemaType: Symbol) {
             return buildResponse(handleUpdate(schemaType, data), request, response, next);
          case DELETE:
             return buildResponse(handleDeletion(schemaType, data), request, response, next);
+         default:
       }
    };
 }
 
-function handlePosting(schemaType: Symbol, data: any){
+function handlePosting(schemaType: Symbol, data: any) {
    switch (schemaType) {
-     case AuthSchema.CREDENTIALS: 
+      case AuthSchema.CREDENTIALS:
          return AuthSchema.validateCredentials(data);
+      default:
    }
    return null;
 }
 
-function handleDeletion(schemaType: Symbol, data: any){
+function handleDeletion(schemaType: Symbol, data: any) {
    switch (schemaType) {
-     case PriviledgeSchema.PRIVILEDGE_QUERY: 
+      case PriviledgeSchema.PRIVILEDGE_QUERY:
          return PriviledgeSchema.validatePriviledgeQuery(data);
+      default:
    }
    return null;
 }
@@ -65,43 +68,37 @@ function handleRetrieval(schemaType: Symbol, data: any, query: any) {
       switch (schemaType) {
          case InviteSchema.INVITATION_QUERY:
             return InviteSchema.validateInviteQuery(query);
-         case PriviledgeSchema.PRIVILEDGE_QUERY: 
+         case PriviledgeSchema.PRIVILEDGE_QUERY:
             return PriviledgeSchema.validatePriviledgeQuery(data);
+         default:
       }
-   } 
+   }
 
    return null;
 }
 
 function handleCreation(schemaType: Symbol, data: any) {
    switch (schemaType) {
-      case UserSchema.USER_CREATE: 
+      case UserSchema.USER_CREATE:
          return UserSchema.validateUserCreate(data);
-      case InviteSchema.INVITATION_CREATE: 
+      case InviteSchema.INVITATION_CREATE:
          return InviteSchema.validateInviteCreate(data);
-      case PriviledgeSchema.PRIVILEDGE_CREATE: 
+      case PriviledgeSchema.PRIVILEDGE_CREATE:
          return PriviledgeSchema.validatePriviledgeCreate(data);
+      default:
    }
    return null;
 }
 
-function handleUpdate(schemaType: Symbol, data: any){
+function handleUpdate(schemaType: Symbol, data: any) {
    switch (schemaType) {
-      case InviteSchema.INVITATION_UPDATE: 
+      case InviteSchema.INVITATION_UPDATE:
          return InviteSchema.validateInviteUpdate(data);
-      case PriviledgeSchema.PRIVILEDGE_UPDATE: 
+      case PriviledgeSchema.PRIVILEDGE_UPDATE:
          return PriviledgeSchema.validatePriviledgeUpdate(data);
+      default:
    }
    return null;
-}
-
-function isEmptyObject(obj: any) {
-   for (let key in obj) {
-      if (Object.prototype.hasOwnProperty.call(obj, key)) {
-         return false;
-      }
-   }
-   return true;
 }
 
 function buildResponse(validation: { message: string, result: ValidationResult } | null, request: any, response: Response, next: NextFunction) {
@@ -115,7 +112,7 @@ function buildResponse(validation: { message: string, result: ValidationResult }
       const errors = error.message.split('.');
 
       if (errors.length > 0) {
-         const messages = errors.map(x => x.trim().replace(/"/g, ''));
+         const messages = errors.map((x) => x.trim().replace(/"/g, ''));
          validateResponse.errors.push(...messages);
       } else {
          const message = error.message.replace(/"/g, '');
@@ -123,16 +120,16 @@ function buildResponse(validation: { message: string, result: ValidationResult }
       }
 
       validateResponse.message = validation.message;
-      validateResponse.valid = false
+      validateResponse.valid = false;
 
       return response.status(httpCodes.BAD_REQUEST).json(validateResponse);
    }
 
    if (value) {
-      request.data = value
+      request.data = value;
    }
 
    return next();
 }
 
-export default validate
+export default validate;

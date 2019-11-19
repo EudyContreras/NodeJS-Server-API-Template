@@ -34,15 +34,15 @@ export default class JobHandler {
     * @param cronJob The data about the job
     * @param task The task to be performed.
     */
-    async scheduleJob(cronJob: CronJob, runImmediately: boolean = false) {
+    public async scheduleJob(cronJob: CronJob, runImmediately: boolean = false) {
       const option = {
          priority: config.agenda.PRIORITY,
          concurrency: config.agenda.CONCURRENCY
-      }
+      };
 
       const task: CronTask = cronJob.task;
 
-      this.agenda.define(cronJob.label, option, async job => {
+      this.agenda.define(cronJob.label, option, async (job) => {
          task.performTask(this.logger, this.errorHandler, job);
       });
 

@@ -2,7 +2,7 @@
 import $ from 'jquery';
 
 interface IScrollListener {
-   onScroll(style: any, scroll: number): void
+   onScroll(style: any, scroll: number): void;
 }
 
 export class ScrollListener implements IScrollListener {
@@ -10,10 +10,10 @@ export class ScrollListener implements IScrollListener {
    public bottom?: number;
    public margin: number;
 
-   public sticker: JQuery<HTMLElement>;
-   public anchor?: JQuery<HTMLElement>;
+   public sticker: JQuery<HTMLElement | Element>;
+   public anchor?: JQuery<HTMLElement | Element>;
 
-   constructor(sticker: HTMLElement, anchor?: HTMLElement | null, topMargin: number = 0) {
+   constructor(sticker: HTMLElement | Element, anchor?: HTMLElement | Element | null, topMargin: number = 0) {
       this.sticker = $(sticker);
       this.top = this.sticker.offset()!.top - topMargin;
       this.margin = topMargin;
@@ -24,12 +24,12 @@ export class ScrollListener implements IScrollListener {
       }
    }
 
-   onScroll(style: any, scroll: number): void {
+   public onScroll(style: any, scroll: number): void {
       if (this.anchor) {
          applyStickyTop(this.sticker, style, scroll, this.top, this.margin);
          applyStickyBottom(this.sticker, style, scroll, this.bottom!, this.margin);
       } else {
-         applyStickyTop(this.sticker, style, scroll, this.top, this.margin)
+         applyStickyTop(this.sticker, style, scroll, this.top, this.margin);
       }
    }
 }
@@ -39,10 +39,10 @@ export default (style: any, ...listeners: IScrollListener[]) => {
       const scroll = $(window).scrollTop();
       for (var i = 0, len = listeners.length; i < len; i++) {
          const listener = listeners[i];
-         listener.onScroll(style, scroll!)
+         listener.onScroll(style, scroll!);
       }
    });
-}
+};
 
 
 export const addAnchor = (style: any, listener: ScrollListener, stickyCallBack: (stuck: boolean) => void) => {
@@ -61,21 +61,21 @@ export const addAnchor = (style: any, listener: ScrollListener, stickyCallBack: 
          stickyCallBack(false);
       }
    });
-}
+};
 
-const applyStickyTop = (sticker: JQuery<HTMLElement>, style: any, scroll: number, top: number, margin: number) => {
+const applyStickyTop = (sticker: JQuery<HTMLElement | Element>, style: any, scroll: number, top: number, margin: number) => {
 
    if (scroll! > top && sticker.hasClass(style.natural)) {
       sticker.removeClass(style.natural).addClass(style.fixed).css({ top: margin });
    } else if (top > scroll! && sticker.hasClass(style.fixed)) {
       sticker.removeClass(style.fixed).addClass(style.natural).css({ top: 'auto' });
    }
-}
+};
 
-const applyStickyBottom = (sticker: JQuery<HTMLElement>, style: any, scroll: number, bottom: number, margin: number) => {
+const applyStickyBottom = (sticker: JQuery<HTMLElement | Element>, style: any, scroll: number, bottom: number, margin: number) => {
    if (scroll! > bottom && sticker.hasClass(style.fixed)) {
       sticker.removeClass(style.fixed).addClass(style.bottom).css({ top: bottom });
    } else if (bottom > scroll! && sticker.hasClass(style.bottom)) {
       sticker.removeClass(style.bottom).addClass(style.fixed).css({ top: margin });
    }
-}
+};

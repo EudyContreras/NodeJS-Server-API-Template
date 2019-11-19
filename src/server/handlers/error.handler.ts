@@ -17,7 +17,7 @@ export default class ErrorHandler {
     * @param error The error that was produced.
     * @param type The type of error to handle.
     */
-   onError(error: any) {
+   public onError(error: any) {
       if (error instanceof Error) {
          this.logger.logError(error.message);
       } else {

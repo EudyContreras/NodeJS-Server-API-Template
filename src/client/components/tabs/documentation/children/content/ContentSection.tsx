@@ -1,12 +1,12 @@
 import React from 'react';
 
-class ContentSection extends React.PureComponent {
+class ContentSection extends React.PureComponent<any, any> {
 
-   constructor(props) {
-      super(props)
+   constructor(props: any) {
+      super(props);
    }
 
-   render() {
+   public render() {
       const style = this.props.styling;
 
       return (

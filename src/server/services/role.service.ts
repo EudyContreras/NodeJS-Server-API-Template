@@ -3,14 +3,14 @@
 import UserRepository from '../repositories/user.repository';
 import AccessRoleRepository from '../repositories/role.repository';
 
-import { AccessRoleMessages, UserMessages } from '../messages/message.response'
+import { AccessRoleMessages, UserMessages } from '../messages/message.response';
 
 export default class AccessRoleService {
    /**
     * @description Retrieves all the available roles 
     * @returns A list containing all the roles or a produced error.
     */
-   async getAllRoles(): Promise<{ result?: any[], error?: any }> {
+   public async getAllRoles(): Promise<{ result?: any[], error?: any }> {
       try {
          const repository = new AccessRoleRepository();
 
@@ -27,13 +27,13 @@ export default class AccessRoleService {
     * @param roleId The id of the role to retrieve
     * @returns The role that matches the given id or a produced error.
     */
-   async getRole(roleId: string): Promise<{ result?: any, error?: any }> {
+   public async getRole(roleId: string): Promise<{ result?: any, error?: any }> {
       try {
          const repository = new AccessRoleRepository();
 
          const result = await repository.getRole(roleId);
 
-         if (!result) return { error: AccessRoleMessages.NO_SUCH_ROLE }
+         if (!result) return { error: AccessRoleMessages.NO_SUCH_ROLE };
          
          return { result };
       } catch (error) {
@@ -46,13 +46,13 @@ export default class AccessRoleService {
     * @param name The type name of the role to retrieve.
     * @returns The role that matches the given name or a produced error.
     */
-   async getRoleCode(name: string): Promise<{ result?: any, error?: any }> {
+   public async getRoleCode(name: string): Promise<{ result?: any, error?: any }> {
       try {
          const repository = new AccessRoleRepository();
 
          const result = await repository.getRoleWhere({ name: name });
 
-         if (!result) return { error: AccessRoleMessages.NO_SUCH_ROLE }
+         if (!result) return { error: AccessRoleMessages.NO_SUCH_ROLE };
 
          return { result: result.code };
       } catch (error) {
@@ -65,13 +65,13 @@ export default class AccessRoleService {
     * @param roleCode The code of the role to retrieve.
     * @returns The role that matches the given role code or a produced error.
     */
-   async getRoleByCode(roleCode: string): Promise<{ result?: any, error?: any }> {
+   public async getRoleByCode(roleCode: string): Promise<{ result?: any, error?: any }> {
       try {
          const repository = new AccessRoleRepository();
 
          const result = await repository.getRoleWhere({ code: roleCode });
 
-         if (!result) return { error: AccessRoleMessages.NO_SUCH_ROLE }
+         if (!result) return { error: AccessRoleMessages.NO_SUCH_ROLE };
 
          return { result };
       } catch (error) {
@@ -84,18 +84,18 @@ export default class AccessRoleService {
     * @param userId The id of the user.
     * @returns The role that matches the given id or a produced error.
     */
-   async getUserRole(userId: string): Promise<{ result?: any, error?: any }> {
+   public async getUserRole(userId: string): Promise<{ result?: any, error?: any }> {
       try {
          const userRepository = new UserRepository();
          const roleRepostiory = new AccessRoleRepository();
 
          const user = await userRepository.getUser(userId, { dto: false });
 
-         if (!user) return { error: UserMessages.NO_SUCH_USER }
+         if (!user) return { error: UserMessages.NO_SUCH_USER };
 
          const result = await roleRepostiory.getRoleWhere({ code: user.roleCode });
 
-         if (!result) return { error: AccessRoleMessages.NO_SUCH_ROLE }
+         if (!result) return { error: AccessRoleMessages.NO_SUCH_ROLE };
 
          return { result };
       } catch (error) {
@@ -108,11 +108,11 @@ export default class AccessRoleService {
     * @param role The role data to use for creating the new role.
     * @returns The role that has just been created or a produced error.
     */
-   async createRole(role: any): Promise<{ result?: any, error?: any }> {
+   public async createRole(role: any): Promise<{ result?: any, error?: any }> {
       try {
          const repository = new AccessRoleRepository();
 
-         const exists = await repository.hasRoleWhere({ name: role.name })
+         const exists = await repository.hasRoleWhere({ name: role.name });
 
          if (exists) return { error: AccessRoleMessages.ROLE_EXIST };
 
@@ -130,7 +130,7 @@ export default class AccessRoleService {
     * @param role The data to use for updating the role.
     * @returns The role that has just been updated or a produced error.
     */
-   async updateRole(roleId: string, data: any): Promise<{ result?: any, error?: any }> {
+   public async updateRole(roleId: string, data: any): Promise<{ result?: any, error?: any }> {
       try {
          const update = {
             name: data.name,
@@ -152,7 +152,7 @@ export default class AccessRoleService {
     * @param roleId The id of the role to be deleted.
     * @returns The role that has just been deleted or a produced error.
     */
-   async deleteRole(roleId: string): Promise<{ result?: any, error?: any }> {
+   public async deleteRole(roleId: string): Promise<{ result?: any, error?: any }> {
       try {
          const repository = new AccessRoleRepository();
 

@@ -4,13 +4,13 @@ const path = require('path');
 module.exports = {
   name: 'client',
   target: 'web',
-  mode: 'production',
+  mode: 'development',
   entry: './src/client.jsx',
   output: {
-    path: path.join(__dirname, '../../public'),
+    path: path.join(__dirname, '../../build/public'),
     filename: 'bundle.js',
     publicPath: "/",
-    chunkFilename: '[id].[name].[chunkhash:8].js'
+    chunkFilename: '[id].[name].[chunkhash:6].js'
   },
   optimization: {
     minimize: true
@@ -43,8 +43,7 @@ module.exports = {
                 context: path.resolve(__dirname, '../../src/client/components'),
               },
               localsConvention: 'camelCase',
-              importLoaders: 1,
-              sourceMap: true,
+              importLoaders: 1
             }
           },
           'sass-loader'

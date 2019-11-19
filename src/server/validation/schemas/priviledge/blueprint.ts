@@ -11,7 +11,7 @@ export const schamaType = {
    PRIVILEDGE_CREATE,
    PRIVILEDGE_UPDATE,
    PRIVILEDGE_QUERY
-}
+};
 
 export const validatePriviledgeCreate = (data: any) => {
    if (data.permissions) {
@@ -30,9 +30,9 @@ export const validatePriviledgeCreate = (data: any) => {
             return  {
                message: SchemaValidation.CREATE_DATA('priviledge'),
                result: result
-            }
+            };
          }
-      };
+      }
    }
 
    const schema = Joi.object({
@@ -53,7 +53,7 @@ export const validatePriviledgeCreate = (data: any) => {
          abortEarly: false
       })
    };
-}
+};
 
 export const validatePriviledgeUpdate = (data: any) => {
 
@@ -75,7 +75,7 @@ export const validatePriviledgeUpdate = (data: any) => {
          abortEarly: false
       })
    };
-}
+};
 
 export const validatePriviledgeQuery = (data: any) => {
   
@@ -86,7 +86,7 @@ export const validatePriviledgeQuery = (data: any) => {
       controller: Joi
          .string()
          .optional()
-   })
+   });
 
    return {
       message: SchemaValidation.FETCH_DATA('priviledge'),
@@ -94,6 +94,6 @@ export const validatePriviledgeQuery = (data: any) => {
          abortEarly: false
       })
    };
-}
+};
 
 export default schamaType;

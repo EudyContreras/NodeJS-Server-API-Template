@@ -2,7 +2,7 @@ require('dotenv').config();
 
 const config = Object.freeze({
   application: {
-    FILE_DIRECTORY: '../node-template-server/dist/'
+    FILE_DIRECTORY: '../node-template-server/build/'
   },
   presentation: {
     path: 'client',
@@ -12,7 +12,7 @@ const config = Object.freeze({
       label: 'view engine',
       path: 'src/client/views',
       client: {
-        path: 'public',
+        path: 'build/public',
         alias: '/static'
       },
       styles: {
@@ -63,7 +63,7 @@ const config = Object.freeze({
   api: {
     someapi: {
       baseUrl: (endpoint: string) => {
-        return `/${endpoint}`
+        return `/${endpoint}`;
       },
       auth: {
         PREFIX: 'Basic ',

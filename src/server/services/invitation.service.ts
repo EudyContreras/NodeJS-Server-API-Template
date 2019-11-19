@@ -14,17 +14,17 @@ export default class InviationService {
     * @returns The possible flag indicating if the user has 
     * received and invitation or the generated error.
     */
-   async hasInvitation(email: string): Promise<{ result?: any, error?: any }> {
+   public async hasInvitation(email: string): Promise<{ result?: any, error?: any }> {
       try {
          const repository = new InvitationRepository();
 
          const result = await repository.hasInvitationWhere({ email: email });
 
-         if (!result) return { error: InvitationMessages.NO_INVITATION }
+         if (!result) return { error: InvitationMessages.NO_INVITATION };
 
          return { result };
       } catch (error) {
-         return { error }
+         return { error };
       }
    }
 
@@ -36,17 +36,17 @@ export default class InviationService {
     * @returns The possible flag indicating if the user has received
     * and invitation or the generated error.
     */
-   async hasActiveInvitation(email: string): Promise<{ result?: any, error?: any }> {
+   public async hasActiveInvitation(email: string): Promise<{ result?: any, error?: any }> {
       try {
          const repository = new InvitationRepository();
 
          const result = await repository.hasInvitationWhere({ email: email, expired: false });
 
-         if (!result) return { error: InvitationMessages.EXPIRED }
+         if (!result) return { error: InvitationMessages.EXPIRED };
 
          return { result };
       } catch (error) {
-         return { error }
+         return { error };
       }
    }
 
@@ -58,7 +58,7 @@ export default class InviationService {
     * @returns  The possible flag indicating if the user has received 
     * and invitation or the generated error.
     */
-   async hasActivePendingInvitation(email: string): Promise<{ result?: any, error?: any }> {
+   public async hasActivePendingInvitation(email: string): Promise<{ result?: any, error?: any }> {
       try {
          const query = { email: email, expired: false, pending: true };
 
@@ -66,11 +66,11 @@ export default class InviationService {
 
          const result = await repository.getInvitationWhere(query);
 
-         if (!result) return { error: InvitationMessages.NOT_PENDING }
+         if (!result) return { error: InvitationMessages.NOT_PENDING };
 
          return { result };
       } catch (error) {
-         return { error }
+         return { error };
       }
    }
 
@@ -78,7 +78,7 @@ export default class InviationService {
     * @description Gets all the available invitations.
     * @returns The possible listof invitations or the generated error.
     */
-   async getAllInvitations(): Promise<{ result?: any[], error?: any }> {
+   public async getAllInvitations(): Promise<{ result?: any[], error?: any }> {
       try {
          const repository = new InvitationRepository();
 
@@ -86,7 +86,7 @@ export default class InviationService {
 
          return { result };
       } catch (error) {
-         return { error }
+         return { error };
       }
    }
 
@@ -95,7 +95,7 @@ export default class InviationService {
      * @param criteria The criteria used for making the search.
      * @returns The possible list of invitations or the generated error.
      */
-   async getAllInvitationsWhere(criteria: any): Promise<{ result?: any[], error?: any }> {
+   public async getAllInvitationsWhere(criteria: any): Promise<{ result?: any[], error?: any }> {
       try {
          const repository = new InvitationRepository();
 
@@ -103,7 +103,7 @@ export default class InviationService {
 
          return { result };
       } catch (error) {
-         return { error }
+         return { error };
       }
    }
 
@@ -114,17 +114,17 @@ export default class InviationService {
     * invitation.
     * @returns The invitation attached to the given email or the generated error.
     */
-   async getInvitationWhere(criteria: any): Promise<{ result?: any, error?: any }> {
+   public async getInvitationWhere(criteria: any): Promise<{ result?: any, error?: any }> {
       try {
          const repository = new InvitationRepository();
 
          const result = await repository.getInvitationWhere(criteria);
 
-         if (!result) return { error: InvitationMessages.NO_INVITATION }
+         if (!result) return { error: InvitationMessages.NO_INVITATION };
 
          return { result };
       } catch (error) {
-         return { error }
+         return { error };
       }
    }
 
@@ -135,17 +135,17 @@ export default class InviationService {
     * retrieve
     * @returns The invitation attached to the given id or the generated error.
     */
-   async getInvitation(inviteId: string): Promise<{ result?: any, error?: any }> {
+   public async getInvitation(inviteId: string): Promise<{ result?: any, error?: any }> {
       try {
          const repository = new InvitationRepository();
 
          const result = await repository.getInvitation(inviteId);
 
-         if (!result) return { error: InvitationMessages.NO_INVITATION }
+         if (!result) return { error: InvitationMessages.NO_INVITATION };
 
          return { result };
       } catch (error) {
-         return { error }
+         return { error };
       }
    }
 
@@ -157,7 +157,7 @@ export default class InviationService {
     * @returns {{result: any, error: string}} The invitation
     * attached to the given id or the generated error.
     */
-   async updateInvitation(inviteId: any, data: any): Promise<{ result?: any; error?: any; }> {
+   public async updateInvitation(inviteId: any, data: any): Promise<{ result?: any; error?: any; }> {
       try {
          const repository = new InvitationRepository();
 
@@ -173,11 +173,11 @@ export default class InviationService {
          
          const result = await repository.updateInvitation(inviteId, data);
 
-         if (!result) return { error: InvitationMessages.NO_INVITATION }
+         if (!result) return { error: InvitationMessages.NO_INVITATION };
 
          return { result };
       } catch (error) {
-         return { error }
+         return { error };
       }
    }
 
@@ -188,17 +188,17 @@ export default class InviationService {
   * @param update The invitation data used for the update.
   * @returns The invitation attached to the given id or the generated error.
   */
-   async updateInvitationWhere(criteria: any, update: any): Promise<{ result?: any, error?: any }> {
+   public async updateInvitationWhere(criteria: any, update: any): Promise<{ result?: any, error?: any }> {
       try {
          const repository = new InvitationRepository();
 
          const result = await repository.updateInvitationWhere(criteria, update);
 
-         if (!result) return { error: InvitationMessages.NO_INVITATION }
+         if (!result) return { error: InvitationMessages.NO_INVITATION };
 
          return { result };
       } catch (error) {
-         return { error }
+         return { error };
       }
    }
 
@@ -210,7 +210,7 @@ export default class InviationService {
     * @returns The created invitation attached to the given id or the generated error.
     * @throws 
     */
-   async createInvitation(hostId: string | null, inviteData: any): Promise<{ result?: any, error?: any }> {
+   public async createInvitation(hostId: string | null, inviteData: any): Promise<{ result?: any, error?: any }> {
       const email = inviteData.email;
       const roleName = inviteData.role;
       const expirationTime = inviteData.expirationTime;
@@ -253,7 +253,7 @@ export default class InviationService {
     * @param email The user email to revoke the invitation from.
     * @returns The revoked invitation or the generated error.
     */
-   async revokeInvitation(email: string): Promise<{ result?: any, error?: any }> {
+   public async revokeInvitation(email: string): Promise<{ result?: any, error?: any }> {
       try {
          const repository = new InvitationRepository();
 
@@ -263,7 +263,7 @@ export default class InviationService {
 
          return { result };
       } catch (error) {
-         return { error }
+         return { error };
       }
    }
 
@@ -272,7 +272,7 @@ export default class InviationService {
     * @param inviteId The id of the invitation to delete.
     * @returns The deleted invitation or the generated error.
     */
-   async deleteInvitation(inviteId: string) {
+   public async deleteInvitation(inviteId: string) {
       try {
          const repository = new InvitationRepository();
 
@@ -280,7 +280,7 @@ export default class InviationService {
 
          return { result };
       } catch (error) {
-         return { error }
+         return { error };
       }
    }
 
@@ -289,7 +289,7 @@ export default class InviationService {
     * @returns {{result: any, error: string}} The number invitations
     * deleted or the generated error.
     */
-   async clearInvitations() {
+   public async clearInvitations() {
       try {
          const repository = new InvitationRepository();
 
@@ -297,7 +297,7 @@ export default class InviationService {
 
          return { result };
       } catch (error) {
-         return { error }
+         return { error };
       }
    }
 
@@ -309,19 +309,19 @@ export default class InviationService {
     */
    private async handleExisting(email: string, repository: InvitationRepository) {
       try {
-         const invitation = await repository.getInvitationWhere({ email: email })
+         const invitation = await repository.getInvitationWhere({ email: email });
 
-         if (invitation === null) return { error: InvitationMessages.NO_INVITATION }
+         if (invitation === null) return { error: InvitationMessages.NO_INVITATION };
          
          if (invitation.pending && !invitation.expired) {
-            return { error: InvitationMessages.IS_PENDING }
+            return { error: InvitationMessages.IS_PENDING };
          }
          if (!invitation.pending && !invitation.expired) {
-            return { error: InvitationMessages.IS_ACTIVE }
+            return { error: InvitationMessages.IS_ACTIVE };
          }
-         return { error: null }
+         return { error: null };
       } catch (error) {
-         return { error }
+         return { error };
       }
    }
 }

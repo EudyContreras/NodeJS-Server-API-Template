@@ -1,19 +1,19 @@
 import React from 'react';
+import Wrapper from '../../../../common/Wrapper';
 import MenuItem from './SidebarMenuItem';
 import SideMenuToggle from './SidebarToggle';
 import SideMenuSearch from './SidebarSearch';
-import Wrapper from '../../../../common/Wrapper';
 
 import { classes, getElement } from '../../../../utililties/styling.utils';
 
 const version = '1.3.5';
 const links = ['Quickstart', 'Basics'];
-const headers = ['Introduction', 'Endpoints']
+const headers = ['Introduction', 'Endpoints'];
 const routes = ['Users', 'Privideles', 'Roles', 'Invitation', 'Users', 'Privideles', 'Roles', 'Invitation'];
 
 interface State {
-	expanded: boolean,
-	hovered: boolean
+	expanded: boolean;
+	hovered: boolean;
 }
 
 class SidebarMenu extends React.PureComponent<any, State> {
@@ -23,20 +23,20 @@ class SidebarMenu extends React.PureComponent<any, State> {
 		this.state = {
 			expanded: true,
 			hovered: false
-		}
+		};
 	}
 
-	closeSidebar = (style: any) => {
+	private closeSidebar = (style: any) => {
 		getElement(this).classList.add(style.sideMenuClosed);
 		getElement(this).classList.remove(style.sideMenuPeak);
 	}
 
-	openSidebar = (style: any) => {
+	private openSidebar = (style: any) => {
 		getElement(this).classList.remove(style.sideMenuClosed);
 		getElement(this).classList.remove(style.sideMenuPeak);
 	}
 
-	onMouseEnter = () => {
+	private onMouseEnter = () => {
 		const style = this.props.styling;
 		const expanded = this.state.expanded;
 		if (!expanded) {
@@ -47,7 +47,7 @@ class SidebarMenu extends React.PureComponent<any, State> {
 		}));
 	}
 
-	onMouseExit = () => {
+	private onMouseExit = () => {
 		const style = this.props.styling;
 		const expanded = this.state.expanded;
 		if (!expanded) {
@@ -58,37 +58,37 @@ class SidebarMenu extends React.PureComponent<any, State> {
 		}));
 	}
 
-	handleToggle = () => {
+	private handleToggle = () => {
 		const style = this.props.styling;
 		const expanded = this.state.expanded;
 
 		if (expanded) {
-			this.closeSidebar(style)
+			this.closeSidebar(style);
 		} else {
-			this.openSidebar(style)
+			this.openSidebar(style);
 		}
 		this.setState((state: State) => ({
 			expanded: !state.expanded
 		}));
 	}
 
-	componentDidMount() { }
+	public componentDidMount() { }
 
-	render() {
+	public render() {
 		const style = this.props.styling;
 
 		const props = {
 			onMouseEnter: this.onMouseEnter,
 			onMouseLeave: this.onMouseExit,
-		}
+		};
 		return (
-			<aside {...props} className={classes(style.sideMenu, style.natural)}>
+			<aside ref={this.props.refProp} {...props} className={classes(style.sideMenu, style.natural)}>
 				< TopSection hovered={this.state.hovered} styling={style} expanded={this.state.expanded} onSidebarToggle={this.handleToggle} />
 				< SideMenuSearch styling={style} />
 				< MiddleSection styling={style} header={headers[0]} />
 				< MainSection styling={style} header={headers[1]} />
 			</aside>
-		)
+		);
 	}
 }
 
@@ -96,13 +96,13 @@ class VersionInfo extends React.PureComponent<any, any> {
 	constructor(props: any) {
 		super(props);
 	}
-	render() {
+	public render() {
 		return (
 			<div>
 				<h2>Api Name</h2>
 				<h5>version: {version}</h5>
 			</div>
-		)
+		);
 	}
 }
 
@@ -110,7 +110,7 @@ class TopSection extends React.PureComponent<any, any> {
 	constructor(props: any) {
 		super(props);
 	}
-	render() {
+	public render() {
 		const style = this.props.styling;
 
 		return (
@@ -118,7 +118,7 @@ class TopSection extends React.PureComponent<any, any> {
 				<VersionInfo styling={style} />
 				<SideMenuToggle hovered={this.props.hovered} styling={style} expanded={this.props.expanded} onSidebarToggle={this.props.onSidebarToggle} />
 			</div>
-		)
+		);
 	}
 }
 
@@ -126,17 +126,17 @@ class MiddleSection extends React.PureComponent<any, any> {
 	constructor(props: any) {
 		super(props);
 	}
-	render() {
+	public render() {
 		const style = this.props.styling;
 
 		return (
 			<Wrapper>
 				<h2 className={style.menuHeader} >{this.props.header}</h2>
 				<ul className={style.middleSection}>
-					{links.map(x => <MenuItem styling={style} hash={'#' + x} label={x} />)}
+					{links.map((x) => <MenuItem styling={style} hash={'#' + x} label={x} />)}
 				</ul>
 			</Wrapper>
-		)
+		);
 	}
 }
 
@@ -144,17 +144,17 @@ class MainSection extends React.PureComponent<any, any> {
 	constructor(props: any) {
 		super(props);
 	}
-	render() {
+	public render() {
 		const style = this.props.styling;
 
 		return (
 			<Wrapper>
 				<h2 className={style.menuHeader} >{this.props.header}</h2>
 				<ul className={style.mainSection}>
-					{routes.map(x => <MenuItem styling={style} hash={'#' + x} label={x} />)}
+					{routes.map((x) => <MenuItem styling={style} hash={'#' + x} label={x} />)}
 				</ul>
 			</Wrapper>
-		)
+		);
 	}
 }
 

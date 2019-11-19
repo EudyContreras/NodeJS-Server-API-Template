@@ -5,4 +5,4 @@ enum HttpContent {
    XML = 'application/xml',
 }
 
-export default HttpContent
+export default HttpContent;

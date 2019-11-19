@@ -6,7 +6,7 @@ import AuthenticationService from '../../services/authentication.service';
 
 import { AuthorizationMessages } from '../../messages/message.response';
 import { AuthenticationResponse } from '../../responses/request.response';
-import { Request, Response, NextFunction } from 'express'
+import { Request, Response, NextFunction } from 'express';
 
 const httpHeader = config.self.headers;
 
@@ -34,11 +34,11 @@ async function authenticate(req: any, res: Response, next: NextFunction) {
 
       req.user = decoded;
 
-      next();
+      return next();
    } catch (error) {
       response.authorized = false;
       response.message = AuthorizationMessages.NO_VALID_TOKEN;
-      response.errors.push(error.message)
+      response.errors.push(error.message);
       return res.status(httpCode.UNAUTHORIZED).json(response);
    }
 }

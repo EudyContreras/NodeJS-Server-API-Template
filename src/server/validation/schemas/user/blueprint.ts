@@ -14,7 +14,7 @@ export const schamaType = {
    USER_CREATE,
    USER_UPDATE,
    USER_PASSORD
-}
+};
 
 export const validateUserCreate = (data: any) => {
 
@@ -39,7 +39,7 @@ export const validateUserCreate = (data: any) => {
          abortEarly: false
       })
    };
-}
+};
 
 export const validateUserUpdate = (data: any) => {
 
@@ -73,7 +73,7 @@ export const validateUserUpdate = (data: any) => {
          abortEarly: false
       })
    };
-}
+};
 
 
 export const validatePasswordUpdate = (data: any) => {
@@ -100,7 +100,7 @@ export const validatePasswordUpdate = (data: any) => {
          abortEarly: false
       })
    };
-}
+};
 
 
 export default schamaType;

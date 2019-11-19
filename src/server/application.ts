@@ -1,6 +1,5 @@
 import cors from 'cors';
 import helmet from 'helmet';
-import morgan from 'morgan';
 import express from 'express';
 import mongoose from 'mongoose';
 import config from './config';
@@ -26,12 +25,12 @@ export default class Application {
       useUnifiedTopology: true,
       useNewUrlParser: true,
       useCreateIndex: true
-   }
+   };
 
    constructor(args: { controllers: Controller[], viewRenderer?: ViewRenderer[], interceptor: Interceptor }) {
       this.app = express();
       this.loggHandler = new LoggingHandler();
-      this.errorHandler = new ErrorHandler(this.loggHandler)
+      this.errorHandler = new ErrorHandler(this.loggHandler);
 
       this.setupExpress();
       this.initializeMiddleware(args.interceptor);
@@ -62,7 +61,7 @@ export default class Application {
       //this.app.use(morgan('combined'));
       this.app.use(compression());
       this.app.use(express.json());
-      this.app.use(express.urlencoded({ extended: false }))
+      this.app.use(express.urlencoded({ extended: false }));
       this.app.use(express.static(config.application.FILE_DIRECTORY));
       this.app.use(express.static(render.path));
       this.app.use(clientRender.alias, express.static(clientRender.path));

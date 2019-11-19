@@ -1,8 +1,8 @@
 
 import Client from '../client';
-import config from '../../config'
+import config from '../../config';
 import Endpoints from './endpoints';
-import ContentTypes from '../../definitions/httpContent'
+import ContentTypes from '../../definitions/httpContent';
 import HttpMethod from '../../definitions/httpMethod';
 
 class ApiClient extends Client {
@@ -11,7 +11,7 @@ class ApiClient extends Client {
    private userName?: string = config.api.someapi.auth.USER_NAME;
    private password?: string = config.api.someapi.auth.PASSWORD;
 
-   getSomeDataOne(onSuccess: Function, onError: Function, extra?: any) {
+   public getSomeDataOne(onSuccess: Function, onError: Function, extra?: any) {
       const endPoint = this.baseUrl(Endpoints.ENDPOINT_ONE);
 
       const options = {
@@ -29,7 +29,7 @@ class ApiClient extends Client {
       this.performRequest(HttpMethod.GET, options, onSuccess, onError, extra);
    }
 
-   getSomeDataTwo(argument: string, onSuccess: Function, onError: Function, extra?: any) {
+   public getSomeDataTwo(argument: string, onSuccess: Function, onError: Function, extra?: any) {
       const endPoint = this.baseUrl(Endpoints.ENDPOINT_TWO);
 
       const query = {
@@ -52,7 +52,7 @@ class ApiClient extends Client {
       this.performRequest(HttpMethod.GET, options, onSuccess, onError, extra);
    }
 
-   getSomeDataThree(argument: string, onSuccess: Function, onError: Function, extra?: any) {
+   public getSomeDataThree(argument: string, onSuccess: Function, onError: Function, extra?: any) {
       const endPoint = this.baseUrl(Endpoints.endpointThree(argument));
 
       const options = {

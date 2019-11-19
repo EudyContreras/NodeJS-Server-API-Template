@@ -1,10 +1,9 @@
 import React from 'react';
-import config from '../../../../../config';
 import SidebarSubItem from './SidebarSubItem';
 
 class SidebarSubMenu extends React.PureComponent<any, any> {
 
-	render() {
+	public render() {
 		const links = [
 			{
 				label: 'Register a user',
@@ -29,9 +28,9 @@ class SidebarSubMenu extends React.PureComponent<any, any> {
 
 		return (
 			<ul className='sub-menu'>
-				{links.map(x => <SidebarSubItem hash={'#' + x} label={x.label} method={x.method.label} />)}
+				{links.map((x) => <SidebarSubItem hash={'#' + x} label={x.label} method={x.method.label} />)}
 			</ul>
-		)
+		);
 	}
 }
 

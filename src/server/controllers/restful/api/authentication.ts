@@ -1,8 +1,8 @@
 
 import express from 'express';
 import Controller from '../../controller';
-import validate from '../../../middleware/validators/body.validator'
-import authenticate from '../../../middleware/authenticators/token.validator'
+import validate from '../../../middleware/validators/body.validator';
+import authenticate from '../../../middleware/authenticators/token.validator';
 import schemaType from '../../../validation/schemas/authentication/blueprint';
 import AuthenticationService from '../../../services/authentication.service';
 import RequestAction from '../../../definitions/requestAction';
@@ -14,29 +14,27 @@ import HttpCode from '../../../definitions/httpCode';
 
 class Authentication extends Controller {
    
-   private service: AuthenticationService = new AuthenticationService()
+   private service: AuthenticationService = new AuthenticationService();
    private routing: string = '/rest/api/authentication';
    private router: Router;
-   private roles: string[];
 
    constructor(...allowedRoles: string[]) {
-      super('authentication')
-      this.roles = allowedRoles;
+      super('authentication');
       this.router = express.Router();
       this.setupRoutes(this.router);
    }
 
-   getRoute(): string {
+   public getRoute(): string {
       return this.routing;
    }
 
-   getRouter(): Router {
+   public getRouter(): Router {
       return this.router;
    }
 
    private setupRoutes(router: Router) {
       router.get('/', authenticate, this.getCredentials);
-      router.put('/recover', this.recoverPassword)
+      router.put('/recover', this.recoverPassword);
       router.post('/', validate(schemaType.CREDENTIALS), this.performAuthentication);
    }
 
@@ -63,7 +61,7 @@ class Authentication extends Controller {
       return this.buildResult(result, error, response, RequestAction.RECOVER);
    }
 
-   buildResult(result: any, error: any, response: Response, requestAction: RequestAction): Response {
+   public buildResult(result: any, error: any, response: Response, requestAction: RequestAction): Response {
       const apiResponse = new AuthenticationResponse();
 
       if (error) {
@@ -77,6 +75,7 @@ class Authentication extends Controller {
             case RequestAction.RECOVER:
                apiResponse.message = AuthenticationMessages.NOT_RECOVERED;
                break;
+            default:
          }
 
          apiResponse.errors.push(error);

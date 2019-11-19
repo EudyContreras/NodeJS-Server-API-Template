@@ -10,26 +10,26 @@ export default class EmailHandler {
       this.account = {
          username: accountInfo.user,
          password: accountInfo.pass
-      }
+      };
    }
 
-   canSendEmails(): boolean {
+   public canSendEmails(): boolean {
       return false;
    }
 
-   async sendTempPasswordEmail(email: string, tempPassword: string) {
+   public async sendTempPasswordEmail(email: string, tempPassword: string) {
 
       const emailContent = {
          emailAddresses: email,
          emailSubject: 'Password Recovery',
          emailBody: `Here is a temporary password: ${tempPassword}`,
          emailHtml: null
-      }
+      };
 
       return await this.sendEmail(emailContent, this.account);
    }
 
-   async sendInvitationEmail(invitation: any) {
+   public async sendInvitationEmail(invitation: any) {
       const name = config.host.APP_NAME;
       const site = config.host.BASE_URL;
 
@@ -38,7 +38,7 @@ export default class EmailHandler {
          emailSubject: 'Invitation',
          emailBody: `You have been invited to ${name}. Please follow the link to create an account: ${site}`,
          emailHtml: null
-      }
+      };
 
       return await this.sendEmail(emailContent, this.account);
    }

@@ -13,7 +13,7 @@ class RoleData {
 
 const CODES = [...config.roles.CODES];
 
-const ROOT = 'root'
+const ROOT = 'root';
 const ADMIN = 'admin';
 const GUEST = 'guest';
 const USER = 'user';
@@ -37,7 +37,7 @@ export {
    GUEST,
    USER,
    ALL
-}
+};
 
 export default {
    ROOT, ADMIN, GUEST, USER, ACCESS_ROLES

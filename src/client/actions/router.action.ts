@@ -5,7 +5,7 @@ export const GET_ALL_ROUTINGS = 'GET_ALL_ROUTINGS';
 export const ERROR_EVENT = 'ROUTINGS_ERROR';
 
 export const getAllRoutings = () => async (dispatch:Function) => {
-   dispatch(loading())
+   dispatch(loading());
 
    const service = new RoutingService();
    
@@ -17,18 +17,18 @@ export const getAllRoutings = () => async (dispatch:Function) => {
       type: GET_ALL_ROUTINGS,
       payload: routings
    });
-}
+};
 
 export const loading = () => {
    return {
       type: LOADING_ROUTINGS
    };
-}
+};
 
 export const onError = (error: any) => {
    return {
       type: ERROR_EVENT,
       payload: error
    };
-}
+};
 

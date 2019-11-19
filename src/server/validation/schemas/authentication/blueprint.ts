@@ -8,7 +8,7 @@ export const CREDENTIALS = Symbol('credentials');
 
 export const schamaType = {
    CREDENTIALS
-}
+};
 
 export const validateCredentials = (data: any) => {
 
@@ -29,7 +29,7 @@ export const validateCredentials = (data: any) => {
       result: schema.validate(data, {
          abortEarly: false
       })
-   }
-}
+   };
+};
 
 export default schamaType;

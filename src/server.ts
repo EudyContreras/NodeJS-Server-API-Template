@@ -8,7 +8,7 @@ import InviteController from './server/controllers/restful/api/invitations';
 import PriviledgeController from './server/controllers/restful/api/priviledges';
 import AuthenticationController from './server/controllers/restful/api/authentication';
 
-import { ROOT, ADMIN, USER, ALL } from './server/localstore/accessrole.store'
+import { ROOT, ADMIN, USER, ALL } from './server/localstore/accessrole.store';
 
 const args = {
    controllers: [
@@ -20,6 +20,6 @@ const args = {
    ],
    viewRenderer: [new IndexViewRender()],
    interceptor: new Interceptor()
-}
+};
 
 new Application(args).startlistening();

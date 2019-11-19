@@ -1,12 +1,12 @@
 import React from 'react';
 import rippleEffect from '../../../../../appliers/ripple.applier';
 import { MaterialIcons } from '../../../../../stores/icon.library';
-import { classes, getElement } from '../../../../utililties/styling.utils';
+import { classes, getElement} from '../../../../utililties/styling.utils';
 
 interface State {
-	sidebarHovered: boolean,
-	expanded: boolean
-};
+	sidebarHovered: boolean;
+	expanded: boolean;
+}
 
 class SidebarToggle extends React.PureComponent<any, State> {
 
@@ -18,24 +18,24 @@ class SidebarToggle extends React.PureComponent<any, State> {
 		};
 	}
 
-	toggleSidebar = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
+	private toggleSidebar = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
 		const style = this.props.styling;
 
 		rippleEffect(event, style);
 
 		if (this.state.expanded) {
-			getElement(this).classList.add(style.expandActive)
+			getElement(this).classList.add(style.expandActive);
 		} else {
-			getElement(this).classList.remove(style.expandActive)
+			getElement(this).classList.remove(style.expandActive);
 		}
 		this.setState((state: State) => ({
 			expanded: !state.expanded
 		}));
 
 		this.props.onSidebarToggle(this.state.expanded);
-	};
+	}
 
-	componentWillReceiveProps(nextProps: any) {
+	public componentWillReceiveProps(nextProps: any) {
 		if (nextProps.hovered !== this.state.sidebarHovered) {
 			this.setState(() => ({
 				sidebarHovered: nextProps.hovered
@@ -43,7 +43,7 @@ class SidebarToggle extends React.PureComponent<any, State> {
 		}
 	}
 
-	render() {
+	public render() {
 		const style = this.props.styling;
 		const elementTitle = this.state.expanded ? 'collapse' : 'expand';
 
@@ -52,7 +52,7 @@ class SidebarToggle extends React.PureComponent<any, State> {
 			title: elementTitle,
 			value: this.state.expanded,
 			onClick: this.toggleSidebar
-		}
+		};
 
 		const iconText = this.state.expanded ? MaterialIcons.icons.CHEV_RIGHT : MaterialIcons.icons.MENU;
 
@@ -71,7 +71,7 @@ class SidebarToggle extends React.PureComponent<any, State> {
 			<div className={classes(...classNamesToggle)} {...props}>
 				<i className={classes(...classnamesIcon)}>{iconText}</i>
 			</div>
-		)
+		);
 	}
 }
 

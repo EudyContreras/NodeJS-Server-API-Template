@@ -11,7 +11,7 @@ export default class AccessPriviledgeService {
     * @param  query The criteria that the priviledges need to fulfill.
     * @returns A list of the matched priviledges or a produced error.
     */
-   async getPriviledges(query: any): Promise<{ result?: any[], error?: any }> {
+   public async getPriviledges(query: any): Promise<{ result?: any[], error?: any }> {
       try {
          const repository = new PriviledgeRespository();
 
@@ -30,18 +30,18 @@ export default class AccessPriviledgeService {
     * @param queryData The criteria that the priviledges need to fulfill.
     * @returns A list of the matched priviledges or a produced error.
     */
-   async hasPermission(userId: any, query: any): Promise<{ result?: any, error?: any }> {
+   public async hasPermission(userId: any, query: any): Promise<{ result?: any, error?: any }> {
       try {
          const repository = new PriviledgeRespository();
 
          const controller = query.controller;
 
-         const priviledge = await repository.getPriviledgeWhere({ userId, controller })
+         const priviledge = await repository.getPriviledgeWhere({ userId, controller });
 
          if (!priviledge) {
-            return { error: PriviledgeMessages.ACCESS_DENIED}
+            return { error: PriviledgeMessages.ACCESS_DENIED};
          }
-         const hasPermission =  priviledge.permissions.some(x => x === query.permission);
+         const hasPermission =  priviledge.permissions.some((x) => x === query.permission);
 
          return { result: hasPermission };
       } catch (error) {
@@ -54,7 +54,7 @@ export default class AccessPriviledgeService {
     * @param priviledge The data containing information about the new priviledge.
     * @returns The newly created priviledge or a produced error.
     */
-   async createPriviledge(priviledge: any): Promise<{ result?: any, error?: any }> {
+   public async createPriviledge(priviledge: any): Promise<{ result?: any, error?: any }> {
       try {
          const repository = new PriviledgeRespository();
 
@@ -71,7 +71,7 @@ export default class AccessPriviledgeService {
     * @param priviledge The data containing information about the priviledge.
     * @returns The newly created priviledge or a produced error.
     */
-   async updatePriviledge(priviledge: any): Promise<{ result?: any, error?: any }> {
+   public async updatePriviledge(priviledge: any): Promise<{ result?: any, error?: any }> {
       try {
          const repository = new PriviledgeRespository();
 
@@ -92,7 +92,7 @@ export default class AccessPriviledgeService {
     * @returns The revoked priviledge 
     * or a produced error.
     */
-   async revokePriviledge(data: any): Promise<{ result?: any, error?: any }> {
+   public async revokePriviledge(data: any): Promise<{ result?: any, error?: any }> {
       try {
          const repository = new PriviledgeRespository();
 
@@ -109,7 +109,7 @@ export default class AccessPriviledgeService {
     * @param userId The user id attached to the priviledges to revoke.
     * @returns The number of priviledges that have been revoked or a produced error.
     */
-   async revokeAllPriviledges(userId: string) {
+   public async revokeAllPriviledges(userId: string) {
       try {
          const repository = new PriviledgeRespository();
 

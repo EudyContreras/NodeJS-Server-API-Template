@@ -2,7 +2,7 @@ import React from 'react';
 
 class SidebarSubItem extends React.PureComponent<any, any> {
 
-	render() {
+	public render() {
 		const hash = this.props.hash;
 		const label = this.props.label;
 		const method = this.props.method;
@@ -13,7 +13,7 @@ class SidebarSubItem extends React.PureComponent<any, any> {
 				<a className='truncate' href={hash}>{label}</a>
 				<i className='material-icons'>chevron_right</i>
 			</li>
-		)
+		);
 	}
 }
 

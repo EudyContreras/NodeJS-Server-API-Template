@@ -5,11 +5,11 @@ export const getAllReports = () => {
    return {
       type: GET_NAVBAR_ITEMS
    };
-}
+};
 
 export const setReportsLoading = () => {
    return {
       type: LOADING_NAVBAR
    };
-}
+};
 

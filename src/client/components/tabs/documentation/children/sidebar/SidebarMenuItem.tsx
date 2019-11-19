@@ -4,19 +4,19 @@ import SidebarSubMenu from './SidebarSubMenu';
 class SidebarMenuItem extends React.PureComponent<any, any>{
 
 	constructor(props: any) {
-		super(props)
+		super(props);
 		this.state = {
 			menuOpen: false
-		}
+		};
 	}
 
-	openSubMenu = (event: React.MouseEvent<HTMLElement, MouseEvent>, style: any) => {
+	private openSubMenu = (event: React.MouseEvent<HTMLElement, MouseEvent>, style: any) => {
 		this.setState((state: any) => {
-			menuOpen: !state.menuOpen
+			menuOpen: !state.menuOpen;
 		});
 	}
 
-	render() {
+	public render() {
 		const hash = this.props.hash;
 		const label = this.props.label;
 		const style = this.props.styling;
@@ -30,8 +30,8 @@ class SidebarMenuItem extends React.PureComponent<any, any>{
 				<SidebarSubMenu styling={style}/>
 			</div>
 
-		)
+		);
 	}
 }
 
-export default SidebarMenuItem
+export default SidebarMenuItem;

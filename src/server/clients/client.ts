@@ -12,7 +12,7 @@ class Client {
     * @param onError The callback which is triggered upon an error.
     * @param extra Extra data to be passed down to a successful request.
     */
-   performRequest(type: HttpMethod, options: any, onSuccess: Function, onError: Function, extra?: any) {
+   protected performRequest(type: HttpMethod, options: any, onSuccess: Function, onError: Function, extra?: any) {
       const callback = function callback(error: Error, response: request.Response, body: any) {
          if (error) return onError(error);
 
@@ -22,7 +22,7 @@ class Client {
          if (onSuccess) {
             onSuccess(content, data, extra);
          }
-      }
+      };
 
       try {
          switch (type) {
@@ -31,7 +31,9 @@ class Client {
                break;
             case HttpMethod.POST:
                request.post(options, callback);
-               break
+               break;
+            default:
+               break;
          }
       } catch (error) {
          if (onError) {
