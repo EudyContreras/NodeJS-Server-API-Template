@@ -15,7 +15,7 @@
    color: rgba(165, 167, 168, 1);
    background-color: rgba(55, 60, 64, 1);
    box-shadow: 2px 0px 6px 0px rgba(0, 0, 0, 0.3);
-   transition: all 0.3s cubic-bezier(.25, .8, .25, 1);
+   transition: all 0.3s $standardInterpolator;
 
    & ul {
       padding-inline-start: 0px;
@@ -28,7 +28,7 @@
 
    &-peek {
       transform: translateX(0px) !important;
-      transition: all 0.3s cubic-bezier(.25, .8, .25, 1);
+      transition: all 0.3s $standardInterpolator;
    }
 
    &-peek > .search{

@@ -1,10 +1,9 @@
 import React from 'react';
 import rippleEffect from '../../../../../appliers/ripple.applier';
 import { MaterialIcons } from '../../../../../stores/icon.library';
-import { classes, getElement} from '../../../../utililties/styling.utils';
+import { join } from '../../../../utililties/styling.utils';
 
 interface State {
-	sidebarHovered: boolean;
 	expanded: boolean;
 }
 
@@ -13,7 +12,6 @@ class SidebarToggle extends React.PureComponent<any, State> {
 	constructor(props: any) {
 		super(props);
 		this.state = {
-			sidebarHovered: props.hovered,
 			expanded: props.expanded
 		};
 	}
@@ -23,11 +21,6 @@ class SidebarToggle extends React.PureComponent<any, State> {
 
 		rippleEffect(event, style);
 
-		if (this.state.expanded) {
-			getElement(this).classList.add(style.expandActive);
-		} else {
-			getElement(this).classList.remove(style.expandActive);
-		}
 		this.setState((state: State) => ({
 			expanded: !state.expanded
 		}));
@@ -35,20 +28,11 @@ class SidebarToggle extends React.PureComponent<any, State> {
 		this.props.onSidebarToggle(this.state.expanded);
 	}
 
-	public componentWillReceiveProps(nextProps: any) {
-		if (nextProps.hovered !== this.state.sidebarHovered) {
-			this.setState(() => ({
-				sidebarHovered: nextProps.hovered
-			}));
-		}
-	}
-
 	public render() {
 		const style = this.props.styling;
 		const elementTitle = this.state.expanded ? 'collapse' : 'expand';
 
 		const props = {
-			id: 'sidebar-toggle',
 			title: elementTitle,
 			value: this.state.expanded,
 			onClick: this.toggleSidebar
@@ -56,20 +40,22 @@ class SidebarToggle extends React.PureComponent<any, State> {
 
 		const iconText = this.state.expanded ? MaterialIcons.icons.CHEV_RIGHT : MaterialIcons.icons.MENU;
 
-		const classNamesToggle = [style.expand];
-		const classnamesIcon = [MaterialIcons.className, style.expandIcon];
+		const toggleClasses = [style.expand];
+		const toggleIconClasses = [MaterialIcons.className, style.expandIcon];
 
-		if (!this.state.sidebarHovered && this.state.expanded) {
-			classNamesToggle.push(style.expandHidden);
+		if (!this.props.hovered && this.state.expanded) {
+			toggleClasses.push(style.expandHidden);
 		}
 
-		if (!this.state.expanded) {
-			classnamesIcon.push(style.expandIconActive);
+		if (this.state.expanded) {
+			toggleClasses.push(style.expandActive);
+		} else {
+			toggleIconClasses.push(style.expandIconActive);
 		}
 
 		return (
-			<div className={classes(...classNamesToggle)} {...props}>
-				<i className={classes(...classnamesIcon)}>{iconText}</i>
+			<div className={join(...toggleClasses)} {...props}>
+				<i className={join(...toggleIconClasses)}>{iconText}</i>
 			</div>
 		);
 	}

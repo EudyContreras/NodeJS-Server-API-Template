@@ -17,6 +17,7 @@ class SidebarMenuItem extends React.PureComponent<any, any>{
 	}
 
 	public render() {
+		const key = this.props.itemId;
 		const hash = this.props.hash;
 		const label = this.props.label;
 		const style = this.props.styling;

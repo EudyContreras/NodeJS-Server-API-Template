@@ -14,9 +14,9 @@ class DocsPage extends React.PureComponent<any, any> {
 
    constructor(props: any) {
       super(props);
-      this.footer = createRef<HTMLElement>();
-      this.sidebar = createRef<HTMLElement>();
-      this.sandbox = createRef<HTMLElement>();
+      this.footer = createRef();
+      this.sidebar = createRef();
+      this.sandbox = createRef();
    }
 
    public componentDidMount() {

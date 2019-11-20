@@ -1,3 +1,8 @@
+$easeInInterpolator: cubic-bezier(0, 0, 0.25, 1);
+$easeOutInterpolator: cubic-bezier(0.4, 0, 1, 1);
+$standardInterpolator: cubic-bezier(.25, .8, .25, 1);
+
+
 @import './partials/ripple';
 @import './partials/elevate';
 @import './partials/navbar';
@@ -82,3 +87,14 @@ body::-webkit-scrollbar {
 .invisible {
 	display: none;
 }
+
+.stagger-out {
+	transition: all 0.3s $easeInInterpolator !important;
+	transform: translateX(0px);
+}
+
+.stagger-in {
+	transition: all 0.3s $easeOutInterpolator !important;
+	transform: translateX(-50px);
+}
+

@@ -49,6 +49,7 @@ class IndexViewRenderer extends ViewRenderer {
          content: server(req.url, this.store, {}, insertCss)
       };
 
+      res.setHeader(config.header.LABEL, config.header.VALUE);
       res.send(client ? React.createElement('') : template(args));
    }
 }

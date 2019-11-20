@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { classes } from '../../utililties/styling.utils';
+import { join } from '../../utililties/styling.utils';
 import { ScrollListener, addAnchor } from '../../../appliers/sticky.applier';
 
 interface State {
@@ -22,7 +22,6 @@ class Navbar extends React.PureComponent<any, State> {
 
 	public componentDidMount() {
 		const navbar = this.navbar.current!;
-		console.log(navbar);
 		this.applyAnchor(navbar);
 	}
 
@@ -89,18 +88,18 @@ class Navbar extends React.PureComponent<any, State> {
 			navClasses.push(style.navLinkActive);
 		}
 
-		return (	<Link onClick={(e) => linkClick(element, idx)} className={classes(...navClasses)} to={element.link}>{element.label}</Link>);
+		return (	<Link onClick={(e) => linkClick(element, idx)} className={join(...navClasses)} to={element.link}>{element.label}</Link>);
 	}
 
 	public render() {
 		const style = this.props.styling;
 		const routes = this.props.routings;
-		const classNames = [style.nav];
+		const classes = [style.nav];
 
 		const properties = {
 			id: 'navbar',
 			ref: this.navbar,
-			className: classes(...classNames),
+			className: join(...classes),
 			onMouseEnter: this.onMouseEnter,
 			onMouseLeave: this.onMouseExit
 		};

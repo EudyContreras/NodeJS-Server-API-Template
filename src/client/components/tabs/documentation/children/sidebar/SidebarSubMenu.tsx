@@ -28,7 +28,7 @@ class SidebarSubMenu extends React.PureComponent<any, any> {
 
 		return (
 			<ul className='sub-menu'>
-				{links.map((x) => <SidebarSubItem hash={'#' + x} label={x.label} method={x.method.label} />)}
+				{links.map((x, index) => <SidebarSubItem key={index} hash={'#' + x} label={x.label} method={x.method.label} />)}
 			</ul>
 		);
 	}

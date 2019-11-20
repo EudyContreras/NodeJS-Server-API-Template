@@ -10,7 +10,7 @@ export const element = (tag: string, classes: string[]) => {
 /**
  * Joins css classes into a single string
  */
-export const classes = (...names: string[]): string => {
+export const join = (...names: string[]): string => {
    return names.join(' ');
 };
 

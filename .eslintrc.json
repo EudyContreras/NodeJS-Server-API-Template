@@ -4,6 +4,9 @@
         "es6": true,
         "node": true
     },
+    // "eslint.workingDirectories": [
+    //     "./res"
+    // ],
     "extends": [
         "eslint:recommended",
         "plugin:react/recommended",
@@ -21,7 +24,7 @@
             "tsx": true,
             "ts": true
         },
-        "ecmaVersion": 6,
+        "ecmaVersion": 2018,
         "sourceType": "module"
     },
     "plugins": [

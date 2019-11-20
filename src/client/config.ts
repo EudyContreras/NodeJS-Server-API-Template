@@ -7,7 +7,7 @@ const config = Object.freeze({
   },
   header: {
     LABEL: 'Set-Cookie',
-    VALUE: 'HttpOnly;Secure;SameSite=Strict'
+    VALUE: 'promo_shown=1; SameSite=Strict;'
   },
   layout: {
     CONTENT_TYPE: 'html',
