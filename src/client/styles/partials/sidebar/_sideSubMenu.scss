@@ -5,50 +5,57 @@
   width: 100%;
   height: auto;
   visibility: hidden;
-  background: rgba(45, 49, 53, 1);
+  background: rgba(47, 51, 56, 1);
   overflow: hidden;
-}
+  box-shadow: inset 1px 0px 3px 2px rgba(0, 0, 0, 0.25);
 
-.sub-menu-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding-left: 2em;
-  padding-top: 0.5em;
-  padding-bottom: 0.5em;
-  padding-right: 1em;
-  -webkit-transition: background-color .2s ease-in-out;
-  transition: background-color 0.2s cubic-bezier(.25, .8, .25, 1);
-}
+  &-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-left: 2em;
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+    padding-right: 1em;
+    transition: background-color 0.2s ease-out;
 
-.sub-menu-item i {
-  color: rgba(110, 110, 110, 1);
-  font-weight: 100;
-  font-size: 16px;
-}
+    &:active {
+      transform: translateY(3px);
+      box-shadow: -1px 0px 0px 0px rgba(0, 0, 0, 0.2);
+    }
 
-.sub-menu-item a {
-  display: inline-block;
-  color: rgba(165, 167, 168, 1);
-  font-size: 12px;
-  display: block;
-  padding: 8px 16px;
-  text-decoration: none;
-  font-weight: 100;
-  transition: color 0.2s cubic-bezier(.25, .8, .25, 1);
-}
+    &:hover {
+      transition: transform 0.2s ease-out;
+      background-color: rgba(54, 58, 63, 1);
+      box-shadow: -1px 0px 6px 0px rgba(0, 0, 0, 0.2);
+    }
 
-.sub-menu-item:hover {
-  background-color: rgba(39, 44, 48, 1);
-}
+    &:hover>a {
+      color: rgb(230, 230, 230);
+      font-weight: 500;
+    }
 
-.sub-menu-item:hover>a {
-  color: rgb(230, 230, 230);
-  font-weight: 500;
-}
+    &:hover>i {
+      color: rgb(220, 220, 220);
+    }
 
-.sub-menu-item:hover>i {
-  color: rgb(220, 220, 220);
+    i {
+      color: rgba(110, 110, 110, 1);
+      font-weight: 100;
+      font-size: 16px;
+    }
+
+    a {
+      display: inline-block;
+      color: rgba(165, 167, 168, 1);
+      font-size: 12px;
+      display: block;
+      padding: 8px 16px;
+      text-decoration: none;
+      font-weight: 100;
+      transition: color 0.2s cubic-bezier(.25, .8, .25, 1);
+    }
+  }
 }
 
 .sm-expanded {

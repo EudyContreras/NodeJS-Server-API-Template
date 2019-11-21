@@ -66,14 +66,15 @@
 
       "list.inactiveSelectionBackground": "#3e444e55",
       "list.activeSelectionBackground": "#42485555",
-
       "list.hoverBackground": "#494f5a55",
       "list.hoverForeground": "#fff",
 
       "editor.fontLigatures": true,
       "editor.background": "#1e2329",
       "editor.inactiveSelectionBackground": "#535c6652",
-      "editor.selectionBackground": "#334d6b52"
+      "editor.selectionBackground": "#334d6b52",
+      "editor.lineHighlightBackground": "#191d22",
+      "editor.lineHighlightBorder": "#191d22"
    },
    "oneDarkPro.vivid": true,
    "oneDarkPro.bold": true,
@@ -83,13 +84,6 @@
    "helium-icon-theme.folders.theme": "none",
    "helium-icon-theme.activeIconPack": "react_redux",
    "workbench.colorTheme": "Arkademy Dark II",
-
-   "terminal.integrated.letterSpacing": 1.2,
-   "terminal.integrated.fontFamily": "menlo",
-   "terminal.integrated.fontSize": 12,
-   "terminal.integrated.fontWeight": "600",
-   "terminal.integrated.fontWeightBold": "bold",
-   "terminal.integrated.lineHeight": 1.2,
 
    "editor.fontSize": 12,
    "editor.fontWeight": "normal",

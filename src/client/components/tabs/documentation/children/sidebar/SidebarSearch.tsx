@@ -22,9 +22,9 @@ class SidebarSearch extends React.PureComponent<any, any> {
 
 		if (!menuState.expanded) {
 			if (menuState.hovered) {
-				classes.push(style.staggerOut);
+				//classes.push(style.staggerOut);
 			} else {
-				classes.push(style.staggerIn);
+				//classes.push(style.staggerIn);
 			}
 		}
 		return (
