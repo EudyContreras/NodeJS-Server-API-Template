@@ -1,9 +1,10 @@
 .sub-menu {
   list-style: none;
   padding: 0 0;
-  position: relative;
+  position: absolute;
   width: 100%;
-  height: 0;
+  height: auto;
+  visibility: hidden;
   background: rgba(45, 49, 53, 1);
   overflow: hidden;
 }
@@ -34,7 +35,6 @@
   padding: 8px 16px;
   text-decoration: none;
   font-weight: 100;
-  -webkit-transition: color 0.2s cubic-bezier(.25, .8, .25, 1);
   transition: color 0.2s cubic-bezier(.25, .8, .25, 1);
 }
 
@@ -52,5 +52,5 @@
 }
 
 .sm-expanded {
-  transition: all ease 350ms;
+  transition: all 0.3s $standardInterpolator;
 }

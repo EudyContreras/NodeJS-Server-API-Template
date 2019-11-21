@@ -21,3 +21,15 @@ export const getElement = (component: React.PureComponent) => {
 export const getHTMLElement = (component: React.PureComponent) => {
 	return (ReactDom.findDOMNode(component) as HTMLElement);
 };
+
+export const css = (properties: any): string => {
+   let style = '';
+
+   for (let key in properties){
+      if(properties.hasOwnProperty(key)) {
+         style += `${key}: ${properties[key]}; \n`;
+      }
+   }
+
+   return style;
+}

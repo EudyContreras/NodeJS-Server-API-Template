@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { Fragment } from 'react';
 import config from '../config';
 import NavbarMenu from './shared/navbar/Navbar';
 import NavbarPadder from './shared/navbar/NavbarPadder';
@@ -23,13 +23,13 @@ class App extends React.PureComponent<any, any> {
     const routings = routes.map((route, idx) => <Route exact key={idx} path={route.path} render={route.render}/>);
     
     return (
-      <>
+      <Fragment>
         <NavbarPadder styling={style}/>
         <Switch> 
           {routings}
         </Switch>
         <NavbarMenu location={this.props.location} styling={style} brandName={config.app.NAME} routings={ elements } />
-      </>
+      </Fragment>
     );
   }
 }

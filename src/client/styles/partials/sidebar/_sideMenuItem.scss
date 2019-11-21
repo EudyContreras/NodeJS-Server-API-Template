@@ -45,3 +45,13 @@
    color: rgb(220, 220, 220);
    transform: rotate(90deg);
 }
+
+.menu-item:hover:not(.active) {
+   background-color: rgb(72, 76, 80);
+}
+
+// .menu-item.active:hover {}
+
+// .menu-item a.active {}
+
+// .menu-item a:hover:not(.active) {}

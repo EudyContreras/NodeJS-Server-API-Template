@@ -27,7 +27,6 @@ class DefaultLayout extends React.PureComponent {
                <link rel='stylesheet' href='/styles/index.css' />
                {/* <link rel='stylesheet' href='/styles/menu.css' /> */}
                <link rel='stylesheet' href='/styles/restful.css' />
-               <link rel='stylesheet' href='/styles/submenu.css' />
                <style>${[...this.props.css].join('')}</style>
             </head>
             <body >

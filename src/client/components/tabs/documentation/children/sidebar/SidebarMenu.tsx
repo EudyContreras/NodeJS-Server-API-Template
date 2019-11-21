@@ -1,5 +1,4 @@
-import React, {createRef, RefObject } from 'react';
-import Wrapper from '../../../../common/Wrapper';
+import React, {createRef, RefObject, Fragment } from 'react';
 import MenuItem from './SidebarMenuItem';
 import SideMenuToggle from './SidebarToggle';
 import SideMenuSearch from './SidebarSearch';
@@ -48,7 +47,6 @@ class SidebarMenu extends React.PureComponent<any, State> {
 	public componentDidMount() { }
 
 	public render() {
-		console.log('TOGGLE hap');
 		const style = this.props.styling;
 
 		const props = {
@@ -124,12 +122,12 @@ class MiddleSection extends React.PureComponent<any, any> {
 		const style = this.props.styling;
 
 		return (
-			<Wrapper>
+			<Fragment>
 				<h2 className={style.menuHeader} >{this.props.header}</h2>
 				<ul className={style.middleSection}>
 					{links.map((x, index) => <MenuItem key={index} styling={style} hash={'#' + x} label={x} />)}
 				</ul>
-			</Wrapper>
+			</Fragment>
 		);
 	}
 }
@@ -142,12 +140,12 @@ class MainSection extends React.PureComponent<any, any> {
 		const style = this.props.styling;
 
 		return (
-			<Wrapper>
+			<Fragment>
 				<h2 className={style.menuHeader} >{this.props.header}</h2>
 				<ul className={style.mainSection}>
 					{routes.map((x, index) => <MenuItem key={index} styling={style} hash={'#' + x} label={x} />)}
 				</ul>
-			</Wrapper>
+			</Fragment>
 		);
 	}
 }

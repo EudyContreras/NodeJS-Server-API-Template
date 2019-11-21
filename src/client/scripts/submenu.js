@@ -16,11 +16,11 @@ function setupSubMenu() {
   function expand(source, subMenu) {
     $(source).addClass('active');
     
-    subMenu.css({
-      height: 'auto',
-      position: 'absolute', 
-      visibility: 'hidden',
-    });
+      subMenu.css({
+        height: 'auto',
+        position: 'absolute', 
+        visibility: 'hidden',
+      });
   
     const height = subMenu.height();
   

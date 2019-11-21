@@ -1,36 +1,46 @@
 import React from 'react';
+import Wrapper from '../../../../common/Wrapper';
 import SidebarSubMenu from './SidebarSubMenu';
+import { MaterialIcons } from '../../../../../stores/icon.library';
+import { join } from '../../../../utililties/styling.utils';
 
-class SidebarMenuItem extends React.PureComponent<any, any>{
+interface State {
+	expanded: boolean
+}
+
+class SidebarMenuItem extends React.PureComponent<any, State>{
 
 	constructor(props: any) {
 		super(props);
 		this.state = {
-			menuOpen: false
+			expanded: false
 		};
 	}
 
-	private openSubMenu = (event: React.MouseEvent<HTMLElement, MouseEvent>, style: any) => {
-		this.setState((state: any) => {
-			menuOpen: !state.menuOpen;
-		});
+	private openSubMenu = () => {
+		this.setState((state: State) => ({
+			expanded: !state.expanded
+		}));
 	}
 
 	public render() {
-		const key = this.props.itemId;
 		const hash = this.props.hash;
 		const label = this.props.label;
 		const style = this.props.styling;
 
-		return (
-			<div>
-				<li className={style.menuItem} onClick={(e) => this.openSubMenu(e, style)}>
-					<a href={hash}>{label}</a>
-					<i className='material-icons'>chevron_right</i>
-				</li>
-				<SidebarSubMenu styling={style}/>
-			</div>
+		const classes = [style.menuItem];
 
+		if (this.state.expanded) {
+			classes.push(style.active);
+		}
+		return (
+			<Wrapper>
+				<li className={join(...classes)} onClick={this.openSubMenu}>
+					<a href={hash}>{label}</a>
+					<i className={MaterialIcons.className}>{MaterialIcons.icons.CHEV_RIGHT}</i>
+				</li>
+				<SidebarSubMenu styling={style} expanded={this.state.expanded}/>
+			</Wrapper>
 		);
 	}
 }
