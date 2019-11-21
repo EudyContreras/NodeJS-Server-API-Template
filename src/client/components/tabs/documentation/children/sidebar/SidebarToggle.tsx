@@ -41,7 +41,7 @@ class SidebarToggle extends React.PureComponent<any, State> {
 		const iconText = this.state.expanded ? MaterialIcons.icons.CHEV_RIGHT : MaterialIcons.icons.MENU;
 
 		const toggleClasses = [style.expand];
-		const toggleIconClasses = [MaterialIcons.className, style.expandIcon];
+		const toggleIconClasses = [MaterialIcons.CLASS, style.expandIcon];
 
 		if (!this.props.hovered && this.state.expanded) {
 			toggleClasses.push(style.expandHidden);

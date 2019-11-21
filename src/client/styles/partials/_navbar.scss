@@ -36,6 +36,34 @@ $navbarColor:rgba(35, 40, 45, 1);
       }
    }
 
+   &-padder {
+      position: static;
+      background-color: $navbarColor;
+      padding: {
+         top: 0.8em;
+         bottom: 0.8em;
+         left: 1.5em;
+         right: 3em;
+      }
+      height: 50px;
+   }
+
+   &-transition {
+      transition: all 0.3s cubic-bezier(.25, .8, .25, 1) 0.5s;
+   }
+
+   &-peeky {
+      &:hover {
+         transform: translateY(0px) !important;
+         transition: all 0.3s cubic-bezier(.25, .8, .25, 1);
+      }
+   }
+   
+   &-sticky {
+      position: fixed;
+      transform: translateY(-65px) !important;
+   }
+
    &-logo {
       display: inline-flex;
       text-align: center;
@@ -59,32 +87,4 @@ $navbarColor:rgba(35, 40, 45, 1);
          }
       }
    }
-}
-
-.nav-transition {
-   transition: all 0.3s cubic-bezier(.25, .8, .25, 1) 0.5s;
-}
-
-.nav-peeky {
-   &:hover {
-      transform: translateY(0px) !important;
-      transition: all 0.3s cubic-bezier(.25, .8, .25, 1);
-   }
-}
-
-.nav-sticky {
-   position: fixed;
-   transform: translateY(-65px) !important;
-}
-
-.nav-padder {
-   position: static;
-   background-color: $navbarColor;
-   padding: {
-      top: 0.8em;
-      bottom: 0.8em;
-      left: 1.5em;
-      right: 3em;
-   }
-   height: 50px;
 }

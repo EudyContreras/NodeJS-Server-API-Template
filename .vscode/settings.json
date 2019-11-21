@@ -1,9 +1,7 @@
 {
    "explorer.confirmDragAndDrop": false,
-   "team.showWelcomeMessage": false,
    "files.autoSave": "afterDelay",
    "terminal.integrated.rendererType": "dom",
-   "jshint.enable": false,
    "[javascript]": {
       "editor.defaultFormatter": "vscode.typescript-language-features"
    },
@@ -89,10 +87,6 @@
    "editor.fontWeight": "normal",
    "editor.fontFamily": "Menlo, Monaco, 'Courier New', monospace",
    "editor.fontLigatures": true,
-   "eslint.alwaysShowStatus": true,
-   "atomKeymap.promptV3Features": true,
-   "editor.multiCursorModifier": "ctrlCmd",
-   "editor.formatOnPaste": true
-
+   "eslint.alwaysShowStatus": true
 
 }

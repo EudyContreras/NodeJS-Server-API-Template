@@ -13,7 +13,7 @@ module.exports = {
     chunkFilename: '[id].[name].[chunkhash:6].js'
   },
   optimization: {
-    minimize: true
+    minimize: false
   },
   module: {
     rules: [

@@ -1,6 +1,6 @@
 
 export const MaterialIcons = {
-   className: 'material-icons',
+   CLASS: 'material-icons',
    icons: {
       CHEV_RIGHT: 'chevron_right',
       CHEV_LEFT: 'chevron_left',

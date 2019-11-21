@@ -13,7 +13,7 @@ module.exports = {
     filename: 'server.js'
   },
   optimization: {
-    minimize: true
+    minimize: false
   },
   externals: [ nodeExternals() ],
   module: {

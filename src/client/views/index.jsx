@@ -8,7 +8,7 @@ export const client = (store, insertCss, window) => (
    <Provider store={store}>
       <BrowserRouter>
          <StyleContext.Provider value={{ insertCss }}>
-          <Application location={window.location.pathname}/>
+            <Application location={window.location.pathname}/>
          </StyleContext.Provider>
       </BrowserRouter>    
    </Provider>

@@ -23,6 +23,10 @@
       list-style-type: none;
    }
 
+   &.fixed {
+      position: fixed;
+   }
+   
    &:hover {
       box-shadow: 6px 0px 12px 0px rgba(0,0,0,0.3);
    }
@@ -64,10 +68,6 @@
    &-closed .expand-icon {
       transform: rotate(0deg);
    }
-}
-
-.side-menu.fixed {
-   position: fixed;
 }
 
 .top-section {

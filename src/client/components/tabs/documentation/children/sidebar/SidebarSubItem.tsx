@@ -21,7 +21,7 @@ class SidebarSubItem extends React.PureComponent<any, any> {
 			<li className={style.subMenuItem}>
 				{/* <h3 className={join(http-method http-all)}>{method}</h3> */}
 				<a className={style.truncate} href={hash}>{label}</a>
-				<i className={MaterialIcons.className}>{MaterialIcons.icons.CHEV_RIGHT}</i>
+				<i className={MaterialIcons.CLASS}>{MaterialIcons.icons.CHEV_RIGHT}</i>
 			</li>
 		);
 	}
