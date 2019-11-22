@@ -11,8 +11,6 @@ import { Switch, Route } from 'react-router-dom';
 
 class App extends React.PureComponent<any, any> {
 
-  public componentDidMount() { }
-  
   public render() {
     const routes = router(style);
 
@@ -20,15 +18,15 @@ class App extends React.PureComponent<any, any> {
       return { link: x.path, label: x.label };
     });
 
-    const routings = routes.map((route, idx) => <Route exact key={idx} path={route.path} render={route.render}/>);
-    
+    const routings = routes.map((route, idx) => <Route exact key={idx} path={route.path} render={route.render} />);
+
     return (
       <Fragment>
-        <NavbarPadder styling={style}/>
-        <Switch> 
+        <NavbarPadder styling={style} />
+        <Switch>
           {routings}
         </Switch>
-        <NavbarMenu location={this.props.location} styling={style} brandName={config.app.NAME} routings={ elements } />
+        <NavbarMenu location={this.props.location} styling={style} brandName={config.app.NAME} routings={elements} />
       </Fragment>
     );
   }

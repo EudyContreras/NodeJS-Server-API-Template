@@ -2,7 +2,7 @@ import React, { Fragment } from 'react';
 import MenuItem from './SidebarMenuItem';
 import SideMenuToggle from './SidebarToggle';
 import SideMenuSearch from './SidebarSearch';
-import { toggleExpanded } from '../../../../../actions/sidemenu.action';
+import { toggleExpand } from '../../../../../actions/sidemenu.action';
 import { connect } from 'react-redux'
 import { join } from '../../../../utililties/styling.utils';
 
@@ -42,13 +42,11 @@ class SidebarMenu extends React.PureComponent<any, State> {
 	}
 
 	private handleToggle = () => {
-		this.props.toggleExpanded();
+		this.props.toggleExpand();
 		console.log(this.props)
 		console.log(this.state)
 	}
-
-	public componentDidMount() { }
-
+	
 	public render() {
 		console.log(this.props.expanded);
 		const style = this.props.styling;
@@ -62,19 +60,19 @@ class SidebarMenu extends React.PureComponent<any, State> {
 		const classes = [style.sideMenu, style.natural];
 
 
-		// if (!this.props.expanded) {
-		// 	classes.push(style.sideMenuClosed);
-		// 	if (this.state.hovered) {
-		// 		classes.push(style.sideMenuPeek);
-		// 	}
-		// } 
+		if (!this.props.expanded) {
+			classes.push(style.sideMenuClosed);
+			if (this.state.hovered) {
+				classes.push(style.sideMenuPeek);
+			}
+		} 
 
 		return (
 			<aside ref={this.props.refProp} {...props} className={join(...classes)}>
 				< TopSection 
 					styling={style}
 					hovered={this.state.hovered} 
-					expanded={true} 
+					expanded={this.props.expanded} 
 					onSidebarToggle={this.handleToggle}
 				/>
 				< SideMenuSearch styling={style} menuState={this.state} />
@@ -156,8 +154,10 @@ class MainSection extends React.PureComponent<any, any> {
 	}
 }
 
-const mapStateToProps = (state: any) => ({
-	expanded: state.expanded
-});
+const mapStateToProps = (state: any) => {
+	return {
+		...state.sidemenu
+	}
+};
 
-export default connect(mapStateToProps, { toggleExpanded }) (SidebarMenu);
+export default connect(mapStateToProps, { toggleExpand })(SidebarMenu);

@@ -10,7 +10,7 @@ const initialState = {
 
 interface Action {
    type: string,
-   payload: any
+   payload: any | undefined
 }
 
 export default function (state = initialState, action: Action) {
@@ -18,7 +18,7 @@ export default function (state = initialState, action: Action) {
       case SIDE_MENU_TOGGLE:
          return {
             ...state,
-            expanded: false
+            expanded: !state.expanded
          };
       case SIDE_MENU_FIXED:
          return {
