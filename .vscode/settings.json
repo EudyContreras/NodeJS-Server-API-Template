@@ -102,6 +102,7 @@
 
    // "editor.fontSize": 12,
    "editor.fontWeight": "bold",
+   "editor.mouseWheelZoom": true,
    // "editor.fontFamily": "Menlo, Monaco, 'Courier New', monospace",
    // "editor.fontLigatures": true,
    // "eslint.alwaysShowStatus": true

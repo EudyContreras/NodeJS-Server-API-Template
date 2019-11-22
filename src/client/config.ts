@@ -14,7 +14,7 @@ const config = Object.freeze({
     TEMPLATE: 'template'
   },
   directories: {
-    images: (file: string) => `client/resources/images/${file}`
+    images: (file: string) => `src/client/resources/images/${file}`
   },
   httpMethods: {
     GET: 'get',

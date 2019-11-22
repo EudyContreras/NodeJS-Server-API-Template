@@ -1,3 +1,4 @@
 TODO:
 
 * Store theme colors in variables.
+* Store visual application state in redux.

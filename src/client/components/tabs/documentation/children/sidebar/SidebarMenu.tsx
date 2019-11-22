@@ -1,8 +1,9 @@
-import React, {createRef, RefObject, Fragment } from 'react';
+import React, { Fragment } from 'react';
 import MenuItem from './SidebarMenuItem';
 import SideMenuToggle from './SidebarToggle';
 import SideMenuSearch from './SidebarSearch';
-
+import { toggleExpanded } from '../../../../../actions/sidemenu.action';
+import { connect } from 'react-redux'
 import { join } from '../../../../utililties/styling.utils';
 
 const version = '1.3.5';
@@ -12,8 +13,8 @@ const routes = ['Users', 'Privideles', 'Roles', 'Invitation', 'Users', 'Prividel
 
 interface State {
 	fixed: boolean,
-	expanded: boolean;
-	hovered: boolean;
+	hovered: boolean,
+	expanded: boolean
 }
 
 class SidebarMenu extends React.PureComponent<any, State> {
@@ -23,8 +24,8 @@ class SidebarMenu extends React.PureComponent<any, State> {
 
 		this.state = {
 			fixed:false,
-			expanded: true,
-			hovered: false
+			hovered: false,
+			expanded: true
 		};
 	}
 
@@ -41,14 +42,15 @@ class SidebarMenu extends React.PureComponent<any, State> {
 	}
 
 	private handleToggle = () => {
-		this.setState((state: State) => ({
-			expanded: !state.expanded
-		}));
+		this.props.toggleExpanded();
+		console.log(this.props)
+		console.log(this.state)
 	}
 
 	public componentDidMount() { }
 
 	public render() {
+		console.log(this.props.expanded);
 		const style = this.props.styling;
 		const isFixed = this.props.fixed;
 
@@ -59,19 +61,20 @@ class SidebarMenu extends React.PureComponent<any, State> {
 
 		const classes = [style.sideMenu, style.natural];
 
-		if (!this.state.expanded) {
-			classes.push(style.sideMenuClosed);
-			if (this.state.hovered) {
-				classes.push(style.sideMenuPeek);
-			}
-		} 
+
+		// if (!this.props.expanded) {
+		// 	classes.push(style.sideMenuClosed);
+		// 	if (this.state.hovered) {
+		// 		classes.push(style.sideMenuPeek);
+		// 	}
+		// } 
 
 		return (
 			<aside ref={this.props.refProp} {...props} className={join(...classes)}>
 				< TopSection 
 					styling={style}
 					hovered={this.state.hovered} 
-					expanded={this.state.expanded} 
+					expanded={true} 
 					onSidebarToggle={this.handleToggle}
 				/>
 				< SideMenuSearch styling={style} menuState={this.state} />
@@ -153,10 +156,8 @@ class MainSection extends React.PureComponent<any, any> {
 	}
 }
 
-// const mapStateToProps = (state) => ({
-// 	expanded: state.expanded,
-// });
+const mapStateToProps = (state: any) => ({
+	expanded: state.expanded
+});
 
-// export default connect(mapStateToProps, { toggleSidebar })(withStyles(style)(SidebarMenu));
-
-export default SidebarMenu;
+export default connect(mapStateToProps, { toggleExpanded }) (SidebarMenu);

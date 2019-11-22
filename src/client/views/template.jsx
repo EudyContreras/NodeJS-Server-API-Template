@@ -28,17 +28,30 @@ class DefaultLayout extends React.PureComponent {
             </head>
             <body >
                <section id='content'>{this.props.content}</section>
-               <script src='/static/bundle.js' />
-               <script src='/scripts/global.js' />
-               <script dangerouslySetInnerHTML={{ __html: `var __REDUX_STATE__ = ${this.props.state};` }} />
                <script src='https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js' />
+               <script dangerouslySetInnerHTML={{ 
+                     __html: ` window.__REDUX_STATE__ = ${JSON.stringify(this.props.state).replace(/</g,'\\u003c')}; 
+                     
+                     window.ga = function () {
+                        ga.q.push(arguments);
+                     }; 
+                     ga.q = []; 
+                     ga.l = + new Date;
+                     ga('create', 'UA-XXXXX-Y', 'auto'); 
+                     ga('set','transport','beacon'); 
+                     ga('send', 'pageview');          
+                     ` 
+                  }} 
+               />
+                <script src='/static/bundle.js' />
+               <script src='/scripts/global.js' />
                <script src='/scripts/main.js' />
-               <script dangerouslySetInnerHTML={
+               {/* <script dangerouslySetInnerHTML={
                   {
                      __html:
                 ` window.ga = function () {ga.q.push(arguments)}; ga.q = []; ga.l = +new Date;
                   ga('create', 'UA-XXXXX-Y', 'auto'); ga('set','transport','beacon'); ga('send', 'pageview')`
-                  }} />
+                  }} /> */}
                <script src='https://www.google-analytics.com/analytics.js' async></script>
             </body>
          </html>

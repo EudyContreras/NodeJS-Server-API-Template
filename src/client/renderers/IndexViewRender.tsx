@@ -2,13 +2,13 @@
 import React from 'react';
 import config from '../config';
 import template from '../views/template';
-import configureStore from '../store';
+import configureStore from '../stores/store';
 import ViewRenderer from '../../server/middleware/renderer';
 
 import { Store } from 'redux';
 import { server } from '../views';
 import { routes } from '../components/Routes';
-import express, { Router, Request, Response } from 'express';
+import { Router, Request, Response } from 'express';
 
 class IndexViewRenderer extends ViewRenderer {
 
@@ -18,7 +18,7 @@ class IndexViewRenderer extends ViewRenderer {
 
    constructor() {
       super();
-      this.router = express.Router();
+      this.router = Router();
       this.store = configureStore({});
       this.setupRoutes(this.router);
    }
@@ -44,8 +44,8 @@ class IndexViewRenderer extends ViewRenderer {
 
       const args = {
          css: css,
+         state: state,
          title: config.app.TITLE,
-         state: JSON.stringify(state),
          content: server(req.url, this.store, {}, insertCss)
       };
 
