@@ -11,6 +11,7 @@ const headers = ['Introduction', 'Endpoints'];
 const routes = ['Users', 'Privideles', 'Roles', 'Invitation', 'Users', 'Privideles', 'Roles', 'Invitation'];
 
 interface State {
+	fixed: boolean,
 	expanded: boolean;
 	hovered: boolean;
 }
@@ -21,6 +22,7 @@ class SidebarMenu extends React.PureComponent<any, State> {
 		super(props);
 
 		this.state = {
+			fixed:false,
 			expanded: true,
 			hovered: false
 		};
@@ -48,6 +50,7 @@ class SidebarMenu extends React.PureComponent<any, State> {
 
 	public render() {
 		const style = this.props.styling;
+		const isFixed = this.props.fixed;
 
 		const props = {
 			onMouseEnter: this.onMouseEnter,

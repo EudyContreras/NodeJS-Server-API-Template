@@ -5,7 +5,11 @@ import SideMenu from './children/sidebar/SidebarMenu';
 import SandBox from './children/sandbox/SandboxArea';
 import stickEffect, { ScrollListener } from '../../../appliers/sticky.applier';
 
-class DocsPage extends React.PureComponent<any, any> {
+interface State {
+   sidebarFixed: boolean
+}
+
+class DocsPage extends React.PureComponent<any, State> {
  
    private readonly footer: RefObject<HTMLElement>;
    private readonly sidebar: RefObject<HTMLElement>;
@@ -18,6 +22,9 @@ class DocsPage extends React.PureComponent<any, any> {
       this.sidebar = createRef();
       this.sandbox = createRef();
       this.content = createRef();
+      this.state = {
+         sidebarFixed: false
+      }
    }
 
    public componentDidMount() {
@@ -28,7 +35,10 @@ class DocsPage extends React.PureComponent<any, any> {
       const sandBox = this.sandbox.current;
       
       const sandboxListener = new ScrollListener(sandBox!, footer, 10);
-      const sidebarListener = new ScrollListener(sideBar!, null ,10);
+
+      const sidebarListener = new ScrollListener(sideBar!, null ,10, (fixed) => {
+        
+      });
 
       stickEffect(style, sidebarListener, sandboxListener);
    }
@@ -37,7 +47,7 @@ class DocsPage extends React.PureComponent<any, any> {
       const style = this.props.styling;
       return (
          <Fragment>
-            <SideMenu refProp={this.sidebar} styling={style} />
+            <SideMenu fixed={this.state.sidebarFixed} refProp={this.sidebar} styling={style} />
             <SandBox refProp={this.sandbox} styling={style} />
             <ContentArea refProp={this.content} styling={style} />
             <FooterArea refProp={this.footer} styling={style} />

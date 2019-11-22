@@ -8,26 +8,42 @@
   background: rgba(47, 51, 56, 1);
   overflow: hidden;
   box-shadow: inset 1px 0px 3px 2px rgba(0, 0, 0, 0.25);
+  box-shadow: inset 0px 8px 8px -6px rgba(0, 0, 0, 0.2);
 
   &-item {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding-left: 2em;
+    padding-left: 1.7em;
     padding-top: 0.5em;
     padding-bottom: 0.5em;
     padding-right: 1em;
     transition: background-color 0.2s ease-out;
+    transition: background-color 0.2s ease-out;
+    border-left: #5c6064;
+    border-left-width: 0.4em;
+    border-left-style: solid;
+    // &::before {
+    //   content: "";
+    // }
+
+    &-wrapper {
+      display: flex;
+      justify-items: center;
+      align-items: center;
+    }
 
     &:active {
       transform: translateY(3px);
-      box-shadow: -1px 0px 0px 0px rgba(0, 0, 0, 0.2);
+      box-shadow: 0px 0px 1px -1px rgba(0, 0, 0, 0.15) !important;
     }
 
     &:hover {
-      transition: transform 0.2s ease-out;
-      background-color: rgba(54, 58, 63, 1);
-      box-shadow: -1px 0px 6px 0px rgba(0, 0, 0, 0.2);
+      transition: all 0.2s ease-out;
+      //background-color: rgba(57, 61, 66, 1);
+      box-shadow: 0px -1px 17px 2px rgba(0, 0, 0, 0.15);
+      border-left-color: #dc8b02;
+      border-left-width: 0.6em;
     }
 
     &:hover>a {

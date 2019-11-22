@@ -44,17 +44,21 @@
    }
 
    &.active>a {
-      color: rgb(220, 220, 220);
+      color: rgb(230, 230, 230);
+      font-weight: 500;
    }
 
    &.active {
-      // background-color: rgb(67, 72, 77);
-      // box-shadow: -2px 0px 6px 2px rgba(0, 0, 0, 0.2);
+
    }
 
    &.active:hover {
       background-color: rgb(67, 72, 77);
    }
+
+   // &.active::before {
+   //    content: "";
+   // }
 }
 
 // .menu-item.active:hover {}

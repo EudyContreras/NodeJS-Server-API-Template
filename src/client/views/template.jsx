@@ -24,9 +24,6 @@ class DefaultLayout extends React.PureComponent {
                <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css' />
                <link rel='stylesheet' href='https://fonts.googleapis.com/icon?family=Material+Icons' />
                <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Roboto&display=swap' />
-               <link rel='stylesheet' href='/styles/index.css' />
-               {/* <link rel='stylesheet' href='/styles/menu.css' /> */}
-               <link rel='stylesheet' href='/styles/restful.css' />
                <style>${[...this.props.css].join('')}</style>
             </head>
             <body >
@@ -35,13 +32,12 @@ class DefaultLayout extends React.PureComponent {
                <script src='/scripts/global.js' />
                <script dangerouslySetInnerHTML={{ __html: `var __REDUX_STATE__ = ${this.props.state};` }} />
                <script src='https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js' />
-               {/* <script src='/scripts/sidemenu.js' /> */}
                <script src='/scripts/main.js' />
                <script dangerouslySetInnerHTML={
                   {
                      __html:
                 ` window.ga = function () {ga.q.push(arguments)}; ga.q = []; ga.l = +new Date;
-              ga('create', 'UA-XXXXX-Y', 'auto'); ga('set','transport','beacon'); ga('send', 'pageview')`
+                  ga('create', 'UA-XXXXX-Y', 'auto'); ga('set','transport','beacon'); ga('send', 'pageview')`
                   }} />
                <script src='https://www.google-analytics.com/analytics.js' async></script>
             </body>

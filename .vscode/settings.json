@@ -1,36 +1,36 @@
 {
-   "explorer.confirmDragAndDrop": false,
-   "files.autoSave": "afterDelay",
-   "terminal.integrated.rendererType": "dom",
-   "[javascript]": {
-      "editor.defaultFormatter": "vscode.typescript-language-features"
-   },
-   "window.zoomLevel": 0,
-   "editor.mouseWheelZoom": true,
-   "javascript.updateImportsOnFileMove.enabled": "always",
-   "workbench.tree.indent": 10,
-   "editor.tabSize": 3,
+   // "explorer.confirmDragAndDrop": false,
+   // "files.autoSave": "afterDelay",
+   // "terminal.integrated.rendererType": "dom",
+   // "[javascript]": {
+   //    "editor.defaultFormatter": "vscode.typescript-language-features"
+   // },
+   // "window.zoomLevel": 0,
+   // "editor.mouseWheelZoom": true,
+   // "javascript.updateImportsOnFileMove.enabled": "always",
+   // "workbench.tree.indent": 10,
+   // "editor.tabSize": 3,
 
-   "[json]": {
-      "editor.defaultFormatter": "HookyQR.beautify"
-   },
-   "typescript.updateImportsOnFileMove.enabled": "always",
-   "[html]": {
-      "editor.defaultFormatter": "HookyQR.beautify"
-   },
+   // "[json]": {
+   //    "editor.defaultFormatter": "HookyQR.beautify"
+   // },
+   // "typescript.updateImportsOnFileMove.enabled": "always",
+   // "[html]": {
+   //    "editor.defaultFormatter": "HookyQR.beautify"
+   // },
    "files.exclude": {
       "node_modules/": true
    },
-   "[jsonc]": {
-      "editor.defaultFormatter": "HookyQR.beautify"
-   },
-   "files.associations": {
-      "*.jsx": "javascriptreact",
-      "*.tsx": "typescriptreact"
-   },
-   "oneDarkPro.editorTheme": "Onedark Pro",
-   "editor.suggestSelection": "first",
-   "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
+   // "[jsonc]": {
+   //    "editor.defaultFormatter": "HookyQR.beautify"
+   // },
+   // "files.associations": {
+   //    "*.jsx": "javascriptreact",
+   //    "*.tsx": "typescriptreact"
+   // },
+   // "oneDarkPro.editorTheme": "Onedark Pro",
+   // "editor.suggestSelection": "first",
+   // "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
 
    "workbench.colorCustomizations": {
       "terminal.background": "#191d22",
@@ -48,13 +48,25 @@
 
       "editorGutter.background": "#1e2329",
 
+
       "tab.inactiveForeground": "#999",
-      "tab.inactiveBackground": "#16191b",
+      "tab.inactiveBackground": "#202429",
+      "tab.border": "#1f262c",
       "tab.activeBackground": "#262b31",
       "tab.activeBorderTop": "#044e70",
 
+
       "sideBarSectionHeader.background": "#28303a",
 
+      "panel.background": "#1f262c",
+    
+
+      "breadcrumb.background": "#262b31",
+     
+      "menubar.selectionBackground": "#413d3d",
+   
+      "editorWidget.background": "#2e363a",
+      "sideBar.background": "#1a1f25",
       "dropdown.foreground": "#fff",
       "dropdown.listBackground": "#28303a",
       "dropdown.background": "#28303a",
@@ -72,21 +84,26 @@
       "editor.inactiveSelectionBackground": "#535c6652",
       "editor.selectionBackground": "#334d6b52",
       "editor.lineHighlightBackground": "#191d22",
-      "editor.lineHighlightBorder": "#191d22"
+      "editor.lineHighlightBorder": "#191d22",
+      "editorGroupHeader.tabsBackground": "#1c2227",
+      
+   
+      "gitDecoration.deletedResourceForeground": "#576064",
+      "gitDecoration.modifiedResourceForeground": "#64b1e4"
    },
-   "oneDarkPro.vivid": true,
-   "oneDarkPro.bold": true,
-   "material-icon-theme.folders.color": "#ffffff",
-   "material-icon-theme.folders.theme": "none",
-   "material-icon-theme.activeIconPack": "react_redux",
-   "helium-icon-theme.folders.theme": "none",
-   "helium-icon-theme.activeIconPack": "react_redux",
-   "workbench.colorTheme": "Arkademy Dark II",
+   // "oneDarkPro.vivid": true,
+   // "oneDarkPro.bold": true,
+   // "material-icon-theme.folders.color": "#ffffff",
+   // "material-icon-theme.folders.theme": "none",
+   // "material-icon-theme.activeIconPack": "react_redux",
+   // "helium-icon-theme.folders.theme": "none",
+   // "helium-icon-theme.activeIconPack": "react_redux",
+   // "workbench.colorTheme": "Arkademy Dark II",
 
-   "editor.fontSize": 12,
-   "editor.fontWeight": "normal",
-   "editor.fontFamily": "Menlo, Monaco, 'Courier New', monospace",
-   "editor.fontLigatures": true,
-   "eslint.alwaysShowStatus": true
+   // "editor.fontSize": 12,
+   "editor.fontWeight": "bold",
+   // "editor.fontFamily": "Menlo, Monaco, 'Courier New', monospace",
+   // "editor.fontLigatures": true,
+   // "eslint.alwaysShowStatus": true
 
 }
