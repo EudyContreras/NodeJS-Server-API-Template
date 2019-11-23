@@ -1,20 +1,21 @@
 /**
  * @description Gets a simple readable string for a specified date.
  */
-export function normalize(date: Date) {
+export function normalize(date: Date): string {
 
-   let year = date.getFullYear().toString();
-   let month = (date.getMonth() + 1).toString();
-   let day =  date.getDate().toString();
+	const year = date.getFullYear().toString();
 
-   if (month.length < 2)
-      month = '0' + month;
-   if (day.length < 2)
-      day = '0' + day;
+	let month = (date.getMonth() + 1).toString();
+	let day =  date.getDate().toString();
 
-   return [year, month, day].join('-');
+	if (month.length < 2)
+		month = '0' + month;
+	if (day.length < 2)
+		day = '0' + day;
+
+	return [year, month, day].join('-');
 }
 
 export default {
-   normalize
+	normalize
 };

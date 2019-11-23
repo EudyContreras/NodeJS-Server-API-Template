@@ -1,6 +1,14 @@
 import React from 'react';
 import $ from 'jquery';
 
+const asClass = (name: string) => '.'+name;
+
+const spanElement = (name: string) => {
+   const element = document.createElement('span');
+   element.classList.add(name);
+   return element;
+};
+
 export default (event: React.MouseEvent<HTMLElement, MouseEvent>, style: any) => {
    $(asClass(style.ripple)).remove();
 
@@ -10,8 +18,8 @@ export default (event: React.MouseEvent<HTMLElement, MouseEvent>, style: any) =>
    const posX = offset.left;
    const posY = offset.top;
 
-   var buttonWidth = offset.width;
-   var buttonHeight = offset.height;
+   let buttonWidth = offset.width;
+   let buttonHeight = offset.height;
 
    const ripple = spanElement(style.ripple);
  

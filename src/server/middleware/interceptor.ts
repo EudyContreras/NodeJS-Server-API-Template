@@ -6,19 +6,19 @@ import notFoundInterceptor from './interceptors/notfound.interceptor';
 import requestInterceptor from './interceptors/request.interceptor';
 
 class Interceptor {
-   public getInterceptors(): Array<(request: Request, response: Response, next: NextFunction) => void> {
-      return [
-         requestInterceptor
-      ];
-   }
+	public getInterceptors(): Array<(request: Request, response: Response, next: NextFunction) => void> {
+		return [
+			requestInterceptor
+		];
+	}
 
-   public getErrorHandler(): (error: HttpException, request: Request, response: Response, next: NextFunction) => void {
-      return errorInterceptor;
-   }
+	public getErrorHandler(): (error: HttpException, request: Request, response: Response, next: NextFunction) => void {
+		return errorInterceptor;
+	}
 
-   public getNotFoundHandler(): (request: Request, response: Response, next: NextFunction) => void {
-      return notFoundInterceptor;
-   }
+	public getNotFoundHandler(): (request: Request, response: Response, next: NextFunction) => void {
+		return notFoundInterceptor;
+	}
 }
 
 export default Interceptor;

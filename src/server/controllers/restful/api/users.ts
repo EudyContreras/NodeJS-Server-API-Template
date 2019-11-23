@@ -13,88 +13,88 @@ import { Router, Request, Response } from 'express';
 
 class Users extends Controller {
 
-   private userService = new UserService();
-   private routing: string = '/rest/api/users';
-   private router: Router;
-   private roles: string[];
+	private userService = new UserService();
+	private routing = '/rest/api/users';
+	private router: Router;
+	private roles: string[];
 
-   constructor(...allowedRoles: string[]) {
-      super('user');
-      this.roles = allowedRoles;
-      this.router = express.Router();
-      this.setupRoutes(this.router);
-   }
+	constructor(...allowedRoles: string[]) {
+		super('user');
+		this.roles = allowedRoles;
+		this.router = express.Router();
+		this.setupRoutes(this.router);
+	}
 
-   public getRoute(): string {
-      return this.routing;
-   }
+	public getRoute(): string {
+		return this.routing;
+	}
 
-   public getRouter(): Router {
-      return this.router;
-   }
+	public getRouter(): Router {
+		return this.router;
+	}
 
-   private setupRoutes(router: Router) {
-      router.get('/',authenticate, allowed(...this.roles), validate(schemaType.USER_QUERY), this.get);
-      router.put('/',authenticate, allowed(...this.roles), validate(schemaType.USER_CREATE), this.create);
-      router.delete('/',authenticate, allowed(...this.roles), this.delete);
+	private setupRoutes(router: Router): void {
+		router.get('/',authenticate, allowed(...this.roles), validate(schemaType.USER_QUERY), this.get);
+		router.put('/',authenticate, allowed(...this.roles), validate(schemaType.USER_CREATE), this.create);
+		router.delete('/',authenticate, allowed(...this.roles), this.delete);
 
-      router.patch('/',authenticate, allowed(ROOT, ADMIN), validate(schemaType.USER_UPDATE), this.update);
-      router.put('/password',authenticate, allowed(ROOT, ADMIN), validate(schemaType.USER_PASSORD), this.updatePassword);
-   }
+		router.patch('/',authenticate, allowed(ROOT, ADMIN), validate(schemaType.USER_UPDATE), this.update);
+		router.put('/password',authenticate, allowed(ROOT, ADMIN), validate(schemaType.USER_PASSORD), this.updatePassword);
+	}
 
-   private get = async (request: any, response: Response) => {
-      const hasProps = request.data ? Object.keys(request.data).length > 0 : null;
+	private get = async (request: any, response: Response): Promise<Response> => {
+		const hasProps = request.data ? Object.keys(request.data).length > 0 : null;
 
-      if (hasProps) {
-         return this.getOne(request.data, response);
-      } else {
-         return this.getAll(response);
-      }
-   }
+		if (hasProps) {
+			return this.getOne(request.data, response);
+		} else {
+			return this.getAll(response);
+		}
+	}
 
-   private getOne = async (query: any, response: Response) => {
-      const { result, error } = await this.userService.getUserWhere(query);
+	private getOne = async (query: any, response: Response): Promise<Response> => {
+		const { result, error } = await this.userService.getUserWhere(query);
 
-      return this.buildResult(result, error, response, RequestAction.GET);
-   }
+		return this.buildResult(result, error, response, RequestAction.GET);
+	}
 
-   private getAll = async (response: Response) => {
-      const { result, error } = await this.userService.getAllUsers();
+	private getAll = async (response: Response): Promise<Response> => {
+		const { result, error } = await this.userService.getAllUsers();
 
-      return this.buildResult(result, error, response, RequestAction.GET_ALL);
-   }
+		return this.buildResult(result, error, response, RequestAction.GET_ALL);
+	}
 
-   private create = async (request: any, response: Response) => {
-      const data = request.data;
+	private create = async (request: any, response: Response): Promise<Response> => {
+		const data = request.data;
 
-      const { result, error } = await this.userService.registerUser(data);
+		const { result, error } = await this.userService.registerUser(data);
 
-      return this.buildResult(result, error, response, RequestAction.CREATE);
-   }
+		return this.buildResult(result, error, response, RequestAction.CREATE);
+	}
 
-   private update = async (request: any, response: Response) => {
-      const userId = request.query.userId || request.user.userId;
+	private update = async (request: any, response: Response): Promise<Response> => {
+		const userId = request.query.userId || request.user.userId;
 
-      const { result, error } = await this.userService.updateUser(userId, request.data);
+		const { result, error } = await this.userService.updateUser(userId, request.data);
 
-      return this.buildResult(result, error, response, RequestAction.UPDATE);
-   }
+		return this.buildResult(result, error, response, RequestAction.UPDATE);
+	}
 
-   private delete = async (request: Request, response: Response) => {
-      const userId = request.query.userId;
+	private delete = async (request: Request, response: Response): Promise<Response> => {
+		const userId = request.query.userId;
 
-      const { result, error } = await this.userService.deleteUser(userId);
+		const { result, error } = await this.userService.deleteUser(userId);
 
-      return this.buildResult(result, error, response, RequestAction.DELETE);
-   }
+		return this.buildResult(result, error, response, RequestAction.DELETE);
+	}
 
-   private updatePassword = async (request: any, response: Response) => {
-      const userId = request.query.userId || request.user.userId;
+	private updatePassword = async (request: any, response: Response): Promise<Response> => {
+		const userId = request.query.userId || request.user.userId;
 
-      const { result, error } = await this.userService.updateUserPassword(userId, request.data);
+		const { result, error } = await this.userService.updateUserPassword(userId, request.data);
 
-      return this.buildResult(result, error, response, RequestAction.UPDATE);
-   }
+		return this.buildResult(result, error, response, RequestAction.UPDATE);
+	}
 
 }
 

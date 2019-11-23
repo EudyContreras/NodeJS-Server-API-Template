@@ -1,6 +1,5 @@
 
 import $ from 'jquery';
-import { on } from 'cluster';
 
 interface IScrollListener {
    onScroll(style: any, scroll: number): void;
@@ -67,7 +66,6 @@ export const addAnchor = (style: any, listener: ScrollListener, stickyCallBack: 
 };
 
 const applyStickyTop = (sticker: JQuery<HTMLElement | Element>, style: any, scroll: number, top: number, margin: number, onFixed: ((fixed: boolean) => void) | undefined) => {
-
    if (scroll! > top && sticker.hasClass(style.natural)) {
       sticker.removeClass(style.natural).addClass(style.fixed).css({ top: margin });
       if (onFixed) onFixed(true);

@@ -4,8 +4,8 @@ import LoggingHandler from '../handlers/logging.handler';
 
 import { Job } from 'agenda';
 
-interface CronTask {
-    performTask(logger: LoggingHandler, errorHandler: ErrorHandler, job: Job | null): void
+interface ICronTask {
+    performTask(logger: LoggingHandler, errorHandler: ErrorHandler, job: Job | null): void;
 }
 
-export default CronTask;
+export default ICronTask;

@@ -1,16 +1,16 @@
-import CronTask from "../cronTask";
-import ErrorHandler from "../../handlers/error.handler";
-import LoggingHandler from "../../handlers/logging.handler";
+import ICronTask from '../cronTask';
+import ErrorHandler from '../../handlers/error.handler';
+import LoggingHandler from '../../handlers/logging.handler';
 
-import { Job } from "agenda";
+import { Job } from 'agenda';
 
-export class PasswordTask implements CronTask {
+export class PasswordTask implements ICronTask {
 
-   public performTask(logger: LoggingHandler, errorHandler: ErrorHandler, job: Job | null): void {
-      throw new Error("Method not implemented.");
-   }
+	public performTask(logger: LoggingHandler, errorHandler: ErrorHandler, job: Job | null): void {
+		throw new Error('Method not implemented.');
+	}
 
-   private async removedTempPasswords() {
-      
-   }
+	private async removedTempPasswords(): Promise<any> {
+		
+	}
 }

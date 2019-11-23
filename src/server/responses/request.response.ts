@@ -3,18 +3,18 @@
  * is requested by a user.
  */
 export class AuthenticationResponse {
-   public authorized: boolean = false;
-   public content?: any | null;
-   public message?: any | null;
-   public errors: any[] = [];
+	public authorized = false;
+	public content?: any | null;
+	public message?: any | null;
+	public errors: any[] = [];
 }
 /**
  * @description Response produced when a request for user
  * credential data is requested by a user.
  */
 export class CredentialsResponse {
-   public authorized: boolean = false;
-   public errors: any[] = [];
+	public authorized = false;
+	public errors: any[] = [];
 }
 
 /**
@@ -22,9 +22,9 @@ export class CredentialsResponse {
  * data takes place.
  */
 export class ValidationResponse {
-   public valid: boolean = false;
-   public message: string = '';
-   public errors: any[] = [];
+	public valid = false;
+	public message = '';
+	public errors: any[] = [];
 }
 
 /**
@@ -32,8 +32,8 @@ export class ValidationResponse {
  * requested for access to certain resource.
  */
 export class AccessResponse {
-   public granted: boolean = false;
-   public errors: any[] = [];
+	public granted = false;
+	public errors: any[] = [];
 }
 
 /**
@@ -41,10 +41,10 @@ export class AccessResponse {
  * to perform a certain action within a resouce.
  */
 export class PriviledgeResponse {
-   public hasAccess?: boolean | null;
-   public permission?: string | null;
-   public message?: string | null;
-   public errors: any[] = [];
+	public hasAccess?: boolean | null;
+	public permission?: string | null;
+	public message?: string | null;
+	public errors: any[] = [];
 }
 
 /**
@@ -52,16 +52,16 @@ export class PriviledgeResponse {
  * place.
  */
 export class RegistrationResponse {
-   public token?: string | null;
-   public email?: string | null;
-   public errors: any[] = [];
+	public token?: string | null;
+	public email?: string | null;
+	public errors: any[] = [];
 }
 
 /**
  * @description A common api response to a request.
  */
 export class ApiResponse {
-   public message?: any | null;
-   public content: any | null;
-   public errors: any[] = [];
+	public message?: any | null;
+	public content: any | null;
+	public errors: any[] = [];
 }

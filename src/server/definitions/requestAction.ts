@@ -6,6 +6,6 @@ enum RequestAction {
    DELETE,
    RECOVER,
    AUTHENTICATE
-};
+}
 
 export default RequestAction;

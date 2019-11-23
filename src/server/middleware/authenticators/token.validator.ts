@@ -10,61 +10,58 @@ import { Request, Response, NextFunction } from 'express';
 
 const httpHeader = config.self.headers;
 
-async function authenticate(req: any, res: Response, next: NextFunction) {
-   const token = getToken(req);
+async function isBlackListed(token: string): Promise<any> {
+	const service = new AuthenticationService();
 
-   const response = new  AuthenticationResponse();
+	const { result, error } = await service.isBlackListed(token);
 
-   if (!token) {
-      response.authorized = false;
-      response.message = AuthorizationMessages.NO_TOKEN;
-      response.errors.push(AuthorizationMessages.NO_TOKEN_FOUND);
-      return res.status(httpCode.UNAUTHORIZED).json(response);
-   }
+	if (error) return true;
 
-   try {
-      const secret = config.jwt.TOKEN_SECRET;
-      const decoded = webtoken.verify(token, secret);
-
-      const blackListed = await isBlackListed(token);
-
-      if (blackListed) {
-         throw new Error(AuthorizationMessages.NO_ACTIVE_TOKEN);
-      }
-
-      req.user = decoded;
-
-      return next();
-   } catch (error) {
-      response.authorized = false;
-      response.message = AuthorizationMessages.NO_VALID_TOKEN;
-      response.errors.push(error.message);
-      return res.status(httpCode.UNAUTHORIZED).json(response);
-   }
+	return result;
 }
 
-async function isBlackListed(token: string) {
-   const service = new AuthenticationService();
+function getToken(req: Request): string | null {
+	const bearer = config.jwt.PREFIX;
 
-   const { result, error } = await service.isBlackListed(token);
+	const token = req.header(httpHeader.TOKEN_HEADER) || req.header(httpHeader.AUTHORIZATION);
 
-   if (error) return true;
+	if (!token) return null;
 
-   return result;
+	if (token.startsWith(bearer)) {
+		return token.slice(bearer.length, token.length);
+	}
+
+	return token;
 }
 
-function getToken(req: Request) {
-   const bearer = config.jwt.PREFIX;
+async function authenticate(req: any, res: Response, next: NextFunction): Promise<void | Response> {
+	const token = getToken(req);
 
-   const token = req.header(httpHeader.TOKEN_HEADER) || req.header(httpHeader.AUTHORIZATION);
+	const response = new  AuthenticationResponse();
 
-   if (!token) return null;
+	if (!token) {
+		response.authorized = false;
+		response.message = AuthorizationMessages.NO_TOKEN;
+		response.errors.push(AuthorizationMessages.NO_TOKEN_FOUND);
+		return res.status(httpCode.UNAUTHORIZED).json(response);
+	}
 
-   if (token.startsWith(bearer)) {
-      return token.slice(bearer.length, token.length);
-   }
+	try {
+		req.user = webtoken.verify(token, config.jwt.TOKEN_SECRET);
+		
+		const blackListed = await isBlackListed(token);
 
-   return token;
+		if (blackListed) {
+			throw new Error(AuthorizationMessages.NO_ACTIVE_TOKEN);
+		}
+
+		return next();
+	} catch (error) {
+		response.authorized = false;
+		response.message = AuthorizationMessages.NO_VALID_TOKEN;
+		response.errors.push(error.message);
+		return res.status(httpCode.UNAUTHORIZED).json(response);
+	}
 }
 
 export default authenticate;
