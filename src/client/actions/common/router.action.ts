@@ -1,4 +1,4 @@
-import RoutingService from './services/routings.service';
+import RoutingService from '../../services/routings.service';
 
 export const LOADING_ROUTINGS = 'LOADING_ROUTINGS';
 export const GET_ALL_ROUTINGS = 'GET_ALL_ROUTINGS';

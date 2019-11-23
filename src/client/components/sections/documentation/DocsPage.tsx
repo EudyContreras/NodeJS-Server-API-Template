@@ -29,14 +29,13 @@ class DocsPage extends React.PureComponent<any, State> {
 
 	public componentDidMount(): void {
 		const style = this.props.styling;
-	
 		const footer = this.footer.current;
 		const sideBar = this.sidebar.current;
 		const sandBox = this.sandbox.current;
 		
 		const sandboxListener = new ScrollListener(sandBox!, footer, 10);
 
-		const sidebarListener = new ScrollListener(sideBar!, null ,10, (fixed: boolean) => {
+		const sidebarListener = new ScrollListener(sideBar!, null ,10, (fixed: boolean): void => {
 			
 		});
 

@@ -40,13 +40,15 @@
             "error",
             "single"
         ],
-        "semi": ["warn", "always"],
+        "semi": "off",
+        "no-extra-semi": "off",
         "object-curly-spacing": ["warn", "always"],
         "no-irregular-whitespace": "off",
         "no-useless-escape": 0,
         "no-empty-function": "off",
         "camelcase": "off",
         "no-use-before-define": "off",
+        "@typescript-eslint/semi": ["warn"],
         "@typescript-eslint/camelcase": ["warn", { "properties": "always" }],
         "@typescript-eslint/no-empty-function": "off",
         "@typescript-eslint/interface-name-prefix": ["off", { "prefixWithI": "always"}],
@@ -58,6 +60,7 @@
     "overrides": [{
         "files": ["*.ts", "*.tsx"],
         "rules": {
+            
             "@typescript-eslint/no-explicit-any": 0,
             "@typescript-eslint/explicit-function-return-type": ["warn"],
             "@typescript-eslint/no-use-before-define": "off",

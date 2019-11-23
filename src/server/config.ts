@@ -20,7 +20,7 @@ const config = Object.freeze({
 				alias: '/styles'
 			},
 			scripts: {
-				path: 'src/client/scripts',
+				path: 'src/client/scriptsjs',
 				alias: '/scripts'
 			},
 			images: {
@@ -62,7 +62,7 @@ const config = Object.freeze({
 	},
 	api: {
 		someapi: {
-			baseUrl: (endpoint: string) => {
+			baseUrl: (endpoint: string): string => {
 				return `/${endpoint}`;
 			},
 			auth: {

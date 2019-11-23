@@ -18,7 +18,6 @@ export default class TopSection extends React.PureComponent<any, any> {
 					styling={style}
 					hovered={this.props.hovered}
 					expanded={this.props.expanded}
-					onSidebarToggle={this.props.onSidebarToggle}
 				/>
 			</div>
 		);

@@ -5,8 +5,8 @@ import MiddleSection from './sections/MiddleSection';
 import SideMenuSearch from './SidebarSearch';
 import { connect } from 'react-redux';
 import { join } from '../../../../utililties/styling.utils';
-import { setToggleVisible, setHovered } from '../../../../../actions/sidemenu.action';
-import { IState } from '../../../../../reducers/common/sidemenu.reducer';
+import { setHovered } from '../../../../../actions/common/sidemenu.action';
+import { ISideMenu } from '../../../../../reducers/common/sidemenu.reducer';
 
 const headers = ['Introduction', 'Endpoints'];
 
@@ -18,10 +18,9 @@ interface StateProps {
 
 interface DispatchProps {
 	setHovered: (hovered: boolean) => void;
-	setToggleVisible: (hidden: boolean) => void;
 }
 
-type State = IState;
+type State = ISideMenu;
 type Props = StateProps & DispatchProps & any;
 
 class SidebarMenu extends React.PureComponent<Props, State> {
@@ -32,17 +31,11 @@ class SidebarMenu extends React.PureComponent<Props, State> {
 
 	private onMouseEnter = (): void => {
 		this.props.setHovered(true);
-		if (this.props.expanded) {
-			this.props.setToggleVisible(false);
-		}
-	}
+	};
 
 	private onMouseExit = (): void => {
 		this.props.setHovered(false);
-		if (this.props.expanded) {
-			this.props.setToggleVisible(true);
-		}
-	}
+	};
 
 	public render(): JSX.Element {
 		const style = this.props.styling;
@@ -79,4 +72,4 @@ const mapStateToProps = (state: any): any => {
 	};
 };
 
-export default connect<StateProps, DispatchProps, any>(mapStateToProps, { setToggleVisible, setHovered })(SidebarMenu);
+export default connect<StateProps, DispatchProps, any>(mapStateToProps, { setHovered })(SidebarMenu);

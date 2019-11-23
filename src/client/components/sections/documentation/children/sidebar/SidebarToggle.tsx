@@ -1,21 +1,23 @@
 import React from 'react';
 import rippleEffect from '../../../../../appliers/ripple.applier';
 import { MaterialIcons } from '../../../../../stores/icon.library';
-import { toggleExpand } from '../../../../../actions/sidemenu.action';
-import { IState } from '../../../../../reducers/common/sidemenu.reducer';
+import { toggleExpand } from '../../../../../actions/common/sidemenu.action';
+import { IToggle } from '../../../../../reducers/common/sidemenu.reducer';
 import { join } from '../../../../utililties/styling.utils';
 import { connect } from 'react-redux';
 
 interface StateProps {
 	expanded: boolean;
-	toggleHidden: boolean;
+	toggle: {
+		hidden: boolean;
+	};
 }
 
 interface DispatchProps {
 	toggleExpand: () => void;
 }
 
-type State = IState;
+type State = IToggle;
 type Props = StateProps & DispatchProps & any;
 
 class SidebarToggle extends React.PureComponent<Props, State> {
@@ -46,7 +48,7 @@ class SidebarToggle extends React.PureComponent<Props, State> {
 		const toggleClasses = [style.expand];
 		const toggleIconClasses = [MaterialIcons.CLASS, style.expandIcon];
 
-		if (this.props.toggleHidden) {
+		if (this.props.toggle.hidden) {
 			toggleClasses.push(style.expandHidden);
 		}
 

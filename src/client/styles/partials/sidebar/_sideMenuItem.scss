@@ -1,12 +1,16 @@
+$backgroundColor: rgb(55, 60, 64);
+$backgroundColorHovered: rgb(67, 72, 77);
+
 .menu-item {
    display: flex;
    align-items: center;
    justify-content: space-between;
+   background-color: $backgroundColor;
    padding-left: 0.8em;
    padding-top: 0.5em;
    padding-bottom: 0.5em;
    padding-right: 1em;
-   transition: background-color 0.2s cubic-bezier(.25, .8, .25, 1);
+   @include transition(background-color 0.2s ease-out);
 
    & i {
       color: rgba(120, 120, 120, 1);
@@ -53,7 +57,8 @@
    }
 
    &.active:hover {
-      background-color: rgb(67, 72, 77);
+      background-color: $backgroundColorHovered;
+      @include transition(background-color 0.2s ease-out);
    }
 
    // &.active::before {
