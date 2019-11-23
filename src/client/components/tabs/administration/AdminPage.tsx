@@ -1,14 +1,10 @@
 import React from 'react';
 
 class AdminPage extends React.PureComponent {
-   
-   public componentDidMount() {
-      
-   }
-
-   public render() {
-      return (<></>);
-   }
+	
+	public render(): JSX.Element {
+		return (<></>);
+	}
 }
 
 export default AdminPage;

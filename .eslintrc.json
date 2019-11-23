@@ -46,17 +46,22 @@
         "no-useless-escape": 0,
         "no-empty-function": "off",
         "camelcase": "off",
+        "no-use-before-define": "off",
         "@typescript-eslint/camelcase": ["warn", { "properties": "always" }],
         "@typescript-eslint/no-empty-function": "off",
-        "@typescript-eslint/interface-name-prefix": ["error", { "prefixWithI": "always"}],
+        "@typescript-eslint/interface-name-prefix": ["off", { "prefixWithI": "always"}],
         "@typescript-eslint/no-implicit-any": 0,
-        "@typescript-eslint/explicit-function-return-type": "off"
+        "@typescript-eslint/explicit-function-return-type": "off",
+
+        "react/display-name": "off"
     },
     "overrides": [{
         "files": ["*.ts", "*.tsx"],
         "rules": {
             "@typescript-eslint/no-explicit-any": 0,
-            "@typescript-eslint/explicit-function-return-type": ["warn"]
+            "@typescript-eslint/explicit-function-return-type": ["warn"],
+            "@typescript-eslint/no-use-before-define": "off",
+            "@typescript-eslint/no-non-null-assertion": "off"
         }
     }]
 }

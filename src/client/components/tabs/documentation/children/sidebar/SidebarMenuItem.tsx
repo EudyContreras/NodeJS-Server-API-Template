@@ -5,7 +5,7 @@ import { MaterialIcons } from '../../../../../stores/icon.library';
 import { join } from '../../../../utililties/styling.utils';
 
 interface State {
-	expanded: boolean
+	expanded: boolean;
 }
 
 class SidebarMenuItem extends React.PureComponent<any, State>{
@@ -17,13 +17,13 @@ class SidebarMenuItem extends React.PureComponent<any, State>{
 		};
 	}
 
-	private openSubMenu = () => {
+	private openSubMenu = (): void => {
 		this.setState((state: State) => ({
 			expanded: !state.expanded
 		}));
 	}
 
-	public render() {
+	public render(): JSX.Element {
 		const hash = this.props.hash;
 		const label = this.props.label;
 		const style = this.props.styling;

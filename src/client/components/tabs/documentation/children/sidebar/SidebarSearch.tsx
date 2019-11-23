@@ -8,12 +8,12 @@ class SidebarSearch extends React.PureComponent<any, any> {
 		super(props);
 	}
 	
-	private performSearch = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
+	private performSearch = (event: React.MouseEvent<HTMLElement, MouseEvent>): void => {
 		event.preventDefault();
 		rippleEffect(event, this.props.styling);
 	}
 
-	public render() {
+	public render(): JSX.Element {
 		const style = this.props.styling;
 
 		const menuState = this.props.menuState;

@@ -20,27 +20,27 @@ class Navbar extends React.PureComponent<any, State> {
 		};
 	}
 
-	public componentDidMount() {
+	public componentDidMount(): void {
 		const navbar = this.navbar.current!;
 		this.applyAnchor(navbar);
 	}
 
-	private applyAnchor(element: HTMLElement) {
+	private applyAnchor(element: HTMLElement): void {
 		const style = this.props.styling;
 
 		const listener = new ScrollListener(element, undefined, -65);
 
-      addAnchor(style, listener, (anchored: boolean) => {
+		addAnchor(style, listener, (anchored: boolean) => {
 			if (!anchored) {
 				element.classList.remove(style.navTransition);
 			} 
-			this.setState(()  => ({
+			this.setState(() => ({
 				anchored: anchored
 			}));
 		});
 	}
 	
-	private onMouseEnter = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
+	private onMouseEnter = (event: React.MouseEvent<HTMLElement, MouseEvent>): void => {
 		const element = event.currentTarget;
 		const style = this.props.styling;
 
@@ -55,7 +55,7 @@ class Navbar extends React.PureComponent<any, State> {
 		}
 	}
 
-	private onMouseExit = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
+	private onMouseExit = (event: React.MouseEvent<HTMLElement, MouseEvent>): void => {
 		const element = event.currentTarget;
 		const style = this.props.styling;
 
@@ -64,17 +64,17 @@ class Navbar extends React.PureComponent<any, State> {
 		}
 	}
 
-	private handleLinkClick = (tab: any) => {
-		this.setState(()  => ({
+	private handleLinkClick = (tab: any): void => {
+		this.setState(() => ({
 			activeTab: tab
 		}));
 	}
 
-	private applyLinkState(style: any, element: any, idx: number) {
+	private applyLinkState(style: any, element: any, idx: number): JSX.Element {
 		const activeTab = this.state.activeTab;
 		const location = this.props.location;
 
-		const linkClick = (element: any, idx: number) => {
+		const linkClick = (element: any, idx: number): void => {
 			this.handleLinkClick({ label: element.label, index: idx });
 		};
 
@@ -88,10 +88,10 @@ class Navbar extends React.PureComponent<any, State> {
 			navClasses.push(style.navLinkActive);
 		}
 
-		return (	<Link onClick={(e) => linkClick(element, idx)} className={join(...navClasses)} to={element.link}>{element.label}</Link>);
+		return (<Link onClick={(): any => linkClick(element, idx)} className={join(...navClasses)} to={element.link}>{element.label}</Link>);
 	}
 
-	public render() {
+	public render(): JSX.Element {
 		const style = this.props.styling;
 		const routes = this.props.routings;
 		const classes = [style.nav];

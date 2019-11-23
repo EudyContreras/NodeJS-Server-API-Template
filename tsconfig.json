@@ -79,7 +79,7 @@
     ]
   },
   "include": [
-    "src/**/*", "*.jsx", ".scss", ".js", "src/client/services/.ts"
+    "src/**/*", "*.jsx", ".scss", ".js", "src/client/actions/services/.ts"
   ],
   "exclude": [
     "node_modules",

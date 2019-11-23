@@ -6,7 +6,7 @@ class SandboxSection extends React.PureComponent<any, any> {
 		super(props);
 	}
 
-	public render() {
+	public render(): JSX.Element {
 
 		return (
 			<div>

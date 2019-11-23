@@ -27,9 +27,9 @@ const links = [
 
 
 interface State {
-	hidden: boolean,
-	loaded: boolean,
-	height: number
+	hidden: boolean;
+	loaded: boolean;
+	height: number;
 }
 
 class SidebarSubMenu extends React.PureComponent<any, State> {
@@ -43,15 +43,15 @@ class SidebarSubMenu extends React.PureComponent<any, State> {
 			hidden: true,
 			loaded: false,
 			height: 0
-		}
+		};
 	}
 
-	private hiddenStyle = () => {
+	private hiddenStyle = (): any => {
 		return {
 			height: 0,
 			position: 'absolute',
 			visibility: 'hidden'
-		}
+		};
 	}
 
 	private getStyle = (height: number): any => {
@@ -59,24 +59,22 @@ class SidebarSubMenu extends React.PureComponent<any, State> {
 			height: height,
 			position: 'relative',
 			visibility: 'visible'
-		}
+		};
 	}
 
-	private onHidden = () => {
+	private onHidden = (): void => {
 		this.setState(() => ({
 			hidden: true
 		}));
-		console.log('HIDDEN')
 	}
 
-	private onShown = () => {
+	private onShown = (): void => {
 		this.setState(() => ({
 			hidden: false
 		}));
-		console.log('SHOWN')
 	}
 
-	public componentDidMount() {
+	public componentDidMount(): void {
 		const menu = this.menu!.current!;
 
 		this.setState(() => ({
@@ -85,7 +83,7 @@ class SidebarSubMenu extends React.PureComponent<any, State> {
 		}));
 	}
 
-	public render() {
+	public render(): JSX.Element {
 		const style = this.props.styling;
 		const expand = this.props.expanded;
 
@@ -96,7 +94,7 @@ class SidebarSubMenu extends React.PureComponent<any, State> {
 			classes.push(style.smExpanded);
 			if (expand) {
 				return (
-					<ul ref={this.menu} onTransitionEnd={this.onShown}  className={join(...classes)} style={this.getStyle(this.state.height)} >
+					<ul ref={this.menu} onTransitionEnd={this.onShown} className={join(...classes)} style={this.getStyle(this.state.height)} >
 						{listItems}
 					</ul>
 				);

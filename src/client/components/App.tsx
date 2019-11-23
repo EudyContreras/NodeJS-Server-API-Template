@@ -11,25 +11,25 @@ import { Switch, Route } from 'react-router-dom';
 
 class App extends React.PureComponent<any> {
 
-   public render(): JSX.Element {
-      const routes = router(style);
+	public render(): JSX.Element {
+		const routes = router(style);
 
-      const elements = routes.filter((x) => x.navLink === true).map((x) => {
-         return { link: x.path, label: x.label };
-      });
+		const elements = routes.filter((x) => x.navLink === true).map((x) => {
+			return { link: x.path, label: x.label };
+		});
 
-      const routings = routes.map((route, idx) => <Route exact key={idx} path={route.path} render={route.render} />);
+		const routings = routes.map((route, idx) => <Route exact key={idx} path={route.path} render={route.render} />);
 
-      return (
-         <Fragment>
-            <NavbarPadder styling={style} />
-            <Switch>
-               {routings}
-            </Switch>
-            <NavbarMenu location={this.props.location} styling={style} brandName={config.app.NAME} routings={elements} />
-         </Fragment>
-      );
-   }
+		return (
+			<Fragment>
+				<NavbarPadder styling={style} />
+				<Switch>
+					{routings}
+				</Switch>
+				<NavbarMenu location={this.props.location} styling={style} brandName={config.app.NAME} routings={elements} />
+			</Fragment>
+		);
+	}
 }
 
 export default withStyles(style)(App);

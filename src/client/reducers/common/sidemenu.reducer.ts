@@ -1,31 +1,36 @@
 import {
-   SIDE_MENU_TOGGLE,
-   SIDE_MENU_FIXED
+	SIDE_MENU_TOGGLE,
+	SIDE_MENU_FIXED
 } from '../../actions/sidemenu.action';
 
-const initialState = {
-   expanded: true,
-   fixed: false
-};
-
-interface Action {
-   type: string,
-   payload: any | undefined
+interface IState {
+	expanded: boolean;
+	fixed: boolean;
 }
 
-export default function (state = initialState, action: Action) {
-   switch (action.type) {
-      case SIDE_MENU_TOGGLE:
-         return {
-            ...state,
-            expanded: !state.expanded
-         };
-      case SIDE_MENU_FIXED:
-         return {
-            ...state,
-            fixed: action.payload
-         };
-      default:
-         return state;
-   }
+interface IAction {
+	type: string;
+	payload: any | undefined;
+}
+
+const initialState: IState = {
+	expanded: true,
+	fixed: false
+};
+
+export default function (state = initialState, action: IAction): IState {
+	switch (action.type) {
+		case SIDE_MENU_TOGGLE:
+			return {
+				...state,
+				expanded: !state.expanded
+			};
+		case SIDE_MENU_FIXED:
+			return {
+				...state,
+				fixed: action.payload
+			};
+		default:
+			return state;
+	}
 }

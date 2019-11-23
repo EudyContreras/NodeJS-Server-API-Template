@@ -16,7 +16,7 @@ class SidebarToggle extends React.PureComponent<any, State> {
 		};
 	}
 
-	private toggleSidebar = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
+	private toggleSidebar = (event: React.MouseEvent<HTMLElement, MouseEvent>): void => {
 		const style = this.props.styling;
 
 		rippleEffect(event, style);
@@ -28,7 +28,7 @@ class SidebarToggle extends React.PureComponent<any, State> {
 		this.props.onSidebarToggle(this.state.expanded);
 	}
 
-	public render() {
+	public render(): JSX.Element {
 		const style = this.props.styling;
 		const elementTitle = this.state.expanded ? 'collapse' : 'expand';
 

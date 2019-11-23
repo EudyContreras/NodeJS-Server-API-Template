@@ -7,33 +7,33 @@ import Admin from './tabs/administration/AdminPage';
 import Lost from './common/Lost';
 
 export const routes = [
-  {
-    path: '/'
-  },
-  {
-    navLink: true,
-    label: 'Documentation',
-    path: '/documentation'
-  },
-  {
-    navLink: true,
-    label: 'About',
-    path: '/about'
-  },
-  {
-    navLink: true,
-    label: 'Admin',
-    path: '/admin'
-  },
-  {
-    path: '*'
-  }
+	{
+		path: '/'
+	},
+	{
+		navLink: true,
+		label: 'Documentation',
+		path: '/documentation'
+	},
+	{
+		navLink: true,
+		label: 'About',
+		path: '/about'
+	},
+	{
+		navLink: true,
+		label: 'Admin',
+		path: '/admin'
+	},
+	{
+		path: '*'
+	}
 ];
 
-export default (styling: any) => [
-  {...routes[0], render: ((props: any) => <Home {...props}  styling={styling}/>)},
-  {...routes[1], render: ((props: any) => <Docs {...props}  styling={styling}/>)},
-  {...routes[2], render: ((props: any) => <About {...props}  styling={styling}/>)},
-  {...routes[3], render: ((props: any) => <Admin {...props}  styling={styling}/>)},
-  {...routes[4], render: ((props: any) => <Lost {...props}  styling={styling}/>)}
+export default (styling: any): any[] => [
+	{ ...routes[0], render: ((props: any): JSX.Element => <Home {...props} styling={styling}/>) },
+	{ ...routes[1], render: ((props: any): JSX.Element => <Docs {...props} styling={styling}/>) },
+	{ ...routes[2], render: ((props: any): JSX.Element => <About {...props} styling={styling}/>) },
+	{ ...routes[3], render: ((props: any): JSX.Element => <Admin {...props} styling={styling}/>) },
+	{ ...routes[4], render: ((props: any): JSX.Element => <Lost {...props} styling={styling}/>) }
 ];

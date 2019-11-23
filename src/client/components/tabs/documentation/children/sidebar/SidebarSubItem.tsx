@@ -1,5 +1,5 @@
 import React from 'react';
-import { join } from '../../../../utililties/styling.utils'
+import { join } from '../../../../utililties/styling.utils';
 import { MaterialIcons } from '../../../../../stores/icon.library';
 
 class SidebarSubItem extends React.PureComponent<any, any> {
@@ -8,13 +8,13 @@ class SidebarSubItem extends React.PureComponent<any, any> {
 		super(props);
 	}
 
-	public render() {
+	public render(): JSX.Element {
 		const hash = this.props.hash;
 		const label = this.props.label;
 		const method = this.props.method;
 		const style = this.props.styling;
 
-		const classes = []
+		const classes = [];
 		
 		return (
 
