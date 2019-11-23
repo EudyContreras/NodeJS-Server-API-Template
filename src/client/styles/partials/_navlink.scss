@@ -2,12 +2,6 @@ $navLinkColorAccent: rgb(238, 150, 2);
 $navLinkColorPrimary: rgb(84, 87, 91);
 $navLinkShadow: rgba(0, 0, 0, 0.3);
 
-@mixin transition($property) {
-   -webkit-transition: $property;
-   -ms-transition: $property;
-   transition: $property;
-}
-
 @mixin scaleXY($propertyX, $propertyY) {
    -webkit-transform: scaleX($propertyX), scaleY($propertyY);
    -ms-transform: scaleX($propertyX) scaleY($propertyY);

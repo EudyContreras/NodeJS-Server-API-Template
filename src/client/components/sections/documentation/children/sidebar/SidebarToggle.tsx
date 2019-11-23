@@ -1,19 +1,27 @@
 import React from 'react';
 import rippleEffect from '../../../../../appliers/ripple.applier';
 import { MaterialIcons } from '../../../../../stores/icon.library';
+import { toggleExpand } from '../../../../../actions/sidemenu.action';
+import { IState } from '../../../../../reducers/common/sidemenu.reducer';
 import { join } from '../../../../utililties/styling.utils';
+import { connect } from 'react-redux';
 
-interface State {
+interface StateProps {
 	expanded: boolean;
+	toggleHidden: boolean;
 }
 
-class SidebarToggle extends React.PureComponent<any, State> {
+interface DispatchProps {
+	toggleExpand: () => void;
+}
+
+type State = IState;
+type Props = StateProps & DispatchProps & any;
+
+class SidebarToggle extends React.PureComponent<Props, State> {
 
 	constructor(props: any) {
 		super(props);
-		this.state = {
-			expanded: props.expanded
-		};
 	}
 
 	private toggleSidebar = (event: React.MouseEvent<HTMLElement, MouseEvent>): void => {
@@ -21,33 +29,28 @@ class SidebarToggle extends React.PureComponent<any, State> {
 
 		rippleEffect(event, style);
 
-		this.setState((state: State) => ({
-			expanded: !state.expanded
-		}));
-
-		this.props.onSidebarToggle(this.state.expanded);
+		this.props.toggleExpand();
 	}
 
 	public render(): JSX.Element {
 		const style = this.props.styling;
-		const elementTitle = this.state.expanded ? 'collapse' : 'expand';
+		const elementTitle = this.props.expanded ? 'collapse' : 'expand';
+		const iconText = this.props.expanded ? MaterialIcons.icons.CHEV_RIGHT : MaterialIcons.icons.MENU;
 
 		const props = {
 			title: elementTitle,
-			value: this.state.expanded,
+			value: this.props.expanded,
 			onClick: this.toggleSidebar
 		};
-
-		const iconText = this.state.expanded ? MaterialIcons.icons.CHEV_RIGHT : MaterialIcons.icons.MENU;
 
 		const toggleClasses = [style.expand];
 		const toggleIconClasses = [MaterialIcons.CLASS, style.expandIcon];
 
-		if (!this.props.hovered && this.state.expanded) {
+		if (this.props.toggleHidden) {
 			toggleClasses.push(style.expandHidden);
 		}
 
-		if (this.state.expanded) {
+		if (this.props.expanded) {
 			toggleClasses.push(style.expandActive);
 		} else {
 			toggleIconClasses.push(style.expandIconActive);
@@ -61,4 +64,10 @@ class SidebarToggle extends React.PureComponent<any, State> {
 	}
 }
 
-export default SidebarToggle;
+const mapStateToProps = (state: any): any => {
+	return {
+		...state.sidemenu
+	};
+};
+
+export default connect<StateProps, DispatchProps, any>(mapStateToProps, { toggleExpand })(SidebarToggle);

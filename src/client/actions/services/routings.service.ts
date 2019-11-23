@@ -1,7 +1,7 @@
 
 export default class RoutingService {
 
-   public getAll = async () => {
-      return { routings: ['Users', 'Roles', 'Invitations', 'Priviledges'], error: null };
-   }
+	public getAll = async (): Promise<any> => {
+		return { routings: ['Users', 'Roles', 'Invitations', 'Priviledges'], error: null };
+	}
 }

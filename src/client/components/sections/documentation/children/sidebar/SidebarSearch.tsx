@@ -20,13 +20,13 @@ class SidebarSearch extends React.PureComponent<any, any> {
 
 		const classes = [style.search, style.shadowElevate];
 
-		if (!menuState.expanded) {
-			if (menuState.hovered) {
-				//classes.push(style.staggerOut);
-			} else {
-				//classes.push(style.staggerIn);
-			}
-		}
+		// if (!menuState.expanded) {
+		// 	if (menuState.hovered) {
+		// 		//classes.push(style.staggerOut);
+		// 	} else {
+		// 		//classes.push(style.staggerIn);
+		// 	}
+		// }
 		return (
 			<form className={join(...classes)} method='post'>
 				<input type='text' className={style.searchTextbox} placeholder='Search' />

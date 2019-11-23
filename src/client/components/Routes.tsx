@@ -1,9 +1,9 @@
 
 import React from 'react';
-import Home from './tabs/documentation/DocsPage';
-import Docs from './tabs/documentation/DocsPage';
-import About from './tabs/information/AboutPage';
-import Admin from './tabs/administration/AdminPage';
+import Home from './sections/documentation/DocsPage';
+import Docs from './sections/documentation/DocsPage';
+import About from './sections/information/AboutPage';
+import Admin from './sections/administration/AdminPage';
 import Lost from './common/Lost';
 
 export const routes = [
