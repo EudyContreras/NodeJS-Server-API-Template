@@ -1,8 +1,8 @@
 import React from 'react';
 import rippleEffect from '../../../../../appliers/ripple.applier';
 import { MaterialIcons } from '../../../../../stores/icon.library';
-import { toggleExpand } from '../../../../../actions/common/sidemenu.action';
-import { IToggle } from '../../../../../reducers/common/sidemenu.reducer';
+import { toggleExpand } from '../../../../../actions/documentation/children/sidemenu.action';
+import { IToggle } from '../../../../../reducers/documentation/children/sidemenu.reducer';
 import { join } from '../../../../utililties/styling.utils';
 import { connect } from 'react-redux';
 
@@ -67,7 +67,7 @@ class SidebarToggle extends React.PureComponent<Props, State> {
 
 const mapStateToProps = (state: any): any => {
 	return {
-		...state.sidemenu.toggle
+		...state.documentation.sidemenu.toggle
 	};
 };
 

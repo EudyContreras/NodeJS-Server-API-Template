@@ -20,15 +20,15 @@ class Navbar extends React.PureComponent<any, State> {
 		};
 	}
 
-	public componentDidMount(): void {
+	public componentDidMount = (): void => {
 		const navbar = this.navbar.current!;
 		this.applyAnchor(navbar);
-	}
+	};
 
-	private applyAnchor(element: HTMLElement): void {
+	private applyAnchor = (element: HTMLElement): void => {
 		const style = this.props.styling;
 
-		const listener = new ScrollListener(element, undefined, -65);
+		const listener = new ScrollListener(this, element, undefined, -65);
 
 		addAnchor(style, listener, (anchored: boolean) => {
 			if (!anchored) {
@@ -38,7 +38,7 @@ class Navbar extends React.PureComponent<any, State> {
 				anchored: anchored
 			}));
 		});
-	}
+	};
 	
 	private onMouseEnter = (event: React.MouseEvent<HTMLElement, MouseEvent>): void => {
 		const element = event.currentTarget;
@@ -53,7 +53,7 @@ class Navbar extends React.PureComponent<any, State> {
 		if (!element.classList.contains(style.navPeeky)) {
 			element.classList.add(style.navPeeky);
 		}
-	}
+	};
 
 	private onMouseExit = (event: React.MouseEvent<HTMLElement, MouseEvent>): void => {
 		const element = event.currentTarget;
@@ -62,15 +62,15 @@ class Navbar extends React.PureComponent<any, State> {
 		if (element.classList.contains(style.navPeeky)) {
 			element.classList.remove(style.navPeeky);
 		}
-	}
+	};
 
 	private handleLinkClick = (tab: any): void => {
 		this.setState(() => ({
 			activeTab: tab
 		}));
-	}
+	};
 
-	private applyLinkState(style: any, element: any, idx: number): JSX.Element {
+	private applyLinkState = (style: any, element: any, idx: number): JSX.Element => {
 		const activeTab = this.state.activeTab;
 		const location = this.props.location;
 
@@ -89,9 +89,9 @@ class Navbar extends React.PureComponent<any, State> {
 		}
 
 		return (<Link onClick={(): any => linkClick(element, idx)} className={join(...navClasses)} to={element.link}>{element.label}</Link>);
-	}
+	};
 
-	public render(): JSX.Element {
+	public render = (): JSX.Element => {
 		const style = this.props.styling;
 		const routes = this.props.routings;
 		const classes = [style.nav];
@@ -120,7 +120,7 @@ class Navbar extends React.PureComponent<any, State> {
 				</ul>
 			</header>
 		);
-	}
+	};
 }
 
 export default Navbar;

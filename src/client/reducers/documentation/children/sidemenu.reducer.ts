@@ -3,9 +3,9 @@ import {
 	SIDE_MENU_TOGGLE,
 	SIDE_MENU_HOVERED,
 	SIDE_MENU_TOP_OFFSET
-} from '../../actions/common/sidemenu.action';
+} from '../../../actions/documentation/children/sidemenu.action';
 
-import IAction from '../../actions/action';
+import IAction from '../../../actions/action';
 
 export interface IRoute {
 	hovered: boolean;
@@ -37,7 +37,7 @@ export interface ISideMenu{
 	endpoints: IEndpoint[];
 }
 
-const InitialState: ISideMenu = {
+export const InitialState: ISideMenu = {
 	topOffset: 0,
 	expanded: true,
 	hovered: false,

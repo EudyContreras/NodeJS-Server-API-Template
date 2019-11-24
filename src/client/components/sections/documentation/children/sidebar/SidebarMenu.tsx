@@ -5,16 +5,16 @@ import MainSection from './sections/MainSection';
 import MiddleSection from './sections/MiddleSection';
 import SideMenuSearch from './SidebarSearch';
 import StyleApplier from '../../../../../appliers/style.applier';
-import { setHovered, setTopOffset, setFixed } from '../../../../../actions/common/sidemenu.action';
 import { getSidemenu } from '../../../../../selectors/sidemenu.selector';
+import { setHovered, setTopOffset, setFixed } from '../../../../../actions/documentation/children/sidemenu.action';
 
 const headers = ['Introduction', 'Endpoints'];
 
 interface StateProps {
-	topOffset: number;
-	expanded: boolean;
-	hovered: boolean;
 	fixed: boolean;
+	hovered: boolean;
+	expanded: boolean;
+	topOffset: number;
 }
 
 interface DispatchProps {
@@ -23,15 +23,14 @@ interface DispatchProps {
 	setFixed: (fixed: boolean) => void;
 }
 
+const Dispatchers = { setHovered, setTopOffset, setFixed };
+
 type Props = StateProps & DispatchProps & any;
 
 class SidebarMenu extends React.PureComponent<Props> {
 
-	private readonly sidebar: React.RefObject<HTMLElement>;
-
 	constructor(props: any) {
 		super(props);
-		this.sidebar = React.createRef();
 	}
 
 	private onMouseEnter = (): void => {
@@ -42,55 +41,16 @@ class SidebarMenu extends React.PureComponent<Props> {
 		this.props.setHovered(false);
 	};
 
-	// public componentDidMount = (): void => {
-	// 	const style = this.props.styling;
-	// 	const sideBar = this.sidebar.current;
-
-	// 	const sidebarListener = new ScrollListener(sideBar!, null ,10, (fixed: boolean): void => {
-	// 		this.setState(() => ({
-	// 			fixed: fixed
-	// 		}));
-	// 	});
-
-	// 	makeSticky(style, sidebarListener);
-	// };
-
-	private handleScroll = (): void => {
-		const offset = this.props.topOffset;
-		const scroll = document.body.scrollTop || document.documentElement.scrollTop;
-
-		if (scroll >= offset && !this.props.fixed) {
-			this.props.setFixed(true);
-		} 
-
-		if (scroll < offset && this.props.fixed) {
-			this.props.setFixed(false);
-		}
-	};
-
-	public componentDidMount = (): void => {
-		const sidebar = this.sidebar.current!;
-		const margin = 10;
-		const scrollTop = sidebar.getBoundingClientRect().top - margin;
-		this.props.setTopOffset(scrollTop);
-		window.addEventListener('scroll', this.handleScroll);
-	};
-
-	public componentWillUnmount = (): void => {
-		window.removeEventListener('scroll', this.handleScroll);
-	};
-
-	public render = (): JSX.Element => {
-		const style = this.props.styling;
-
+	private getProperties = (style: any): any & any => {
 		const styler = new StyleApplier(style.sideMenu);
 
 		styler
-			.appendWhen(style.sideMenuClosed, !this.props.expanded)
-			.appendWhen(style.sideMenuPeek, this.props.hovered, false)
-			.appendAndOr(style.fixed, style.natural, this.props.fixed); // .append(style.natural, !this.state.fixed);
+			.appendWhen(!this.props.expanded, style.sideMenuClosed)
+			.appendWhen(this.props.hovered, style.sideMenuPeek, false)
+			.appendAndOr(this.props.fixed, style.fixed, style.natural);
 		
 		const common = {
+			ref:this.props.self,
 			style: { top: this.props.fixed ? 10 : 'auto' },
 			className: styler.getClasses()
 		};
@@ -100,8 +60,16 @@ class SidebarMenu extends React.PureComponent<Props> {
 			onMouseLeave: this.onMouseExit,
 		};
 
+		return { common, actions };
+	};
+
+	public render = (): JSX.Element => {
+		const style = this.props.styling;
+
+		const { common , actions } = this.getProperties(style);
+
 		return (
-			<aside ref={this.sidebar} {...common} {...actions} >
+			<aside {...common} {...actions} >
 				< TopSection styling={style} />
 				< SideMenuSearch styling={style} menuState={this.state} />
 				< MiddleSection styling={style} header={headers[0]} />
@@ -111,6 +79,6 @@ class SidebarMenu extends React.PureComponent<Props> {
 	};
 }
 
-const mapStateToProps = (state: any): any => getSidemenu(state.sidemenu);
+const mapStateToProps = (state: any): any => getSidemenu(state.documentation);
 
-export default connect<StateProps, DispatchProps, any>(mapStateToProps, { setHovered, setTopOffset, setFixed })(SidebarMenu);
+export default connect<StateProps, DispatchProps, any>(mapStateToProps, Dispatchers)(SidebarMenu);

@@ -10,12 +10,12 @@ export default class Styler {
 		this.styles = [...baseStyles];
 	}
 	
-	append = (style: string, condition: boolean): Styler => {
+	append = (condition: boolean, style: string): Styler => {
 		if (condition) this.styles.push(style);
 		return this;
 	};
 
-	appendAndOr = (styleA: string, styleB: string, condition: boolean): Styler => {
+	appendAndOr = (condition: boolean, styleA: string, styleB: string): Styler => {
 		if (condition) {
 			this.styles.push(styleA);
 		} else {
@@ -35,7 +35,7 @@ export default class Styler {
 	 * @param updateState Flag determining if the state should be updated.
 	 * @returns The instance of this updater.
 	 */
-	appendWhen = (style: string, condition: boolean, updateState = true): Styler => {
+	appendWhen = (condition: boolean, style: string, updateState = true): Styler => {
 		if (condition && this.latest) this.styles.push(style);
 		if (updateState) {
 			this.latest = condition;

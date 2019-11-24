@@ -1,14 +1,13 @@
 
 
-import { ISideMenu } from '../reducers/common/sidemenu.reducer';
+import { IDocumentationArea } from '../reducers/documentation/section.reducer';
 import { createSelector } from 'reselect';
 
-
-export const getSidemenu = createSelector((state: ISideMenu): any => (state), (state: any) => {
+export const getSidemenu = createSelector((state: IDocumentationArea): any => (state), (state: IDocumentationArea) => {
 	return {
-		fixed: state.fixed,
-		hovered: state.hovered,
-		expanded: state.expanded,
-		topOffset: state.topOffset
+		fixed: state.sidemenu.fixed,
+		hovered: state.sidemenu.hovered,
+		expanded: state.sidemenu.expanded,
+		topOffset: state.sidemenu.topOffset
 	};
 });

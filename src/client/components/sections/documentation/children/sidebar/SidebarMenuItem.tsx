@@ -21,7 +21,7 @@ class SidebarMenuItem extends React.PureComponent<any, State>{
 		this.setState((state: State) => ({
 			expanded: !state.expanded
 		}));
-	}
+	};
 
 	public render(): JSX.Element {
 		const hash = this.props.hash;

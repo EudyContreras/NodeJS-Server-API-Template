@@ -38,14 +38,17 @@ export class ScrollListener implements IScrollListener {
 
 export default (style: any, ...listeners: IScrollListener[]): void => {
 	$(window).on('scroll', () => {
-		const scroll = $(window).scrollTop();
 		for (let i = 0, len = listeners.length; i < len; i++) {
 			const listener = listeners[i];
-			listener.onScroll(style, scroll!);
+			updateEffect(style, listener);
 		}
 	});
 };
 
+export const updateEffect = (style: any, listener: IScrollListener): void => {
+	const scroll = $(window).scrollTop();
+	listener.onScroll(style, scroll!);
+};
 
 export const addAnchor = (style: any, listener: ScrollListener, stickyCallBack: (stuck: boolean) => void): void => {
 	$(window).on('scroll', () => {
