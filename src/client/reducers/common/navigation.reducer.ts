@@ -16,7 +16,7 @@ export interface INavigationBar {
 	navigationTabs: INavigationTab[];
 }
 
-export const InitialState: INavigationBar = {
+const InitialState: INavigationBar = {
 	fixed: false,
 	hovered: false,
 	navigationTabs: []

@@ -11,7 +11,7 @@ class SandboxArea extends React.PureComponent<any, any> {
 	public render(): JSX.Element {
 		const style = this.props.styling;
 		return (
-			<aside ref={this.props.refProp} className={join(style.sandboxArea, style.natural)}>
+			<aside ref={this.props.self} className={join(style.sandboxArea, style.natural)}>
 				<SandboxSection styling={style}/>
 				<SandboxSection styling={style}/>
 				<SandboxSection styling={style}/>

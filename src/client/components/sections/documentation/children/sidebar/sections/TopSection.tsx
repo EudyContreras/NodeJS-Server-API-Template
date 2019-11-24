@@ -14,11 +14,7 @@ export default class TopSection extends React.PureComponent<any, any> {
 		return (
 			<div className={style.topSection}>
 				<VersionInfo styling={style} />
-				<SideMenuToggle
-					styling={style}
-					hovered={this.props.hovered}
-					expanded={this.props.expanded}
-				/>
+				<SideMenuToggle styling={style} />
 			</div>
 		);
 	}

@@ -30,4 +30,4 @@ export const css = (properties: any): string => {
 	}
 
 	return style;
-}
+};
