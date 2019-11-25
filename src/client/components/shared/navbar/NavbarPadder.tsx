@@ -1,10 +1,15 @@
 import React from 'react';
 
-export default class NavbarPadder extends React.PureComponent<any, any> {
-	public render(): JSX.Element{
+interface Props {
+	styling: any;
+	self: any;
+}
+
+export default class NavbarPadder extends React.PureComponent<Props> {
+
+	public render = (): JSX.Element => {
 		const style = this.props.styling;
-		return (
-			<header className={style.navPadder}></header>
-		);
-	}
+
+		return (<header ref={this.props.self} className={style.navPadder}></header>);
+	};
 }

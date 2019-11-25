@@ -30,10 +30,10 @@ export const routes = [
 	}
 ];
 
-export default (styling: any): any[] => [
-	{ ...routes[0], render: ((props: any): JSX.Element => <Home {...props} styling={styling}/>) },
-	{ ...routes[1], render: ((props: any): JSX.Element => <Docs {...props} styling={styling}/>) },
-	{ ...routes[2], render: ((props: any): JSX.Element => <About {...props} styling={styling}/>) },
-	{ ...routes[3], render: ((props: any): JSX.Element => <Admin {...props} styling={styling}/>) },
-	{ ...routes[4], render: ((props: any): JSX.Element => <Lost {...props} styling={styling}/>) }
+export default (otherProps: any): any[] => [
+	{ ...routes[0], render: ((props: any): JSX.Element => <Home {...props} {...otherProps}/>) },
+	{ ...routes[1], render: ((props: any): JSX.Element => <Docs {...props} {...otherProps}/>) },
+	{ ...routes[2], render: ((props: any): JSX.Element => <About {...props} {...otherProps}/>) },
+	{ ...routes[3], render: ((props: any): JSX.Element => <Admin {...props} {...otherProps}/>) },
+	{ ...routes[4], render: ((props: any): JSX.Element => <Lost {...props} {...otherProps}/>) }
 ];

@@ -1,12 +1,11 @@
 
 
-import { IDocumentationArea } from '../reducers/documentation/section.reducer';
+import { ISandboxArea } from '../reducers/documentation/sandbox.reducer';
 import { createSelector } from 'reselect';
 
-export const getSandbox = createSelector((state: IDocumentationArea): any => (state), (state: IDocumentationArea) => {
+export const getSandbox = createSelector((state: ISandboxArea): any => (state), (state: ISandboxArea ) => {
 	return {
-		fixed: state.sandbox.fixed,
-		offsetTop: state.sandbox.offsetTop,
-		offsetBottom: state.sandbox.offsetBottom
+		fixedTop: state.fixedTop,
+		fixedBottom: state.fixedBottom
 	};
 });

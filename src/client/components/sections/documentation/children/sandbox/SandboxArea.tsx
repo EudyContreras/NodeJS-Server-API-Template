@@ -3,20 +3,19 @@ import { connect } from 'react-redux';
 import SandboxSection from './SandboxSection';
 import StyleApplier from '../../../../../appliers/style.applier';
 import { getSandbox } from '../../../../../selectors/sandbox.selector';
-import { setFixed, setOffsets } from '../../../../../actions/documentation/children/sandbox.action';
+import { setTopFixed, setBottomFixed } from '../../../../../actions/documentation/sandbox.action';
 
 interface StateProps {
-	fixed: boolean;
-	offsetTop: number;
-	offsetBottom: number;
+	fixedTop: boolean;
+	fixedBottom: boolean;
 }
 
 interface DispatchProps {
-	setOffsets: (offsetTop?: number, offsetBottom?: number) => void;
-	setFixed: (fixed: boolean) => void;
+	setTopFixed: (fixed: boolean) => void;
+	setBottomFixed: (fixed: boolean) => void;
 }
 
-const Dispatchers = { setOffsets, setFixed };
+const Dispatchers = { setTopFixed, setBottomFixed };
 
 type Props = StateProps & DispatchProps & any;
 
@@ -29,11 +28,11 @@ class SandboxArea extends React.PureComponent<Props, any> {
 	private getProperties = (style: any): any & any => {
 		const styler = new StyleApplier(style.sandboxArea);
 
-		styler.appendAndOr(this.props.fixed, style.fixed, style.natural);
+		styler.appendAndOr(this.props.fixedTop, style.fixed, style.natural);
 		
 		const common = {
 			ref: this.props.self,
-			style: { top: this.props.fixed ? 10 : 'auto' },
+			style: { top: this.props.fixedTop ? 10 : 'auto' },
 			className: styler.getClasses()
 		};
 
@@ -41,6 +40,8 @@ class SandboxArea extends React.PureComponent<Props, any> {
 	};
 
 	public render = (): JSX.Element => {
+		console.log(this.props);
+
 		const style = this.props.styling;
 
 		const { common } = this.getProperties(style);
@@ -57,6 +58,6 @@ class SandboxArea extends React.PureComponent<Props, any> {
 	};
 }
 
-const mapStateToProps = (state: any): any => getSandbox(state.documentation);
+const mapStateToProps = (state: any): any => getSandbox(state.documentation.sandbox);
 
 export default connect<StateProps, DispatchProps, any>(mapStateToProps, Dispatchers)(SandboxArea);

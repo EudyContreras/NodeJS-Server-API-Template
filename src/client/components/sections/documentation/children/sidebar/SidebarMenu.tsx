@@ -6,7 +6,7 @@ import MiddleSection from './sections/MiddleSection';
 import SideMenuSearch from './SidebarSearch';
 import StyleApplier from '../../../../../appliers/style.applier';
 import { getSidemenu } from '../../../../../selectors/sidemenu.selector';
-import { setHovered, setTopOffset, setFixed } from '../../../../../actions/documentation/children/sidemenu.action';
+import { setHovered, setFixed } from '../../../../../actions/documentation/sidebar.action';
 
 const headers = ['Introduction', 'Endpoints'];
 
@@ -14,16 +14,14 @@ interface StateProps {
 	fixed: boolean;
 	hovered: boolean;
 	expanded: boolean;
-	topOffset: number;
 }
 
 interface DispatchProps {
-	setTopOffset: (offset: number) => void;
 	setHovered: (hovered: boolean) => void;
 	setFixed: (fixed: boolean) => void;
 }
 
-const Dispatchers = { setHovered, setTopOffset, setFixed };
+const Dispatchers = { setHovered, setFixed };
 
 type Props = StateProps & DispatchProps & any;
 
@@ -79,6 +77,6 @@ class SidebarMenu extends React.PureComponent<Props> {
 	};
 }
 
-const mapStateToProps = (state: any): any => getSidemenu(state.documentation);
+const mapStateToProps = (state: any): any => getSidemenu(state.documentation.sidebar);
 
 export default connect<StateProps, DispatchProps, any>(mapStateToProps, Dispatchers)(SidebarMenu);

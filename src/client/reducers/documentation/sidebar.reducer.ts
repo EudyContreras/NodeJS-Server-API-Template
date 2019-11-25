@@ -1,11 +1,13 @@
 import {
+	SIDE_MENU,
 	SIDE_MENU_FIXED,
 	SIDE_MENU_TOGGLE,
-	SIDE_MENU_HOVERED,
-	SIDE_MENU_TOP_OFFSET
-} from '../../../actions/documentation/children/sidemenu.action';
+	SIDE_MENU_HOVERED
+} from '../../actions/documentation/sidebar.action';
 
-import IAction from '../../../actions/action';
+import IAction from '../../actions/action';
+
+export const SOURCE = SIDE_MENU;
 
 export interface IRoute {
 	hovered: boolean;
@@ -28,7 +30,6 @@ export interface ISearchBar {
 }
 
 export interface ISideMenu{
-	topOffset: number;
 	expanded: boolean;
 	hovered: boolean;
 	fixed: boolean;
@@ -38,7 +39,6 @@ export interface ISideMenu{
 }
 
 export const InitialState: ISideMenu = {
-	topOffset: 0,
 	expanded: true,
 	hovered: false,
 	fixed: false,
@@ -81,12 +81,6 @@ export default function (state = InitialState, action: IAction): ISideMenu {
 					...state.toggle,
 					hidden: toggleHidden
 				}
-			};
-		}
-		case SIDE_MENU_TOP_OFFSET: {
-			return {
-				...state,
-				topOffset: action.payload
 			};
 		}
 		case SIDE_MENU_FIXED: {

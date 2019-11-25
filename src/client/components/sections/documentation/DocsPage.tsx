@@ -1,5 +1,5 @@
-import React, { createRef, RefObject, Fragment } from 'react';
 import { connect } from 'react-redux';
+import React, { createRef, RefObject, Fragment } from 'react';
 import ContentArea from './children/content/ContentArea';
 import FooterArea from './children/footer/FooterArea';
 import SideMenu from './children/sidebar/SidebarMenu';
@@ -7,37 +7,23 @@ import SandBox from './children/sandbox/SandboxArea';
 
 import {
 	setAllFixed,
-	setAllOffsets,
 	setSidebarFixed,
-	setSidebarOffsets,
 	setSandboxFixed,
-	setSandboxOffsets
 } from '../../../actions/documentation/section.action';
 
 interface StateProps {
-	sidebarData: {
-		fixed: boolean;
-		offsetTop: number;
-		offsetBottom: number;
-
-	};
-	sandboxData: {
-		fixed: boolean;
-		offsetTop: number;
-		offsetBottom: number;
-	};
+	sidebarFixed: boolean;
+	sandboxFixedTop: boolean;
+	sandboxFixedBottom: boolean;
 }
 
 interface DispatchProps {
 	setAllFixed: (sidebarFixed: boolean, sandboxFixed: boolean) => any;
-	setAllOffsets: (sidebarOffsetTop?: number, sidebarOffsetBottom?: number, sandboxOffsetTop?: number, sandboxOffsetBottom?: number) => any;
 	setSidebarFixed: (fixed: boolean) => any;
-	setSidebarOffsets: (offsetTop?: number, offsetBottom?: number) => any;
 	setSandboxFixed: (fixed: boolean) => any;
-	setSandboxOffsets: (offsetTop?: number, offsetBottom?: number) => any;
 }
 
-const Dispatchers = { setAllFixed, setAllOffsets, setSidebarFixed, setSidebarOffsets, setSandboxFixed, setSandboxOffsets };
+const Dispatchers = { setAllFixed, setSidebarFixed, setSandboxFixed };
 
 type Props = StateProps & DispatchProps & any;
 
@@ -74,33 +60,41 @@ class DocsPage extends React.PureComponent<Props> {
 
 	// 	//updateEffect(sidebarListener);
 	// 	updateEffect(sandboxListener);
-	
+
 	// }
 
-	getSidebarProps = (): any =>{
-		return this.props.sidebarData.fixed;
+	shouldComponentUpdate = (): any => false;
+
+	getSidebarProps = (): any => {
+		return this.props.sidebarFixed;
 	};
 
 	getSandboxProps = (): any => {
-		return this.props.sidebarData.fixed;
+		return this.props.sandboxFixed;
 	};
 
-	shouldComponentUpdate (): any {
-		return false;
-	}
-
-	private handleScroll = (): void => {
-		const fixed = this.props.sidebarData.fixed;
-		const offsetTop = this.props.sidebarData.offsetTop;
-		const offsetBottom = this.props.sidebarData.offsetBottom;
+	private handleScroll = (offsetTop = 0, offsetBottom: number | null = null): void => {
+		const topFixed = this.props.sidebarFixed;
 
 		const scroll = document.body.scrollTop || document.documentElement.scrollTop;
 
-		if (scroll >= offsetTop && !fixed) {
-			this.props.setSidebarFixed(true);
-		} else if (scroll < offsetTop && fixed) {
-			this.props.setSidebarFixed(false);
+		if (scroll >= offsetTop && !topFixed) {
+			this.props.setAllFixed(true, true);
+		} else if (scroll < offsetTop && topFixed) {
+			this.props.setAllFixed(false, false);
 		}
+
+		// if (offsetBottom != null) {
+		// 	const bottomFixed = this.props.sandboxFixed;
+
+		// 	if (scroll! > offsetBottom && bottomFixed) {
+		// 		this.props.setSandboxFixed(false);
+		// 	} else if (offsetBottom > scroll! && !bottomFixed) {
+		// 		if (scroll >= offsetTop) {
+		// 			this.props.setSandboxFixed(true);
+		// 		}
+		// 	}
+		// }
 
 		// if (scroll >= offsetTop && !this.props.fixed) {
 		// 	this.props.setSidebarFixed(true);
@@ -111,7 +105,7 @@ class DocsPage extends React.PureComponent<Props> {
 
 	public componentDidMount = (): void => {
 		const margin = 10;
-		
+
 		const sidebar = this.sidebar.current!;
 		const sandbox = this.sandbox.current!;
 		const footer = this.footer.current!;
@@ -119,18 +113,20 @@ class DocsPage extends React.PureComponent<Props> {
 		const scrollTop = sidebar.getBoundingClientRect().top - margin;
 		const scrollBottom = footer.getBoundingClientRect().top - sandbox.getBoundingClientRect().height;
 
-		this.props.setAllOffsets(scrollTop, null, scrollTop, scrollBottom);
+		const topPosition = Math.abs(document.body.getBoundingClientRect().top) + scrollTop;
 
-		window.addEventListener('scroll', this.handleScroll);
+		window.addEventListener('scroll', () => this.handleScroll(topPosition, scrollBottom));
 	};
 
 	public componentWillUnmount = (): void => {
-		window.removeEventListener('scroll', this.handleScroll);
+		window.removeEventListener('scroll', () => this.handleScroll());
 	};
 
 	public render(): JSX.Element {
-		console.log(this.getSidebarProps());
+		console.log(this.props);
+
 		const style = this.props.styling;
+
 		return (
 			<Fragment>
 				<SideMenu self={this.sidebar} styling={style} />
@@ -141,17 +137,11 @@ class DocsPage extends React.PureComponent<Props> {
 		);
 	}
 }
+
 const mapStateToProps = (state: any): any => ({
-	sidebarData: {
-		fixed: state.documentation.sidebarData.fixed,
-		offsetTop: state.documentation.sidebarData.offsetTop,
-		offsetBottom: state.documentation.sidebarData.offsetBottom
-	},
-	sandboxData: {
-		fixed: state.documentation.sandboxData.fixed,
-		offsetTop: state.documentation.sandboxData.offsetTop,
-		offsetBottom: state.documentation.sandboxData.offsetBottom
-	},
+	sidebarFixed: state.documentation.sidebar.fixed,
+	sandboxFixedTop: state.documentation.sandbox.fixedTop,
+	sandboxFixedBottom: state.documentation.sandbox.fixedBottom,
 });
 
 export default connect<StateProps, DispatchProps, any>(mapStateToProps, Dispatchers)(DocsPage);

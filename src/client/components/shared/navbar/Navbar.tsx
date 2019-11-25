@@ -9,7 +9,7 @@ interface State {
 }
 
 class Navbar extends React.PureComponent<any, State> {
-	private navbar: React.RefObject<HTMLElement>
+	private navbar: React.RefObject<HTMLElement>;
 
 	constructor(props: any) {
 		super(props);
