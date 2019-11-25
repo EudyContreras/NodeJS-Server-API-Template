@@ -3,6 +3,7 @@ import {
 	SANDBOX_AREA_HOVERED,
 	SANDBOX_AREA_FIXED_TOP,
 	SANDBOX_AREA_FIXED_BOTTOM,
+	SANDBOX_AREA_OFFSET_BOTTOM
 } from '../../actions/documentation/sandbox.action';
 
 import IAction from '../../actions/action';
@@ -13,16 +14,24 @@ export interface ISandboxArea {
 	hovered: boolean;
 	fixedTop: boolean;
 	fixedBottom: boolean;
+	offsetBottom: number;
 }
 
 export const InitialState: ISandboxArea = {
+	hovered: false,
 	fixedTop: false,
 	fixedBottom: false,
-	hovered: false,
+	offsetBottom: 0
 };
 
 export default function (state = InitialState, action: IAction): ISandboxArea {
 	switch (action.type) {
+		case SANDBOX_AREA_HOVERED: {
+			return {
+				...state,
+				hovered: action.payload,
+			};
+		}
 		case SANDBOX_AREA_FIXED_TOP: {
 			return {
 				...state,
@@ -35,10 +44,10 @@ export default function (state = InitialState, action: IAction): ISandboxArea {
 				fixedBottom: action.payload,
 			};
 		}
-		case SANDBOX_AREA_HOVERED: {
+		case SANDBOX_AREA_OFFSET_BOTTOM: {
 			return {
 				...state,
-				hovered: action.payload,
+				offsetBottom: action.payload,
 			};
 		}
 		default:

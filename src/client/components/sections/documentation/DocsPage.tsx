@@ -8,7 +8,9 @@ import SandBox from './children/sandbox/SandboxArea';
 import {
 	setAllFixed,
 	setSidebarFixed,
-	setSandboxFixed,
+	setSandboxFixedTop,
+	setSandboxFixedBottom,
+	setSandboxOffsetBottom
 } from '../../../actions/documentation/section.action';
 
 interface StateProps {
@@ -19,11 +21,13 @@ interface StateProps {
 
 interface DispatchProps {
 	setAllFixed: (sidebarFixed: boolean, sandboxFixed: boolean) => any;
-	setSidebarFixed: (fixed: boolean) => any;
-	setSandboxFixed: (fixed: boolean) => any;
+	setSidebarFixed: (fixed: boolean) => void;
+	setSandboxFixedTop: (fixed: boolean) => void;
+	setSandboxFixedBottom: (fixed: boolean) => void;
+	setSandboxOffsetBottom: (offset: number) => void;
 }
 
-const Dispatchers = { setAllFixed, setSidebarFixed, setSandboxFixed };
+const Dispatchers = { setAllFixed, setSidebarFixed, setSandboxFixedTop, setSandboxFixedBottom, setSandboxOffsetBottom };
 
 type Props = StateProps & DispatchProps & any;
 
@@ -60,41 +64,38 @@ class DocsPage extends React.PureComponent<Props> {
 
 	// 	//updateEffect(sidebarListener);
 	// 	updateEffect(sandboxListener);
-
 	// }
 
 	shouldComponentUpdate = (): any => false;
 
-	getSidebarProps = (): any => {
-		return this.props.sidebarFixed;
-	};
+	getSidebarProps = (): any => this.props.sidebarFixed;
 
-	getSandboxProps = (): any => {
-		return this.props.sandboxFixed;
-	};
+	getSandboxProps = (): any => this.props.sandboxFixed;
 
 	private handleScroll = (offsetTop = 0, offsetBottom: number | null = null): void => {
 		const topFixed = this.props.sidebarFixed;
 
 		const scroll = document.body.scrollTop || document.documentElement.scrollTop;
 
-		if (scroll >= offsetTop && !topFixed) {
+		if (scroll > offsetTop && !topFixed) {
 			this.props.setAllFixed(true, true);
 		} else if (scroll < offsetTop && topFixed) {
 			this.props.setAllFixed(false, false);
 		}
 
-		// if (offsetBottom != null) {
-		// 	const bottomFixed = this.props.sandboxFixed;
+		if (offsetBottom != null) {
+			const bottomFixed = this.props.sandboxFixedBottom;
 
-		// 	if (scroll! > offsetBottom && bottomFixed) {
-		// 		this.props.setSandboxFixed(false);
-		// 	} else if (offsetBottom > scroll! && !bottomFixed) {
-		// 		if (scroll >= offsetTop) {
-		// 			this.props.setSandboxFixed(true);
-		// 		}
-		// 	}
-		// }
+			if (scroll > offsetBottom) {
+				if (!bottomFixed && topFixed) {
+					this.props.setSandboxFixedBottom(true);
+				}
+			} else if (scroll <= offsetBottom) {
+				if (bottomFixed) {
+					this.props.setSandboxFixedBottom(false);
+				}
+			}
+		}
 
 		// if (scroll >= offsetTop && !this.props.fixed) {
 		// 	this.props.setSidebarFixed(true);
@@ -115,6 +116,8 @@ class DocsPage extends React.PureComponent<Props> {
 
 		const topPosition = Math.abs(document.body.getBoundingClientRect().top) + scrollTop;
 
+		(this.props as DispatchProps).setSandboxOffsetBottom(scrollBottom);
+		
 		window.addEventListener('scroll', () => this.handleScroll(topPosition, scrollBottom));
 	};
 
@@ -122,8 +125,7 @@ class DocsPage extends React.PureComponent<Props> {
 		window.removeEventListener('scroll', () => this.handleScroll());
 	};
 
-	public render(): JSX.Element {
-		console.log(this.props);
+	public render = (): JSX.Element => {
 
 		const style = this.props.styling;
 
@@ -135,7 +137,7 @@ class DocsPage extends React.PureComponent<Props> {
 				<FooterArea self={this.footer} styling={style} />
 			</Fragment>
 		);
-	}
+	};
 }
 
 const mapStateToProps = (state: any): any => ({

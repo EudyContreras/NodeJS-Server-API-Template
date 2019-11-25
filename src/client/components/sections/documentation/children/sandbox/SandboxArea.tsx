@@ -8,6 +8,7 @@ import { setTopFixed, setBottomFixed } from '../../../../../actions/documentatio
 interface StateProps {
 	fixedTop: boolean;
 	fixedBottom: boolean;
+	offsetBottom: number;
 }
 
 interface DispatchProps {
@@ -32,7 +33,7 @@ class SandboxArea extends React.PureComponent<Props, any> {
 		
 		const common = {
 			ref: this.props.self,
-			style: { top: this.props.fixedTop ? 10 : 'auto' },
+			style: { top: this.props.fixedTop ? 10 : this.props.fixedBottom ? this.props.offsetBottom : 'auto' },
 			className: styler.getClasses()
 		};
 

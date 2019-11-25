@@ -1,7 +1,9 @@
 import {
 	DOCUMENTATION_SECTION_ALL_FIXED,
 	DOCUMENTATION_SECTION_SIDEBAR_FIXED,
-	DOCUMENTATION_SECTION_SANDBOX_FIXED
+	DOCUMENTATION_SECTION_SANDBOX_FIXED_TOP,
+	DOCUMENTATION_SECTION_SANDBOX_FIXED_BOTTOM,
+	DOCUMENTATION_SECTION_SANDBOX_OFFSET_BOTTOM
 } from '../../actions/documentation/section.action';
 
 import * as Sidebar from '../documentation/sidebar.reducer';
@@ -35,18 +37,46 @@ export default (state = InitialState, action: IAction): IDocumentationArea => {
 				},
 				sandbox: {
 					...state.sandbox,
-					fixedTop: action.payload.sandboxFixed
+					fixedTop: action.payload.sandboxFixed,
+					fixedBottom: false
 				}
 			};
 		}
 		case DOCUMENTATION_SECTION_SIDEBAR_FIXED: {
 			return {
-				...state
+				...state,
+				sidebar: {
+					...state.sidebar,
+					fixed: action.payload,
+				}
 			};
 		}
-		case DOCUMENTATION_SECTION_SANDBOX_FIXED: {
+		case DOCUMENTATION_SECTION_SANDBOX_FIXED_TOP: {
 			return {
-				...state
+				...state,
+				sandbox: {
+					...state.sandbox,
+					fixedTop: action.payload
+				}
+			};
+		}
+		case DOCUMENTATION_SECTION_SANDBOX_FIXED_BOTTOM: {
+			return {
+				...state,
+				sandbox: {
+					...state.sandbox,
+					fixedBottom: action.payload,
+					fixedTop: !action.payload
+				}
+			};
+		}
+		case DOCUMENTATION_SECTION_SANDBOX_OFFSET_BOTTOM: {
+			return {
+				...state,
+				sandbox: {
+					...state.sandbox,
+					offsetBottom: action.payload
+				}
 			};
 		}
 		default:
