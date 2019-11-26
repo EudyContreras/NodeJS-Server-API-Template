@@ -7,7 +7,7 @@ class SandboxSection extends React.PureComponent<any> {
 	}
 
 	public render = (): JSX.Element => {
-		console.log(' Sandbox Section rendered');
+
 		return (<div> </div>);
 	};
 }

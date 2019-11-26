@@ -64,7 +64,7 @@ class SidebarMenu extends React.PureComponent<Props> {
 
 	public render = (): JSX.Element => {
 		const style = this.props.styling;
-		console.log('Side menu rendered');
+
 		const { common , actions } = this.getProperties(style);
 
 		return (

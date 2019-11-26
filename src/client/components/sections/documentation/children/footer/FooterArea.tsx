@@ -11,7 +11,7 @@ class FooterArea extends React.Component<Props, any> {
 	}
 
 	public render = (): JSX.Element => {
-		console.log('Footer rendered');
+
 		const style = this.props.styling;
 
 		return (

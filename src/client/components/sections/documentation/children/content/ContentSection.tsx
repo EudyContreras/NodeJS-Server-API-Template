@@ -8,7 +8,7 @@ class ContentSection extends React.PureComponent<any> {
 
 	public render = (): JSX.Element => {
 		const style = this.props.styling;
-		console.log('Content section rendered');
+
 		return (
 			<article className={style.content}>
 				<div >

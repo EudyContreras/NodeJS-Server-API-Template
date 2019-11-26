@@ -9,7 +9,7 @@ class ContentArea extends React.PureComponent<any, any> {
 
 	public render = (): JSX.Element => {
 		const style = this.props.styling;
-		console.log('Content rendered');
+		
 		return (
 			<div className={style.contentWrapper}>
 				<Wrapper className={style.contentPadder}>
