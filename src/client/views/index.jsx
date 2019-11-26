@@ -5,7 +5,7 @@ import { Provider } from 'react-redux';
 import { StaticRouter, BrowserRouter } from 'react-router';
 
 export const client = (store, insertCss, window) => (
-	<Provider store={store}>
+	<Provider onUpdate={() => window.scrollTo(0, 0)} store={store}>
 		<BrowserRouter>
 			<StyleContext.Provider value={{ insertCss }}>
 				<Application location={window.location.pathname}/>

@@ -10,7 +10,7 @@ export default (args) => {
 };
 
 class DefaultLayout extends React.PureComponent {
-	render() {
+	render = () => {
 		return (
 			<html>
 				<head>
@@ -49,7 +49,7 @@ class DefaultLayout extends React.PureComponent {
 				</body>
 			</html>
 		);
-	}
+	};
 }
 
 DefaultLayout.propTypes = {

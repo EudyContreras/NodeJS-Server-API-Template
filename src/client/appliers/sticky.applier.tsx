@@ -1,90 +1,89 @@
 
 import $ from 'jquery';
 
-abstract class IScrollListener {
-	public top = 0;
-	public bottom?: number = undefined;
-	public margin = 0;
-	public component: React.PureComponent<any> | null = null;
-	abstract onScroll(scroll: number): void;
+interface IScrollListener {
+	onScroll(style: any, scroll: number): void;
 }
 
-export class ScrollListener extends IScrollListener {
-
+export class ScrollListener implements IScrollListener {
+	public top: number;
+	public bottom?: number;
+	public margin: number;
 	public onFixed: ((fixed: boolean) => void) | undefined;
-	public getFixedProps: (() => boolean) | undefined;
 
-	constructor(component: React.PureComponent, sticker: HTMLElement | Element, anchor?: HTMLElement | Element | null, topMargin = 0, getFixedProps?: () => boolean, onFixed?: (fixed: boolean) => void) {
-		super();
-		this.component = component;
-		this.top = $(sticker).offset()!.top - topMargin;
+	public sticker: JQuery<HTMLElement | Element>;
+	public anchor?: JQuery<HTMLElement | Element>;
+
+	constructor(sticker: HTMLElement | Element, anchor?: HTMLElement | Element | null, topMargin = 0, onFixed?: (fixed: boolean) => void) {
+		this.sticker = $(sticker);
+		this.top = this.sticker.offset()!.top - topMargin;
 		this.margin = topMargin;
 		this.onFixed = onFixed;
-		this.getFixedProps = getFixedProps;
 
 		if (anchor) {
-			this.bottom = $(anchor)!.offset()!.top - $(sticker).height()!;
+			this.anchor = $(anchor);
+			this.bottom = this.anchor!.offset()!.top - this.sticker.height()!;
 		}
 	}
 
-	public onScroll(scroll: number): void {
-		if (this.bottom) {
-			applyStickyTop(scroll, this.top, this.onFixed, this.getFixedProps);
-			applyStickyBottom(scroll, this.bottom!, this.onFixed, this.getFixedProps);
+	public onScroll(style: any, scroll: number): void {
+		if (this.anchor) {
+			applyStickyTop(this.sticker, style, scroll, this.top, this.margin, this.onFixed);
+			applyStickyBottom(this.sticker, style, scroll, this.bottom!, this.margin, this.onFixed);
 		} else {
-			applyStickyTop(scroll, this.top, this.onFixed, this.getFixedProps);
+			applyStickyTop(this.sticker, style, scroll, this.top, this.margin, this.onFixed);
 		}
 	}
 }
 
-export default (...listeners: IScrollListener[]): void => {
+export default (style: any, ...listeners: IScrollListener[]): void => {
 	$(window).on('scroll', () => {
 		for (let i = 0, len = listeners.length; i < len; i++) {
 			const listener = listeners[i];
-			updateEffect(listener);
+			updateEffect(style, listener);
 		}
 	});
 };
 
-export const updateEffect = (listener: IScrollListener): void => {
+export const updateEffect = (style: any, listener: IScrollListener): void => {
 	const scroll = $(window).scrollTop();
-	listener.onScroll(scroll!);
+	listener.onScroll(style, scroll!);
 };
 
 export const addAnchor = (style: any, listener: ScrollListener, stickyCallBack: (stuck: boolean) => void): void => {
 	$(window).on('scroll', () => {
 		const scroll = $(window).scrollTop();
   
-		// const sticker = listener.sticker;
+		const sticker = listener.sticker;
 
-		// if (scroll! >= listener.top && !sticker.hasClass(style.navSticky)) {
-		// 	sticker.addClass(style.navSticky);
-		// 	stickyCallBack(true);
-		// }
+		if (scroll! >= listener.top && !sticker.hasClass(style.navSticky)) {
+			sticker.addClass(style.navSticky);
+			stickyCallBack(true);
+		}
 
-		// if (scroll! < listener.top && sticker.hasClass(style.navSticky)) {
-		// 	sticker.removeClass(style.navSticky);
-		// 	stickyCallBack(false);
-		// }
+		if (scroll! < listener.top && sticker.hasClass(style.navSticky)) {
+			sticker.removeClass(style.navSticky);
+			stickyCallBack(false);
+		}
 	});
 };
 
-const applyStickyTop = (scroll: number, top: number, onFixed: ((fixed: boolean) => void) | undefined, getFixedProps: (() => boolean) | undefined): void => {
-	const fixed = getFixedProps!();
-
-	if (scroll! > top && !fixed) {
+const applyStickyTop = (sticker: JQuery<HTMLElement | Element>, style: any, scroll: number, top: number, margin: number, onFixed: ((fixed: boolean) => void) | undefined): void => {
+	if (scroll! > top && sticker.hasClass(style.natural)) {
+		sticker.removeClass(style.natural).addClass(style.fixed).css({ top: margin });
 		if (onFixed) onFixed(true);
-	} else if (top > scroll! && fixed) {
+	} else if (top > scroll! && sticker.hasClass(style.fixed)) {
+		sticker.removeClass(style.fixed).addClass(style.natural).css({ top: 'auto' });
 		if (onFixed) onFixed(false);
 	}
 };
 
-const applyStickyBottom = (scroll: number, bottom: number, onFixed: ((fixed: boolean) => void) | undefined, getFixedProps: (() => boolean) | undefined): void => {
-	const fixedBottom = getFixedProps!();
-	
-	if (scroll! > bottom && fixedBottom) {
+const applyStickyBottom = (sticker: JQuery<HTMLElement | Element>, style: any, scroll: number, bottom: number, margin: number, onFixed: ((fixed: boolean) => void) | undefined): void => {
+	if (scroll! > bottom && sticker.hasClass(style.fixed)) {
+		sticker.removeClass(style.fixed).addClass(style.bottom).css({ top: bottom });
 		if (onFixed) onFixed(false);
-	} else if (bottom > scroll! && !fixedBottom) {
+	} else if (bottom > scroll! && sticker.hasClass(style.bottom)) {
+		sticker.removeClass(style.bottom).addClass(style.fixed).css({ top: margin });
 		if (onFixed) onFixed(true);
 	}
 };

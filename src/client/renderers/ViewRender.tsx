@@ -23,17 +23,17 @@ class IndexViewRenderer extends ViewRenderer {
 		this.setupRoutes(this.router);
 	}
 
-	public getRoute(): string {
+	public getRoute =(): string => {
 		return this.routing;
-	}
+	};
 
-	public getRouter(): Router {
+	public getRouter = (): Router => {
 		return this.router;
-	}
+	};
 
-	public setupRoutes(router: Router): void {
+	public setupRoutes = (router: Router): void => {
 		routes.map((x) => router.get(x.path, this.renderRoutes));
-	}
+	};
 
 	private renderRoutes = (req: Request, res: Response): void => {
 		const css = new Set();
@@ -51,7 +51,7 @@ class IndexViewRenderer extends ViewRenderer {
 
 		res.setHeader(config.header.LABEL, config.header.VALUE);
 		res.send(client ? React.createElement('') : template(args));
-	}
+	};
 }
 
 export default IndexViewRenderer;
