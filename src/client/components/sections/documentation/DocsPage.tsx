@@ -129,9 +129,9 @@ class DocsPage extends React.Component<Props> {
 }
 
 const mapStateToProps = (state: any): any => ({
-	sidebarFixed: state.documentation.sidebar.fixed,
-	sandboxFixedTop: state.documentation.sandbox.fixedTop,
-	sandboxFixedBottom: state.documentation.sandbox.fixedBottom,
+	sidebarFixed: state.presentation.documentation.sidebar.fixed,
+	sandboxFixedTop: state.presentation.documentation.sandbox.fixedTop,
+	sandboxFixedBottom: state.presentation.documentation.sandbox.fixedBottom,
 });
 
 export default connect<StateProps, DispatchProps, any>(mapStateToProps, Dispatchers)(DocsPage);

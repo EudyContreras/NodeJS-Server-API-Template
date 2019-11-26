@@ -28,7 +28,7 @@ class SandboxArea extends React.PureComponent<Props, any> {
 
 	private getProperties = (style: any): any & any => {
 		const styler = new StyleApplier(style.sandboxArea);
-		const cssTop = this.props.fixedTop ? 15 : this.props.fixedBottom ? this.props.offsetBottom : 'auto';
+		const cssTop = this.props.fixedTop ? 14 : this.props.fixedBottom ? this.props.offsetBottom : 'auto';
 
 		styler.appendWhen(this.props.fixedTop, style.fixed);
 		
@@ -55,6 +55,6 @@ class SandboxArea extends React.PureComponent<Props, any> {
 	};
 }
 
-const mapStateToProps = (state: any): any => getSandbox(state.documentation.sandbox);
+const mapStateToProps = (state: any): any => getSandbox(state.presentation.documentation.sandbox);
 
 export default connect<StateProps, DispatchProps, any>(mapStateToProps, Dispatchers)(SandboxArea);

@@ -4,6 +4,8 @@ import navigationReducer from './common/navigation.reducer';
 import documentationReducer from './documentation/section.reducer';
 
 export default combineReducers({
-	navbar: navigationReducer,
-	documentation: documentationReducer
+	presentation: combineReducers({
+		navbar: navigationReducer,
+		documentation: documentationReducer
+	})
 });

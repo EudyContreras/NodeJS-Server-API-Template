@@ -67,7 +67,7 @@ class SidebarToggle extends React.PureComponent<Props, State> {
 
 const mapStateToProps = (state: any): any => {
 	return {
-		...state.documentation.sidebar.toggle
+		...state.presentation.documentation.sidebar.toggle
 	};
 };
 

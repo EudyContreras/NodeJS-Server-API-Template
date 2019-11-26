@@ -41,7 +41,7 @@ class SidebarMenu extends React.PureComponent<Props> {
 
 	private getProperties = (style: any): any & any => {
 		const styler = new StyleApplier(style.sideMenu);
-		const cssTop = this.props.fixed ? 15 : 'auto';
+		const cssTop = this.props.fixed ? 14 : 'auto';
 
 		styler
 			.appendWhen(!this.props.expanded, style.sideMenuClosed)
@@ -78,6 +78,6 @@ class SidebarMenu extends React.PureComponent<Props> {
 	};
 }
 
-const mapStateToProps = (state: any): any => getSidemenu(state.documentation.sidebar);
+const mapStateToProps = (state: any): any => getSidemenu(state.presentation.documentation.sidebar);
 
 export default connect<StateProps, DispatchProps, any>(mapStateToProps, Dispatchers)(SidebarMenu);
