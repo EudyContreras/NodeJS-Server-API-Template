@@ -1,24 +1,42 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { join } from '../../utililties/styling.utils';
+import { getNavigationBar } from '../../../selectors/navbar.selector';
+import {
+	setAnchored,
+	setMouseInside,
+	setMouseOutside,
+	setActiveTab
+} from '../../../actions/common/navigation.action';
 
-interface State {
-	hovered: boolean;
+interface StateProps {
 	anchored: boolean;
-	activeTab: any;
+	mouseInside: boolean;
+	mouseOutside: boolean;
+	activeTab: null | {
+		label: string;
+		index: string;
+	};
 }
 
-class Navbar extends React.PureComponent<any, State> {
+interface DispatchProps {
+	setAnchored: (anchored: boolean) => void;
+	setMouseInside: (inside: boolean) => void;
+	setMouseOutside: (outside: boolean) => void;
+	setActiveTab: (tab: string) => void;
+}
+
+const Dispatchers = { setAnchored, setMouseInside, setMouseOutside, setActiveTab };
+
+type Props = StateProps & DispatchProps & any;
+
+class Navbar extends React.PureComponent<Props> {
 	private navbar: React.RefObject<HTMLElement>;
 
 	constructor(props: any) {
 		super(props);
 		this.navbar = React.createRef();
-		this.state = {
-			activeTab: null,
-			hovered: false,
-			anchored: false
-		};
 	}
 
 	public componentDidMount = (): void => {
@@ -40,51 +58,37 @@ class Navbar extends React.PureComponent<any, State> {
 	};
 
 	private anchor = (top: number): void => {
-		const anchored = this.state.anchored;
+		const anchored = this.props.anchored;
 
 		const scroll = document.body.scrollTop || document.documentElement.scrollTop;
 
 		if (scroll! >= top && !anchored) {
-			this.setState({ anchored: true });
+			this.props.setAnchored(true);
 		}
 
 		if (scroll! < top && anchored) {
-			this.setState({ anchored: false });
-		}
-	};
-	
-	private onMouseEnter = (event: React.MouseEvent<HTMLElement, MouseEvent>): void => {
-		const element = event.currentTarget;
-		const style = this.props.styling;
-
-		if (!this.state.anchored) return;
-
-		if (!element.classList.contains(style.navTransition)) {
-			element.classList.add(style.navTransition);
-		}
-
-		if (!element.classList.contains(style.navPeeky)) {
-			element.classList.add(style.navPeeky);
+			this.props.setAnchored(false);
 		}
 	};
 
-	private onMouseExit = (event: React.MouseEvent<HTMLElement, MouseEvent>): void => {
-		const element = event.currentTarget;
-		const style = this.props.styling;
+	private onMouseEnter = (): void => {
+		if (this.props.anchored) {
+			this.props.setMouseInside(true);
+		}
+	};
 
-		if (element.classList.contains(style.navPeeky)) {
-			element.classList.remove(style.navPeeky);
+	private onMouseExit = (): void => {
+		if (this.props.anchored) {
+			this.props.setMouseOutside(true);
 		}
 	};
 
 	private handleLinkClick = (tab: any): void => {
-		this.setState(() => ({
-			activeTab: tab
-		}));
+		this.props.setActiveTab(tab);
 	};
 
-	private applyLinkState = (style: any, element: any, idx: number): JSX.Element => {
-		const activeTab = this.state.activeTab;
+	private getLinkProps = (style: any, element: any, idx: number): any => {
+		const activeTab = this.props.activeTab;
 		const location = this.props.location;
 
 		const linkClick = (): void => {
@@ -97,11 +101,17 @@ class Navbar extends React.PureComponent<any, State> {
 			if (element.link === location) {
 				navClasses.push(style.navLinkActive);
 			}
-		} else if (element.label === activeTab.label ) {
+		} else if (element.label === activeTab.label) {
 			navClasses.push(style.navLinkActive);
 		}
 
-		return (<Link onClick={linkClick} className={join(...navClasses)} to={element.link}>{element.label}</Link>);
+		const properties = {
+			className: join(...navClasses),
+			onClick: linkClick,
+			to: element.link,
+		};
+
+		return properties;
 	};
 
 	public render = (): JSX.Element => {
@@ -109,8 +119,16 @@ class Navbar extends React.PureComponent<any, State> {
 		const routes = this.props.routings;
 		const classes = [style.nav];
 
-		if (this.state.anchored) {
+		if (this.props.anchored) {
 			classes.push(style.navSticky);
+
+			if (this.props.mouseInside) {
+				classes.push(style.navTransition, style.navPeeky);
+			}
+
+			if (this.props.mouseOutside) {
+				classes.push(style.navTransition);
+			}
 		}
 		const properties = {
 			ref: this.navbar,
@@ -120,7 +138,7 @@ class Navbar extends React.PureComponent<any, State> {
 		};
 
 		return (
-			<header { ...properties }>
+			<header {...properties}>
 				<div className={style.navLogo}>
 					<div className={style.status} />
 					<div className={style.navLogoText}>
@@ -129,7 +147,7 @@ class Navbar extends React.PureComponent<any, State> {
 				</div>
 				<ul>
 					{routes.map((element: any, idx: number) =>
-						<li key={idx}>{this.applyLinkState(style, element, idx)}</li>
+						<li key={idx}><Link {...this.getLinkProps(style, element, idx)}>{element.label}</Link></li>
 					)}
 				</ul>
 			</header>
@@ -137,4 +155,6 @@ class Navbar extends React.PureComponent<any, State> {
 	};
 }
 
-export default Navbar;
+const mapStateToProps = (state: any): any => getNavigationBar(state.presentation.navigation);
+
+export default connect<StateProps, DispatchProps, any>(mapStateToProps, Dispatchers)(Navbar);

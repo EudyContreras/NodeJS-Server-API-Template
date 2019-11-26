@@ -1,6 +1,8 @@
 import {
-	NAV_MENU_ANCHORED,
-	NAV_MENU_HOVERED
+	NAV_BAR_MENU_ANCHORED,
+	NAV_BAR_MENU_ACTIVE_TAB,
+	NAV_BAR_MENU_MOUSE_INSIDE,
+	NAV_BAR_MENU_MOUSE_OUTSIDE
 } from '../../actions/common/navigation.action';
 
 import IAction from '../../actions/action';
@@ -11,29 +13,52 @@ export interface INavigationTab {
 }
 
 export interface INavigationBar {
-	hovered: boolean;
 	anchored: boolean;
+	mouseInside: boolean;
+	mouseOutside: boolean;
+	acitiveTab: null | {
+		label: string;
+		index: number;
+	};
 	navigationTabs: INavigationTab[];
 }
 
 const InitialState: INavigationBar = {
-	hovered: false,
 	anchored: false,
+	mouseInside: false,
+	mouseOutside: false,
+	acitiveTab: null,
 	navigationTabs: []
 };
 
 export default function (state = InitialState, action: IAction): INavigationBar {
 	switch (action.type) {
-		case NAV_MENU_HOVERED: {
+		case NAV_BAR_MENU_ANCHORED: {
 			return {
 				...state,
-				hovered: action.payload
+				anchored: action.payload,
+				mouseInside: false,
+				mouseOutside: false
 			};
 		}
-		case NAV_MENU_ANCHORED: {
+		case NAV_BAR_MENU_ACTIVE_TAB: {
 			return {
 				...state,
-				anchored: action.payload
+				acitiveTab: action.payload
+			};
+		}
+		case NAV_BAR_MENU_MOUSE_INSIDE: {
+			return {
+				...state,
+				mouseInside: action.payload,
+				mouseOutside: false
+			};
+		}
+		case NAV_BAR_MENU_MOUSE_OUTSIDE: {
+			return {
+				...state,
+				mouseOutside: action.payload,
+				mouseInside: false
 			};
 		}
 		default:

@@ -5,7 +5,7 @@ import documentationReducer from './documentation/section.reducer';
 
 export default combineReducers({
 	presentation: combineReducers({
-		navbar: navigationReducer,
+		navigation: navigationReducer,
 		documentation: documentationReducer
 	})
 });
