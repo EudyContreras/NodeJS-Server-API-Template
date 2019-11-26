@@ -1,11 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { join } from '../../utililties/styling.utils';
-import { ScrollListener, addAnchor } from '../../../appliers/sticky.applier';
 
 interface State {
-	activeTab: any;
+	hovered: boolean;
 	anchored: boolean;
+	activeTab: any;
 }
 
 class Navbar extends React.PureComponent<any, State> {
@@ -16,28 +16,41 @@ class Navbar extends React.PureComponent<any, State> {
 		this.navbar = React.createRef();
 		this.state = {
 			activeTab: null,
+			hovered: false,
 			anchored: false
 		};
 	}
 
 	public componentDidMount = (): void => {
-		const navbar = this.navbar.current!;
-		this.applyAnchor(navbar);
+		this.applyAnchor(this.navbar.current!);
 	};
 
-	private applyAnchor = (element: HTMLElement): void => {
-		const style = this.props.styling;
+	private applyAnchor = (navbar: HTMLElement): void => {
+		const margin = 15;
+		const topOffset = -(navbar.clientHeight - margin);
 
-		const listener = new ScrollListener(this, element, undefined, -65);
+		const body = document.body;
 
-		addAnchor(style, listener, (anchored: boolean) => {
-			if (!anchored) {
-				element.classList.remove(style.navTransition);
-			} 
-			this.setState(() => ({
-				anchored: anchored
-			}));
-		});
+		const scroll = body.getBoundingClientRect().top;
+		const scrollTop = navbar.getBoundingClientRect().top;
+
+		const topPosition = Math.abs(scroll) + (scrollTop - topOffset);
+
+		window.addEventListener('scroll', () => this.anchor(topPosition));
+	};
+
+	private anchor = (top: number): void => {
+		const anchored = this.state.anchored;
+
+		const scroll = document.body.scrollTop || document.documentElement.scrollTop;
+
+		if (scroll! >= top && !anchored) {
+			this.setState({ anchored: true });
+		}
+
+		if (scroll! < top && anchored) {
+			this.setState({ anchored: false });
+		}
 	};
 	
 	private onMouseEnter = (event: React.MouseEvent<HTMLElement, MouseEvent>): void => {
@@ -74,7 +87,7 @@ class Navbar extends React.PureComponent<any, State> {
 		const activeTab = this.state.activeTab;
 		const location = this.props.location;
 
-		const linkClick = (element: any, idx: number): void => {
+		const linkClick = (): void => {
 			this.handleLinkClick({ label: element.label, index: idx });
 		};
 
@@ -88,7 +101,7 @@ class Navbar extends React.PureComponent<any, State> {
 			navClasses.push(style.navLinkActive);
 		}
 
-		return (<Link onClick={(): any => linkClick(element, idx)} className={join(...navClasses)} to={element.link}>{element.label}</Link>);
+		return (<Link onClick={linkClick} className={join(...navClasses)} to={element.link}>{element.label}</Link>);
 	};
 
 	public render = (): JSX.Element => {
@@ -96,8 +109,10 @@ class Navbar extends React.PureComponent<any, State> {
 		const routes = this.props.routings;
 		const classes = [style.nav];
 
+		if (this.state.anchored) {
+			classes.push(style.navSticky);
+		}
 		const properties = {
-			id: 'navbar',
 			ref: this.navbar,
 			className: join(...classes),
 			onMouseEnter: this.onMouseEnter,
@@ -108,7 +123,6 @@ class Navbar extends React.PureComponent<any, State> {
 			<header { ...properties }>
 				<div className={style.navLogo}>
 					<div className={style.status} />
-					{/* <img className={style.navLogoImage} src={logo}/> */}
 					<div className={style.navLogoText}>
 						<a href='/'>{this.props.brandName}</a>
 					</div>

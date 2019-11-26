@@ -24,8 +24,6 @@ const links = [
 	}
 ];
 
-
-
 interface State {
 	hidden: boolean;
 	loaded: boolean;
@@ -34,7 +32,7 @@ interface State {
 
 class SidebarSubMenu extends React.PureComponent<any, State> {
 
-	private readonly menu: RefObject<HTMLUListElement>
+	private readonly menu: RefObject<HTMLUListElement>;
 
 	constructor(props: any) {
 		super(props);
@@ -52,7 +50,7 @@ class SidebarSubMenu extends React.PureComponent<any, State> {
 			position: 'absolute',
 			visibility: 'hidden'
 		};
-	}
+	};
 
 	private getStyle = (height: number): any => {
 		return {
@@ -60,30 +58,30 @@ class SidebarSubMenu extends React.PureComponent<any, State> {
 			position: 'relative',
 			visibility: 'visible'
 		};
-	}
+	};
 
 	private onHidden = (): void => {
 		this.setState(() => ({
 			hidden: true
 		}));
-	}
+	};
 
 	private onShown = (): void => {
 		this.setState(() => ({
 			hidden: false
 		}));
-	}
+	};
 
-	public componentDidMount(): void {
+	public componentDidMount = (): void => {
 		const menu = this.menu!.current!;
 
 		this.setState(() => ({
 			loaded: true,
 			height: menu.clientHeight
 		}));
-	}
+	};
 
-	public render(): JSX.Element {
+	public render = (): JSX.Element => {
 		const style = this.props.styling;
 		const expand = this.props.expanded;
 
@@ -109,7 +107,7 @@ class SidebarSubMenu extends React.PureComponent<any, State> {
 			}
 		}
 		return (<ul ref={this.menu}>{listItems}</ul>);
-	}
+	};
 }
 
 export default SidebarSubMenu;

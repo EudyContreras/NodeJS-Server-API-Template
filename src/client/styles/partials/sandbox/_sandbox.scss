@@ -2,26 +2,29 @@
 .sandbox-area {
    float: right;
    right: 0;
-   width: 30%;
+   width: 35%;
    height: 100vh;
+   display: flex;
+   justify-content: space-around;
+   flex-direction: column;
    position: absolute;
    margin: 0;
    z-index: 1000;
    overflow: hidden;
+   padding-top: 3em;
+   padding-bottom: 3em;
    background-color: rgba(38, 43, 47, 1);
    box-shadow: -2px -2px 5px 0px rgba(0,0,0,0.4);
    transition: width 0.3s $standardInterpolator;
 
    & div {
       display: flex;
-      height: 400px;
+      height: 100vh;
       background-color: rgba(32, 36, 40, 1);
       border-radius: 6px;
       margin: {
-         top: 3em;
-         left: 1.5em;
-         right: 1.5em;
-         bottom: 1.5em;
+         left: 2em;
+         right: 2em;
       }
    }
 }

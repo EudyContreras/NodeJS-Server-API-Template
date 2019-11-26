@@ -8,7 +8,7 @@ class SidebarSubItem extends React.PureComponent<any, any> {
 		super(props);
 	}
 
-	public render(): JSX.Element {
+	public render = (): JSX.Element => {
 		const hash = this.props.hash;
 		const label = this.props.label;
 		const method = this.props.method;
@@ -26,7 +26,7 @@ class SidebarSubItem extends React.PureComponent<any, any> {
 				<i className={MaterialIcons.CLASS}>{MaterialIcons.icons.CHEV_RIGHT}</i>
 			</li>
 		);
-	}
+	};
 }
 
 export default SidebarSubItem;

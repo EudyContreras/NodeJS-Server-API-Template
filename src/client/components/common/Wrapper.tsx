@@ -1,9 +1,9 @@
 import React from 'react';
 
-export default class Wrapper extends React.PureComponent<any, any> {
-	public render(): JSX.Element {
-		return (
-			<div>{this.props.children}</div>
-		);
-	}
+export default class Wrapper extends React.PureComponent<any> {
+	
+	public render = (): JSX.Element => {
+		const { children, ...props } = this.props;
+		return (<div {...props}>{children}</div>);
+	};
 } 

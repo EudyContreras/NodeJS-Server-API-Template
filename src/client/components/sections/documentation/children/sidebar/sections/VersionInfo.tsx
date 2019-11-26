@@ -8,12 +8,12 @@ export default class VersionInfo extends React.PureComponent<any, any> {
 		super(props);
 	}
 
-	public render(): JSX.Element {
+	public render = (): JSX.Element => {
 		return (
 			<div>
 				<h2>Api Name</h2>
 				<h5>version: {version}</h5>
 			</div>
 		);
-	}
+	};
 }

@@ -2,10 +2,13 @@
    display: flex;
    flex-direction: column;
    margin-left: 17%;
-   margin-right: 30%;
-   padding-bottom: 3em;
+   margin-right: 35%;
    background-color: rgb(48,53,57);
    transition: all 0.3s $standardInterpolator;
+}
+
+.content-padder {
+   padding-bottom: 3em;
 }
 
 .content {

@@ -6,6 +6,7 @@ import SideMenu from './children/sidebar/SidebarMenu';
 import SandBox from './children/sandbox/SandboxArea';
 
 import {
+	setAll,
 	setAllFixed,
 	setSidebarFixed,
 	setSandboxFixedTop,
@@ -20,6 +21,7 @@ interface StateProps {
 }
 
 interface DispatchProps {
+	setAll: (sidebarFixed: boolean, sandboxFixedTop: boolean, sandboxFixedBottom: boolean, sandboxOffsetBottom: number) => any;
 	setAllFixed: (sidebarFixed: boolean, sandboxFixed: boolean) => any;
 	setSidebarFixed: (fixed: boolean) => void;
 	setSandboxFixedTop: (fixed: boolean) => void;
@@ -27,11 +29,11 @@ interface DispatchProps {
 	setSandboxOffsetBottom: (offset: number) => void;
 }
 
-const Dispatchers = { setAllFixed, setSidebarFixed, setSandboxFixedTop, setSandboxFixedBottom, setSandboxOffsetBottom };
+const Dispatchers = { setAll, setAllFixed, setSidebarFixed, setSandboxFixedTop, setSandboxFixedBottom, setSandboxOffsetBottom };
 
 type Props = StateProps & DispatchProps & any;
 
-class DocsPage extends React.PureComponent<Props> {
+class DocsPage extends React.Component<Props> {
 
 	private readonly footer: RefObject<HTMLElement>;
 	private readonly sidebar: RefObject<HTMLElement>;
@@ -46,87 +48,73 @@ class DocsPage extends React.PureComponent<Props> {
 		this.content = createRef();
 	}
 
-	// public componentDidMount(): void {
-	// 	const style = this.props.styling;
-	// 	const footer = this.footer.current;
-	// 	const sideBar = this.sidebar.current;
-	// 	const sandBox = this.sandbox.current;
-
-	// 	const sandboxListener = new ScrollListener(this, sandBox!, footer, 10, this.getSandboxProps, (fixed: boolean): void => {
-	// 		this.props.setPlaygroundFixed(fixed);
-	// 	});
-
-	// 	const sidebarListener = new ScrollListener(this, sideBar!, null ,10, this.getSidebarProps, (fixed: boolean): void => {
-	// 		this.props.setSidebarFixed(fixed);
-	// 	});
-
-	// 	stickEffect(sandboxListener);
-
-	// 	//updateEffect(sidebarListener);
-	// 	updateEffect(sandboxListener);
-	// }
-
 	shouldComponentUpdate = (): any => false;
 
-	getSidebarProps = (): any => this.props.sidebarFixed;
-
-	getSandboxProps = (): any => this.props.sandboxFixed;
-
-	private handleScroll = (offsetTop = 0, offsetBottom: number | null = null): void => {
+	private handleScroll = (offsetTop = 0, offsetBottom = 0): void => {
 		const topFixed = this.props.sidebarFixed;
 
 		const scroll = document.body.scrollTop || document.documentElement.scrollTop;
 
 		if (scroll > offsetTop && !topFixed) {
-			this.props.setAllFixed(true, true);
+			if (scroll < offsetBottom) {
+				this.props.setAllFixed(true, true);
+			}
 		} else if (scroll < offsetTop && topFixed) {
 			this.props.setAllFixed(false, false);
 		}
+		const bottomFixed = this.props.sandboxFixedBottom;
 
-		if (offsetBottom != null) {
-			const bottomFixed = this.props.sandboxFixedBottom;
-
-			if (scroll > offsetBottom) {
-				if (!bottomFixed && topFixed) {
-					this.props.setSandboxFixedBottom(true);
-				}
-			} else if (scroll <= offsetBottom) {
-				if (bottomFixed) {
-					this.props.setSandboxFixedBottom(false);
-				}
+		if (scroll > offsetBottom) {
+			if (!bottomFixed && topFixed) {
+				this.props.setSandboxFixedBottom(true);
+			}
+		} else if (scroll <= offsetBottom) {
+			if (bottomFixed) {
+				this.props.setSandboxFixedBottom(false);
 			}
 		}
-
-		// if (scroll >= offsetTop && !this.props.fixed) {
-		// 	this.props.setSidebarFixed(true);
-		// } else if (scroll < offsetTop && this.props.fixed) {
-		// 	this.props.setSidebarFixed(false);
-		// }
 	};
 
 	public componentDidMount = (): void => {
-		const margin = 10;
+		const margin = 15;
 
+		const body = document.body;
 		const sidebar = this.sidebar.current!;
 		const sandbox = this.sandbox.current!;
 		const footer = this.footer.current!;
 
-		const scrollTop = sidebar.getBoundingClientRect().top - margin;
+		const scroll = body.getBoundingClientRect().top;
+		const scrollTop = sidebar.getBoundingClientRect().top;
 		const scrollBottom = footer.getBoundingClientRect().top - sandbox.getBoundingClientRect().height;
 
-		const topPosition = Math.abs(document.body.getBoundingClientRect().top) + scrollTop;
+		const topPosition = Math.abs(scroll) + (scrollTop - margin);
+		const bottomPosition = Math.abs(scroll) + (scrollBottom);
 
-		(this.props as DispatchProps).setSandboxOffsetBottom(scrollBottom);
-		
-		window.addEventListener('scroll', () => this.handleScroll(topPosition, scrollBottom));
+		this.applyInitialValues(topPosition, bottomPosition);
+
+		window.onscroll = (): void => {
+			this.handleScroll(topPosition, bottomPosition - margin);
+		};
+		window.onresize = (): void => {
+			console.log('RESIZED');
+		};
 	};
 
-	public componentWillUnmount = (): void => {
-		window.removeEventListener('scroll', () => this.handleScroll());
+	private applyInitialValues = (topPosition: number, bottomPosition: number): void => {
+		const topFixed = this.props.sidebarFixed;
+
+		const scroll = document.body.scrollTop || document.documentElement.scrollTop;
+
+		if (!topFixed) {
+			if (scroll >= bottomPosition) {
+				this.props.setAll(true, false, true, bottomPosition);
+			} else {
+				this.props.setAll(false, false, false, bottomPosition);
+			}
+		}
 	};
 
 	public render = (): JSX.Element => {
-
 		const style = this.props.styling;
 
 		return (

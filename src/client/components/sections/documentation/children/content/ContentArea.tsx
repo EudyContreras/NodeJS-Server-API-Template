@@ -1,26 +1,28 @@
 import React from 'react';
 import Section from './ContentSection';
-
+import Wrapper from '../../../../common/Wrapper';
 class ContentArea extends React.PureComponent<any, any> {
 
 	constructor(props: any) {
 		super(props);
 	}
 
-	public render(): JSX.Element {
+	public render = (): JSX.Element => {
 		const style = this.props.styling;
-
+		console.log('Content rendered');
 		return (
 			<div className={style.contentWrapper}>
-				<Section styling={style}/>
-				<Section styling={style}/>
-				<Section styling={style}/>
-				<Section styling={style}/>
-				<Section styling={style}/>
-				<Section styling={style}/>
+				<Wrapper className={style.contentPadder}>
+					<Section styling={style} />
+					<Section styling={style} />
+					<Section styling={style} />
+					<Section styling={style} />
+					<Section styling={style} />
+					<Section styling={style} />
+				</Wrapper>
 			</div>
 		);
-	}
-} 
+	};
+}
 
 export default ContentArea;

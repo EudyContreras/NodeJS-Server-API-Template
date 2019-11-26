@@ -41,15 +41,16 @@ class SidebarMenu extends React.PureComponent<Props> {
 
 	private getProperties = (style: any): any & any => {
 		const styler = new StyleApplier(style.sideMenu);
+		const cssTop = this.props.fixed ? 15 : 'auto';
 
 		styler
 			.appendWhen(!this.props.expanded, style.sideMenuClosed)
 			.appendWhen(this.props.hovered, style.sideMenuPeek, false)
-			.appendAndOr(this.props.fixed, style.fixed, style.natural);
+			.append(this.props.fixed, style.fixed);
 		
 		const common = {
-			ref:this.props.self,
-			style: { top: this.props.fixed ? 10 : 'auto' },
+			ref: this.props.self,
+			style: { top: cssTop },
 			className: styler.getClasses()
 		};
 
@@ -63,7 +64,7 @@ class SidebarMenu extends React.PureComponent<Props> {
 
 	public render = (): JSX.Element => {
 		const style = this.props.styling;
-
+		console.log('Side menu rendered');
 		const { common , actions } = this.getProperties(style);
 
 		return (

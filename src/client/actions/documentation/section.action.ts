@@ -1,9 +1,17 @@
 
+export const DOCUMENTATION_SECTION_ALL = 'DOCUMENTATION_SECTION_ALL';
 export const DOCUMENTATION_SECTION_ALL_FIXED = 'DOCUMENTATION_SECTION_ALL_FIXED';
 export const DOCUMENTATION_SECTION_SIDEBAR_FIXED = 'DOCUMENTATION_SECTION_SIDEBAR_FIXED';
 export const DOCUMENTATION_SECTION_SANDBOX_FIXED_TOP = 'DOCUMENTATION_SECTION_SANDBOX_FIXED_TOP';
 export const DOCUMENTATION_SECTION_SANDBOX_FIXED_BOTTOM = 'DOCUMENTATION_SECTION_SANDBOX_FIXED_BOTTOM';
 export const DOCUMENTATION_SECTION_SANDBOX_OFFSET_BOTTOM = 'DOCUMENTATION_SECTION_SANDBOX_OFFSET_BOTTOM';
+
+export const setAll = (sidebarFixed: boolean, sandboxFixedTop: boolean, sandboxFixedBottom: boolean, sandboxOffsetBottom: number) => (dispatch: any): void => {
+	dispatch({
+		type: DOCUMENTATION_SECTION_ALL,
+		payload: { sidebarFixed, sandboxFixedTop, sandboxFixedBottom, sandboxOffsetBottom }
+	});
+};
 
 export const setAllFixed = (sidebarFixed: boolean, sandboxFixed: boolean) => (dispatch: any): void => {
 	dispatch({

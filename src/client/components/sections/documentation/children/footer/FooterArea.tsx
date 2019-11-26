@@ -10,13 +10,14 @@ class FooterArea extends React.Component<Props, any> {
 		super(props);
 	}
 
-	public render(): JSX.Element {
+	public render = (): JSX.Element => {
+		console.log('Footer rendered');
 		const style = this.props.styling;
 
 		return (
 			<footer ref={this.props.self} className={style.footerArea}></footer>
 		);
-	}
+	};
 } 
 
 export default FooterArea;

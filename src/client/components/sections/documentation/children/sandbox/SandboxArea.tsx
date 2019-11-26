@@ -28,12 +28,13 @@ class SandboxArea extends React.PureComponent<Props, any> {
 
 	private getProperties = (style: any): any & any => {
 		const styler = new StyleApplier(style.sandboxArea);
+		const cssTop = this.props.fixedTop ? 15 : this.props.fixedBottom ? this.props.offsetBottom : 'auto';
 
-		styler.appendAndOr(this.props.fixedTop, style.fixed, style.natural);
+		styler.appendWhen(this.props.fixedTop, style.fixed);
 		
 		const common = {
 			ref: this.props.self,
-			style: { top: this.props.fixedTop ? 10 : this.props.fixedBottom ? this.props.offsetBottom : 'auto' },
+			style: { top: cssTop },
 			className: styler.getClasses()
 		};
 
@@ -41,17 +42,12 @@ class SandboxArea extends React.PureComponent<Props, any> {
 	};
 
 	public render = (): JSX.Element => {
-		console.log(this.props);
-
 		const style = this.props.styling;
 
 		const { common } = this.getProperties(style);
 
 		return (
 			<aside {...common}>
-				<SandboxSection styling={style}/>
-				<SandboxSection styling={style}/>
-				<SandboxSection styling={style}/>
 				<SandboxSection styling={style}/>
 				<SandboxSection styling={style}/>
 			</aside>

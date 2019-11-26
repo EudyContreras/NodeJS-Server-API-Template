@@ -23,7 +23,7 @@ class SidebarMenuItem extends React.PureComponent<any, State>{
 		}));
 	};
 
-	public render(): JSX.Element {
+	public render = (): JSX.Element => {
 		const hash = this.props.hash;
 		const label = this.props.label;
 		const style = this.props.styling;
@@ -42,7 +42,7 @@ class SidebarMenuItem extends React.PureComponent<any, State>{
 				<SidebarSubMenu styling={style} expanded={this.state.expanded}/>
 			</Wrapper>
 		);
-	}
+	};
 }
 
 export default SidebarMenuItem;

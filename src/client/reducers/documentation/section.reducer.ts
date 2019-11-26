@@ -1,4 +1,5 @@
 import {
+	DOCUMENTATION_SECTION_ALL,
 	DOCUMENTATION_SECTION_ALL_FIXED,
 	DOCUMENTATION_SECTION_SIDEBAR_FIXED,
 	DOCUMENTATION_SECTION_SANDBOX_FIXED_TOP,
@@ -28,6 +29,21 @@ export const InitialState: IDocumentationArea = {
 export default (state = InitialState, action: IAction): IDocumentationArea => {
 	if (action.from) return handleSubReducers(state, action);
 	switch (action.type) {
+		case DOCUMENTATION_SECTION_ALL: {
+			return {
+				...state,
+				sidebar: {
+					...state.sidebar,
+					fixed: action.payload.sidebarFixed,
+				},
+				sandbox: {
+					...state.sandbox,
+					fixedTop: action.payload.sandboxFixedTop,
+					fixedBottom: action.payload.sandboxFixedBottom,
+					offsetBottom: action.payload.sandboxOffsetBottom
+				}
+			};
+		}
 		case DOCUMENTATION_SECTION_ALL_FIXED: {
 			return {
 				...state,

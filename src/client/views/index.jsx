@@ -16,7 +16,7 @@ export const client = (store, insertCss, window) => (
 
 export const server = (url, store, context, insertCss) => (
 	<Provider store={store}>
-		<StaticRouter location={url} context={context}>
+		<StaticRouter onUpdate={() => window.scrollTo(0, 0)} location={url} context={context}>
 			<StyleContext.Provider value={{ insertCss }}>
 				<Application location={url} />
 			</StyleContext.Provider>

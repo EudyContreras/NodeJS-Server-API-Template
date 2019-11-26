@@ -9,7 +9,7 @@ export default class MainSection extends React.PureComponent<any, any> {
 		super(props);
 	}
 
-	public render(): JSX.Element {
+	public render = (): JSX.Element => {
 		const style = this.props.styling;
 
 		return (
@@ -22,5 +22,5 @@ export default class MainSection extends React.PureComponent<any, any> {
 				</ul>
 			</Fragment>
 		);
-	}
+	};
 }

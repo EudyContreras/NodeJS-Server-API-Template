@@ -1,5 +1,5 @@
 import {
-	NAV_MENU_FIXED,
+	NAV_MENU_ANCHORED,
 	NAV_MENU_HOVERED
 } from '../../actions/common/navigation.action';
 
@@ -11,14 +11,14 @@ export interface INavigationTab {
 }
 
 export interface INavigationBar {
-	fixed: boolean;
 	hovered: boolean;
+	anchored: boolean;
 	navigationTabs: INavigationTab[];
 }
 
 const InitialState: INavigationBar = {
-	fixed: false,
 	hovered: false,
+	anchored: false,
 	navigationTabs: []
 };
 
@@ -30,10 +30,10 @@ export default function (state = InitialState, action: IAction): INavigationBar 
 				hovered: action.payload
 			};
 		}
-		case NAV_MENU_FIXED: {
+		case NAV_MENU_ANCHORED: {
 			return {
 				...state,
-				fixed: action.payload
+				anchored: action.payload
 			};
 		}
 		default:

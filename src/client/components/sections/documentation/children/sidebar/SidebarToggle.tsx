@@ -32,7 +32,7 @@ class SidebarToggle extends React.PureComponent<Props, State> {
 		this.props.toggleExpand();
 	};
 
-	public render(): JSX.Element {
+	public render = (): JSX.Element => {
 
 		const style = this.props.styling;
 		const elementTitle = this.props.locked ? 'collapse' : 'expand';
@@ -62,7 +62,7 @@ class SidebarToggle extends React.PureComponent<Props, State> {
 				<i className={join(...toggleIconClasses)}>{iconText}</i>
 			</div>
 		);
-	}
+	};
 }
 
 const mapStateToProps = (state: any): any => {

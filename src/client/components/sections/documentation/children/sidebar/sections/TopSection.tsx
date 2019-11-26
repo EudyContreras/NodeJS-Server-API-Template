@@ -8,7 +8,7 @@ export default class TopSection extends React.PureComponent<any, any> {
 		super(props);
 	}
 	
-	public render(): JSX.Element {
+	public render = (): JSX.Element => {
 		const style = this.props.styling;
 
 		return (
@@ -17,5 +17,5 @@ export default class TopSection extends React.PureComponent<any, any> {
 				<SideMenuToggle styling={style} />
 			</div>
 		);
-	}
+	};
 }
