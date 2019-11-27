@@ -1,5 +1,5 @@
 import React from 'react';
-import Wrapper from '../../../../common/Wrapper';
+import Wrapper from '../../../../shared/Wrapper';
 import SidebarSubMenu from './SidebarSubMenu';
 import { MaterialIcons } from '../../../../../stores/icon.library';
 import { join } from '../../../../utililties/styling.utils';
@@ -33,6 +33,7 @@ class SidebarMenuItem extends React.PureComponent<any, State>{
 		if (this.state.expanded) {
 			classes.push(style.active);
 		}
+
 		return (
 			<Wrapper>
 				<li className={join(...classes)} onClick={this.openSubMenu}>

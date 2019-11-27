@@ -4,7 +4,7 @@ import Home from './sections/documentation/DocsPage';
 import Docs from './sections/documentation/DocsPage';
 import About from './sections/information/AboutPage';
 import Admin from './sections/administration/AdminPage';
-import Lost from './common/Lost';
+import Lost from './shared/Lost';
 
 export const routes = [
 	{

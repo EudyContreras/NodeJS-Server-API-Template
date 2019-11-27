@@ -4,10 +4,10 @@ import TopSection from './sections/TopSection';
 import MainSection from './sections/MainSection';
 import MiddleSection from './sections/MiddleSection';
 import SideMenuSearch from './SidebarSearch';
-import StyleApplier from '../../../../../appliers/style.applier';
+import { appendWhen } from '../../../../../appliers/style.applier';
 import { getSidemenu } from '../../../../../selectors/sidemenu.selector';
 import { setHovered, setFixed } from '../../../../../actions/documentation/sidebar.action';
-
+import { join } from '../../../../utililties/styling.utils';
 const headers = ['Introduction', 'Endpoints'];
 
 interface StateProps {
@@ -40,18 +40,17 @@ class SidebarMenu extends React.PureComponent<Props> {
 	};
 
 	private getProperties = (style: any): any & any => {
-		const styler = new StyleApplier(style.sideMenu);
-		const cssTop = this.props.fixed ? 14 : 'auto';
+		const styles = [style.sideMenu];
+		const cssTop = this.props.fixed ? this.props.offsetTop : 'auto';
 
-		styler
-			.appendWhen(!this.props.expanded, style.sideMenuClosed)
-			.appendWhen(this.props.hovered, style.sideMenuPeek, false)
-			.append(this.props.fixed, style.fixed);
+		appendWhen(styles, !this.props.expanded, style.sideMenuClosed);
+		appendWhen(styles, !this.props.expanded && this.props.hovered, style.sideMenuPeek);
+		appendWhen(styles, this.props.fixed, style.fixed);
 		
 		const common = {
 			ref: this.props.self,
 			style: { top: cssTop },
-			className: styler.getClasses()
+			className: join(...styles)
 		};
 
 		const actions = {
@@ -66,7 +65,7 @@ class SidebarMenu extends React.PureComponent<Props> {
 		const style = this.props.styling;
 
 		const { common , actions } = this.getProperties(style);
-
+		
 		return (
 			<aside {...common} {...actions} >
 				< TopSection styling={style} />
@@ -78,6 +77,6 @@ class SidebarMenu extends React.PureComponent<Props> {
 	};
 }
 
-const mapStateToProps = (state: any): any => getSidemenu(state.presentation.documentation.sidebar);
+const mapStateToProps = (state: any): any => getSidemenu(state.presentation);
 
 export default connect<StateProps, DispatchProps, any>(mapStateToProps, Dispatchers)(SidebarMenu);

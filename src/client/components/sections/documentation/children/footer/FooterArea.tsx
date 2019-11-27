@@ -1,11 +1,7 @@
 import React from 'react';
 
-interface Props {
-	self: any;
-	styling: any;
-}
-
-class FooterArea extends React.Component<Props, any> {
+class FooterArea extends React.Component<any, any> {
+	
 	constructor(props: any) {
 		super(props);
 	}

@@ -92,9 +92,8 @@ class DocsPage extends React.Component<Props> {
 
 		this.applyInitialValues(topPosition, bottomPosition);
 
-		window.onscroll = (): void => {
-			this.handleScroll(topPosition, bottomPosition - margin);
-		};
+		window.onscroll = (): void => this.handleScroll(topPosition, bottomPosition - margin);
+		
 		window.onresize = (): void => {
 			console.log('RESIZED');
 		};

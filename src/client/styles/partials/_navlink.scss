@@ -72,7 +72,7 @@ $navLinkShadow: rgba(0, 0, 0, 0.3);
    @include transition(.25s);
 
    &:hover {
-      color: white;
+      color: white !important; 
    }
 
    &::before {

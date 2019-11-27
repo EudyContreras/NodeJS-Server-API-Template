@@ -12,19 +12,19 @@ export default (args) => {
 class DefaultLayout extends React.PureComponent {
 	render = () => {
 		return (
-			<html>
+			<html lang='en-US'>
 				<head>
 					<meta charSet='utf-8' />
-					<title>{this.props.title}</title>
 					<meta name='viewport' content='width=device-width, initial-scale=1' />
 					<meta name='theme-color' content='#000000' />
 					<meta name='description' content='Template Web site generated the server api routing' />
 					<link rel='manifest' href='/static/manifest.json' />
-					<link rel='apple-touch-icon' href={FavIcon} />
+					<link rel='apple-touch-icon' type='image/png' href={FavIcon} />
 					<link rel='shortcut icon' type='image/png' href={FavIcon} />
 					<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css' />
 					<link rel='stylesheet' href='https://fonts.googleapis.com/icon?family=Material+Icons' />
 					<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Roboto&display=swap' />
+					<title>{this.props.title}</title>
 					<style>${[...this.props.css].join('')}</style>
 				</head>
 				<body >

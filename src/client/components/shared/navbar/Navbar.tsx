@@ -155,6 +155,6 @@ class Navbar extends React.PureComponent<Props> {
 	};
 }
 
-const mapStateToProps = (state: any): any => getNavigationBar(state.presentation.navigation);
+const mapStateToProps = (state: any): any => getNavigationBar(state.presentation);
 
 export default connect<StateProps, DispatchProps, any>(mapStateToProps, Dispatchers)(Navbar);

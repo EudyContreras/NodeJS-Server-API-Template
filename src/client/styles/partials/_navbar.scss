@@ -58,13 +58,13 @@ $navbarColor:rgba(35, 40, 45, 1);
          transform: translateY(0px) !important;
          transition: all 0.3s cubic-bezier(.25, .8, .25, 1);
       }
-      &:hover li>a {
+      &:hover .nav-link {
          color: rgb(171, 172, 174);
          transition: all 0.3s cubic-bezier(.25, .8, .25, 1);
       }
    }
 
-   &-sticky li>a {
+   &-sticky .nav-link {
       color: transparent;
       transition: all 0.3s cubic-bezier(.25, .8, .25, 1) 0.35s;
    }

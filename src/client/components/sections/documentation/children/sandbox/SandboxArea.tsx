@@ -1,9 +1,10 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import SandboxSection from './SandboxSection';
-import StyleApplier from '../../../../../appliers/style.applier';
+import { connect } from 'react-redux';
+import { appendWhen } from '../../../../../appliers/style.applier';
 import { getSandbox } from '../../../../../selectors/sandbox.selector';
 import { setTopFixed, setBottomFixed } from '../../../../../actions/documentation/sandbox.action';
+import { join } from '../../../../utililties/styling.utils';
 
 interface StateProps {
 	fixedTop: boolean;
@@ -27,15 +28,15 @@ class SandboxArea extends React.PureComponent<Props, any> {
 	}
 
 	private getProperties = (style: any): any & any => {
-		const styler = new StyleApplier(style.sandboxArea);
-		const cssTop = this.props.fixedTop ? 14 : this.props.fixedBottom ? this.props.offsetBottom : 'auto';
+		const styles = [style.sandboxArea];
+		const cssTop = this.props.fixedTop ? this.props.offsetTop : this.props.fixedBottom ? this.props.offsetBottom : 'auto';
 
-		styler.appendWhen(this.props.fixedTop, style.fixed);
+		appendWhen(styles, this.props.fixedTop, style.fixed);
 		
 		const common = {
 			ref: this.props.self,
 			style: { top: cssTop },
-			className: styler.getClasses()
+			className: join(...styles)
 		};
 
 		return { common };
@@ -55,6 +56,6 @@ class SandboxArea extends React.PureComponent<Props, any> {
 	};
 }
 
-const mapStateToProps = (state: any): any => getSandbox(state.presentation.documentation.sandbox);
+const mapStateToProps = (state: any): any => getSandbox(state.presentation);
 
 export default connect<StateProps, DispatchProps, any>(mapStateToProps, Dispatchers)(SandboxArea);

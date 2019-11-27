@@ -14,6 +14,7 @@ export interface INavigationTab {
 
 export interface INavigationBar {
 	anchored: boolean;
+	offsetTop: number;
 	mouseInside: boolean;
 	mouseOutside: boolean;
 	acitiveTab: null | {
@@ -25,6 +26,7 @@ export interface INavigationBar {
 
 const InitialState: INavigationBar = {
 	anchored: false,
+	offsetTop: 0,
 	mouseInside: false,
 	mouseOutside: false,
 	acitiveTab: null,

@@ -82,6 +82,7 @@ class SidebarSubMenu extends React.PureComponent<any, State> {
 	};
 
 	public render = (): JSX.Element => {
+
 		const style = this.props.styling;
 		const expand = this.props.expanded;
 

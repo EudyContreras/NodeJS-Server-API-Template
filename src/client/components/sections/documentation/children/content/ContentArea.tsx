@@ -1,6 +1,7 @@
 import React from 'react';
 import Section from './ContentSection';
-import Wrapper from '../../../../common/Wrapper';
+import Wrapper from '../../../../shared/Wrapper';
+
 class ContentArea extends React.PureComponent<any, any> {
 
 	constructor(props: any) {
@@ -13,12 +14,12 @@ class ContentArea extends React.PureComponent<any, any> {
 		return (
 			<div className={style.contentWrapper}>
 				<Wrapper className={style.contentPadder}>
-					<Section styling={style} />
-					<Section styling={style} />
-					<Section styling={style} />
-					<Section styling={style} />
-					<Section styling={style} />
-					<Section styling={style} />
+					<Section styling={style}/>
+					<Section styling={style}/>
+					<Section styling={style}/>
+					<Section styling={style}/>
+					<Section styling={style}/>
+					<Section styling={style}/>
 				</Wrapper>
 			</div>
 		);
