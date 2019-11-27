@@ -7,6 +7,11 @@ import {
 	DOCUMENTATION_SECTION_SANDBOX_OFFSET_BOTTOM
 } from '../../actions/documentation/section.action';
 
+import {
+	NAV_BAR_MENU_ANCHORED
+} from '../../actions/common/navigation.action';
+
+import * as Navbar from '../common/navigation.reducer';
 import * as Sidebar from '../documentation/sidebar.reducer';
 import * as Sandbox from '../documentation/sandbox.reducer';
 
@@ -102,6 +107,9 @@ export default (state = InitialState, action: IAction): IDocumentationArea => {
 
 const handleSubReducers = (state = InitialState, action: IAction): IDocumentationArea => {
 	switch(action.from) {
+		case Navbar.SOURCE: {
+			return handleNavbarActions(state, action);
+		}
 		case Sidebar.SOURCE: {
 			return {
 				...state,
@@ -117,4 +125,24 @@ const handleSubReducers = (state = InitialState, action: IAction): IDocumentatio
 		default:
 			return state; 
 	};
+};
+
+const handleNavbarActions = (state = InitialState, action: IAction): IDocumentationArea => {
+	switch(action.type) {
+		case NAV_BAR_MENU_ANCHORED: {
+			return {
+				...state,
+				sidebar: {
+					...state.sidebar,
+					fixed: action.payload,
+				},
+				sandbox: {
+					...state.sandbox,
+					fixedTop:  !state.sandbox.fixedBottom ? action.payload : false,
+				}
+			};
+		}
+		default:
+			return state;
+	}
 };

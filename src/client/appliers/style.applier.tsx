@@ -76,6 +76,6 @@ export const appendAndOr = (styles: string[], condition: boolean, styleA: string
  * @param updateState Flag determining if the state should be updated.
  * @returns The instance of this updater.
  */
-export const appendWhen = (styles: string[], condition: boolean, style: string): void => {
-	if (condition) styles.push(style);
+export const appendWhen = (styles: string[], condition: boolean, ...style: string[]): void => {
+	if (condition) styles.push(...style);
 };

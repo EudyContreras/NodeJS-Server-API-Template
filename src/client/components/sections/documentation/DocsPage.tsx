@@ -55,13 +55,13 @@ class DocsPage extends React.Component<Props> {
 
 		const scroll = document.body.scrollTop || document.documentElement.scrollTop;
 
-		if (scroll > offsetTop && !topFixed) {
-			if (scroll < offsetBottom) {
-				this.props.setAllFixed(true, true);
-			}
-		} else if (scroll < offsetTop && topFixed) {
-			this.props.setAllFixed(false, false);
-		}
+		// if (scroll > offsetTop && !topFixed) {
+		// 	if (scroll < offsetBottom) {
+		// 		this.props.setAllFixed(true, true);
+		// 	}
+		// } else if (scroll < offsetTop && topFixed) {
+		// 	this.props.setAllFixed(false, false);
+		// }
 		const bottomFixed = this.props.sandboxFixedBottom;
 
 		if (scroll > offsetBottom) {
@@ -94,9 +94,9 @@ class DocsPage extends React.Component<Props> {
 
 		window.onscroll = (): void => this.handleScroll(topPosition, bottomPosition - margin);
 		
-		window.onresize = (): void => {
-			console.log('RESIZED');
-		};
+		// window.onresize = (): void => {
+		// 	console.log('RESIZED');
+		// };
 	};
 
 	private applyInitialValues = (topPosition: number, bottomPosition: number): void => {

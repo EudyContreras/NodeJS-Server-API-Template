@@ -13,7 +13,7 @@ export const setAll = (sidebarFixed: boolean, sandboxFixedTop: boolean, sandboxF
 	});
 };
 
-export const setAllFixed = (sidebarFixed: boolean, sandboxFixed: Function) => (dispatch: any): void => {
+export const setAllFixed = (sidebarFixed: boolean, sandboxFixed: boolean) => (dispatch: Function): void => {
 	dispatch({
 		type: DOCUMENTATION_SECTION_ALL_FIXED,
 		payload: { sidebarFixed, sandboxFixed }

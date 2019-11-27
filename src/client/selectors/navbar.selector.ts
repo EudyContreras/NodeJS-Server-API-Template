@@ -7,6 +7,5 @@ export const getNavigationBar = createSelector((state: IPresentation): any => (s
 	anchored: state.navigation.anchored,
 	mouseInside: state.navigation.mouseInside,
 	mouseOutside: state.navigation.mouseOutside,
-	offsetTop: state.navigation.offsetTop,
 	activeTab: state.navigation.acitiveTab
 }));

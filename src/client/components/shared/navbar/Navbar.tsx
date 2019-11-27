@@ -2,11 +2,13 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { join } from '../../utililties/styling.utils';
+import { appendWhen } from '../../../appliers/style.applier';
 import { getNavigationBar } from '../../../selectors/navbar.selector';
 import {
 	setAnchored,
 	setMouseInside,
 	setMouseOutside,
+	setOffsetTop,
 	setActiveTab
 } from '../../../actions/common/navigation.action';
 
@@ -24,14 +26,16 @@ interface DispatchProps {
 	setAnchored: (anchored: boolean) => void;
 	setMouseInside: (inside: boolean) => void;
 	setMouseOutside: (outside: boolean) => void;
+	setOffsetTop: (offset: number) => void;
 	setActiveTab: (tab: string) => void;
 }
 
-const Dispatchers = { setAnchored, setMouseInside, setMouseOutside, setActiveTab };
+const Dispatchers = { setAnchored, setMouseInside, setMouseOutside, setActiveTab, setOffsetTop };
 
 type Props = StateProps & DispatchProps & any;
 
-class Navbar extends React.PureComponent<Props> {
+class Navbar extends React.PureComponent<Props, any> {
+
 	private navbar: React.RefObject<HTMLElement>;
 
 	constructor(props: any) {
@@ -54,6 +58,7 @@ class Navbar extends React.PureComponent<Props> {
 
 		const topPosition = Math.abs(scroll) + (scrollTop - topOffset);
 
+		this.props.setOffsetTop(margin-1);
 		window.addEventListener('scroll', () => this.anchor(topPosition));
 	};
 
@@ -95,18 +100,13 @@ class Navbar extends React.PureComponent<Props> {
 			this.handleLinkClick({ label: element.label, index: idx });
 		};
 
-		const navClasses: string[] = [style.navLink];
+		const classes = [style.navLink];
 
-		if (activeTab === null) {
-			if (element.link === location) {
-				navClasses.push(style.navLinkActive);
-			}
-		} else if (element.label === activeTab.label) {
-			navClasses.push(style.navLinkActive);
-		}
+		appendWhen(classes, activeTab === null && element.link === location, style.navLinkActive);
+		appendWhen(classes, activeTab !== null && element.label === activeTab.label, style.navLinkActive);
 
 		const properties = {
-			className: join(...navClasses),
+			className: join(...classes),
 			onClick: linkClick,
 			to: element.link,
 		};
@@ -119,17 +119,10 @@ class Navbar extends React.PureComponent<Props> {
 		const routes = this.props.routings;
 		const classes = [style.nav];
 
-		if (this.props.anchored) {
-			classes.push(style.navSticky);
+		appendWhen(classes, this.props.anchored, style.navSticky);
+		appendWhen(classes, this.props.anchored && this.props.mouseInside, style.navTransition, style.navPeeky);
+		appendWhen(classes, this.props.mouseOutside, style.navTransition);
 
-			if (this.props.mouseInside) {
-				classes.push(style.navTransition, style.navPeeky);
-			}
-
-			if (this.props.mouseOutside) {
-				classes.push(style.navTransition);
-			}
-		}
 		const properties = {
 			ref: this.navbar,
 			className: join(...classes),

@@ -1,9 +1,13 @@
 import {
+	NAV_BAR_MENU,
 	NAV_BAR_MENU_ANCHORED,
+	NAV_BAR_MENU_OFFSET_TOP,
 	NAV_BAR_MENU_ACTIVE_TAB,
 	NAV_BAR_MENU_MOUSE_INSIDE,
 	NAV_BAR_MENU_MOUSE_OUTSIDE
 } from '../../actions/common/navigation.action';
+
+export const SOURCE = NAV_BAR_MENU;
 
 import IAction from '../../actions/action';
 
@@ -61,6 +65,12 @@ export default function (state = InitialState, action: IAction): INavigationBar 
 				...state,
 				mouseOutside: action.payload,
 				mouseInside: false
+			};
+		}
+		case NAV_BAR_MENU_OFFSET_TOP: {
+			return {
+				...state,
+				offsetTop: action.payload
 			};
 		}
 		default:
