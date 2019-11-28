@@ -1,5 +1,10 @@
 
-import { join } from '../components/utililties/styling.utils';
+/**
+ * Joins css classes into a single string
+ */
+export const join = (...names: string[]): string => {
+	return names.join(' ');
+};
 
 export default class Styler {
 

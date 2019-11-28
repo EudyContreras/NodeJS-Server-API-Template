@@ -3,8 +3,7 @@ import {
 	NAV_BAR_MENU_ANCHORED,
 	NAV_BAR_MENU_OFFSET_TOP,
 	NAV_BAR_MENU_ACTIVE_TAB,
-	NAV_BAR_MENU_MOUSE_INSIDE,
-	NAV_BAR_MENU_MOUSE_OUTSIDE
+	NAV_BAR_MENU_MOUSE_INSIDE
 } from '../../actions/common/navigation.action';
 
 export const SOURCE = NAV_BAR_MENU;
@@ -19,8 +18,7 @@ export interface INavigationTab {
 export interface INavigationBar {
 	anchored: boolean;
 	offsetTop: number;
-	mouseInside: boolean;
-	mouseOutside: boolean;
+	mouseInside: boolean | null;
 	acitiveTab: null | {
 		label: string;
 		index: number;
@@ -31,8 +29,7 @@ export interface INavigationBar {
 const InitialState: INavigationBar = {
 	anchored: false,
 	offsetTop: 0,
-	mouseInside: false,
-	mouseOutside: false,
+	mouseInside: null,
 	acitiveTab: null,
 	navigationTabs: []
 };
@@ -43,8 +40,7 @@ export default function (state = InitialState, action: IAction): INavigationBar 
 			return {
 				...state,
 				anchored: action.payload,
-				mouseInside: false,
-				mouseOutside: false
+				mouseInside: !action.payload ? null : state.mouseInside
 			};
 		}
 		case NAV_BAR_MENU_ACTIVE_TAB: {
@@ -57,14 +53,6 @@ export default function (state = InitialState, action: IAction): INavigationBar 
 			return {
 				...state,
 				mouseInside: action.payload,
-				mouseOutside: false
-			};
-		}
-		case NAV_BAR_MENU_MOUSE_OUTSIDE: {
-			return {
-				...state,
-				mouseOutside: action.payload,
-				mouseInside: false
 			};
 		}
 		case NAV_BAR_MENU_OFFSET_TOP: {

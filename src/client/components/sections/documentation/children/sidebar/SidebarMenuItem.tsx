@@ -2,7 +2,7 @@ import React from 'react';
 import Wrapper from '../../../../shared/Wrapper';
 import SidebarSubMenu from './SidebarSubMenu';
 import { MaterialIcons } from '../../../../../stores/icon.library';
-import { join } from '../../../../utililties/styling.utils';
+import { join } from '../../../../utililties/react.utils';
 
 interface State {
 	expanded: boolean;

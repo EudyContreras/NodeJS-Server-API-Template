@@ -6,6 +6,9 @@ module.exports = {
   target: 'web',
   mode: 'development',
   entry: './src/client.jsx',
+  performance: {
+    hints: false
+  },
   output: {
     path: path.join(__dirname, '../../build/public'),
     filename: 'bundle.js',
@@ -13,7 +16,11 @@ module.exports = {
     chunkFilename: '[id].[name].[chunkhash:6].js'
   },
   optimization: {
-    minimize: false
+    minimize: false,
+    nodeEnv: 'development',
+    removeAvailableModules: true,
+    mergeDuplicateChunks: true,
+    removeEmptyChunks: true
   },
   module: {
     rules: [

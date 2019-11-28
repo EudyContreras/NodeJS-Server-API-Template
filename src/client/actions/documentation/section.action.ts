@@ -6,7 +6,21 @@ export const DOCUMENTATION_SECTION_SANDBOX_FIXED_TOP = 'DOCUMENTATION_SECTION_SA
 export const DOCUMENTATION_SECTION_SANDBOX_FIXED_BOTTOM = 'DOCUMENTATION_SECTION_SANDBOX_FIXED_BOTTOM';
 export const DOCUMENTATION_SECTION_SANDBOX_OFFSET_BOTTOM = 'DOCUMENTATION_SECTION_SANDBOX_OFFSET_BOTTOM';
 
-export const setAll = (sidebarFixed: boolean, sandboxFixedTop: boolean, sandboxFixedBottom: boolean, sandboxOffsetBottom: number) => (dispatch: Function): void => {
+export interface DispatchProps {
+	setAll: (sidebarFixed: boolean, sandboxFixedTop: boolean, sandboxFixedBottom: boolean, sandboxOffsetBottom: number) => any;
+	setAllFixed: (sidebarFixed: boolean, sandboxFixed: boolean) => any;
+	setSidebarFixed: (fixed: boolean) => void;
+	setSandboxFixedTop: (fixed: boolean) => void;
+	setSandboxFixedBottom: (fixed: boolean) => void;
+	setSandboxOffsetBottom: (offset: number) => void;
+}
+
+export const setAll = (
+	sidebarFixed: boolean, 
+	sandboxFixedTop: boolean, 
+	sandboxFixedBottom: boolean, 
+	sandboxOffsetBottom: number
+) => (dispatch: Function): void => {
 	dispatch({
 		type: DOCUMENTATION_SECTION_ALL,
 		payload: { sidebarFixed, sandboxFixedTop, sandboxFixedBottom, sandboxOffsetBottom }
@@ -47,3 +61,5 @@ export const setSandboxOffsetBottom = (offset: number) => (dispatch: Function): 
 		payload: offset
 	});
 };
+
+export const Dispatchers = { setAll, setAllFixed, setSidebarFixed, setSandboxFixedTop, setSandboxFixedBottom, setSandboxOffsetBottom };

@@ -1,6 +1,6 @@
 import React from 'react';
 import rippleEffect from '../../../../../appliers/ripple.applier';
-import { join } from '../../../../utililties/styling.utils';
+import { join } from '../../../../utililties/react.utils';
 
 class SidebarSearch extends React.PureComponent<any, any> {
 

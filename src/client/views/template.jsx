@@ -6,7 +6,7 @@ import ReactDOMServer from 'react-dom/server';
 
 export default (args) => {
 	const layout = ReactDOMServer.renderToString(<DefaultLayout {...args} />);
-	return `<!DOCTYPE html>${layout}`;
+	return `<!doctype html>${layout}`;
 };
 
 class DefaultLayout extends React.PureComponent {
@@ -42,8 +42,7 @@ class DefaultLayout extends React.PureComponent {
 						ga('create', 'UA-XXXXX-Y', 'auto');
 						ga('set','transport','beacon');
 						ga('send', 'pageview');`
-					}} 
-					/>
+					}}/>
 					<script src='/static/bundle.js' />
 					<script src='/scripts/loader.js' />
 				</body>

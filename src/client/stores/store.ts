@@ -11,11 +11,7 @@ declare global {
 
 export default function configureStore(initialState: any): Store {
 	const middleWare = [thunk];
-
-	if (process.env.NODE_ENV !== 'production') {
-		middleWare.push(require('redux-immutable-state-invariant').default());
-	}
-
+	
 	const composeEnhancers = typeof window !== 'undefined' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 	const store = createStore(

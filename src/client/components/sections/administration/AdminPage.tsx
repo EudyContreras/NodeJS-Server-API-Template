@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 
 class AdminPage extends React.PureComponent {
 	
 	public render = (): JSX.Element => {
-		return (<></>);
+		return (<Fragment></Fragment>);
 	};
 }
 

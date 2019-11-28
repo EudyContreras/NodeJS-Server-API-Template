@@ -12,14 +12,10 @@ export const join = (...names: string[]): string => {
 	return names.join(' ');
 };
 
-// export const getElement = (component: React.PureComponent): Element => {
-// 	return (ReactDom.findDOMNode(component) as Element);
-// };
-
-// export const getHTMLElement = (component: React.PureComponent) => {
-// 	return (ReactDom.findDOMNode(component) as HTMLElement);
-// };
-
+/**
+ * Creates a css styling string from the given
+ * object.
+ */
 export const css = (properties: any): string => {
 	let style = '';
 

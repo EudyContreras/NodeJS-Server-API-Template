@@ -3,7 +3,7 @@ import rippleEffect from '../../../../../appliers/ripple.applier';
 import { MaterialIcons } from '../../../../../stores/icon.library';
 import { toggleExpand } from '../../../../../actions/documentation/sidebar.action';
 import { IToggle } from '../../../../../reducers/documentation/sidebar.reducer';
-import { join } from '../../../../utililties/styling.utils';
+import { join } from '../../../../utililties/react.utils';
 import { connect } from 'react-redux';
 
 interface StateProps {

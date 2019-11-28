@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { appendWhen } from '../../../../../appliers/style.applier';
 import { getSandbox } from '../../../../../selectors/sandbox.selector';
 import { setTopFixed, setBottomFixed } from '../../../../../actions/documentation/sandbox.action';
-import { join } from '../../../../utililties/styling.utils';
+import { join } from '../../../../utililties/react.utils';
 
 interface StateProps {
 	fixedTop: boolean;

@@ -7,7 +7,8 @@ import SideMenuSearch from './SidebarSearch';
 import { appendWhen } from '../../../../../appliers/style.applier';
 import { getSidemenu } from '../../../../../selectors/sidemenu.selector';
 import { setHovered, setFixed } from '../../../../../actions/documentation/sidebar.action';
-import { join } from '../../../../utililties/styling.utils';
+import { join } from '../../../../utililties/react.utils';
+
 const headers = ['Introduction', 'Endpoints'];
 
 interface StateProps {

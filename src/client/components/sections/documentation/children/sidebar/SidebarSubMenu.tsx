@@ -1,6 +1,6 @@
 import React, { RefObject, createRef } from 'react';
 import SidebarSubItem from './SidebarSubItem';
-import { join } from '../../../../utililties/styling.utils';
+import { join } from '../../../../utililties/react.utils';
 
 const links = [
 	{

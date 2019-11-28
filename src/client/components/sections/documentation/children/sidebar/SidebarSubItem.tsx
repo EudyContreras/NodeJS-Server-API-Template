@@ -1,5 +1,5 @@
 import React from 'react';
-import { join } from '../../../../utililties/styling.utils';
+import { join } from '../../../../utililties/react.utils';
 import { MaterialIcons } from '../../../../../stores/icon.library';
 
 class SidebarSubItem extends React.PureComponent<any, any> {

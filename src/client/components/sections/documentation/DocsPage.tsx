@@ -6,30 +6,15 @@ import SideMenu from './children/sidebar/SidebarMenu';
 import SandBox from './children/sandbox/SandboxArea';
 
 import {
-	setAll,
-	setAllFixed,
-	setSidebarFixed,
-	setSandboxFixedTop,
-	setSandboxFixedBottom,
-	setSandboxOffsetBottom
+	DispatchProps,
+	Dispatchers
 } from '../../../actions/documentation/section.action';
 
 interface StateProps {
-	sidebarFixed: boolean;
+	offsetTop: number;
 	sandboxFixedTop: boolean;
 	sandboxFixedBottom: boolean;
 }
-
-interface DispatchProps {
-	setAll: (sidebarFixed: boolean, sandboxFixedTop: boolean, sandboxFixedBottom: boolean, sandboxOffsetBottom: number) => any;
-	setAllFixed: (sidebarFixed: boolean, sandboxFixed: boolean) => any;
-	setSidebarFixed: (fixed: boolean) => void;
-	setSandboxFixedTop: (fixed: boolean) => void;
-	setSandboxFixedBottom: (fixed: boolean) => void;
-	setSandboxOffsetBottom: (offset: number) => void;
-}
-
-const Dispatchers = { setAll, setAllFixed, setSidebarFixed, setSandboxFixedTop, setSandboxFixedBottom, setSandboxOffsetBottom };
 
 type Props = StateProps & DispatchProps & any;
 
@@ -50,22 +35,15 @@ class DocsPage extends React.Component<Props> {
 
 	shouldComponentUpdate = (): any => false;
 
-	private handleScroll = (offsetTop = 0, offsetBottom = 0): void => {
-		const topFixed = this.props.sidebarFixed;
+	private handleScroll = (offsetBottom = 0): void => {
+		const fixedTop = this.props.sandboxFixedTop;
 
 		const scroll = document.body.scrollTop || document.documentElement.scrollTop;
 
-		// if (scroll > offsetTop && !topFixed) {
-		// 	if (scroll < offsetBottom) {
-		// 		this.props.setAllFixed(true, true);
-		// 	}
-		// } else if (scroll < offsetTop && topFixed) {
-		// 	this.props.setAllFixed(false, false);
-		// }
 		const bottomFixed = this.props.sandboxFixedBottom;
 
 		if (scroll > offsetBottom) {
-			if (!bottomFixed && topFixed) {
+			if (!bottomFixed && fixedTop) {
 				this.props.setSandboxFixedBottom(true);
 			}
 		} else if (scroll <= offsetBottom) {
@@ -76,35 +54,27 @@ class DocsPage extends React.Component<Props> {
 	};
 
 	public componentDidMount = (): void => {
-		const margin = 15;
 
 		const body = document.body;
-		const sidebar = this.sidebar.current!;
 		const sandbox = this.sandbox.current!;
 		const footer = this.footer.current!;
 
 		const scroll = body.getBoundingClientRect().top;
-		const scrollTop = sidebar.getBoundingClientRect().top;
 		const scrollBottom = footer.getBoundingClientRect().top - sandbox.getBoundingClientRect().height;
 
-		const topPosition = Math.abs(scroll) + (scrollTop - margin);
 		const bottomPosition = Math.abs(scroll) + (scrollBottom);
 
-		this.applyInitialValues(topPosition, bottomPosition);
+		this.applyInitialValues(bottomPosition);
 
-		window.onscroll = (): void => this.handleScroll(topPosition, bottomPosition - margin);
-		
-		// window.onresize = (): void => {
-		// 	console.log('RESIZED');
-		// };
+		window.onscroll = (): void => this.handleScroll(bottomPosition - this.props.offsetTop);
 	};
 
-	private applyInitialValues = (topPosition: number, bottomPosition: number): void => {
-		const topFixed = this.props.sidebarFixed;
+	private applyInitialValues = (bottomPosition: number): void => {
+		const fixedTop = this.props.sandboxFixedTop;
 
 		const scroll = document.body.scrollTop || document.documentElement.scrollTop;
 
-		if (!topFixed) {
+		if (!fixedTop) {
 			if (scroll >= bottomPosition) {
 				this.props.setAll(true, false, true, bottomPosition);
 			} else {
@@ -128,7 +98,7 @@ class DocsPage extends React.Component<Props> {
 }
 
 const mapStateToProps = (state: any): any => ({
-	sidebarFixed: state.presentation.documentation.sidebar.fixed,
+	offsetTop: state.presentation.navigation.offsetTop,
 	sandboxFixedTop: state.presentation.documentation.sandbox.fixedTop,
 	sandboxFixedBottom: state.presentation.documentation.sandbox.fixedBottom,
 });

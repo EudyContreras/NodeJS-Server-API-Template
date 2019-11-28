@@ -5,6 +5,9 @@ module.exports = {
   name: 'server',
   target: 'node',
   mode: 'development',
+  performance: {
+    hints: false
+  },
   entry: [
     '@babel/polyfill', './src/server.ts'
   ],
@@ -13,7 +16,11 @@ module.exports = {
     filename: 'server.js'
   },
   optimization: {
-    minimize: false
+    minimize: false,
+    nodeEnv: 'development',
+    removeAvailableModules: true,
+    mergeDuplicateChunks: true,
+    removeEmptyChunks: true
   },
   externals: [ nodeExternals() ],
   module: {

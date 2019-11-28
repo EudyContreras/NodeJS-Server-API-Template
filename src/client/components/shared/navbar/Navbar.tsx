@@ -1,36 +1,19 @@
 import React from 'react';
+import memoize from 'fast-memoize';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { join } from '../../utililties/styling.utils';
-import { appendWhen } from '../../../appliers/style.applier';
+import { appendWhen, join } from '../../../appliers/style.applier';
 import { getNavigationBar } from '../../../selectors/navbar.selector';
-import {
-	setAnchored,
-	setMouseInside,
-	setMouseOutside,
-	setOffsetTop,
-	setActiveTab
-} from '../../../actions/common/navigation.action';
+import { DispatchProps, Dispatchers } from '../../../actions/common/navigation.action';
 
 interface StateProps {
 	anchored: boolean;
-	mouseInside: boolean;
-	mouseOutside: boolean;
+	mouseInside: boolean | null;
 	activeTab: null | {
 		label: string;
 		index: string;
 	};
 }
-
-interface DispatchProps {
-	setAnchored: (anchored: boolean) => void;
-	setMouseInside: (inside: boolean) => void;
-	setMouseOutside: (outside: boolean) => void;
-	setOffsetTop: (offset: number) => void;
-	setActiveTab: (tab: string) => void;
-}
-
-const Dispatchers = { setAnchored, setMouseInside, setMouseOutside, setActiveTab, setOffsetTop };
 
 type Props = StateProps & DispatchProps & any;
 
@@ -59,6 +42,7 @@ class Navbar extends React.PureComponent<Props, any> {
 		const topPosition = Math.abs(scroll) + (scrollTop - topOffset);
 
 		this.props.setOffsetTop(margin-1);
+
 		window.addEventListener('scroll', () => this.anchor(topPosition));
 	};
 
@@ -84,21 +68,23 @@ class Navbar extends React.PureComponent<Props, any> {
 
 	private onMouseExit = (): void => {
 		if (this.props.anchored) {
-			this.props.setMouseOutside(true);
+			this.props.setMouseInside(false);
 		}
 	};
 
 	private handleLinkClick = (tab: any): void => {
-		this.props.setActiveTab(tab);
+		if (this.props.activeTab === null) {
+			this.props.setActiveTab(tab);
+		} else {
+			if (this.props.activeTab.label !== tab.label) {
+				this.props.setActiveTab(tab);
+			}
+		}
 	};
 
 	private getLinkProps = (style: any, element: any, idx: number): any => {
 		const activeTab = this.props.activeTab;
 		const location = this.props.location;
-
-		const linkClick = (): void => {
-			this.handleLinkClick({ label: element.label, index: idx });
-		};
 
 		const classes = [style.navLink];
 
@@ -107,7 +93,7 @@ class Navbar extends React.PureComponent<Props, any> {
 
 		const properties = {
 			className: join(...classes),
-			onClick: linkClick,
+			onClick: ((): void => this.handleLinkClick({ label: element.label, index: idx })),
 			to: element.link,
 		};
 
@@ -119,9 +105,12 @@ class Navbar extends React.PureComponent<Props, any> {
 		const routes = this.props.routings;
 		const classes = [style.nav];
 
+		const mouseInside = this.props.mouseInside === true;
+		const mouseOutside = this.props.mouseInside === false;
+
 		appendWhen(classes, this.props.anchored, style.navSticky);
-		appendWhen(classes, this.props.anchored && this.props.mouseInside, style.navTransition, style.navPeeky);
-		appendWhen(classes, this.props.mouseOutside, style.navTransition);
+		appendWhen(classes, this.props.anchored && mouseInside, style.navTransition, style.navPeeky);
+		appendWhen(classes, this.props.anchored && mouseOutside, style.navTransition);
 
 		const properties = {
 			ref: this.navbar,
@@ -140,7 +129,9 @@ class Navbar extends React.PureComponent<Props, any> {
 				</div>
 				<ul>
 					{routes.map((element: any, idx: number) =>
-						<li key={idx}><Link {...this.getLinkProps(style, element, idx)}>{element.label}</Link></li>
+						<li key={idx}>
+							<Link {...memoize(this.getLinkProps)(style, element, idx)}>{element.label}</Link>
+						</li>
 					)}
 				</ul>
 			</header>
