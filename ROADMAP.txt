@@ -1,4 +1,8 @@
 TODO:
 
 * Store theme colors in variables.
-* Store visual application state in redux.
+* Use loadable or something similar for react code splitting.
+* Use react isomorphic code splitting with React Universal Component
+* Make the audit achieve a good score.
+* Port class components to functional components.
+

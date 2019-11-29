@@ -124,7 +124,7 @@ class Navbar extends React.PureComponent<Props, any> {
 				<div className={style.navLogo}>
 					<div className={style.status} />
 					<div className={style.navLogoText}>
-						<a href='/'>{this.props.brandName}</a>
+						<a aria-label='brand name' href='/'>{this.props.brandName}</a>
 					</div>
 				</div>
 				<ul>

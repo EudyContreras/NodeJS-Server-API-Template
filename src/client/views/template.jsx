@@ -21,30 +21,27 @@ class DefaultLayout extends React.PureComponent {
 					<link rel='manifest' href='/static/manifest.json' />
 					<link rel='apple-touch-icon' type='image/png' href={FavIcon} />
 					<link rel='shortcut icon' type='image/png' href={FavIcon} />
-					<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css' />
-					<link rel='stylesheet' href='https://fonts.googleapis.com/icon?family=Material+Icons' />
-					<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Roboto&display=swap' />
+					<link rel='stylesheet' href='https://fonts.googleapis.com/icon?family=Material+Icons&display=swap' media="all" id='materialIcons' async disabled/>
+					<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Roboto&display=swap' media="all" id='robotoFont' async disabled/>
 					<title>{this.props.title}</title>
 					<style>${[...this.props.css].join('')}</style>
 				</head>
 				<body >
 					<section id='content'>{this.props.content}</section>
-					<script src='https://www.google-analytics.com/analytics.js' async></script>
-					<script src='https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js' />
+					<script rel="preconnect" src='https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js' async defer/>
 					<script dangerouslySetInnerHTML={{ __html:
 						`
 						window.__REDUX_STATE__ = ${JSON.stringify(this.props.state).replace(/</g,'\\u003c')};
-						window.ga = function () {
-							ga.q.push(arguments);
-						};
-						ga.q = []; 
-						ga.l = + new Date;
-						ga('create', 'UA-XXXXX-Y', 'auto');
-						ga('set','transport','beacon');
-						ga('send', 'pageview');`
+
+						window.onload = function()
+						{
+							document.getElementById('robotoFont').removeAttribute('disabled');
+							document.getElementById('materialIcons').removeAttribute('disabled');
+						}
+						`
 					}}/>
-					<script src='/static/bundle.js' />
-					<script src='/scripts/loader.js' />
+					<script type='text/javascript' src='/scripts/loader.js'/>
+					<script type='text/javascript' src='/static/bundle.js'/>
 				</body>
 			</html>
 		);

@@ -14,13 +14,13 @@ class SidebarSubItem extends React.PureComponent<any, any> {
 		const method = this.props.method;
 		const style = this.props.styling;
 
-		const classes = [];
+		const classes = [style.httpMethod, style.httpAll];
 		
 		return (
 
 			<li className={style.subMenuItem}>
 				<div className={style.subMenuItemWrapper}>
-					<h3 className={join(style.httpMethod, style.httpAll)}>{method}</h3>
+					<h3 className={join(...classes)}>{method}</h3>
 					<a className={style.truncate} href={hash}>{label}</a>
 				</div>
 				<i className={MaterialIcons.CLASS}>{MaterialIcons.icons.CHEV_RIGHT}</i>

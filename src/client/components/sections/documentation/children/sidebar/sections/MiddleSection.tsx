@@ -5,6 +5,7 @@ import MenuItem from '../SidebarMenuItem';
 const links = ['Quickstart', 'Basics'];
 
 export default class MiddleSection extends React.PureComponent<any, any> {
+	
 	constructor(props: any) {
 		super(props);
 	}

@@ -4,6 +4,7 @@ import React from 'react';
 const version = '1.3.5';
 
 export default class VersionInfo extends React.PureComponent<any, any> {
+	
 	constructor(props: any) {
 		super(props);
 	}
