@@ -58,7 +58,6 @@ export default class Application {
 
 		this.app.use(cors());
 		this.app.use(helmet());
-		//this.app.use(morgan('combined'));
 		this.app.use(compression());
 		this.app.use(express.json());
 		this.app.use(express.urlencoded({ extended: false }));
@@ -68,6 +67,7 @@ export default class Application {
 		this.app.use(stylesRender.alias, express.static(stylesRender.path));
 		this.app.use(scriptRender.alias, express.static(scriptRender.path));
 		this.app.use(imageRender.alias, express.static(imageRender.path));
+		
 		this.app.set(render.viewEngine.alias, render.viewEngine.path);
 		this.app.set(render.viewEngine.label, render.viewEngine.type);
 		this.app.engine(render.viewEngine.type, reactRender.createEngine());

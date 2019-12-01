@@ -35,13 +35,11 @@ class SidebarMenuItem extends React.PureComponent<any, State>{
 		}
 
 		return (
-			<Wrapper>
-				<li className={join(...classes)} onClick={this.openSubMenu}>
-					<a href={hash}>{label}</a>
-					<i className={MaterialIcons.CLASS}>{MaterialIcons.icons.CHEV_RIGHT}</i>
-				</li>
-				{/* <SidebarSubMenu styling={style} expanded={this.state.expanded}/> */}
-			</Wrapper>
+			<li className={join(...classes)} onClick={this.openSubMenu}>
+				<a href={hash}>{label}</a>
+				<i className={MaterialIcons.CLASS}>{MaterialIcons.icons.CHEV_RIGHT}</i>
+				<SidebarSubMenu styling={style} expanded={this.state.expanded}/>
+			</li>
 		);
 	};
 }

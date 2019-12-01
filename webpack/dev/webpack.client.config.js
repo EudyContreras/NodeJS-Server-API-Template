@@ -1,14 +1,22 @@
+require('dotenv').config();
+
 const path = require('path');
 const TerserPlugin = require('terser-webpack-plugin');
+
+const enviroment = process.env.NODE_ENV;
+const minimize = false;
 
 module.exports = {
   name: 'client',
   target: 'web',
-  mode: 'production',
+  mode: enviroment,
   entry: './src/client.jsx',
   performance: {
     hints: false
   },
+  plugins: [
+   
+  ],
   output: {
     path: path.join(__dirname, '../../build/public'),
     filename: 'bundle.js',
@@ -16,7 +24,7 @@ module.exports = {
     chunkFilename: '[id].[name].[chunkhash:6].js'
   },
   optimization: {
-    minimize: true,
+    minimize: minimize,
     minimizer: [new TerserPlugin({
       test: /\.(js|jsx|tsx|ts)$/i,
       extractComments: false,
@@ -44,7 +52,7 @@ module.exports = {
         safari10: false,
       },
     })],
-    nodeEnv: 'production',
+    nodeEnv: enviroment,
     removeAvailableModules: true,
     mergeDuplicateChunks: true,
     removeEmptyChunks: true,
@@ -93,7 +101,19 @@ module.exports = {
       },
       {
         test: /\.(jpe?g|png|gif|svg)$/i,
-        loader: 'file-loader'
+        loader: 'file-loader',
+        options: {
+          outputPath: 'public/images',
+          publicPath: 'public/assets',
+          // name: '[name].[ext]',
+          name(file) {
+            if (process.env.NODE_ENV === 'development') {
+              return '[name].[ext]';
+            }
+
+            return '[contenthash].[ext]';
+          },
+        }
       },
       {
         test: /\.(css|scss)$/,

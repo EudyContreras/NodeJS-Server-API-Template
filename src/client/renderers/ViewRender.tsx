@@ -1,5 +1,6 @@
 
 import React from 'react';
+import path from 'path';
 import config from '../config';
 import template from '../views/template';
 import configureStore from '../stores/store';
@@ -23,7 +24,7 @@ class IndexViewRenderer extends ViewRenderer {
 		this.setupRoutes(this.router);
 	}
 
-	public getRoute =(): string => {
+	public getRoute = (): string => {
 		return this.routing;
 	};
 
@@ -32,25 +33,38 @@ class IndexViewRenderer extends ViewRenderer {
 	};
 
 	public setupRoutes = (router: Router): void => {
+		router.get('/serviceWorker.js', (req, res) => {
+			res.sendFile(path.resolve(__dirname, '../scriptsjs', 'serviceWorker.js'), (error) => {
+				console.log(error);
+			});
+		});
 		routes.map((x) => router.get(x.path, this.renderRoutes));
 	};
 
 	private renderRoutes = (req: Request, res: Response): void => {
-		const css = new Set();
-		const client = config.app.CSR;
-		const state = this.store.getState();
+		const shell = req.query.shell !== undefined;
 
-		const insertCss = (...styles: any[]): void => styles.forEach((style) => css.add(style._getCss()));
+		if (shell) {
+			res.send(template());
+		} else {
+			const css = new Set();
+			const client = config.app.CSR;
+			const state = this.store.getState();
 
-		const args = {
-			css: css,
-			state: state,
-			title: config.app.TITLE,
-			content: server(req.url, this.store, {}, insertCss)
-		};
+			const insertCss = (...styles: any[]): void => styles.forEach((style) => css.add(style._getCss()));
 
-		res.setHeader(config.header.LABEL, config.header.VALUE);
-		res.send(client ? React.createElement('') : template(args));
+			const args = {
+				css: css,
+				state: state,
+				title: config.app.TITLE,
+				preloaded: '', 
+				enableSW: true,
+				content: server(req.url, this.store, {}, insertCss)
+			};
+
+			res.setHeader(config.header.LABEL, config.header.VALUE);
+			res.send(client ? React.createElement('') : template(args));
+		}
 	};
 }
 

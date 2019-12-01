@@ -48,7 +48,7 @@ export default class InvitationRepository {
 		return count > 0;
 	}
 
-	public async getAllInvitations(options = { dto: true }): Promise<IInvitation[] | any[]>  {
+	public async getAllInvitations(options = { dto: true }): Promise<IInvitation[] | any[]> {
 		const invitations = await Invitation
 			.find()
 			.select(this.exclude)
@@ -61,7 +61,7 @@ export default class InvitationRepository {
 		return invitations;
 	}
 
-	public async getAllInvitationsWhere(query: any, options = { dto: true }): Promise<IInvitation[] | any[]>  {
+	public async getAllInvitationsWhere(query: any, options = { dto: true }): Promise<IInvitation[] | any[]> {
 		const invitations = await Invitation
 			.find(query)
 			.select(this.exclude)

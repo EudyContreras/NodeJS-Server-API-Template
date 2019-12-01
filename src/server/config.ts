@@ -1,4 +1,4 @@
-require('dotenv').config();
+
 
 const config = Object.freeze({
 	application: {
@@ -13,7 +13,7 @@ const config = Object.freeze({
 			path: 'src/client/views',
 			client: {
 				path: 'build/public',
-				alias: '/static'
+				alias: '/'
 			},
 			styles: {
 				path: 'src/client/styles',
@@ -24,8 +24,8 @@ const config = Object.freeze({
 				alias: '/scripts'
 			},
 			images: {
-				path: 'src/client/resources',
-				alias: '/res/images'
+				path: 'src/client/resources/images',
+				alias: '/images'
 			},
 			resources: {
 				path: 'src/client/resources',
@@ -42,7 +42,7 @@ const config = Object.freeze({
 	host: {
 		APP_NAME: 'app name',
 		BASE_URL: '',
-		PORT: process.env.PORT || 5000,
+		PORT: process.env.PORT,
 	},
 	redis: {
 		HOST: 'localhost',

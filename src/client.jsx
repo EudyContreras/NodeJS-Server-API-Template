@@ -5,13 +5,16 @@ import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 
+import { register } from './client/scriptsjs/serviceWorker';
 import StyleContext from 'isomorphic-style-loader/StyleContext';
 import Application from './client/components/App';
 import configureStore from './client/stores/store';
 
 const initialState = window.__REDUX_STATE__ || {};
+const preloaded = window.__PRELOADED__ || {};
 
 delete window.__REDUX_STATE__;
+delete window.__PRELOADED__;
 
 const store = configureStore(initialState);
 
@@ -24,9 +27,11 @@ ReactDOM.hydrate(
 	<Provider store={store} suppressHydrationWarning={true}>
 		<BrowserRouter onUpdate={() => window.scrollTo(0, 0)}>
 			<StyleContext.Provider value={{ insertCss }}>
-				<Application location={window.location.pathname} />
+				<Application location={window.location.pathname} preloaded={preloaded} />
 			</StyleContext.Provider>
 		</BrowserRouter>
 	</Provider>,
 	document.getElementById('content')
 );
+
+register();
