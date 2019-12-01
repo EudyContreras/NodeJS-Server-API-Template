@@ -5,7 +5,7 @@ const nodeExternals = require('webpack-node-externals');
 const TerserPlugin = require('terser-webpack-plugin');
 
 const enviroment = process.env.NODE_ENV;
-const minimize = false;
+const minimize = true;
 
 module.exports = {
   name: 'server',

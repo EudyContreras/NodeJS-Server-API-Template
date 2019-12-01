@@ -4,7 +4,7 @@ const path = require('path');
 const TerserPlugin = require('terser-webpack-plugin');
 
 const enviroment = process.env.NODE_ENV;
-const minimize = false;
+const minimize = true;
 
 module.exports = {
   name: 'client',
