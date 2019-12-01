@@ -1,8 +1,6 @@
-require('dotenv').config();
 
 const path = require('path');
 const TerserPlugin = require('terser-webpack-plugin');
-
 const enviroment = process.env.NODE_ENV;
 const minimize = false;
 
@@ -14,9 +12,6 @@ module.exports = {
   performance: {
     hints: false
   },
-  plugins: [
-   
-  ],
   output: {
     path: path.join(__dirname, '../../build/public'),
     filename: 'bundle.js',
@@ -24,6 +19,9 @@ module.exports = {
     chunkFilename: '[id].[name].[chunkhash:6].js',
     globalObject: 'this'
   },
+  plugins: [
+   
+  ],
   optimization: {
     minimize: minimize,
     minimizer: [new TerserPlugin({
