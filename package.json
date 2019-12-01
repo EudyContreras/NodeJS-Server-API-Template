@@ -5,7 +5,7 @@
   "license": "ISC",
   "author": "Eudy Contreras",
   "email": "econtreras12@live.com",
-  "proxy": "http://localhost:5000",
+  "proxy": "/",
   "homepage": "https://github.com/EudyContreras/NodeJS-Server-API-Template#readme",
   "description": "A NodeJS template API and Server meant to speed up the initial development process.",
   "repository": {
@@ -133,6 +133,7 @@
     "jquery": "^3.4.1",
     "node-sass": "^4.13.0",
     "nodemon": "^1.19.4",
+    "offline-plugin": "^5.0.7",
     "raw-loader": "^3.1.0",
     "redux-immutable-state-invariant": "^2.1.0",
     "sass": "^1.23.6",
