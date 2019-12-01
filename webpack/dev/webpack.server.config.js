@@ -106,13 +106,12 @@ module.exports = {
         loader: 'file-loader',
         options: {
           outputPath: 'public/images',
-          publicPath: 'public/assets',
-          // name: '[name].[ext]',
+          publicPath: 'images',
           name(file) {
             if (process.env.NODE_ENV === 'development') {
               return '[name].[ext]';
             }
-
+            return '[name].[ext]';
             return '[contenthash].[ext]';
           },
         }

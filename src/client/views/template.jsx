@@ -4,7 +4,7 @@ import PropType from 'prop-types';
 import FavIcon from '../resources/images/favicon.png';
 import ReactDOMServer from 'react-dom/server';
 
-export default (args) => {
+export default (args = {}) => {
 	const layout = ReactDOMServer.renderToString(<DefaultLayout {...args} />);
 	return `<!doctype html>${layout}`;
 };
@@ -33,8 +33,6 @@ class DefaultLayout extends React.PureComponent {
 					<script dangerouslySetInnerHTML={{
 						__html:
 						`
-						window.__PRELOADED__= ${JSON.stringify(this.props.preloaded).replace(/</g, '\\u003c')};
-
 						window.__REDUX_STATE__= ${JSON.stringify(this.props.state).replace(/</g, '\\u003c')};
 
 						window.onload = function()
@@ -70,7 +68,6 @@ class DefaultLayout extends React.PureComponent {
 DefaultLayout.propTypes = {
 	enableSW: PropType.bool,
 	content: PropType.any,
-	preloaded: PropType.any,
 	title: PropType.string,
 	state: PropType.any,
 	css: PropType.object

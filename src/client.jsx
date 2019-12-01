@@ -11,10 +11,8 @@ import Application from './client/components/App';
 import configureStore from './client/stores/store';
 
 const initialState = window.__REDUX_STATE__ || {};
-const preloaded = window.__PRELOADED__ || {};
 
 delete window.__REDUX_STATE__;
-delete window.__PRELOADED__;
 
 const store = configureStore(initialState);
 
@@ -27,7 +25,7 @@ ReactDOM.hydrate(
 	<Provider store={store} suppressHydrationWarning={true}>
 		<BrowserRouter onUpdate={() => window.scrollTo(0, 0)}>
 			<StyleContext.Provider value={{ insertCss }}>
-				<Application location={window.location.pathname} preloaded={preloaded} />
+				<Application location={window.location.pathname} />
 			</StyleContext.Provider>
 		</BrowserRouter>
 	</Provider>,
