@@ -33,11 +33,6 @@ class IndexViewRenderer extends ViewRenderer {
 	};
 
 	public setupRoutes = (router: Router): void => {
-		router.get('/serviceWorker.js', (req, res) => {
-			res.sendFile(path.resolve(__dirname, '../scriptsjs', 'serviceWorker.js'), (error) => {
-				console.log(error);
-			});
-		});
 		routes.map((x) => router.get(x.path, this.renderRoutes));
 	};
 

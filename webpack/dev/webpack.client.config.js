@@ -21,7 +21,8 @@ module.exports = {
     path: path.join(__dirname, '../../build/public'),
     filename: 'bundle.js',
     publicPath: "/",
-    chunkFilename: '[id].[name].[chunkhash:6].js'
+    chunkFilename: '[id].[name].[chunkhash:6].js',
+    globalObject: 'this'
   },
   optimization: {
     minimize: minimize,
