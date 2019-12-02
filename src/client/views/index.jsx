@@ -5,12 +5,12 @@ import { Provider } from 'react-redux';
 import { StaticRouter, BrowserRouter } from 'react-router';
 
 export const client = (store, insertCss, window) => (
-	<Provider onUpdate={() => window.scrollTo(0, 0)} store={store}>
-		<BrowserRouter>
+	<Provider store={store} suppressHydrationWarning={true}>
+		<BrowserRouter onUpdate={() => window.scrollTo(0, 0)}>
 			<StyleContext.Provider value={{ insertCss }}>
-				<Application location={window.location.pathname}/>
+				<Application location={window.location.pathname} />
 			</StyleContext.Provider>
-		</BrowserRouter>    
+		</BrowserRouter>
 	</Provider>
 );
 

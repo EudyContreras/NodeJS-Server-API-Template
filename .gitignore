@@ -38,8 +38,6 @@ bower_components
 build/Release
 
 # Dependency directories
-/dist
-/public
 /.history
 node_modules/
 jspm_packages/
@@ -99,13 +97,10 @@ typings/
 .dynamodb/
 
 build/server.js
-
 build/public/bundle.js
-
 build/public/common/
-
 build/public/vendor/
-
 build/public/images/icons/
-
 build/public/images/
+build/public/serviceWorker.js
+build/public/main.js

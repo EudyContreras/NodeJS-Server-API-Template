@@ -4,7 +4,6 @@ import ReactDOM from 'react-dom';
 
 import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
-
 import { register } from './client/scriptsjs/serviceWorker';
 import StyleContext from 'isomorphic-style-loader/StyleContext';
 import Application from './client/components/App';
