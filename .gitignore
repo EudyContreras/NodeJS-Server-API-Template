@@ -101,3 +101,7 @@ typings/
 build/server.js
 
 build/public/bundle.js
+
+build/public/common/
+
+build/public/vendor/

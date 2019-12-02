@@ -1,11 +1,11 @@
 require('dotenv').config();
 
 const path = require('path');
-const nodeExternals = require('webpack-node-externals');
+const webpack = require('webpack');
+const NodeExternals = require('webpack-node-externals');
 const TerserPlugin = require('terser-webpack-plugin');
-
 const enviroment = process.env.NODE_ENV;
-const minimize = true;
+const minimize = false;
 
 module.exports = {
   name: 'server',
@@ -23,7 +23,7 @@ module.exports = {
     globalObject: 'this'
   },
   plugins: [
-    
+
   ],
   optimization: {
     minimize: minimize,
@@ -91,7 +91,7 @@ module.exports = {
     //   }
     // }
   },
-  externals: [nodeExternals()],
+  externals: [NodeExternals()],
   module: {
     rules: [{
         test: /\.txt$/,

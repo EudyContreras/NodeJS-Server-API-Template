@@ -57,8 +57,9 @@ class DefaultLayout extends React.PureComponent {
 						
 						`
 					}} />
+					
 					<script type='text/javascript' src='/scripts/loader.js' />
-					<script type='text/javascript' src='/bundle.js' />
+					<script type='text/javascript' src='/main.js' />
 				</body>
 			</html>
 		);

@@ -1,6 +1,6 @@
 {
-  "short_name": "React SSR Engine",
-  "name": "React SSR API Doc template engine",
+  "background_color": "#272b2d",
+  "display": "standalone",
   "icons": [
     {
       "src": "images/favicon.ico",
@@ -18,13 +18,14 @@
       "type": "image/png"
     }
   ],
+  "main.js": "main.js",
+  "name": "React SSR API Doc template engine",
+  "scope": "/",
   "serviceworker": {
     "src": "serviceWorker.js",
     "scope": "/"
   },
-  "scope": "/",
+  "short_name": "React SSR Engine",
   "start_url": "/",
-  "display": "standalone",
-  "theme_color": "#000000",
-  "background_color": "#272b2d"
+  "theme_color": "#000000"
 }

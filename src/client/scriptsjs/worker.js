@@ -2,7 +2,6 @@ var CACHE_NAME = 'eudcon-universal-react-cache';
 
 var urlsToCache = [
 	'/',
-	'/main.js',
 	'/bundle.js',
 	'/manifest.json',
 	'/robots.txt',
