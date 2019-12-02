@@ -1,5 +1,3 @@
-importScripts("/precache-manifest.462340e702e16d84da7b1b8e8a7e8af2.js", "https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
-
 const CACHE_NAME = 'eudcon-universal-react-cache';
 
 const urlsToCache = [

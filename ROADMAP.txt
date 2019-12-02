@@ -6,3 +6,7 @@ TODO:
 * Make the audit achieve a good score.
 * Port class components to functional components.
 
+
+PWA TODO:
+
+Add a nice app shell

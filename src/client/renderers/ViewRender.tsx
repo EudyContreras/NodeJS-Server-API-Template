@@ -1,6 +1,5 @@
 
 import React from 'react';
-import path from 'path';
 import config from '../config';
 import template from '../views/template';
 import configureStore from '../stores/store';
