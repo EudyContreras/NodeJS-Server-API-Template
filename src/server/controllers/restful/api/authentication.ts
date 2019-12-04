@@ -44,14 +44,14 @@ class Authentication extends Controller {
 		const { result, error } = await this.service.getUser(userId);
 
 		return this.buildResult(result, error, response, RequestAction.GET);
-	}
+	};
 
 	private performAuthentication = async (request: any, response: Response): Promise<Response> => {
 
 		const { result, error } = await this.service.authenticate(request.data);
 
 		return this.buildResult(result, error, response, RequestAction.AUTHENTICATE);
-	}
+	};
 
 	private recoverPassword = async (request: Request, response: Response): Promise<Response> => {
 		const email = request.query.email;
@@ -59,7 +59,7 @@ class Authentication extends Controller {
 		const { result, error } = await this.service.recoverPassword(email);
 
 		return this.buildResult(result, error, response, RequestAction.RECOVER);
-	}
+	};
 
 	public buildResult(result: any, error: any, response: Response, requestAction: RequestAction): Response {
 		const apiResponse = new AuthenticationResponse();

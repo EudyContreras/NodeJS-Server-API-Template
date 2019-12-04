@@ -40,6 +40,10 @@ const config = Object.freeze({
 			TOKEN_HEADER: 'x-auth-token',
 		}
 	},
+	ssl: {
+		ACTIVE: false,
+		PASS_PHRASE: process.env.PASS_PHRASE
+	},
 	host: {
 		APP_NAME: 'app name',
 		BASE_URL: '',

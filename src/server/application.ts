@@ -1,9 +1,11 @@
+
+import fs from 'fs';
 import cors from 'cors';
+import https from 'https';
 import helmet from 'helmet';
 import express from 'express';
 import mongoose from 'mongoose';
 import config from './config';
-
 import compression from 'compression';
 import Interceptor from './middleware/interceptor';
 import Controller from './controllers/controller';
@@ -11,7 +13,6 @@ import ErrorHandler from './handlers/error.handler';
 import LoggingHandler from './handlers/logging.handler';
 import ViewRenderer from './middleware/renderer';
 import DataInitializer from './initializers/database.initializer';
-
 import reactRender from 'express-react-views';
 
 export default class Application {
@@ -43,10 +44,21 @@ export default class Application {
 
 	public startlistening(): void {
 		const port = config.host.PORT;
+		const ssl = config.ssl.ACTIVE;
 
-		this.app.listen(port, () => {
+		const listener = (): void => {
 			console.log(`Server listening on the port ${port}`);
-		});
+		};
+
+		if (ssl) {
+			https.createServer({
+				key: fs.readFileSync('./ssl/sslkey.pem'),
+				cert: fs.readFileSync('./ssl/sslcert.pem'),
+				passphrase: config.ssl.PASS_PHRASE,
+			}, this.app).listen(port, listener);
+		} else {
+			this.app.listen(port, listener);
+		}
 	}
 
 	private setupExpress(): void {
@@ -67,7 +79,6 @@ export default class Application {
 		this.app.use(stylesRender.alias, express.static(stylesRender.path));
 		this.app.use(scriptRender.alias, express.static(scriptRender.path));
 		this.app.use(imageRender.alias, express.static(imageRender.path));
-		
 		this.app.set(render.viewEngine.alias, render.viewEngine.path);
 		this.app.set(render.viewEngine.label, render.viewEngine.type);
 		this.app.engine(render.viewEngine.type, reactRender.createEngine());

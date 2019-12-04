@@ -4,10 +4,12 @@ import { HttpException } from '../exceptions/http.exceptions';
 import errorInterceptor from './interceptors/error.interceptor';
 import notFoundInterceptor from './interceptors/notfound.interceptor';
 import requestInterceptor from './interceptors/request.interceptor';
+import redirectInterceptor from './interceptors/redirect.interceptor';
 
 class Interceptor {
 	public getInterceptors(): Array<(request: Request, response: Response, next: NextFunction) => void> {
 		return [
+			redirectInterceptor,
 			requestInterceptor
 		];
 	}

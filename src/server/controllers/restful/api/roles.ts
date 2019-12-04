@@ -42,19 +42,19 @@ class Roles extends Controller {
 		} else {
 			return this.getAll(request, response);
 		}
-	}
+	};
 
 	private getOne = async (id: string, request: Request, response: Response): Promise<Response> => {
 		const { result, error } = await this.service.getRole(id);
 
 		return this.buildResult(result, error, response, RequestAction.GET);
-	}
+	};
 
 	private getAll = async (request: Request, response: Response): Promise<Response> => {
 		const { result, error } = await this.service.getAllRoles();
 
 		return this.buildResult(result, error, response, RequestAction.GET_ALL);
-	}
+	};
 }
 
 export default Roles;

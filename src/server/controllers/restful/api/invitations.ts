@@ -47,25 +47,25 @@ class Invitations extends Controller {
 		} else {
 			return this.getAll(response);
 		}
-	}
+	};
 
 	private getOne = async (query: any, response: Response): Promise<Response> => {
 		const { result, error } = await this.invitationService.getInvitationWhere(query);
 
 		return this.buildResult(result, error, response, RequestAction.GET);
-	}
+	};
 
 	private getAll = async (response: Response): Promise<Response> => {
 		const { result, error } = await this.invitationService.getAllInvitations();
 
 		return this.buildResult(result, error, response, RequestAction.GET_ALL);
-	}
+	};
 
 	private create = async (request: any, response: Response): Promise<Response> => {
 		const { result, error } = await this.invitationService.createInvitation(null, request.data);
 
 		return this.buildResult(result, error, response, RequestAction.CREATE);
-	}
+	};
 
 	private update = async (request: any, response: Response): Promise<Response> => {
 		const inviteId = request.query.inviteId;
@@ -73,7 +73,7 @@ class Invitations extends Controller {
 		const { result, error } = await this.invitationService.updateInvitation(inviteId, request.data);
 
 		return this.buildResult(result, error, response, RequestAction.UPDATE);
-	}
+	};
 
 	private delete = async (request: Request, response: Response): Promise<Response> => {
 		const inviteId = request.query.inviteId;
@@ -81,7 +81,7 @@ class Invitations extends Controller {
 		const { result, error } = await this.invitationService.deleteInvitation(inviteId);
 
 		return this.buildResult(result, error, response, RequestAction.DELETE);
-	}
+	};
 }
 
 export default Invitations;
