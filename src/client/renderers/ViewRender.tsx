@@ -1,5 +1,3 @@
-
-import React from 'react';
 import config from '../config';
 import template from '../views/template';
 import configureStore from '../stores/store';
@@ -37,13 +35,13 @@ class IndexViewRenderer extends ViewRenderer {
 	};
 
 	private renderRoutes = async (req: Request, res: Response): Promise<void> => {
-		const client = config.app.CSR;
+		const csr = config.app.CSR;
 		const shell = req.query.shell !== undefined;
 
 		res.setHeader(config.header.LABEL, config.header.VALUE);
 		
 		if (shell) {
-			res.status(200).send(client ? React.createElement('') : template());
+			res.status(200).send(template({ csr: csr }));
 		} else {
 			const css = new Set([sass._getCss()]);
 			
@@ -52,13 +50,14 @@ class IndexViewRenderer extends ViewRenderer {
 			const insertCss = (...styles: any[]): void => styles.forEach((style) => css.add(style._getCss()));
 
 			const args = {
+				csr: csr,
 				css: css,
 				state: state,
 				title: config.app.TITLE,
 				content: server(req.url, this.store, {}, insertCss),
 				enableSW: true
 			};
-			res.send(client ? React.createElement('') : template(args));
+			res.render('template', args);
 		}
 	};
 }
