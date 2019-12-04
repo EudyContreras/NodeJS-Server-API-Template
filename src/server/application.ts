@@ -44,13 +44,13 @@ export default class Application {
 
 	public startlistening(): void {
 		const port = config.host.PORT;
-		const ssl = config.ssl.ACTIVE;
+		const secure = config.ssl.ACTIVE;
 
 		const listener = (): void => {
 			console.log(`Server listening on the port ${port}`);
 		};
 
-		if (ssl) {
+		if (secure) {
 			https.createServer({
 				key: fs.readFileSync('./ssl/sslkey.pem'),
 				cert: fs.readFileSync('./ssl/sslcert.pem'),
@@ -79,8 +79,6 @@ export default class Application {
 		this.app.use(stylesRender.alias, express.static(stylesRender.path));
 		this.app.use(scriptRender.alias, express.static(scriptRender.path));
 		this.app.use(imageRender.alias, express.static(imageRender.path));
-		this.app.set(render.viewEngine.alias, render.viewEngine.path);
-		this.app.set(render.viewEngine.label, render.viewEngine.type);
 		this.app.engine(render.viewEngine.type, reactRender.createEngine());
 	}
 
