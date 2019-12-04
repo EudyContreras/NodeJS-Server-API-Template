@@ -24,8 +24,6 @@ export function register(config) {
 		// The URL constructor is available in all browsers that support SW.
 		const publicUrl = new URL(process.env.PUBLIC_URL, window.location.href);
 
-		console.log('Public url:', publicUrl);
-		
 		if (publicUrl.origin !== window.location.origin) {
 			console.log('Not same origin');
 			// Our service worker won't work if PUBLIC_URL is on a different origin

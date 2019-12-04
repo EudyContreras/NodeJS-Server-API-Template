@@ -24,6 +24,10 @@ const config = Object.freeze({
 				path: 'src/client/scriptsjs',
 				alias: '/scripts'
 			},
+			views: {
+				path: 'src/client/views',
+				alias: '/views'
+			},
 			images: {
 				path: 'src/client/resources/images',
 				alias: '/images'
