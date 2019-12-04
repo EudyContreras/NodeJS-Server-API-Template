@@ -25,10 +25,10 @@ class DefaultLayout extends React.PureComponent {
 					<link rel="icon" type='image/png' href={FavIcon} />
 					<link rel='apple-touch-icon' type='image/png' href={FavIcon} />
 					<link rel='shortcut icon' type='image/png' href={FavIcon} />
-					<link rel='stylesheet' href='https://fonts.googleapis.com/icon?family=Material+Icons&display=swap' media="all" id='materialIcons' defer async disabled />
-					<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Roboto&display=swap' media="all" id='robotoFont' defer async disabled />
+					<link rel='stylesheet' href='https://fonts.googleapis.com/icon?family=Material+Icons&display=swap' media="all" id='materialIcons' defer async />
+					<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Roboto&display=optional' media="all" id='robotoFont' defer async />
+					<style type='text/css'>{[...this.props.css].join('')}</style>
 					<title>{this.props.title}</title>
-					<style>${[...this.props.css].join('')}</style>
 				</head>
 				<body >
 					<section id='content'>{this.props.content}</section>
@@ -63,6 +63,7 @@ class DefaultLayout extends React.PureComponent {
 					}} />
 					
 					<script type='text/javascript' src='/scripts/loader.js' />
+					<script type='text/javascript' src='/vendor/vendor.js' />
 					<script type='text/javascript' src='/main.js' />
 				</body>
 			</html>

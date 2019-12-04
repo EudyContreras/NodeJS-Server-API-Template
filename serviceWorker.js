@@ -3,6 +3,7 @@ const CACHE_NAME = 'eudcon-universal-react-cache';
 const urlsToCache = [
   '/',
   '/main.js',
+  '/vendor.js',
   '/manifest.json',
   '/robots.txt',
   '/serviceWorker.js',
@@ -12,11 +13,10 @@ const urlsToCache = [
   'http://localhost:5000/scripts/loader.js',
   'https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js',
   'https://fonts.googleapis.com/icon?family=Material+Icons&display=swap',
-  'https://fonts.googleapis.com/css?family=Roboto&display=swap',
+  'https://fonts.googleapis.com/css?family=Roboto&display=optional',
   'https://fonts.gstatic.com/s/materialicons/v48/flUhRq6tzZclQEJ-Vdg-IuiaDsNcIhQ8tQ.woff2',
   'https://fonts.googleapis.com/css?family=Lato|Montserrat:500|Open+Sans:600|Roboto&display=swap'
 ];
-
 
 workbox.core.skipWaiting();
 workbox.core.clientsClaim();

@@ -4,6 +4,7 @@ import config from '../config';
 import template from '../views/template';
 import configureStore from '../stores/store';
 import ViewRenderer from '../../server/middleware/renderer';
+import sass from './../styles/app.scss';
 
 import { Store } from 'redux';
 import { server } from '../views';
@@ -35,7 +36,7 @@ class IndexViewRenderer extends ViewRenderer {
 		routes.map((x) => router.get(x.path, this.renderRoutes));
 	};
 
-	private renderRoutes = (req: Request, res: Response): void => {
+	private renderRoutes = async (req: Request, res: Response): Promise<void> => {
 		const client = config.app.CSR;
 		const shell = req.query.shell !== undefined;
 
@@ -44,7 +45,8 @@ class IndexViewRenderer extends ViewRenderer {
 		if (shell) {
 			res.status(200).send(client ? React.createElement('') : template());
 		} else {
-			const css = new Set();
+			const css = new Set([sass._getCss()]);
+			
 			const state = this.store.getState();
 
 			const insertCss = (...styles: any[]): void => styles.forEach((style) => css.add(style._getCss()));
@@ -53,8 +55,8 @@ class IndexViewRenderer extends ViewRenderer {
 				css: css,
 				state: state,
 				title: config.app.TITLE,
-				enableSW: true,
-				content: server(req.url, this.store, {}, insertCss)
+				content: server(req.url, this.store, {}, insertCss),
+				enableSW: true
 			};
 			res.send(client ? React.createElement('') : template(args));
 		}

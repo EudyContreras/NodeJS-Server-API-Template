@@ -96,11 +96,5 @@ typings/
 # DynamoDB Local files
 .dynamodb/
 
-build/server.js
-build/public/bundle.js
-build/public/common/
-build/public/vendor/
-build/public/images/icons/
-build/public/images/
-build/public/serviceWorker.js
-build/public/main.js
+build/public/
+/build
