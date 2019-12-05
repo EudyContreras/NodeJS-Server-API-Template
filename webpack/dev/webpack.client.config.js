@@ -5,8 +5,8 @@ const webpack = require('webpack');
 const manifest = require('../../src/client/resources/manifest.json');
 const WorkboxPlugin = require('workbox-webpack-plugin');
 const ManifestPlugin = require('webpack-assets-manifest');
+const AssetsManifestPlugin = require('webpack-manifest-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
-
 const optimization = require('./sections/optimization');
 const babelLoader = require('./loaders/babel.loader');
 const styleLoader = require('./loaders/style.loader');
@@ -75,6 +75,9 @@ module.exports = {
         ...manifest
       }
     }),
+    new AssetsManifestPlugin({
+      fileName: 'manifest-assets.json'
+    }),
     new CopyPlugin([{
         from: 'src/client/resources/robots.txt',
         to: ''
@@ -90,7 +93,8 @@ module.exports = {
     ]),
     new WorkboxPlugin.InjectManifest({
       swSrc: 'serviceWorker.js',
-      swDest: 'serviceWorker.js'
+      swDest: 'serviceWorker.js',
+      precacheManifestFilename: 'manifest-precache.[manifestHash].js'
     })
   ],
   output: {
