@@ -2,15 +2,10 @@ const CACHE_NAME = 'eudcon-universal-react-cache';
 
 const urlsToCache = [
   '/',
-  '/main.js',
   '/manifest.json',
   '/robots.txt',
-  '/serviceWorker.js',
-  '/vendor/vendor.js',
-  '/scripts/loader.js',
+  '/service-worker.js',
   '/images/favicon.ico',
-  '/images/icons/icon-144x144.png',
-  '/images/icons/icon-152x152.png',
   'https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js',
   'https://fonts.googleapis.com/icon?family=Material+Icons&display=swap',
   'https://fonts.googleapis.com/css?family=Roboto&display=optional',
@@ -78,28 +73,17 @@ self.addEventListener('fetch', function (event) {
   event.respondWith(
     caches.match(request)
     .then(response => {
-      // Cache hit - return response
-      if (response) {
-        return response;
-      }
+      
+      if (response) return response;
 
       return fetch(request).then(response => {
-        // Check if we received a valid response
         if (!response || response.status !== 200 || response.type !== 'basic') {
           return response;
         }
 
-        // IMPORTANT: Clone the response. A response is a stream
-        // and because we want the browser to consume the response
-        // as well as the cache consuming the response, we need
-        // to clone it so we have two streams.
-        var responseToCache = response.clone();
+        const responseToCache = response.clone();
 
-        caches.open(CACHE_NAME)
-          .then(cache => {
-            cache.put(request, responseToCache);
-          })
-          .catch(error => console.log(error));
+        caches.open(CACHE_NAME).then(cache => cache.put(request, responseToCache));
 
         return response;
       });

@@ -17,13 +17,13 @@ function DefaultLayout(props) {
 			<meta name='viewport' content='width=device-width, initial-scale=1' />
 			<meta name='theme-color' content='#000000' />
 			<meta name='description' content='Template Web site generated the server api routing' />
-			<meta name="apple-mobile-web-app-capable" content="yes" />
-			<meta name="apple-mobile-web-app-status-bar-style" content="black" />
-			<meta name="apple-mobile-web-app-title" content={props.title} />
+			<meta name='apple-mobile-web-app-capable' content='yes' />
+			<meta name='apple-mobile-web-app-status-bar-style' content='black' />
+			<meta name='apple-mobile-web-app-title' content={props.title} />
 			<link rel='manifest' href='/manifest.json' />
-			<link rel="icon" type='image/png' href='images/favicon.ico' />
-			<link rel='apple-touch-icon' type='image/png' href='images/favicon.ico' />
-			<link rel='shortcut icon' type='image/png' href='images/favicon.ico' />
+			<link rel='icon' type='image/png' href='static/images/favicon.ico' />
+			<link rel='apple-touch-icon' type='image/png' href='static/images/favicon.ico' />
+			<link rel='shortcut icon' type='image/png' href='static/images/favicon.ico' />
 			<link rel='stylesheet' href='https://fonts.googleapis.com/icon?family=Material+Icons&display=swap' media="all" id='materialIcons' defer async />
 			<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Roboto&display=optional' media="all" id='robotoFont' defer async />
 			<style type='text/css'>{[...props.css].join('')}</style>
@@ -47,7 +47,7 @@ function DefaultLayout(props) {
 			
 			if ('serviceWorker' in navigator) {
 				window.addEventListener('load', function() {
-				  navigator.serviceWorker.register('serviceWorker.js').then(function(registration) {
+				  navigator.serviceWorker.register('service-worker.js').then(function(registration) {
 					 console.log('ServiceWorker registration successful with scope: ', registration.scope);
 					//  registration.pushManager.subscribe({userVisibleOnly: true});
 				  }, function(err) {
@@ -59,9 +59,29 @@ function DefaultLayout(props) {
 			
 			`
 			}} />
-
-			<script type='text/javascript' src='/vendor/vendor.js' />
-			<script type='text/javascript' src='/main.js' />
+			<script type='text/javascript' src='static/scripts/vendor/vendor-main-react-redux.chunk.js' />
+			<script type='text/javascript' src='static/scripts/common/commons-main-index.js.chunk.js' />
+			<script type='text/javascript' src='static/scripts/vendor/vendor-main-babel.chunk.js' />
+			<script type='text/javascript' src='static/scripts/vendor/vendor-main-isomorphic-style-loader.chunk.js' />
+			<script type='text/javascript' src='static/scripts/common/commons-main-browser.js.chunk.js' />
+			<script type='text/javascript' src='static/scripts/vendor/vendor-main-prop-types.chunk.js' />
+			<script type='text/javascript' src='static/scripts/vendor/vendor-main-webpack.chunk.js' />
+			<script type='text/javascript' src='static/scripts/common/commons-main-api.js.chunk.js' />
+			<script type='text/javascript' src='static/scripts/common/commons-main-history.js.chunk.js' />
+			<script type='text/javascript' src='static/scripts/common/commons-main-hoist-non-react-statics.cjs.js.chunk.js' />
+			<script type='text/javascript' src='static/scripts/common/commons-main-jquery.js.chunk.js' />
+			<script type='text/javascript' src='static/scripts/vendor/vendor-main-react-dom.chunk.js' />
+			<script type='text/javascript' src='static/scripts/vendor/vendor-main-react-is.chunk.js' />
+			<script type='text/javascript' src='static/scripts/common/commons-main-react-router-dom.js.chunk.js' />
+			<script type='text/javascript' src='static/scripts/common/commons-main-react-router.js.chunk.js' />
+			<script type='text/javascript' src='static/scripts/vendor/vendor-main-react.chunk.js' />
+			<script type='text/javascript' src='static/scripts/common/commons-main-redux.js.chunk.js' />
+			<script type='text/javascript' src='static/scripts/common/commons-main-resolve-pathname.js.chunk.js' />
+			<script type='text/javascript' src='static/scripts/vendor/vendor-main-scheduler.chunk.js' />
+			<script type='text/javascript' src='static/scripts/vendor/vendor-main-symbol-observable.chunk.js' />
+			<script type='text/javascript' src='static/scripts/common/commons-main-tiny-invariant.esm.js.chunk.js' />
+			<script type='text/javascript' src='static/scripts/common/commons-main-value-equal.js.chunk.js' />
+			<script type='text/javascript' src='static/scripts/bundle.js' />
 		</body>
 	</html>;
 };
