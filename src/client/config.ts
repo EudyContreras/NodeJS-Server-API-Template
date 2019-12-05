@@ -1,9 +1,11 @@
-require('dotenv').config();
 
 const config = Object.freeze({
 	app: {
-		CSR: process.env.CLIENT_ONLY,
+		CSR: false,
+		USE_SW: true,
 		TITLE: 'React App',
+		APP_LAYOUT: 'templateApp',
+		SHELL_LAYOUT: 'templateShell',
 		NAME: ''
 	},
 	header: {

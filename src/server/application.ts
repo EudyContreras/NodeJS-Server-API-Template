@@ -74,7 +74,6 @@ export default class Application {
 		this.app.use(express.json());
 		this.app.use(express.urlencoded({ extended: false }));
 		this.app.use(express.static(config.application.FILE_DIRECTORY));
-		this.app.use(express.static(render.path));
 		this.app.use(clientRender.alias, express.static(clientRender.path));
 		this.app.use(stylesRender.alias, express.static(stylesRender.path));
 		this.app.use(scriptRender.alias, express.static(scriptRender.path));

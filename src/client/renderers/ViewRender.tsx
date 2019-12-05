@@ -1,11 +1,10 @@
 import config from '../config';
-import template from '../views/template';
 import configureStore from '../stores/store';
 import ViewRenderer from '../../server/middleware/renderer';
 import sass from './../styles/app.scss';
 
 import { Store } from 'redux';
-import { server } from '../views';
+import { application, shell } from '../views';
 import { routes } from '../components/Routes';
 import { Router, Request, Response } from 'express';
 
@@ -35,30 +34,53 @@ class IndexViewRenderer extends ViewRenderer {
 	};
 
 	private renderRoutes = async (req: Request, res: Response): Promise<void> => {
-		const csr = config.app.CSR;
 		const shell = req.query.shell !== undefined;
 
-		res.setHeader(config.header.LABEL, config.header.VALUE);
-		
 		if (shell) {
-			res.status(200).send(template({ csr: csr }));
+			return await this.renderShell(req, res);
 		} else {
-			const css = new Set([sass._getCss()]);
-			
-			const state = this.store.getState();
-
-			const insertCss = (...styles: any[]): void => styles.forEach((style) => css.add(style._getCss()));
-
-			const args = {
-				csr: csr,
-				css: css,
-				state: state,
-				title: config.app.TITLE,
-				content: server(req.url, this.store, {}, insertCss),
-				enableSW: true
-			};
-			res.render('template', args);
+			return await this.renderApplication(req, res);
 		}
+	};
+
+	private renderApplication = async (req: Request, res: Response): Promise<void> => {
+	
+		const state = this.store.getState();
+		const css = new Set([sass._getCss()]);
+
+		const insertCss = (...styles: any[]): void => styles.forEach((style) => css.add(style._getCss()));
+
+		const props = {
+			css: css,
+			state: state,
+			csr: config.app.CSR,
+			title: config.app.TITLE,
+			enableSW: config.app.USE_SW,
+			content: application(req.url, this.store, {}, insertCss),
+			cache: true
+		};
+
+		res.setHeader(config.header.LABEL, config.header.VALUE);
+		res.render(config.app.APP_LAYOUT, props);
+	};
+
+	private renderShell = async (req: Request, res: Response): Promise<void> => {
+	
+		const css = new Set([sass._getCss()]);
+
+		const insertCss = (...styles: any[]): void => styles.forEach((style) => css.add(style._getCss()));
+
+		const props = {
+			css: css,
+			csr: config.app.CSR,
+			title: config.app.TITLE,
+			enableSW: config.app.USE_SW,
+			content: shell(req.url, this.store, {}, insertCss),
+			cache: true
+		};
+
+		res.setHeader(config.header.LABEL, config.header.VALUE);
+		res.render(config.app.SHELL_LAYOUT, props);
 	};
 }
 
