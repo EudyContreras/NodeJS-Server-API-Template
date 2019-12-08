@@ -59,7 +59,7 @@ function DefaultLayout(props) {
 			
 			`
 			}} />
-			<script type='text/javascript' src='static/scripts/vendor/vendor-main-react-redux.chunk.js' />
+			{/* <script type='text/javascript' src='static/scripts/vendor/vendor-main-react-redux.chunk.js' />
 			<script type='text/javascript' src='static/scripts/common/commons-main-index.js.chunk.js' />
 			<script type='text/javascript' src='static/scripts/vendor/vendor-main-babel.chunk.js' />
 			<script type='text/javascript' src='static/scripts/vendor/vendor-main-isomorphic-style-loader.chunk.js' />
@@ -80,7 +80,8 @@ function DefaultLayout(props) {
 			<script type='text/javascript' src='static/scripts/vendor/vendor-main-scheduler.chunk.js' />
 			<script type='text/javascript' src='static/scripts/vendor/vendor-main-symbol-observable.chunk.js' />
 			<script type='text/javascript' src='static/scripts/common/commons-main-tiny-invariant.esm.js.chunk.js' />
-			<script type='text/javascript' src='static/scripts/common/commons-main-value-equal.js.chunk.js' />
+			<script type='text/javascript' src='static/scripts/common/commons-main-value-equal.js.chunk.js' /> */}
+			<script type='text/javascript' src='static/scripts/vendor/vendor.chunk.js' />
 			<script type='text/javascript' src='static/scripts/bundle.js' />
 		</body>
 	</html>;

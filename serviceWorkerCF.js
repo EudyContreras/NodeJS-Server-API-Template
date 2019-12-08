@@ -2,7 +2,10 @@ const CACHE_NAME = 'eudcon-universal-react-cache';
 
 const urlsToCache = [
   '/',
+  '/manifest.json',
+  '/robots.txt',
   '/service-worker.js',
+  '/images/favicon.ico',
   'https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js',
   'https://fonts.googleapis.com/icon?family=Material+Icons&display=swap',
   'https://fonts.googleapis.com/css?family=Roboto&display=optional',
@@ -62,7 +65,7 @@ isRequestForStatic = (request) => {
 }
 
 isSideEffectRequest = (request) => {
-  return [...Object.values(http)].includes(request.method);
+  return [...http].includes(request.method);
 }
 
 throwOnError = (response) => {

@@ -2,7 +2,10 @@ const CACHE_NAME = 'eudcon-universal-react-cache';
 
 const urlsToCache = [
   '/',
+  '/manifest.json',
+  '/robots.txt',
   '/service-worker.js',
+  '/images/favicon.ico',
   'https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js',
   'https://fonts.googleapis.com/icon?family=Material+Icons&display=swap',
   'https://fonts.googleapis.com/css?family=Roboto&display=optional',
@@ -23,11 +26,6 @@ const events = {
   MESSAGE: 'message',
   FETCH: 'fetch',
   PUSH: 'push'
-}
-
-const messages = {
-  READ_OFFLINE: 'READ_OFFLINE',
-  SKIP_WAITING: 'SKIP_WAITING'
 }
 
 workbox.core.skipWaiting();
@@ -62,7 +60,7 @@ isRequestForStatic = (request) => {
 }
 
 isSideEffectRequest = (request) => {
-  return [...Object.values(http)].includes(request.method);
+  return [...http].includes(request.method);
 }
 
 throwOnError = (response) => {
@@ -86,7 +84,8 @@ cacheFailingToCacheableRequestStrategy = ({ request, cache }) => {
 
 self.addEventListener(events.INSTALL, event => {
   console.log('SW installed', event);
-  event.waitUntil(
+
+  event.waitUntil( async () => {
     caches.open(CACHE_NAME)
     .then(cache => {
       console.log('Opened cache');
@@ -99,7 +98,7 @@ self.addEventListener(events.INSTALL, event => {
     })
     .catch(error => console.log(error))
 
-  );
+  });
 });
 
 self.addEventListener(events.ACTIVATE, event => {
@@ -107,7 +106,7 @@ self.addEventListener(events.ACTIVATE, event => {
 
   const expectedCaches = [CACHE_NAME];
 
-  event.waitUntil(
+  event.waitUntil( async () => {
     caches.keys().then(keys => Promise.all(
       keys.map(key => {
         if (!expectedCaches.includes(key)) {
@@ -117,7 +116,7 @@ self.addEventListener(events.ACTIVATE, event => {
     )).then(() => {
       console.log('Cached deleted');
     })
-  );
+  });
 
   return self.clients.claim();
 });
@@ -161,13 +160,13 @@ self.addEventListener(events.MESSAGE, event => {
 
   const command = event.data;
   switch(command.type) {
-    case messages.READ_OFFLINE: {
+    case 'READ_OFFLINE': {
       const request = new Request(command.payload);
       fetch(request).then(throwOnError).then(response => {
         caches.open(CACHE_NAME).then(cache => cache.put(request, response));
       });
     }
-    case messages.SKIP_WAITING: {
+    case 'SKIP_WAITING': {
       self.skipWaiting();
     }
   }

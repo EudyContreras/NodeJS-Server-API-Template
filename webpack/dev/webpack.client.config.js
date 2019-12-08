@@ -18,60 +18,66 @@ const isEnvProduction = enviroment === 'production';
 const isEnvDevelopment = enviroment === 'development';
 const publicUrl = isEnvProduction ? publicPath.slice(0, -1) : isEnvDevelopment && '';
 
-const cssRegex = /\.css$/;
-const cssModuleRegex = /\.module\.css$/;
-const sassRegex = /\.(scss|sass)$/;
-const sassModuleRegex = /\.module\.(scss|sass)$/;
-
 const entryPoint = './src/client.jsx';
 
-const splitChunk = {
-  // runtimeChunk: {
-  //   name: entrypoint => `runtime-${entrypoint.name}`,
-  // },
-  splitChunks: {
-    // chunks: 'all',
-    // name: false,
-    // cacheGroups: {
-    //   commons: {
-    //     test: /[\\/]node_modules[\\/]/,
-    //     name: "vendor/vendor",
-    //     chunks: "all"
-    //   }
-    // },
-    chunks: 'all',
-    maxInitialRequests: Infinity,
-    minSize: 0,
-    cacheGroups: {
-      commons: {
-        reuseExistingChunk: true,
-        enforce: true,
-        chunks: 'async',
-        test: /[\\/]node_modules[\\/]/,
-        // cacheGroupKey here is `commons` as the key of the cacheGroup
-        name(module, chunks, cacheGroupKey) {
-          const folder = 'common';
-          const moduleFileName = module.identifier().split('/').reduceRight(item => item);
-          const allChunksNames = chunks.map((item) => item.name).join('~');
-          return `${folder}/${cacheGroupKey}-${allChunksNames}-${moduleFileName}`;
-        },
-        chunks: 'all'
-      },
-      vendor: {
-        chunks: 'all',
-        test: /[\\/]node_modules[\\/]/,
-        name(module, chunks, cacheGroupKey) {
-          const folder = 'vendor';
-          // get the name. E.g. node_modules/packageName/not/this/part.js
-          // or node_modules/packageName
+const resources = [{
+  from: 'src/client/resources/manifest.json',
+  to: ''
+}, {
+  from: 'src/client/resources/robots.txt',
+  to: ''
+}, {
+  from: 'src/client/resources/images',
+  to: 'static/images'
+}, {
+  from: 'src/client/resources/images/icons',
+  to: 'static/images/icons'
+}];
 
-          const packageName = module.context.match(/[\\/]node_modules[\\/](.*?)([\\/]|$)/)[1];
-          const allChunksNames = chunks.map((item) => item.name).join('~');
-          // npm package names are URL-safe, but some servers don't like @ symbols
-          return `${folder}/${cacheGroupKey}-${allChunksNames}-${packageName.replace('@', '')}`;
-        },
+const singleShunk = {
+  cacheGroups: {
+    commons: {
+      test: /[\\/]node_modules[\\/]/,
+      name: "vendor/vendor",
+      chunks: "all"
+    }
+  }
+}
+
+const multiChunk = {
+  chunks: 'all',
+  maxInitialRequests: Infinity,
+  minSize: 0,
+  cacheGroups: {
+    commons: {
+      reuseExistingChunk: true,
+      enforce: true,
+      chunks: 'async',
+      test: /[\\/]node_modules[\\/]/,
+      name(module, chunks, cacheGroupKey) {
+        const folder = 'common';
+        const moduleFileName = module.identifier().split('/').reduceRight(item => item);
+        const allChunksNames = chunks.map((item) => item.name).join('~');
+        return `${folder}/${cacheGroupKey}-${allChunksNames}-${moduleFileName}`;
+      },
+      chunks: 'all'
+    },
+    vendor: {
+      chunks: 'all',
+      test: /[\\/]node_modules[\\/]/,
+      name(module, chunks, cacheGroupKey) {
+
+        const packageName = module.context.match(/[\\/]node_modules[\\/](.*?)([\\/]|$)/)[1];
+        const allChunksNames = chunks.map((item) => item.name).join('~');
+        return `${folder}/${cacheGroupKey}-${allChunksNames}-${packageName.replace('@', '')}`;
       },
     },
+  },
+}
+
+const splitChunk = {
+  splitChunks: {
+    ...singleShunk
   }
 }
 
@@ -103,19 +109,7 @@ module.exports = {
         };
       },
     }),
-    new CopyPlugin([{
-      from: 'src/client/resources/manifest.json',
-      to: ''
-    }, {
-      from: 'src/client/resources/robots.txt',
-      to: ''
-    }, {
-      from: 'src/client/resources/images',
-      to: 'static/images'
-    }, {
-      from: 'src/client/resources/images/icons',
-      to: 'static/images/icons'
-    }]),
+    new CopyPlugin(resources),
     new WorkboxPlugin.InjectManifest({
       swSrc: 'serviceWorker.js',
       swDest: 'service-worker.js',
