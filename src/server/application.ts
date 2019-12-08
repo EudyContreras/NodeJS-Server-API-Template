@@ -1,9 +1,11 @@
+
+import fs from 'fs';
 import cors from 'cors';
+import https from 'https';
 import helmet from 'helmet';
 import express from 'express';
 import mongoose from 'mongoose';
 import config from './config';
-
 import compression from 'compression';
 import Interceptor from './middleware/interceptor';
 import Controller from './controllers/controller';
@@ -11,7 +13,6 @@ import ErrorHandler from './handlers/error.handler';
 import LoggingHandler from './handlers/logging.handler';
 import ViewRenderer from './middleware/renderer';
 import DataInitializer from './initializers/database.initializer';
-
 import reactRender from 'express-react-views';
 
 export default class Application {
@@ -43,10 +44,21 @@ export default class Application {
 
 	public startlistening(): void {
 		const port = config.host.PORT;
+		const secure = config.ssl.ACTIVE;
 
-		this.app.listen(port, () => {
+		const listener = (): void => {
 			console.log(`Server listening on the port ${port}`);
-		});
+		};
+
+		if (secure) {
+			https.createServer({
+				key: fs.readFileSync('./ssl/sslkey.pem'),
+				cert: fs.readFileSync('./ssl/sslcert.pem'),
+				passphrase: config.ssl.PASS_PHRASE,
+			}, this.app).listen(port, listener);
+		} else {
+			this.app.listen(port, listener);
+		}
 	}
 
 	private setupExpress(): void {
@@ -58,12 +70,10 @@ export default class Application {
 
 		this.app.use(cors());
 		this.app.use(helmet());
-		//this.app.use(morgan('combined'));
 		this.app.use(compression());
 		this.app.use(express.json());
 		this.app.use(express.urlencoded({ extended: false }));
 		this.app.use(express.static(config.application.FILE_DIRECTORY));
-		this.app.use(express.static(render.path));
 		this.app.use(clientRender.alias, express.static(clientRender.path));
 		this.app.use(stylesRender.alias, express.static(stylesRender.path));
 		this.app.use(scriptRender.alias, express.static(scriptRender.path));

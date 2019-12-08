@@ -10,6 +10,7 @@
    min-width: 230px;
    scroll-behavior: smooth;
    overflow-y: visible;
+   will-change: transform;
    margin: 0;
    z-index: 1000;
    color: rgba(165, 167, 168, 1);
@@ -92,7 +93,7 @@
       margin-top: 10px;
       font-size: 14px;
       font-weight: 200;
-      color: rgba(162, 166, 170, 1);
+      color: rgba(166, 170, 174, 1);
    }
 }
 

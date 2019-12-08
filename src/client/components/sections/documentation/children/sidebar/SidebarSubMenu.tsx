@@ -107,7 +107,7 @@ class SidebarSubMenu extends React.PureComponent<any, State> {
 				);
 			}
 		}
-		return (<ul ref={this.menu}>{listItems}</ul>);
+		return (<ul ref={this.menu} className={join(...classes)}>{listItems}</ul>);
 	};
 }
 

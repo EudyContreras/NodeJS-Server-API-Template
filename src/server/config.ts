@@ -1,3 +1,4 @@
+
 require('dotenv').config();
 
 const config = Object.freeze({
@@ -13,7 +14,7 @@ const config = Object.freeze({
 			path: 'src/client/views',
 			client: {
 				path: 'build/public',
-				alias: '/static'
+				alias: '/'
 			},
 			styles: {
 				path: 'src/client/styles',
@@ -24,8 +25,8 @@ const config = Object.freeze({
 				alias: '/scripts'
 			},
 			images: {
-				path: 'src/client/resources',
-				alias: '/res/images'
+				path: 'src/client/resources/images',
+				alias: '/images'
 			},
 			resources: {
 				path: 'src/client/resources',
@@ -39,10 +40,14 @@ const config = Object.freeze({
 			TOKEN_HEADER: 'x-auth-token',
 		}
 	},
+	ssl: {
+		ACTIVE: false,
+		PASS_PHRASE: process.env.PASS_PHRASE
+	},
 	host: {
 		APP_NAME: 'app name',
 		BASE_URL: '',
-		PORT: process.env.PORT || 5000,
+		PORT: process.env.PORT,
 	},
 	redis: {
 		HOST: 'localhost',

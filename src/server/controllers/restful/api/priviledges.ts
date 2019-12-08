@@ -43,25 +43,25 @@ class Priviledges extends Controller {
 		const { result, error } = await this.priviledgeService.getPriviledges(request.data);
 
 		return this.buildResult(result, error, response, RequestAction.GET_ALL);
-	}
+	};
 
 	private create = async (request: any, response: Response): Promise<Response> => {
 		const { result, error } = await this.priviledgeService.createPriviledge(request.data);
 
 		return this.buildResult(result, error, response, RequestAction.CREATE);
-	}
+	};
 
 	private update = async (request: any, response: Response): Promise<Response> => {
 		const { result, error } = await this.priviledgeService.updatePriviledge(request.data);
 
 		return this.buildResult(result, error, response, RequestAction.UPDATE);
-	}
+	};
 
 	private delete = async (request: any, response: Response): Promise<Response> => {
 		const { result, error } = await this.priviledgeService.revokePriviledge(request.data);
 
 		return this.buildResult(result, error, response, RequestAction.DELETE);
-	}
+	};
 }
 
 export default Priviledges;

@@ -50,19 +50,19 @@ class Users extends Controller {
 		} else {
 			return this.getAll(response);
 		}
-	}
+	};
 
 	private getOne = async (query: any, response: Response): Promise<Response> => {
 		const { result, error } = await this.userService.getUserWhere(query);
 
 		return this.buildResult(result, error, response, RequestAction.GET);
-	}
+	};
 
 	private getAll = async (response: Response): Promise<Response> => {
 		const { result, error } = await this.userService.getAllUsers();
 
 		return this.buildResult(result, error, response, RequestAction.GET_ALL);
-	}
+	};
 
 	private create = async (request: any, response: Response): Promise<Response> => {
 		const data = request.data;
@@ -70,7 +70,7 @@ class Users extends Controller {
 		const { result, error } = await this.userService.registerUser(data);
 
 		return this.buildResult(result, error, response, RequestAction.CREATE);
-	}
+	};
 
 	private update = async (request: any, response: Response): Promise<Response> => {
 		const userId = request.query.userId || request.user.userId;
@@ -78,7 +78,7 @@ class Users extends Controller {
 		const { result, error } = await this.userService.updateUser(userId, request.data);
 
 		return this.buildResult(result, error, response, RequestAction.UPDATE);
-	}
+	};
 
 	private delete = async (request: Request, response: Response): Promise<Response> => {
 		const userId = request.query.userId;
@@ -86,7 +86,7 @@ class Users extends Controller {
 		const { result, error } = await this.userService.deleteUser(userId);
 
 		return this.buildResult(result, error, response, RequestAction.DELETE);
-	}
+	};
 
 	private updatePassword = async (request: any, response: Response): Promise<Response> => {
 		const userId = request.query.userId || request.user.userId;
@@ -94,7 +94,7 @@ class Users extends Controller {
 		const { result, error } = await this.userService.updateUserPassword(userId, request.data);
 
 		return this.buildResult(result, error, response, RequestAction.UPDATE);
-	}
+	};
 
 }
 

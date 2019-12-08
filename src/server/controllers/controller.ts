@@ -2,7 +2,7 @@
 import HttpCode from '../definitions/httpCode';
 import RequestAction from '../definitions/requestAction';
 
-import { Router, Response} from 'express';
+import { Router, Response } from 'express';
 import { ApiResponse } from '../responses/request.response';
 import { ResponseMessages } from '../messages/message.response';
 

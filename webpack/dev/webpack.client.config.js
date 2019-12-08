@@ -1,119 +1,139 @@
+require('dotenv').config();
+
 const path = require('path');
-const TerserPlugin = require('terser-webpack-plugin');
+const webpack = require('webpack');
+const WorkboxPlugin = require('workbox-webpack-plugin');
+const ManifestPlugin = require('webpack-manifest-plugin');
+const CopyPlugin = require('copy-webpack-plugin');
+const optimization = require('./sections/optimization');
+const babelLoader = require('./loaders/babel.loader');
+const styleLoader = require('./loaders/style.loader');
+const fileLoader = require('./loaders/file.loader');
+
+const enviroment = process.env.NODE_ENV;
+
+const publicPath = '../../build/public/';
+const useSourceMap = process.env.GENERATE_SOURCEMAP !== 'false';
+const isEnvProduction = enviroment === 'production';
+const isEnvDevelopment = enviroment === 'development';
+const publicUrl = isEnvProduction ? publicPath.slice(0, -1) : isEnvDevelopment && '';
+
+const entryPoint = './src/client.jsx';
+
+const resources = [{
+  from: 'src/client/resources/manifest.json',
+  to: ''
+}, {
+  from: 'src/client/resources/robots.txt',
+  to: ''
+}, {
+  from: 'src/client/resources/images',
+  to: 'static/images'
+}, {
+  from: 'src/client/resources/images/icons',
+  to: 'static/images/icons'
+}];
+
+const singleShunk = {
+  cacheGroups: {
+    commons: {
+      test: /[\\/]node_modules[\\/]/,
+      name: "vendor/vendor",
+      chunks: "all"
+    }
+  }
+}
+
+const multiChunk = {
+  chunks: 'all',
+  maxInitialRequests: Infinity,
+  minSize: 0,
+  cacheGroups: {
+    commons: {
+      reuseExistingChunk: true,
+      enforce: true,
+      chunks: 'async',
+      test: /[\\/]node_modules[\\/]/,
+      name(module, chunks, cacheGroupKey) {
+        const folder = 'common';
+        const moduleFileName = module.identifier().split('/').reduceRight(item => item);
+        const allChunksNames = chunks.map((item) => item.name).join('~');
+        return `${folder}/${cacheGroupKey}-${allChunksNames}-${moduleFileName}`;
+      },
+      chunks: 'all'
+    },
+    vendor: {
+      chunks: 'all',
+      test: /[\\/]node_modules[\\/]/,
+      name(module, chunks, cacheGroupKey) {
+
+        const packageName = module.context.match(/[\\/]node_modules[\\/](.*?)([\\/]|$)/)[1];
+        const allChunksNames = chunks.map((item) => item.name).join('~');
+        return `${folder}/${cacheGroupKey}-${allChunksNames}-${packageName.replace('@', '')}`;
+      },
+    },
+  },
+}
+
+const splitChunk = {
+  splitChunks: {
+    ...singleShunk
+  }
+}
 
 module.exports = {
   name: 'client',
   target: 'web',
-  mode: 'production',
-  entry: './src/client.jsx',
+  mode: enviroment,
+  bail: isEnvProduction,
+  entry: entryPoint,
   performance: {
     hints: false
   },
+  plugins: [
+    new ManifestPlugin({
+      fileName: 'manifest-assets.json',
+      publicPath: publicPath,
+      generate: (seed, files, entrypoints) => {
+        const manifestFiles = files.reduce((manifest, file) => {
+          manifest[file.name] = file.path;
+          return manifest;
+        }, seed);
+        const entrypointFiles = entrypoints.main.filter(
+          fileName => !fileName.endsWith('.map')
+        );
+
+        return {
+          files: manifestFiles,
+          entrypoints: entrypointFiles,
+        };
+      },
+    }),
+    new CopyPlugin(resources),
+    new WorkboxPlugin.InjectManifest({
+      swSrc: 'serviceWorker.js',
+      swDest: 'service-worker.js',
+      precacheManifestFilename: 'manifest-precache.[manifestHash].js'
+    })
+  ],
   output: {
-    path: path.join(__dirname, '../../build/public'),
-    filename: 'bundle.js',
-    publicPath: "/",
-    chunkFilename: '[id].[name].[chunkhash:6].js'
+    path: path.join(__dirname, publicPath),
+    futureEmitAssets: true,
+    pathinfo: isEnvDevelopment,
+    filename: 'static/scripts/bundle.js',
+    chunkFilename: 'static/scripts/[name].chunk.js',
+    publicPath: '/',
+    globalObject: 'this'
   },
-  optimization: {
-    minimize: true,
-    minimizer: [new TerserPlugin({
-      test: /\.(js|jsx|tsx|ts)$/i,
-      extractComments: false,
-      chunkFilter: (chunk) => {
-        if (chunk.name === 'vendor') {
-          return false;
-        }
-        return true;
-      },
-      terserOptions: {
-        ecma: 6,
-        warnings: true,
-        parse: {},
-        compress: {},
-        mangle: true,
-        module: true,
-        output: {
-          comments: false,
-        },
-        toplevel: true,
-        nameCache: null,
-        ie8: false,
-        keep_classnames: undefined,
-        keep_fnames: false,
-        safari10: false,
-      },
-    })],
-    nodeEnv: 'production',
-    removeAvailableModules: true,
-    mergeDuplicateChunks: true,
-    removeEmptyChunks: true,
-    // splitChunks: {
-    //   chunks: 'async',
-    //   minSize: 30000,
-    //   maxSize: 0,
-    //   minChunks: 1,
-    //   maxAsyncRequests: 6,
-    //   maxInitialRequests: 4,
-    //   automaticNameDelimiter: '~',
-    //   automaticNameMaxLength: 30,
-    //   cacheGroups: {
-    //     commons: {
-    //       test: /[\\/]node_modules[\\/]/,
-    //       // cacheGroupKey here is `commons` as the key of the cacheGroup
-    //       name(module, chunks, cacheGroupKey) {
-    //         const moduleFileName = module.identifier().split('/').reduceRight(item => item);
-    //         const allChunksNames = chunks.map((item) => item.name).join('~');
-    //         return `${cacheGroupKey}-${allChunksNames}-${moduleFileName}`;
-    //       },
-    //       chunks: 'all'
-    //     },
-    //     vendors: {
-    //       reuseExistingChunk: true,
-    //       test: /[\\/]node_modules[\\/]/,
-    //       priority: -10
-    //     },
-    //     default: {
-    //       minChunks: 2,
-    //       priority: -20,
-    //       reuseExistingChunk: true
-    //     }
-    //   }
-    // }
-  },
+  optimization: optimization(enviroment, splitChunk, useSourceMap),
   module: {
     rules: [{
         test: /\.txt$/,
         use: 'raw-loader'
       },
-      {
-        test: /\.(js|jsx|tsx|ts)$/,
-        loader: 'babel-loader',
-        exclude: /node_modules/
-      },
-      {
-        test: /\.(jpe?g|png|gif|svg)$/i,
-        loader: 'file-loader'
-      },
-      {
-        test: /\.(css|scss)$/,
-        use: [
-          'isomorphic-style-loader',
-          {
-            loader: 'css-loader',
-            options: {
-              modules: {
-                mode: 'local',
-                localIdentName: '[name]__[local]',
-                context: path.resolve(__dirname, '../../src/client/components'),
-              },
-              localsConvention: 'camelCase',
-              importLoaders: 1
-            }
-          },
-          'sass-loader'
-        ]
-      }
+      babelLoader,
+      fileLoader,
+      styleLoader(path)
     ]
   },
   resolve: {
