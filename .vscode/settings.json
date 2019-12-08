@@ -1,0 +1,74 @@
+{
+   "files.exclude": {
+      "node_modules/": true
+   },
+
+   "eslint.validate": [
+      "javascript",
+      "javascriptreact",
+      "typescript",
+      "typescriptreact"
+   ],
+
+   "workbench.colorCustomizations": {
+      "terminal.background": "#191d22",
+
+      "statusBar.foreground": "#ffffff",
+      "statusBar.background": "#363d46",
+      "statusBar.border": "#92a4bb",
+
+      "activityBar.foreground": "#eeeefa",
+      "activityBar.background": "#1f262c",
+      "activityBar.activeBorder": "#044e70",
+      "activityBar.activeBackground": "#39414b",
+      "activityBar.inactiveForeground": "#888894",
+      "activityBar.border": "#2e363a",
+
+      "tab.border": "#1f262c",
+      "tab.inactiveForeground": "#999",
+      "tab.inactiveBackground": "#202429",
+      "tab.activeBackground": "#262b31",
+      "tab.activeBorderTop": "#044e70",
+
+      "sideBarSectionHeader.background": "#28303a",
+      "sideBar.background": "#1a1f25",
+
+      "input.background": "#272f38",
+
+      "panel.background": "#1f262c",
+
+      "breadcrumb.background": "#262b31",
+
+      "menubar.selectionBackground": "#413d3d",
+
+      "editorWidget.background": "#2e363a",
+      "editorGutter.background": "#1e2329",
+
+      "dropdown.foreground": "#fff",
+      "dropdown.listBackground": "#28303a",
+      "dropdown.background": "#28303a",
+      "dropdown.border": "#28303a",
+
+      "list.inactiveSelectionBackground": "#3e444e55",
+      "list.activeSelectionBackground": "#42485555",
+      "list.hoverBackground": "#494f5a55",
+      "list.hoverForeground": "#fff",
+
+      // "editor.fontLigatures": true,
+      "editor.background": "#1e2329",
+      "editor.inactiveSelectionBackground": "#535c6652",
+      "editor.selectionBackground": "#334d6b52",
+      "editor.lineHighlightBackground": "#191d22",
+      "editor.lineHighlightBorder": "#191d22",
+      "editorGroupHeader.tabsBackground": "#1c2227",
+
+      "gitDecoration.deletedResourceForeground": "#576064",
+      "gitDecoration.modifiedResourceForeground": "#64b1e4"
+   },
+
+   // "editor.fontWeight": "normal",
+   "editor.mouseWheelZoom": true,
+   "eslint.alwaysShowStatus": true,
+   "eslint.lintTask.enable": true,
+
+}

@@ -1,0 +1,144 @@
+import React from 'react';
+import memoize from 'fast-memoize';
+import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
+import { appendWhen, join } from '../../../appliers/style.applier';
+import { getNavigationBar } from '../../../selectors/navbar.selector';
+import { DispatchProps, Dispatchers } from '../../../actions/common/navigation.action';
+
+interface StateProps {
+	anchored: boolean;
+	mouseInside: boolean | null;
+	activeTab: null | {
+		label: string;
+		index: string;
+	};
+}
+
+type Props = StateProps & DispatchProps & any;
+
+class Navbar extends React.PureComponent<Props, any> {
+
+	private navbar: React.RefObject<HTMLElement>;
+
+	constructor(props: any) {
+		super(props);
+		this.navbar = React.createRef();
+	}
+
+	public componentDidMount = (): void => {
+		this.applyAnchor(this.navbar.current!);
+	};
+
+	private applyAnchor = (navbar: HTMLElement): void => {
+		const margin = 15;
+		const topOffset = -(navbar.clientHeight - margin);
+
+		const body = document.body;
+
+		const scroll = body.getBoundingClientRect().top;
+		const scrollTop = navbar.getBoundingClientRect().top;
+
+		const topPosition = Math.abs(scroll) + (scrollTop - topOffset);
+
+		this.props.setOffsetTop(margin-1);
+
+		window.addEventListener('scroll', () => this.anchor(topPosition));
+	};
+
+	private anchor = (top: number): void => {
+		const anchored = this.props.anchored;
+
+		const scroll = document.body.scrollTop || document.documentElement.scrollTop;
+
+		if (scroll! >= top && !anchored) {
+			this.props.setAnchored(true);
+		}
+
+		if (scroll! < top && anchored) {
+			this.props.setAnchored(false);
+		}
+	};
+
+	private onMouseEnter = (): void => {
+		if (this.props.anchored) {
+			this.props.setMouseInside(true);
+		}
+	};
+
+	private onMouseExit = (): void => {
+		if (this.props.anchored) {
+			this.props.setMouseInside(false);
+		}
+	};
+
+	private handleLinkClick = (tab: any): void => {
+		if (this.props.activeTab === null) {
+			this.props.setActiveTab(tab);
+		} else {
+			if (this.props.activeTab.label !== tab.label) {
+				this.props.setActiveTab(tab);
+			}
+		}
+	};
+
+	private getLinkProps = (style: any, element: any, idx: number): any => {
+		const activeTab = this.props.activeTab;
+		const location = this.props.location;
+
+		const classes = [style.navLink];
+
+		appendWhen(classes, activeTab === null && element.link === location, style.navLinkActive);
+		appendWhen(classes, activeTab !== null && element.label === activeTab.label, style.navLinkActive);
+
+		const properties = {
+			className: join(...classes),
+			onClick: ((): void => this.handleLinkClick({ label: element.label, index: idx })),
+			to: element.link,
+		};
+
+		return properties;
+	};
+
+	public render = (): JSX.Element => {
+		const style = this.props.styling;
+		const routes = this.props.routings;
+		const classes = [style.nav];
+
+		const mouseInside = this.props.mouseInside === true;
+		const mouseOutside = this.props.mouseInside === false;
+
+		appendWhen(classes, this.props.anchored, style.navSticky);
+		appendWhen(classes, this.props.anchored && mouseInside, style.navTransition, style.navPeeky);
+		appendWhen(classes, this.props.anchored && mouseOutside, style.navTransition);
+
+		const properties = {
+			ref: this.navbar,
+			className: join(...classes),
+			onMouseEnter: this.onMouseEnter,
+			onMouseLeave: this.onMouseExit
+		};
+
+		return (
+			<header {...properties}>
+				<div className={style.navLogo}>
+					<div className={style.status} />
+					<div className={style.navLogoText}>
+						<a aria-label='brand name' href='/'>{this.props.brandName}</a>
+					</div>
+				</div>
+				<ul>
+					{routes.map((element: any, idx: number) =>
+						<li key={idx}>
+							<Link {...memoize(this.getLinkProps)(style, element, idx)}>{element.label}</Link>
+						</li>
+					)}
+				</ul>
+			</header>
+		);
+	};
+}
+
+const mapStateToProps = (state: any): any => getNavigationBar(state.presentation);
+
+export default connect<StateProps, DispatchProps, any>(mapStateToProps, Dispatchers)(Navbar);

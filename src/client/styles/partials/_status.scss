@@ -1,0 +1,37 @@
+$rippleColor: #e4b51d;
+$rippleColorDark: #e2a115;
+$rippleColorDarker: #be870e;
+$rippleCenter: #fff;
+
+.status-ripple {
+   background-color: $rippleCenter;
+   width: 1em;
+   height: 1em;
+   margin-left: 1em;
+   display: inline-flex;
+   border-radius: 50%;
+   animation: ripple 2s cubic-bezier(.25, .8, .25, 1) infinite;
+}
+
+@keyframes ripple {
+   0% {
+      box-shadow:
+         0 0 0 0.1em rgba($rippleColor, 1),
+         0 0 0 0.4em rgba($rippleColorDark, 1),
+         0 0 0 0.6em rgba($rippleColorDarker, 1);
+   }
+
+   50% {
+      box-shadow:
+         0 0 0 0.3em rgba($rippleColor, 1),
+         0 0 0 0.5em rgba($rippleColorDark, 1),
+         0 0 0 0.7em rgba($rippleColorDarker, 1);
+   }
+
+   100% {
+      box-shadow:
+         0 0 0 0.1em rgba($rippleColor, 1),
+         0 0 0 0.4em rgba($rippleColorDark, 1),
+         0 0 0 0.6em rgba($rippleColorDarker, 1);
+   }
+}
