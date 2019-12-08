@@ -44,19 +44,20 @@ class IndexViewRenderer extends ViewRenderer {
 	};
 
 	private renderApplication = async (req: Request, res: Response): Promise<void> => {
-	
-		const state = this.store.getState();
 		const css = new Set([sass._getCss()]);
+		const state = this.store.getState();
 
-		const insertCss = (...styles: any[]): void => styles.forEach((style) => css.add(style._getCss()));
+		const insertCss = (...styles: any[]): void => styles.forEach(style => css.add(style._getCss()));
 
+		const content = application(req.url, this.store, {}, insertCss);
+		
 		const props = {
 			css: css,
 			state: state,
 			csr: config.app.CSR,
 			title: config.app.TITLE,
 			enableSW: config.app.USE_SW,
-			content: application(req.url, this.store, {}, insertCss),
+			content: content,
 			cache: true
 		};
 
@@ -65,17 +66,17 @@ class IndexViewRenderer extends ViewRenderer {
 	};
 
 	private renderShell = async (req: Request, res: Response): Promise<void> => {
-	
 		const css = new Set([sass._getCss()]);
+		const insertCss = (...styles: any[]): void => styles.forEach(style => css.add(style._getCss()));
 
-		const insertCss = (...styles: any[]): void => styles.forEach((style) => css.add(style._getCss()));
+		const content = shell(req.url, this.store, {}, insertCss);
 
 		const props = {
 			css: css,
 			csr: config.app.CSR,
 			title: config.app.TITLE,
 			enableSW: config.app.USE_SW,
-			content: shell(req.url, this.store, {}, insertCss),
+			content: content,
 			cache: true
 		};
 

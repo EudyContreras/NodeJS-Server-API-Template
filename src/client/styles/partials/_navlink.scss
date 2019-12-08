@@ -25,7 +25,7 @@ $navLinkShadow: rgba(0, 0, 0, 0.3);
    background-color: $navLinkColorPrimary;
    box-shadow: 0px 0px 5px 1px rgba(0, 0, 0, 0.4);
    position: absolute;
-   @include scaleXY(0, 0);
+   @include scaleXY(1, 0);
    @include transition(.25s);
 }
 
@@ -38,7 +38,7 @@ $navLinkShadow: rgba(0, 0, 0, 0.3);
    width: 30%;
    background-color: $navLinkColorAccent;
    position: absolute;
-   @include scaleXY(0, 0);
+   @include scaleXY(1, 0);
    @include transition(.25s);
 }
 

@@ -13,6 +13,7 @@ export default (props) => {
 function DefaultLayout(props) {
 	return <html lang='en-US'>
 		<head>
+			<title>{props.title}</title>
 			<meta charSet='utf-8' />
 			<meta name='viewport' content='width=device-width, initial-scale=1' />
 			<meta name='theme-color' content='#000000' />
@@ -27,7 +28,6 @@ function DefaultLayout(props) {
 			<link rel='stylesheet' href='https://fonts.googleapis.com/icon?family=Material+Icons&display=swap' media="all" id='materialIcons' defer disabled/>
 			<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Roboto&display=optional' media="all" id='robotoFont' defer disabled/>
 			<style type='text/css'>{[...props.css].join('')}</style>
-			<title>{props.title}</title>
 		</head>
 		<body >
 			<section id='content'>{props.content}</section>

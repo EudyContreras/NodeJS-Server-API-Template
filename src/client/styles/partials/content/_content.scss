@@ -1,7 +1,7 @@
 .content-wrapper {
    display: flex;
    flex-direction: column;
-   will-change: transform;
+   will-change: width, margin-left;
    margin-left: 17%;
    margin-right: 35%;
    background-color: rgb(48,53,57);

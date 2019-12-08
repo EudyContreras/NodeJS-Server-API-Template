@@ -13,7 +13,7 @@ module.exports = (enviroment, splitChunk, useSourceMap) => ({
 			extractComments: false,
 			chunkFilter: (chunk) => {
 				if (chunk.name.startsWith('vendor')) {
-					return minimizeVendors;
+					return minimizeVendors && enviroment == 'production';
 				}
 				return true;
 			},
@@ -25,7 +25,7 @@ module.exports = (enviroment, splitChunk, useSourceMap) => ({
 					ecma: 5,
 					warnings: false,
 					comparisons: false,
-					drop_console: true,
+					drop_console: false,
 					inline: 2,
 				},
 				mangle: {
