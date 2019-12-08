@@ -6,8 +6,7 @@ const urlsToCache = [
   'https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js',
   'https://fonts.googleapis.com/icon?family=Material+Icons&display=swap',
   'https://fonts.googleapis.com/css?family=Roboto&display=optional',
-  'https://fonts.gstatic.com/s/materialicons/v48/flUhRq6tzZclQEJ-Vdg-IuiaDsNcIhQ8tQ.woff2',
-  'https://fonts.googleapis.com/css?family=Lato|Montserrat:500|Open+Sans:600|Roboto&display=swap'
+  'https://fonts.gstatic.com/s/materialicons/v48/flUhRq6tzZclQEJ-Vdg-IuiaDsNcIhQ8tQ.woff2'
 ];
 
 const http = {
@@ -30,8 +29,8 @@ const messages = {
   SKIP_WAITING: 'SKIP_WAITING'
 }
 
-workbox.core.skipWaiting();
-workbox.core.clientsClaim();
+// workbox.core.skipWaiting();
+// workbox.core.clientsClaim();
 
 requestFailingToCacheStrategy = ({ request, cache }) => {
   return fetch(request).catch(() => cache.match(request));
@@ -85,26 +84,18 @@ cacheFailingToCacheableRequestStrategy = ({ request, cache }) => {
 };
 
 self.addEventListener(events.INSTALL, event => {
-  console.log('SW installed', event);
   event.waitUntil(
     caches.open(CACHE_NAME)
     .then(cache => {
-      console.log('Opened cache');
       const cacheRes = self.__precacheManifest.map(x => x.url);
       return cache.addAll([...urlsToCache, ...cacheRes]);
     })
-    .then(() => {
-      console.log('Skipped waiting');
-      return self.skipWaiting();
-    })
+    .then(() => self.skipWaiting())
     .catch(error => console.log(error))
-
   );
 });
 
 self.addEventListener(events.ACTIVATE, event => {
-  console.log('SW activated', event);
-
   const expectedCaches = [CACHE_NAME];
 
   event.waitUntil(
@@ -114,9 +105,7 @@ self.addEventListener(events.ACTIVATE, event => {
           return caches.delete(key);
         }
       })
-    )).then(() => {
-      console.log('Cached deleted');
-    })
+    ))
   );
 
   return self.clients.claim();
@@ -124,8 +113,6 @@ self.addEventListener(events.ACTIVATE, event => {
 
 self.addEventListener(events.FETCH, event => {
   const request = event.request.clone();
-
-  console.log('SW fetch', request);
 
   if (isSideEffectRequest(request)) {
     event.respondWith(requestFailingWithNotFoundStrategy({ request }));
@@ -147,7 +134,6 @@ self.addEventListener(events.FETCH, event => {
 });
 
 self.addEventListener(events.PUSH, event => {
-  console.log('SW push', event);
 
   const title = 'Get Started With Workbox';
   const options = {
@@ -157,8 +143,6 @@ self.addEventListener(events.PUSH, event => {
 });
 
 self.addEventListener(events.MESSAGE, event => {
-  console.log('SW message', event);
-
   const command = event.data;
   switch(command.type) {
     case messages.READ_OFFLINE: {
@@ -173,10 +157,10 @@ self.addEventListener(events.MESSAGE, event => {
   }
 });
 
-/**
- * The workboxSW.precacheAndRoute() method efficiently caches and responds to
- * requests for URLs in the manifest.
- * See https://goo.gl/S9QRab
- */
-self.__precacheManifest = [].concat(self.__precacheManifest || []);
-workbox.precaching.precacheAndRoute(self.__precacheManifest, {});
+// /**
+//  * The workboxSW.precacheAndRoute() method efficiently caches and responds to
+//  * requests for URLs in the manifest.
+//  * See https://goo.gl/S9QRab
+//  */
+// self.__precacheManifest = [].concat(self.__precacheManifest || []);
+// workbox.precaching.precacheAndRoute(self.__precacheManifest, {});

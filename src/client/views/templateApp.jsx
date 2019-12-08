@@ -24,8 +24,8 @@ function DefaultLayout(props) {
 			<link rel='icon' type='image/png' href='static/images/favicon.ico' />
 			<link rel='apple-touch-icon' type='image/png' href='static/images/favicon.ico' />
 			<link rel='shortcut icon' type='image/png' href='static/images/favicon.ico' />
-			<link rel='stylesheet' href='https://fonts.googleapis.com/icon?family=Material+Icons&display=swap' media="all" id='materialIcons' defer async />
-			<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Roboto&display=optional' media="all" id='robotoFont' defer async />
+			<link rel='stylesheet' href='https://fonts.googleapis.com/icon?family=Material+Icons&display=swap' media="all" id='materialIcons' defer disabled/>
+			<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Roboto&display=optional' media="all" id='robotoFont' defer disabled/>
 			<style type='text/css'>{[...props.css].join('')}</style>
 			<title>{props.title}</title>
 		</head>

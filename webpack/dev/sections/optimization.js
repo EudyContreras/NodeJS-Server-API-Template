@@ -2,6 +2,8 @@ const TerserPlugin = require('terser-webpack-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const safePostCssParser = require('postcss-safe-parser');
 
+const minimizeVendors = true;
+
 module.exports = (enviroment, splitChunk, useSourceMap) => ({
 	minimize: enviroment == 'production',
 	minimizer: [
@@ -11,7 +13,7 @@ module.exports = (enviroment, splitChunk, useSourceMap) => ({
 			extractComments: false,
 			chunkFilter: (chunk) => {
 				if (chunk.name.startsWith('vendor')) {
-					return false;
+					return minimizeVendors;
 				}
 				return true;
 			},
