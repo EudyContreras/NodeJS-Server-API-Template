@@ -1,0 +1,103 @@
+$navLinkColorAccent: rgb(238, 150, 2);
+$navLinkColorPrimary: rgb(84, 87, 91);
+$navLinkShadow: rgba(0, 0, 0, 0.3);
+
+@mixin scaleXY($propertyX, $propertyY) {
+   -webkit-transform: scaleX($propertyX), scaleY($propertyY);
+   -ms-transform: scaleX($propertyX) scaleY($propertyY);
+   transform: scaleX($propertyX) scaleY($propertyY);
+}
+
+@mixin translateY($property) {
+   -webkit-transform: translateY($property);
+   -ms-transform: translateY($property);
+   transform: translateY($property);
+}
+
+@mixin link() {
+   content: "";
+   bottom: 0;
+   left: 0px;
+   clear: both;
+   height: 6px;
+   width: 100%;
+   background-color: $navLinkColorAccent;
+   background-color: $navLinkColorPrimary;
+   box-shadow: 0px 0px 5px 1px rgba(0, 0, 0, 0.4);
+   position: absolute;
+   @include scaleXY(0, 0);
+   @include transition(.25s);
+}
+
+@mixin marker() {
+   content: "";
+   bottom: 0;
+   left: calc(50% - 15%);
+   clear: both;
+   height: 12px;
+   width: 30%;
+   background-color: $navLinkColorAccent;
+   position: absolute;
+   @include scaleXY(0, 0);
+   @include transition(.25s);
+}
+
+@mixin linkActive($showShadow: false, $shadowColor: $navLinkShadow) {
+   @include scaleXY(1, 1);
+   @if $showShadow { 
+      box-shadow: 0px 2px 7px 2px $shadowColor;
+      //box-shadow: 0px 0px 5px 1px rgba(0, 0, 0, 0.4);
+   }
+}
+
+@mixin markActive($showShadow: false, $shadowColor: $navLinkShadow) {
+   @include scaleXY(1, 1);
+   @if $showShadow {
+      box-shadow: 0px -2px 5px 1px rgba(0,0,0,0.2);
+   }
+}
+
+.nav-link {
+   margin: 0 0px;
+   padding: {
+      top: 0px;
+      bottom: 35px;
+      left: 1.5em;
+      right: 1.5em;
+   }
+   position: relative;
+   font-weight: 500;
+   text-decoration: none;
+   color: rgb(171, 172, 174);
+   @include transition(.25s);
+
+   &:hover {
+      color: white !important; 
+   }
+
+   &::before {
+      transform-origin: bottom;
+      border-top-left-radius: 8px;
+      border-top-right-radius: 8px;
+      @include marker();
+   }
+
+   &::after {
+      transform-origin: bottom;
+      border-radius: 8px;
+      @include link();
+   }
+}
+
+.nav-link-active {
+   font-weight: 600;
+   color: rgb(204, 205, 206);
+
+   &::before {
+      @include markActive(true);
+   }
+
+   &::after {
+      @include linkActive(true);
+   }
+}

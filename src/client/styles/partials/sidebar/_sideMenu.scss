@@ -1,0 +1,119 @@
+@import './sideMenuItem';
+@import './sideMenusearch';
+@import './sideMenuToggle';
+@import './sideSubMenu';
+
+.side-menu {
+   width: 17%;
+   height: 100vh;
+   position: absolute;
+   min-width: 230px;
+   scroll-behavior: smooth;
+   overflow-y: visible;
+   will-change: transform;
+   margin: 0;
+   z-index: 1000;
+   color: rgba(165, 167, 168, 1);
+   background-color: rgba(55, 60, 64, 1);
+   box-shadow: 2px 0px 6px 0px rgba(0, 0, 0, 0.3);
+   transition: all 0.3s $standardInterpolator;
+
+   & ul {
+      padding-inline-start: 0px;
+      list-style-type: none;
+   }
+
+   &.fixed {
+      position: fixed;
+   }
+
+   &:hover {
+      box-shadow: 6px 0px 12px 0px rgba(0, 0, 0, 0.3);
+   }
+
+   &-peek {
+      transform: translateX(0px) !important;
+      transition: all 0.3s $standardInterpolator;
+   }
+
+   &-peek>.search {
+      opacity: 1 !important;
+   }
+
+   &-closed {
+      transform: translateX(calc(-100% + 20px));
+   }
+
+   &-closed>.search {
+      opacity: 0;
+   }
+
+   &-closed~.content-wrapper {
+      margin-left: 0%;
+      margin-right: 40%;
+      padding-left: 1.5em;
+   }
+
+   &-closed~.sandbox-area {
+      width: 40%;
+   }
+
+   &-closed~.sandbox-area {
+      width: 40%;
+   }
+
+   &-closed~.footer-area {
+      margin-left: 0%;
+   }
+
+   &-closed .expand-icon {
+      transform: rotate(0deg);
+   }
+}
+
+.top-section {
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+   padding-left: 30px;
+   padding-top: 30px;
+   padding-bottom: 30px;
+   background-color: rgba(68, 72, 77, 1);
+   border-bottom-width: 1px;
+   border-bottom-style: solid;
+   border-bottom-color: rgba(0, 0, 0, 0.3);
+
+   & h2 {
+      font-weight: 300;
+      font-size: 20px;
+      color: #eee;
+   }
+
+   & h5 {
+      margin-top: 10px;
+      font-size: 14px;
+      font-weight: 200;
+      color: rgba(166, 170, 174, 1);
+   }
+}
+
+.middle-section {
+   padding-top: 1em;
+   padding-bottom: 1em;
+   border-bottom-style: solid;
+   border-bottom-width: 1px;
+   border-bottom-color: #484c50;
+}
+
+.main-section {
+   padding-top: 1em;
+}
+
+.menu-header {
+   text-transform: uppercase;
+   padding-left: 30px;
+   padding-top: 30px;
+   font-weight: 500;
+   font-size: 14px;
+   color: #eee;
+}

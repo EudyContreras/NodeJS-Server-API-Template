@@ -1,0 +1,73 @@
+$backgroundColor: rgb(55, 60, 64);
+$backgroundColorHovered: rgb(67, 72, 77);
+
+.menu-item {
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+   background-color: $backgroundColor;
+   padding-left: 0.8em;
+   padding-top: 0.5em;
+   padding-bottom: 0.5em;
+   padding-right: 1em;
+   @include transition(background-color 0.2s ease-out);
+
+   & i {
+      color: rgba(162, 166, 170, 1);
+      font-weight: 100;
+      font-size: 16px;
+      transition: all 0.2s cubic-bezier(.25, .8, .25, 1);
+   }
+
+   & a {
+      color: rgba(162, 166, 170, 1);
+      font-size: 14px;
+      display: block;
+      padding: 8px 16px;
+      letter-spacing: 0.6px;
+      font-weight: 400;
+      transition: color 0.2s cubic-bezier(.25, .8, .25, 1);
+   }
+
+   &:hover:not(.active) {
+      background-color: rgb(67, 72, 77);
+   }
+
+   &:hover>i {
+      color: rgb(220, 220, 220);
+   }
+
+   &:hover>a {
+      color: rgb(230, 230, 230);
+      font-weight: 500;
+   }
+
+   &.active>i {
+      color: rgb(220, 220, 220);
+      transform: rotate(90deg);
+   }
+
+   &.active>a {
+      color: rgb(230, 230, 230);
+      font-weight: 500;
+   }
+
+   &.active {
+
+   }
+
+   &.active:hover {
+      background-color: $backgroundColorHovered;
+      @include transition(background-color 0.2s ease-out);
+   }
+
+   // &.active::before {
+   //    content: "";
+   // }
+}
+
+// .menu-item.active:hover {}
+
+// .menu-item a.active {}
+
+// .menu-item a:hover:not(.active) {}

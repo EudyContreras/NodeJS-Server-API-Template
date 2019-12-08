@@ -1,0 +1,48 @@
+.content-wrapper {
+   display: flex;
+   flex-direction: column;
+   will-change: transform;
+   margin-left: 17%;
+   margin-right: 35%;
+   background-color: rgb(48,53,57);
+   transition: all 0.3s $standardInterpolator;
+}
+
+.content-padder {
+   padding-bottom: 3em;
+}
+
+.content {
+   padding-top: 3em;
+   padding-bottom: 0em;
+   padding-left: 3em;
+   padding-right: 3em;
+   min-height: 400px;
+   height: 400px;
+   width: auto;
+   position: relative;
+   background-color: rgb(48,53,57);
+}
+
+.content > .params-table {
+   width: 100%;
+   text-align: left;
+   padding-left: 1em;
+   padding-right: 1em;
+   background-color: rgba(37, 42, 46, 1);
+}
+
+.content > .params-table th {
+   height: 40px;
+}
+
+.content > .params-table tr {
+   height: 40px;
+}
+
+.content div {
+   display: flex;
+   background-color: rgb(55, 60, 64);
+   height: -webkit-fill-available;
+   border-radius: 8px;
+}

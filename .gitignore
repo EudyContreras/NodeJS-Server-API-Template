@@ -38,10 +38,12 @@ bower_components
 build/Release
 
 # Dependency directories
-
+/.history
 node_modules/
 jspm_packages/
 
+*.DS_Store
+.DS_Store
 # TypeScript v1 declaration files
 typings/
 
@@ -66,6 +68,12 @@ typings/
 # dotenv environment variables file
 .env
 .env.test
+.env.local
+.env.development.local
+.env.development
+.env.test.local
+.env.production.local
+.env.production
 
 # parcel-bundler cache (https://parceljs.org/)
 .cache
@@ -87,3 +95,6 @@ typings/
 
 # DynamoDB Local files
 .dynamodb/
+
+build/public/
+/build

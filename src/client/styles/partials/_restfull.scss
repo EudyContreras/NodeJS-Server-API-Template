@@ -1,0 +1,39 @@
+.http-method {
+   font-size: 10px;
+   text-transform: uppercase;
+   font-weight: 700;
+   padding-left: 8px;
+   padding-right: 8px;
+   padding-top: 2px;
+   padding-bottom: 2px;
+   color: white;
+   border: 0;
+   border-radius: 4px;
+   text-align: center;
+   line-height: 1;
+   display: flex;
+ }
+ 
+.http-all {
+   background-color: rgba(92, 96, 100, 0);
+}
+
+.http-get {
+   background-color: #177598;
+}
+
+.http-post {
+   background-color: #339973;
+}
+
+.http-delete {
+   background-color: #a5432d;
+}
+
+.http-patch {
+   background-color: #bb8f2e;
+}
+
+.http-put {
+   background-color: #9c3556;
+}
