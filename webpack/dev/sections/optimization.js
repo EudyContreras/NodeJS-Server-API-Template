@@ -54,6 +54,9 @@ module.exports = (enviroment, splitChunk, useSourceMap) => ({
 		}),
 	],
 	nodeEnv: enviroment,
+	providedExports: true,
+	removeAvailableModules: true,
+	mangleWasmImports: true,
 	removeEmptyChunks: true,
 	...splitChunk
 });
