@@ -32,11 +32,11 @@ const messages = {
 // workbox.core.skipWaiting();
 // workbox.core.clientsClaim();
 
-requestFailingToCacheStrategy = ({ request, cache }) => {
+const requestFailingToCacheStrategy = ({ request, cache }) => {
   return fetch(request).catch(() => cache.match(request));
 }
 
-requestFailingWithNotFoundStrategy = ({ request }) => {
+const requestFailingWithNotFoundStrategy = ({ request }) => {
   return fetch(request)
     .catch(() => {
       const body = JSON.stringify({ error: 'Sorry, you are offline. Please, try later.' });
@@ -46,7 +46,7 @@ requestFailingWithNotFoundStrategy = ({ request }) => {
     });
 }
 
-cacheableRequestFailingToCacheStrategy = ({ request, cache }) => {
+const cacheableRequestFailingToCacheStrategy = ({ request, cache }) => {
   return fetch(request)
     .then(throwOnError)
     .then(response => {
@@ -56,22 +56,22 @@ cacheableRequestFailingToCacheStrategy = ({ request, cache }) => {
     .catch(() => cache.match(request));
 }
 
-isRequestForStatic = (request) => {
+const isRequestForStatic = (request) => {
   return /.(png|jpg|jpeg|gif|ico|css|js)$/.test(request.url);
 }
 
-isSideEffectRequest = (request) => {
+const isSideEffectRequest = (request) => {
   return [...Object.values(http)].includes(request.method);
 }
 
-throwOnError = (response) => {
+const throwOnError = (response) => {
   if (response.status >= 200 && response.status < 300 || response.status === 0) {
     return response;
   }
   throw new Error(response.statusText);
 };
 
-cacheFailingToCacheableRequestStrategy = ({ request, cache }) => {
+const cacheFailingToCacheableRequestStrategy = ({ request, cache }) => {
   return cache.match(request)
     .then(throwOnError)
     .catch(() => fetch(request)

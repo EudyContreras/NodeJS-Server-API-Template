@@ -1,7 +1,7 @@
 import config from '../config';
 import configureStore from '../stores/store';
 import ViewRenderer from '../../server/middleware/renderer';
-import sass from './../styles/app.scss';
+import appStyle from './../styles/app.scss';
 
 import { Store } from 'redux';
 import { application, shell } from '../views';
@@ -44,15 +44,16 @@ class IndexViewRenderer extends ViewRenderer {
 	};
 
 	private renderApplication = async (req: Request, res: Response): Promise<void> => {
-		const css = new Set([sass._getCss()]);
 		const state = this.store.getState();
+		const styling = new Set([appStyle._getCss()]);
+		const context = {};
 
-		const insertCss = (...styles: any[]): void => styles.forEach(style => css.add(style._getCss()));
+		const insertCss = (...styles: any[]): void => styles.forEach(style => styling.add(style._getCss()));
 
-		const content = application(req.url, this.store, {}, insertCss);
+		const content = application(req.url, this.store, context, insertCss );
 		
 		const props = {
-			css: css,
+			css: styling,
 			state: state,
 			csr: config.app.CSR,
 			title: config.app.TITLE,
@@ -66,7 +67,7 @@ class IndexViewRenderer extends ViewRenderer {
 	};
 
 	private renderShell = async (req: Request, res: Response): Promise<void> => {
-		const css = new Set([sass._getCss()]);
+		const css = new Set([appStyle._getCss()]);
 		const insertCss = (...styles: any[]): void => styles.forEach(style => css.add(style._getCss()));
 
 		const content = shell(req.url, this.store, {}, insertCss);

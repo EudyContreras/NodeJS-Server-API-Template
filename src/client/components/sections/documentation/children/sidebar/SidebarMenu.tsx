@@ -1,9 +1,9 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import TopSection from './sections/TopSection';
 import MainSection from './sections/MainSection';
 import MiddleSection from './sections/MiddleSection';
 import SideMenuSearch from './SidebarSearch';
+import { connect } from 'react-redux';
 import { appendWhen } from '../../../../../appliers/style.applier';
 import { getSidemenu } from '../../../../../selectors/sidemenu.selector';
 import { setHovered, setFixed } from '../../../../../actions/documentation/sidebar.action';

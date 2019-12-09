@@ -10,10 +10,12 @@ export default (props) => {
 	}
 };
 
-function DefaultLayout(props) {
+const DefaultLayout = (props) => {
 	return <html lang='en-US'>
 		<head>
 			<title>{props.title}</title>
+			<script async type='text/javascript' src='static/scripts/vendor/vendor.chunk.js' />
+			<script async type='text/javascript' src='static/scripts/bundle.js' />
 			<meta charSet='utf-8' />
 			<meta name='viewport' content='width=device-width, initial-scale=1' />
 			<meta name='theme-color' content='#000000' />
@@ -25,9 +27,9 @@ function DefaultLayout(props) {
 			<link rel='icon' type='image/png' href='static/images/favicon.ico' />
 			<link rel='apple-touch-icon' type='image/png' href='static/images/favicon.ico' />
 			<link rel='shortcut icon' type='image/png' href='static/images/favicon.ico' />
-			<link rel='stylesheet' href='https://fonts.googleapis.com/icon?family=Material+Icons&display=swap' media="all" id='materialIcons' defer disabled/>
-			<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Roboto&display=optional' media="all" id='robotoFont' defer disabled/>
-			<style type='text/css'>{[...props.css].join('')}</style>
+			<link rel='stylesheet' href='https://fonts.googleapis.com/icon?family=Material+Icons&display=swap' media="all" id='materialIcons' async defer disabled />
+			<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Roboto&display=optional' media="all" id='robotoFont' async defer disabled/>
+			<style defer id='shellStyle' type='text/css'>{props.css}</style>
 		</head>
 		<body >
 			<section id='content'>{props.content}</section>
@@ -49,7 +51,7 @@ function DefaultLayout(props) {
 				window.addEventListener('load', function() {
 				  navigator.serviceWorker.register('service-worker.js').then(function(registration) {
 					 console.log('ServiceWorker registration successful with scope: ', registration.scope);
-					//  registration.pushManager.subscribe({userVisibleOnly: true});
+				    //registration.pushManager.subscribe({userVisibleOnly: true});
 				  }, function(err) {
 					 console.log('ServiceWorker registration failed: ', err);
 				  }).catch(error => console.log(error));
@@ -81,8 +83,7 @@ function DefaultLayout(props) {
 			<script type='text/javascript' src='static/scripts/vendor/vendor-main-symbol-observable.chunk.js' />
 			<script type='text/javascript' src='static/scripts/common/commons-main-tiny-invariant.esm.js.chunk.js' />
 			<script type='text/javascript' src='static/scripts/common/commons-main-value-equal.js.chunk.js' /> */}
-			<script type='text/javascript' src='static/scripts/vendor/vendor.chunk.js' />
-			<script type='text/javascript' src='static/scripts/bundle.js' />
+		
 		</body>
 	</html>;
 };
@@ -92,5 +93,5 @@ DefaultLayout.propTypes = {
 	content: PropType.any,
 	title: PropType.string,
 	state: PropType.any,
-	css: PropType.object
+	css: PropType.string
 };

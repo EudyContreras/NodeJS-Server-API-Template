@@ -41,4 +41,6 @@ if (initialState != null) {
 	);
 }
 
+document.getElementById('shellStyle').remove();
+
 register();
