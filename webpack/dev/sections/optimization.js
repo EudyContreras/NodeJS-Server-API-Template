@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/camelcase */
+/* eslint-disable @typescript-eslint/no-var-requires */
 const TerserPlugin = require('terser-webpack-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const safePostCssParser = require('postcss-safe-parser');
@@ -38,8 +40,7 @@ module.exports = (enviroment, splitChunk, useSourceMap) => ({
 					comments: false,
 					ascii_only: true,
 				},
-			},
-			sourceMap: useSourceMap,
+			}
 		}),
 		new OptimizeCSSAssetsPlugin({
 			cssProcessorOptions: {

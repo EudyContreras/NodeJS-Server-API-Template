@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 require('dotenv').config();
 
 const path = require('path');
@@ -11,36 +12,36 @@ const fileLoader = require('./loaders/file.loader');
 const enviroment = process.env.NODE_ENV;
 
 module.exports = {
-  name: 'server',
-  target: 'node',
-  mode: enviroment,
-  performance: {
-    hints: false
-  },
-  entry: [
-    '@babel/polyfill', './src/server.ts'
-  ],
-  output: {
-    path: path.join(__dirname, '../../build'),
-    filename: 'server.js',
-    globalObject: 'this'
-  },
-  plugins: [
+	name: 'server',
+	target: 'node',
+	mode: enviroment,
+	performance: {
+		hints: false
+	},
+	entry: [
+		'@babel/polyfill', './src/server.ts'
+	],
+	output: {
+		path: path.join(__dirname, '../../build'),
+		filename: 'server.js',
+		globalObject: 'this'
+	},
+	plugins: [
 
-  ],
-  optimization: optimization(enviroment),
-  externals: [NodeExternals()],
-  module: {
-    rules: [{
-        test: /\.txt$/,
-        use: 'raw-loader'
-      },
-      babelLoader,
-      fileLoader,
-      styleLoader(path)
-    ]
-  },
-  resolve: {
-    extensions: ['*', '.js', '.jsx', '.tsx', '.ts', '.scss', '.css']
-  },
+	],
+	optimization: optimization(enviroment),
+	externals: [NodeExternals()],
+	module: {
+		rules: [{
+			test: /\.txt$/,
+			use: 'raw-loader'
+		},
+		babelLoader,
+		fileLoader,
+		styleLoader(path)
+		]
+	},
+	resolve: {
+		extensions: ['*', '.js', '.jsx', '.tsx', '.ts', '.scss', '.css']
+	},
 };

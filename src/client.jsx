@@ -1,7 +1,7 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-
+import config from './client/config';
 import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { register } from './client/scriptsjs/serviceWorker';
@@ -9,7 +9,7 @@ import StyleContext from 'isomorphic-style-loader/StyleContext';
 import Application from './client/components/App';
 import configureStore from './client/stores/store';
 
-const initialState = window.__REDUX_STATE__ || null;
+const initialState = window.__REDUX_STATE__ || {};
 
 delete window.__REDUX_STATE__;
 
@@ -18,28 +18,18 @@ const insertCss = (...styles) => {
 	return () => removeCss.forEach(dispose => dispose());
 };
 
-if (initialState != null) {
-	const store = configureStore(initialState);
+const store = configureStore(initialState);
 
-	ReactDOM.hydrate(
-		<Provider store={store} suppressHydrationWarning={true}>
-			<BrowserRouter onUpdate={() => window.scrollTo(0, 0)}>
-				<StyleContext.Provider value={{ insertCss }}>
-					<Application location={window.location.pathname} />
-				</StyleContext.Provider>
-			</BrowserRouter>
-		</Provider>,
-		document.getElementById('content')
-	);
-} else {
-
-	ReactDOM.hydrate(
-		<StyleContext.Provider value={{ insertCss }}>
-			<Application location={window.location.pathname} />
-		</StyleContext.Provider>,
-		document.getElementById('content')
-	);
-}
+ReactDOM.hydrate(
+	<Provider store={store} suppressHydrationWarning={true}>
+		<BrowserRouter onUpdate={() => window.scrollTo(0, 0)}>
+			<StyleContext.Provider value={{ insertCss }}>
+				<Application location={window.location.pathname} />
+			</StyleContext.Provider>
+		</BrowserRouter>
+	</Provider>,
+	document.getElementById('content')
+);
 
 document.getElementById('shellStyle').remove();
 

@@ -9,9 +9,9 @@ module.exports = {
 			const isIcon = parts[parts.length - 1].startsWith('icon');
 
 			if (process.env.NODE_ENV === 'development') {
-				return isIcon ? `icons/[name].[ext]` : `[name].[ext]`;
+				return isIcon ? 'icons/[name].[ext]' : '[name].[ext]';
 			}
-			return isIcon ? `icons/[name].[ext]` : `[name].[ext]`;
+			return isIcon ? 'icons/[name].[ext]' : '[name].[ext]';
 		}
 	}
 }

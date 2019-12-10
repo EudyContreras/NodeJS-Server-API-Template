@@ -12,6 +12,7 @@ class IndexViewRenderer extends ViewRenderer {
 
 	private routing = '/';
 	private router: Router;
+	private context = {};
 	private store: Store;
 
 	constructor() {
@@ -36,26 +37,28 @@ class IndexViewRenderer extends ViewRenderer {
 	private renderRoutes = async (req: Request, res: Response): Promise<void> => {
 		const shell = req.query.shell !== undefined;
 
-		if (shell) {
-			return await this.renderShell(req, res);
+		if (config.app.CSR) {
+			res.status(200).send('');
 		} else {
-			return await this.renderApplication(req, res);
+			if (shell) {
+				return await this.renderShell(req, res);
+			} else {
+				return await this.renderApplication(req, res);
+			}
 		}
 	};
 
 	private renderApplication = async (req: Request, res: Response): Promise<void> => {
 		const state = this.store.getState();
 		const styling = new Set([appStyle._getCss()]);
-		const context = {};
 
 		const insertCss = (...styles: any[]): void => styles.forEach(style => styling.add(style._getCss()));
 
-		const content = application(req.url, this.store, context, insertCss );
+		const content = application(req.url, this.store, this.context, insertCss);
 		
 		const props = {
 			css: styling,
 			state: state,
-			csr: config.app.CSR,
 			title: config.app.TITLE,
 			enableSW: config.app.USE_SW,
 			content: content,
@@ -67,14 +70,14 @@ class IndexViewRenderer extends ViewRenderer {
 	};
 
 	private renderShell = async (req: Request, res: Response): Promise<void> => {
-		const css = new Set([appStyle._getCss()]);
-		const insertCss = (...styles: any[]): void => styles.forEach(style => css.add(style._getCss()));
+		const styling = new Set([appStyle._getCss()]);
 
-		const content = shell(req.url, this.store, {}, insertCss);
+		const insertCss = (...styles: any[]): void => styles.forEach(style => styling.add(style._getCss()));
+
+		const content = shell(req.url, this.store, this.context, insertCss);
 
 		const props = {
-			css: css,
-			csr: config.app.CSR,
+			css: styling,
 			title: config.app.TITLE,
 			enableSW: config.app.USE_SW,
 			content: content,

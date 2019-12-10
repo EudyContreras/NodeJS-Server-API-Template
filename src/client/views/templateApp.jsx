@@ -18,7 +18,7 @@ const DefaultLayout = (props) => {
 			<script async type='text/javascript' src='static/scripts/bundle.js' />
 			<meta charSet='utf-8' />
 			<meta name='viewport' content='width=device-width, initial-scale=1' />
-			<meta name='theme-color' content='#000000' />
+			<meta name='theme-color' content='#23282d' />
 			<meta name='description' content='Template Web site generated the server api routing' />
 			<meta name='apple-mobile-web-app-capable' content='yes' />
 			<meta name='apple-mobile-web-app-status-bar-style' content='black' />
@@ -28,10 +28,11 @@ const DefaultLayout = (props) => {
 			<link rel='apple-touch-icon' type='image/png' href='static/images/favicon.ico' />
 			<link rel='shortcut icon' type='image/png' href='static/images/favicon.ico' />
 			<link rel='stylesheet' href='https://fonts.googleapis.com/icon?family=Material+Icons&display=swap' media="all" id='materialIcons' async defer disabled />
-			<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Roboto&display=optional' media="all" id='robotoFont' async defer disabled/>
+			<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Roboto&display=optional' media="all" id='robotoFont' async defer disabled />
 			<style defer id='shellStyle' type='text/css'>{props.css}</style>
 		</head>
 		<body >
+			<noscript>You need to enable JavaScript to fully be able to use this this web-app.</noscript>
 			<section id='content'>{props.content}</section>
 			<script rel="preconnect" src='https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js' defer async />
 			<script dangerouslySetInnerHTML={{
@@ -89,6 +90,7 @@ const DefaultLayout = (props) => {
 };
 
 DefaultLayout.propTypes = {
+	cache: PropType.any,
 	enableSW: PropType.bool,
 	content: PropType.any,
 	title: PropType.string,
