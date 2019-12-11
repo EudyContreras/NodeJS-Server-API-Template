@@ -37,17 +37,11 @@ class SidebarMenu extends React.Component<Props, any> {
 	}
 
 	private onMouseEnter = (): void => {
-		if (!this.props.hovered) {
-			this.setState({
-				hovering: true
-			}, () => {
-				this.props.setHovered(true);
-			})	
-		} else {
-			this.setState({
-				hovering: true
-			});
-		}
+		this.setState({
+			hovering: true
+		}, () => {
+			this.props.setHovered(true);
+		});
 	};
 
 	private onMouseExit = (): void => {

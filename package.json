@@ -2,10 +2,9 @@
   "name": "template-server",
   "private": true,
   "version": "1.0.0",
-  "license": "ISC",
+  "license": "MIT",
   "author": "Eudy Contreras",
   "email": "econtreras12@live.com",
-  "proxy": "/",
   "homepage": "https://github.com/EudyContreras/NodeJS-Server-API-Template#readme",
   "description": "A NodeJS template API and Server meant to speed up the initial development process.",
   "repository": {
