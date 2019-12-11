@@ -95,5 +95,5 @@ DefaultLayout.propTypes = {
 	content: PropType.any,
 	title: PropType.string,
 	state: PropType.any,
-	css: PropType.string
+	css: PropType.any
 };

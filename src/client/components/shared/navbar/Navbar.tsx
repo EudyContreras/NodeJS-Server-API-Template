@@ -2,6 +2,7 @@ import React from 'react';
 import memoize from 'fast-memoize';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { shallowEqual } from '../../utililties/comparer.utils';
 import { appendWhen, join } from '../../../appliers/style.applier';
 import { getNavigationBar } from '../../../selectors/navbar.selector';
 import { DispatchProps, Dispatchers } from '../../../actions/common/navigation.action';
@@ -17,13 +18,22 @@ interface StateProps {
 
 type Props = StateProps & DispatchProps & any;
 
-class Navbar extends React.PureComponent<Props, any> {
+class Navbar extends React.Component<Props, any> {
 
 	private navbar: React.RefObject<HTMLElement>;
 
 	constructor(props: any) {
 		super(props);
 		this.navbar = React.createRef();
+		this.state = {
+			hovering: false
+		};
+	}
+
+	public shouldComponentUpdate = (nextProps: any, nextState: any): boolean => {
+		return !shallowEqual(this.props.anchored, nextProps.anchored) 
+			|| !shallowEqual(this.props.mouseInside, nextProps.mouseInside)
+			|| !shallowEqual(this.props.activeTab, nextProps.activeTab)
 	}
 
 	public componentDidMount = (): void => {
@@ -61,12 +71,26 @@ class Navbar extends React.PureComponent<Props, any> {
 	};
 
 	private onMouseEnter = (): void => {
-		if (this.props.anchored) {
-			this.props.setMouseInside(true);
+		if (!this.props.anchored) {
+			return;
 		}
+		this.setState({
+			hovering: true
+		}, () => {
+			setTimeout(() => {
+				if (this.state.hovering) {
+					if (this.props.anchored) {
+						this.props.setMouseInside(true);
+					}
+				}
+			}, 100);
+		});
 	};
 
 	private onMouseExit = (): void => {
+		this.setState({
+			hovering: false
+		});
 		if (this.props.anchored) {
 			this.props.setMouseInside(false);
 		}

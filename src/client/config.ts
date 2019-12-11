@@ -6,7 +6,7 @@ const config = Object.freeze({
 		TITLE: 'Template Engine',
 		APP_LAYOUT: 'templateApp',
 		SHELL_LAYOUT: 'templateShell',
-		NAME: ''
+		NAME: '',
 	},
 	header: {
 		LABEL: 'Set-Cookie',

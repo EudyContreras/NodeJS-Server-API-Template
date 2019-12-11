@@ -4,6 +4,7 @@ import MainSection from './sections/MainSection';
 import MiddleSection from './sections/MiddleSection';
 import SideMenuSearch from './SidebarSearch';
 import { connect } from 'react-redux';
+import { shallowEqual } from '../../../../utililties/comparer.utils';
 import { appendWhen } from '../../../../../appliers/style.applier';
 import { getSidemenu } from '../../../../../selectors/sidemenu.selector';
 import { setHovered, setFixed } from '../../../../../actions/documentation/sidebar.action';
@@ -26,19 +27,46 @@ const Dispatchers = { setHovered, setFixed };
 
 type Props = StateProps & DispatchProps & any;
 
-class SidebarMenu extends React.PureComponent<Props> {
+class SidebarMenu extends React.Component<Props, any> {
 
 	constructor(props: any) {
 		super(props);
+		this.state = {
+			hovering: false
+		}
 	}
 
 	private onMouseEnter = (): void => {
-		this.props.setHovered(true);
+		if (!this.props.hovered) {
+			this.setState({
+				hovering: true
+			}, () => {
+				this.props.setHovered(true);
+			})	
+		} else {
+			this.setState({
+				hovering: true
+			});
+		}
 	};
 
 	private onMouseExit = (): void => {
-		this.props.setHovered(false);
+		this.setState({
+			hovering: false
+		}, () => {
+			setTimeout(() => {
+				if (!this.state.hovering) {
+					this.props.setHovered(false);
+				}
+			}, 300);
+		});
 	};
+
+	public shouldComponentUpdate = (nextProps: any, nextState: any): boolean => {
+		return !shallowEqual(this.props.fixed, nextProps.fixed) 
+			|| !shallowEqual(this.props.hovered, nextProps.hovered)
+			|| !shallowEqual(this.props.expanded, nextProps.expanded)
+	}
 
 	private getProperties = (style: any): any & any => {
 		const styles = [style.sideMenu];
@@ -63,6 +91,8 @@ class SidebarMenu extends React.PureComponent<Props> {
 	};
 
 	public render = (): JSX.Element => {
+		console.log('Render sidebar');
+
 		const style = this.props.styling;
 
 		const { common , actions } = this.getProperties(style);

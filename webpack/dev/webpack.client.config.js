@@ -2,24 +2,26 @@
 require('dotenv').config();
 
 const path = require('path');
+const webpack = require('webpack');
 const WorkboxPlugin = require('workbox-webpack-plugin');
 const ManifestPlugin = require('webpack-manifest-plugin');
+const typescriptLoader = require('./loaders/tyscript.loader');
 const CopyPlugin = require('copy-webpack-plugin');
 const optimization = require('./sections/optimization');
+const splitchunks = require('./sections/splitchunks');
 const babelLoader = require('./loaders/babel.loader');
 const styleLoader = require('./loaders/style.loader');
 const fileLoader = require('./loaders/file.loader');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
+const useCSR = process.env.CSR == 'true';
+const useSourceMap = process.env.GENERATE_SOURCEMAP !== 'false';
 const enviroment = process.env.NODE_ENV;
 
-const useCSR = process.env.CSR == 'true';
-const publicPath = '../../build/public/';
-const useSourceMap = process.env.GENERATE_SOURCEMAP !== 'false';
 const isEnvProduction = enviroment === 'production';
 const isEnvDevelopment = enviroment === 'development';
-const publicUrl = isEnvProduction ? publicPath.slice(0, -1) : isEnvDevelopment && '';
 
+const publicPath = '../../build/public/';
 const entryPoint = './src/client.jsx';
 
 const resources = [
@@ -36,7 +38,6 @@ const resources = [
 		from: 'src/client/resources/images/icons',
 		to: 'static/images/icons'
 	}];
-
 if (useCSR) {
 	resources.push(
 		{
@@ -45,49 +46,10 @@ if (useCSR) {
 		}
 	);
 }
-const singleShunk = {
-	cacheGroups: {
-		commons: {
-			test: /[\\/]node_modules[\\/]/,
-			name: 'vendor/vendor',
-			chunks: 'all'
-		}
-	}
-};
-
-const multiChunk = {
-	chunks: 'all',
-	maxInitialRequests: Infinity,
-	minSize: 0,
-	cacheGroups: {
-		commons: {
-			reuseExistingChunk: true,
-			enforce: true,
-			chunks: 'all',
-			test: /[\\/]node_modules[\\/]/,
-			name(module, chunks, cacheGroupKey) {
-				const folder = 'common';
-				const moduleFileName = module.identifier().split('/').reduceRight(item => item);
-				const allChunksNames = chunks.map((item) => item.name).join('~');
-				return `${folder}/${cacheGroupKey}-${allChunksNames}-${moduleFileName}`;
-			},
-		},
-		vendor: {
-			chunks: 'all',
-			test: /[\\/]node_modules[\\/]/,
-			name(module, chunks, cacheGroupKey) {
-				const folder = 'vendor';
-				const packageName = module.context.match(/[\\/]node_modules[\\/](.*?)([\\/]|$)/)[1];
-				const allChunksNames = chunks.map((item) => item.name).join('~');
-				return `${folder}/${cacheGroupKey}-${allChunksNames}-${packageName.replace('@', '')}`;
-			},
-		},
-	},
-};
 
 const splitChunk = {
 	splitChunks: {
-		...singleShunk
+		...splitchunks
 	}
 };
 
@@ -101,7 +63,7 @@ module.exports = {
 		hints: false
 	},
 	plugins: [
-		new CleanWebpackPlugin(),
+		new CopyPlugin(resources),
 		new ManifestPlugin({
 			fileName: 'manifest-assets.json',
 			publicPath: publicPath,
@@ -120,12 +82,12 @@ module.exports = {
 				};
 			},
 		}),
-		new CopyPlugin(resources),
 		new WorkboxPlugin.InjectManifest({
 			swSrc: 'serviceWorker.js',
 			swDest: 'service-worker.js',
 			precacheManifestFilename: 'manifest-precache.[manifestHash].js'
-		})
+		}),
+		new CleanWebpackPlugin(),
 	],
 	output: {
 		path: path.join(__dirname, publicPath),
@@ -144,6 +106,7 @@ module.exports = {
 		},
 		babelLoader,
 		fileLoader,
+		typescriptLoader,
 		styleLoader(path)
 		]
 	},
