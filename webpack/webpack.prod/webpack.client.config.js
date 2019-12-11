@@ -5,7 +5,6 @@ require('dotenv').config();
 const path = require('path');
 const WorkboxPlugin = require('workbox-webpack-plugin');
 const ManifestPlugin = require('webpack-manifest-plugin');
-const typescriptLoader = require('../loaders/tyscript.loader');
 const CopyPlugin = require('copy-webpack-plugin');
 const optimization = require('../sections/optimization');
 const splitchunks = require('../sections/splitchunks');
@@ -18,7 +17,7 @@ const useCSR = process.env.CSR == 'true';
 const useSourceMap = process.env.GENERATE_SOURCEMAP !== 'false';
 
 const enviroment = 'production';
-const publicPath = '../../dist/public/';
+const publicPath = '../../build/public/';
 const entryPoint = './src/client.jsx';
 
 const resources = [
@@ -60,6 +59,7 @@ module.exports = {
 		hints: false
 	},
 	plugins: [
+		new CleanWebpackPlugin(),
 		new CopyPlugin(resources),
 		new ManifestPlugin({
 			fileName: 'manifest-assets.json',
@@ -84,7 +84,6 @@ module.exports = {
 			swDest: 'service-worker.js',
 			precacheManifestFilename: 'manifest-precache.[manifestHash].js'
 		}),
-		new CleanWebpackPlugin(),
 	],
 	output: {
 		path: path.join(__dirname, publicPath),
@@ -103,7 +102,6 @@ module.exports = {
 		},
 		babelLoader,
 		fileLoader,
-		typescriptLoader,
 		styleLoader(path)
 		]
 	},

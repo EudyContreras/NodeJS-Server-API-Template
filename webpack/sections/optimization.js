@@ -41,7 +41,7 @@ module.exports = ({ enviroment, splitChunk, useSourceMap, production = false }) 
 			}
 		})
 	],
-	nodeEnv: production === true ? enviroment : 'development',
+	nodeEnv: enviroment,
 	providedExports: true,
 	removeAvailableModules: true,
 	mangleWasmImports: true,

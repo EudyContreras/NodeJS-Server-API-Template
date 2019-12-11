@@ -24,11 +24,11 @@
     "build:dev": "npm run build:dev:watch:server & npm run build:dev:watch:client",
     "build:prod": "npm run build:prod:server & npm run build:prod:client",
     "build:all": "npm run build:dev & npm run build:prod",
-    "build:dev:start": "concurrently \"npm run build:dev:watch:server\" \"npm run build:dev:watch:client\" \"nodemon ./build/server.js\"",
-    "build:prod:start": "npm run build:prod && NODE_ENV=production node ./dist/server.js",
+    "build:dev:start": "concurrently \"npm run build:dev && NODE_ENV=development\" \"nodemon --delay 2500ms ./build/server.js\"",
+    "build:prod:start": "npm run build:prod && NODE_ENV=production node ./build/server.js",
     "start:dev": "nodemon ./build/server.js",
-    "start:prod": "nodemon ./dist/server.js",
-    "start": "node dist/server.js"
+    "start:prod": "nodemon ./build/server.js",
+    "start": "node build/server.js"
   },
   "keywords": [
     "ssr",
@@ -67,7 +67,6 @@
     "fast-memoize": "^2.5.1",
     "fontfaceobserver": "^2.1.0",
     "helmet": "^3.21.2",
-    "isomorphic-style-loader": "^5.1.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.7.5",
     "morgan": "^1.9.1",
@@ -140,6 +139,7 @@
     "eslint-plugin-react": "^7.16.0",
     "file-loader": "^4.2.0",
     "isomorphic-loader": "^3.0.0",
+    "isomorphic-style-loader": "^5.1.0",
     "jquery": "^3.4.1",
     "node-sass": "^4.13.0",
     "nodemon": "^1.19.4",

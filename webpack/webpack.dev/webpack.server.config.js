@@ -2,7 +2,6 @@
 
 const path = require('path');
 const NodeExternals = require('webpack-node-externals');
-const typescriptLoader = require('../loaders/tyscript.loader');
 const optimization = require('../sections/optimization');
 const babelLoader = require('../loaders/babel.loader');
 const styleLoader = require('../loaders/style.loader');
@@ -37,7 +36,6 @@ module.exports = {
 		},
 		babelLoader,
 		fileLoader,
-		typescriptLoader,
 		styleLoader(path)
 		]
 	},

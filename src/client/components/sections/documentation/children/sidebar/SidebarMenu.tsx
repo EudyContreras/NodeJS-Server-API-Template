@@ -91,8 +91,6 @@ class SidebarMenu extends React.Component<Props, any> {
 	};
 
 	public render = (): JSX.Element => {
-		console.log('Render sidebar');
-
 		const style = this.props.styling;
 
 		const { common , actions } = this.getProperties(style);
