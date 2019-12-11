@@ -1,8 +1,6 @@
 /* eslint-disable @typescript-eslint/camelcase */
 /* eslint-disable @typescript-eslint/no-var-requires */
 const TerserPlugin = require('terser-webpack-plugin');
-const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
-const safePostCssParser = require('postcss-safe-parser');
 
 const minimizeVendors = true;
 
@@ -27,7 +25,7 @@ module.exports = ({ enviroment, splitChunk, useSourceMap, production = false }) 
 					ecma: 5,
 					warnings: false,
 					comparisons: false,
-					drop_console: production,
+					drop_console: false,
 					inline: 2,
 				},
 				mangle: {
@@ -41,18 +39,7 @@ module.exports = ({ enviroment, splitChunk, useSourceMap, production = false }) 
 					ascii_only: true,
 				},
 			}
-		}),
-		new OptimizeCSSAssetsPlugin({
-			cssProcessorOptions: {
-				parser: safePostCssParser,
-				map: useSourceMap ?
-					{
-						inline: false,
-						annotation: true,
-					} :
-					false,
-			},
-		}),
+		})
 	],
 	nodeEnv: production === true ? enviroment : 'development',
 	providedExports: true,

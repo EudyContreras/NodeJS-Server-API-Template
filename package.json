@@ -12,33 +12,27 @@
     "type": "git",
     "url": "https://github.com/EudyContreras/NodeJS-Server-API-Template"
   },
-  "main": "src/server.ts",
+  "main": "dist/server.js",
   "scripts": {
     "build:ts": "tsc -p .",
-    
     "build:dev:server": "webpack --config webpack/webpack.dev/webpack.server.config.js",
     "build:dev:client": "webpack --config webpack/webpack.dev/webpack.client.config.js",
-
     "build:prod:server": "webpack --config webpack/webpack.prod/webpack.server.config.js",
     "build:prod:client": "webpack --config webpack/webpack.prod/webpack.client.config.js",
-
     "build:dev:watch:server": "webpack --config webpack/webpack.dev/webpack.server.config.js/ --watch",
     "build:dev:watch:client": "webpack --config webpack/webpack.dev/webpack.client.config.js/ --watch",
-
-    "build:dev": "npm run build:dev:watch:server && npm run build:dev:watch:client",
-    "build:prod": "npm run build:prod:server && npm run build:prod:client",
-    "build:all": "npm run build:dev && npm run build:prod",
-
-    "build:start:dev": "concurrently \"npm run build:dev\" \"nodemon ./build/server.js\"",
-    "build:start:prod": "npm run build:prod && NODE_ENV=production node ./dist/server.js",
-
-    "start:dev": "nodemon ./build/server.js\"",
-    "start:prod": "node ./dist/server.js",
-
-    "exec": "nodemon ./build/server.js"
+    "build:dev": "npm run build:dev:watch:server & npm run build:dev:watch:client",
+    "build:prod": "npm run build:prod:server & npm run build:prod:client",
+    "build:all": "npm run build:dev & npm run build:prod",
+    "build:dev:start": "concurrently \"npm run build:dev:watch:server\" \"npm run build:dev:watch:client\" \"nodemon ./build/server.js\"",
+    "build:prod:start": "npm run build:prod && NODE_ENV=production node ./dist/server.js",
+    "start:dev": "nodemon ./build/server.js",
+    "start:prod": "nodemon ./dist/server.js",
+    "start": "node dist/server.js"
   },
   "keywords": [
     "ssr",
+    "PWA",
     "typescript",
     "api-template",
     "isomorphic",
@@ -145,27 +139,20 @@
     "eslint-plugin-jsx-a11y": "^6.2.3",
     "eslint-plugin-react": "^7.16.0",
     "file-loader": "^4.2.0",
-    "http-server": "^0.12.0",
     "isomorphic-loader": "^3.0.0",
     "jquery": "^3.4.1",
-    "mini-css-extract-plugin": "^0.8.0",
     "node-sass": "^4.13.0",
     "nodemon": "^1.19.4",
-    "offline-plugin": "^5.0.7",
-    "optimize-css-assets-webpack-plugin": "^5.0.3",
-    "postcss-safe-parser": "^4.0.1",
     "raw-loader": "^3.1.0",
-    "redux-immutable-state-invariant": "^2.1.0",
     "sass": "^1.23.6",
     "sass-loader": "^8.0.0",
     "style-loader": "^1.0.0",
-    "terser-webpack-plugin": "^2.2.1",
+    "terser-webpack-plugin": "^2.2.3",
     "ts-loader": "^6.2.1",
     "ts-node": "^8.4.1",
     "typescript": "^3.7.3",
     "url-loader": "^2.2.0",
     "webpack": "^4.41.2",
-    "webpack-assets-manifest": "^3.1.1",
     "webpack-cli": "^3.3.10",
     "webpack-manifest-plugin": "^2.2.0",
     "webpack-node-externals": "^1.7.2",
