@@ -10,6 +10,18 @@
         "plugin:@typescript-eslint/recommended",
         "plugin:@typescript-eslint/eslint-recommended"
     ],
+    "settings": {
+        "import/parsers": {
+            "@typescript-eslint/parser": [".ts", ".tsx"]
+        },
+        "import/resolver": {
+            "typescript": {}
+        },
+        "react": {
+            "pragma": "React",
+            "version": "detect"
+        }
+    },
     "globals": {
         "Atomics": "readonly",
         "SharedArrayBuffer": "readonly"
@@ -27,10 +39,12 @@
         "@typescript-eslint"
     ],
     "rules": {
-         "no-multi-spaces": "warn",
+        "no-multi-spaces": "warn",
         "indent": [
-            "error", "tab", 
-            { "SwitchCase": 1 }
+            "error", "tab",
+            {
+                "SwitchCase": 1
+            }
         ],
         "linebreak-style": [
             "error",
@@ -49,9 +63,13 @@
         "camelcase": "off",
         "no-use-before-define": "off",
         "@typescript-eslint/semi": ["warn"],
-        "@typescript-eslint/camelcase": ["warn", { "properties": "always" }],
+        "@typescript-eslint/camelcase": ["warn", {
+            "properties": "always"
+        }],
         "@typescript-eslint/no-empty-function": "off",
-        "@typescript-eslint/interface-name-prefix": ["off", { "prefixWithI": "always"}],
+        "@typescript-eslint/interface-name-prefix": ["off", {
+            "prefixWithI": "always"
+        }],
         "@typescript-eslint/no-implicit-any": 0,
         "@typescript-eslint/explicit-function-return-type": "off",
 
@@ -60,7 +78,6 @@
     "overrides": [{
         "files": ["*.ts", "*.tsx"],
         "rules": {
-            
             "@typescript-eslint/no-explicit-any": 0,
             "@typescript-eslint/explicit-function-return-type": ["warn"],
             "@typescript-eslint/no-use-before-define": "off",

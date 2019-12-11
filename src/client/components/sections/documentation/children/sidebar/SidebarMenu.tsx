@@ -33,7 +33,7 @@ class SidebarMenu extends React.Component<Props, any> {
 		super(props);
 		this.state = {
 			hovering: false
-		}
+		};
 	}
 
 	private onMouseEnter = (): void => {
@@ -59,8 +59,8 @@ class SidebarMenu extends React.Component<Props, any> {
 	public shouldComponentUpdate = (nextProps: any, nextState: any): boolean => {
 		return !shallowEqual(this.props.fixed, nextProps.fixed) 
 			|| !shallowEqual(this.props.hovered, nextProps.hovered)
-			|| !shallowEqual(this.props.expanded, nextProps.expanded)
-	}
+			|| !shallowEqual(this.props.expanded, nextProps.expanded);
+	};
 
 	private getProperties = (style: any): any & any => {
 		const styles = [style.sideMenu];

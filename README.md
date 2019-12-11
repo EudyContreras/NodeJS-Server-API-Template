@@ -23,6 +23,7 @@ Some information about the technologies used and what the application does. Its 
 * Docker
 * Express
 * Eslint AirBNB Template
+* MVC
 
 ## Requirements
 

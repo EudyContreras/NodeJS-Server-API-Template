@@ -33,8 +33,8 @@ class Navbar extends React.Component<Props, any> {
 	public shouldComponentUpdate = (nextProps: any, nextState: any): boolean => {
 		return !shallowEqual(this.props.anchored, nextProps.anchored) 
 			|| !shallowEqual(this.props.mouseInside, nextProps.mouseInside)
-			|| !shallowEqual(this.props.activeTab, nextProps.activeTab)
-	}
+			|| !shallowEqual(this.props.activeTab, nextProps.activeTab);
+	};
 
 	public componentDidMount = (): void => {
 		this.applyAnchor(this.navbar.current!);
