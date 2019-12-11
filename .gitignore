@@ -98,3 +98,5 @@ typings/
 
 build/public/
 /build
+
+dist/

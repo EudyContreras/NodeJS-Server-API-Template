@@ -1,15 +1,14 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-require('dotenv').config();
 
 const path = require('path');
 const NodeExternals = require('webpack-node-externals');
-const typescriptLoader = require('./loaders/tyscript.loader');
-const optimization = require('./sections/optimization');
-const babelLoader = require('./loaders/babel.loader');
-const styleLoader = require('./loaders/style.loader');
-const fileLoader = require('./loaders/file.loader');
+const typescriptLoader = require('../loaders/tyscript.loader');
+const optimization = require('../sections/optimization');
+const babelLoader = require('../loaders/babel.loader');
+const styleLoader = require('../loaders/style.loader');
+const fileLoader = require('../loaders/file.loader');
 
-const enviroment = process.env.NODE_ENV;
+const enviroment = 'development';
 
 module.exports = {
 	name: 'server',
@@ -29,7 +28,7 @@ module.exports = {
 	plugins: [
 
 	],
-	optimization: optimization(enviroment),
+	optimization: optimization({ enviroment: enviroment, production: false }),
 	externals: [NodeExternals()],
 	module: {
 		rules: [{

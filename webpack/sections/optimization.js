@@ -6,8 +6,8 @@ const safePostCssParser = require('postcss-safe-parser');
 
 const minimizeVendors = true;
 
-module.exports = (enviroment, splitChunk, useSourceMap) => ({
-	minimize: enviroment == 'production',
+module.exports = ({ enviroment, splitChunk, useSourceMap, production = false }) => ({
+	minimize: production,
 	minimizer: [
 		new TerserPlugin({
 			test: /\.(js|jsx|tsx|ts)$/i,
@@ -15,7 +15,7 @@ module.exports = (enviroment, splitChunk, useSourceMap) => ({
 			extractComments: false,
 			chunkFilter: (chunk) => {
 				if (chunk.name.startsWith('vendor')) {
-					return minimizeVendors && enviroment == 'production';
+					return minimizeVendors && production;
 				}
 				return true;
 			},
@@ -27,7 +27,7 @@ module.exports = (enviroment, splitChunk, useSourceMap) => ({
 					ecma: 5,
 					warnings: false,
 					comparisons: false,
-					drop_console: false,
+					drop_console: production,
 					inline: 2,
 				},
 				mangle: {
@@ -54,7 +54,7 @@ module.exports = (enviroment, splitChunk, useSourceMap) => ({
 			},
 		}),
 	],
-	nodeEnv: enviroment,
+	nodeEnv: production === true ? enviroment : 'development',
 	providedExports: true,
 	removeAvailableModules: true,
 	mangleWasmImports: true,

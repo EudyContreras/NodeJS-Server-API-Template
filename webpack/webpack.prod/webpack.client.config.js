@@ -1,27 +1,24 @@
+
 /* eslint-disable @typescript-eslint/no-var-requires */
 require('dotenv').config();
 
 const path = require('path');
-const webpack = require('webpack');
 const WorkboxPlugin = require('workbox-webpack-plugin');
 const ManifestPlugin = require('webpack-manifest-plugin');
-const typescriptLoader = require('./loaders/tyscript.loader');
+const typescriptLoader = require('../loaders/tyscript.loader');
 const CopyPlugin = require('copy-webpack-plugin');
-const optimization = require('./sections/optimization');
-const splitchunks = require('./sections/splitchunks');
-const babelLoader = require('./loaders/babel.loader');
-const styleLoader = require('./loaders/style.loader');
-const fileLoader = require('./loaders/file.loader');
+const optimization = require('../sections/optimization');
+const splitchunks = require('../sections/splitchunks');
+const babelLoader = require('../loaders/babel.loader');
+const styleLoader = require('../loaders/style.loader');
+const fileLoader = require('../loaders/file.loader');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 const useCSR = process.env.CSR == 'true';
 const useSourceMap = process.env.GENERATE_SOURCEMAP !== 'false';
-const enviroment = process.env.NODE_ENV;
 
-const isEnvProduction = enviroment === 'production';
-const isEnvDevelopment = enviroment === 'development';
-
-const publicPath = '../../build/public/';
+const enviroment = 'production';
+const publicPath = '../../dist/public/';
 const entryPoint = './src/client.jsx';
 
 const resources = [
@@ -57,7 +54,7 @@ module.exports = {
 	name: 'client',
 	target: 'web',
 	mode: enviroment,
-	bail: isEnvProduction,
+	bail: true,
 	entry: entryPoint,
 	performance: {
 		hints: false
@@ -92,13 +89,13 @@ module.exports = {
 	output: {
 		path: path.join(__dirname, publicPath),
 		futureEmitAssets: true,
-		pathinfo: isEnvDevelopment,
+		pathinfo: false,
 		filename: 'static/scripts/bundle.js',
 		chunkFilename: 'static/scripts/[name].chunk.js',
 		publicPath: '/',
 		globalObject: 'this'
 	},
-	optimization: optimization(enviroment, splitChunk, useSourceMap),
+	optimization: optimization({ enviroment, splitChunk, useSourceMap, production: true }),
 	module: {
 		rules: [{
 			test: /\.txt$/,

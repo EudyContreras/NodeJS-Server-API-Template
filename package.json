@@ -16,17 +16,18 @@
   "scripts": {
     "build:ts": "tsc -p .",
     
-    "build:dev:server": "webpack --config webpack/dev/webpack.server.config.js",
-    "build:dev:client": "webpack --config webpack/dev/webpack.client.config.js",
+    "build:dev:server": "webpack --config webpack/webpack.dev/webpack.server.config.js",
+    "build:dev:client": "webpack --config webpack/webpack.dev/webpack.client.config.js",
 
-    "build:prod:server": "webpack --config webpack/prod/webpack.server.config.js",
-    "build:prod:client": "webpack --config webpack/prod/webpack.client.config.js",
+    "build:prod:server": "webpack --config webpack/webpack.prod/webpack.server.config.js",
+    "build:prod:client": "webpack --config webpack/webpack.prod/webpack.client.config.js",
 
-    "build:dev:watch:server": "webpack --config webpack/dev/webpack.server.config.js/ --watch",
-    "build:dev:watch:client": "webpack --config webpack/dev/webpack.client.config.js/ --watch",
+    "build:dev:watch:server": "webpack --config webpack/webpack.dev/webpack.server.config.js/ --watch",
+    "build:dev:watch:client": "webpack --config webpack/webpack.dev/webpack.client.config.js/ --watch",
 
     "build:dev": "npm run build:dev:watch:server && npm run build:dev:watch:client",
     "build:prod": "npm run build:prod:server && npm run build:prod:client",
+    "build:all": "npm run build:dev && npm run build:prod",
 
     "build:start:dev": "concurrently \"npm run build:dev\" \"nodemon ./build/server.js\"",
     "build:start:prod": "npm run build:prod && NODE_ENV=production node ./dist/server.js",
