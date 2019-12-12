@@ -28,13 +28,13 @@ const DefaultLayout = (props) => {
 			<link rel='apple-touch-icon' type='image/png' href='static/images/favicon.ico' />
 			<link rel='shortcut icon' type='image/png' href='static/images/favicon.ico' />
 			<link rel='stylesheet' href='https://fonts.googleapis.com/icon?family=Material+Icons&display=swap' media="all" id='materialIcons' async disabled />
-			<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Roboto&display=optional' media="all" id='robotoFont' async disabled />
+			<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Roboto&display=optional' media="all" id='robotoFont' defer disabled />
 			<style defer id='shellStyle'>{props.css}</style>
 		</head>
 		<body >
 			<noscript>You need to enable JavaScript to fully be able to use this this web-app.</noscript>
 			<section id='content'>{props.content}</section>
-			<script rel="preconnect" src='https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js' async />
+			<script rel="preconnect" src='https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js' defer />
 			<script dangerouslySetInnerHTML={{
 				__html:
 					`

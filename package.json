@@ -11,7 +11,7 @@
     "type": "git",
     "url": "https://github.com/EudyContreras/NodeJS-Server-API-Template"
   },
-  "main": "dist/server.js",
+  "main": "build/server.js",
   "scripts": {
     "build:ts": "tsc -p .",
     "build:dev:server": "webpack --config webpack/webpack.dev/webpack.server.config.js",
@@ -23,8 +23,8 @@
     "build:dev": "npm run build:dev:watch:server & npm run build:dev:watch:client",
     "build:prod": "npm run build:prod:server & npm run build:prod:client",
     "build:all": "npm run build:dev & npm run build:prod",
-    "build:dev:start": "concurrently \"npm run build:dev && NODE_ENV=development\" \"nodemon --delay 2500ms ./build/server.js\"",
-    "build:prod:start": "npm run build:prod && NODE_ENV=production node ./build/server.js",
+    "build:dev:start": "concurrently \"npm run build:dev && NODE_ENV=development\" \"nodemon --delay 2500ms build/server.js\"",
+    "build:prod:start": "npm run build:prod && NODE_ENV=production node build/server.js",
     "start:dev": "nodemon ./build/server.js",
     "start:prod": "nodemon ./build/server.js",
     "start": "node build/server.js"
