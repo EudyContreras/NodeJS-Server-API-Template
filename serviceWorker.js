@@ -36,6 +36,7 @@ const throwOnError = (response) => {
 	throw new Error(response.statusText);
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const requestFailingToCacheStrategy = ({ request, cache }) => {
 	return fetch(request).catch(() => cache.match(request));
 };
