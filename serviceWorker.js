@@ -17,11 +17,18 @@ const http = {
 };
 
 const events = {
+	PERIODIC_SYNC: 'periodicsync',
 	INSTALL: 'install',
 	ACTIVATE: 'activate',
 	MESSAGE: 'message',
 	FETCH: 'fetch',
+	SYNC: 'sync',
 	PUSH: 'push'
+};
+
+const syncEvents = {
+	INITIAL_SYNC: 'initial-sync',
+	CONTENT_SYNC: 'content-sync'
 };
 
 const messages = {
@@ -36,9 +43,12 @@ const throwOnError = (response) => {
 	throw new Error(response.statusText);
 };
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const requestFailingToCacheStrategy = ({ request, cache }) => {
-	return fetch(request).catch(() => cache.match(request));
+const initialSynch = () => {
+	
+};
+
+const syncContent = () => {
+
 };
 
 const requestFailingWithNotFoundStrategy = ({ request }) => {
@@ -80,6 +90,18 @@ const cacheFailingToCacheableRequestStrategy = ({ request, cache }) => {
 			})
 		);
 };
+
+self.addEventListener(events.SYNC, event => {
+	if(event.tag === syncEvents.EXAMPLE) {
+		event.waitUntil(initialSynch());
+	}
+});
+
+self.addEventListener(events.PERIODIC_SYNC, (event) => {
+	if (event.tag === syncEvents.CONTENT_SYNC) {
+		event.waitUntil(syncContent());
+	}
+});
 
 self.addEventListener(events.INSTALL, event => {
 	event.waitUntil(

@@ -35,6 +35,19 @@ class DocsPage extends React.Component<Props> {
 
 	shouldComponentUpdate = (): any => false;
 
+	private handleResize = (): void => {
+		const body = document.body;
+		const sandbox = this.sandbox.current!;
+		const footer = this.footer.current!;
+
+		const scroll = body.getBoundingClientRect().top;
+		const scrollBottom = footer.getBoundingClientRect().top - sandbox.getBoundingClientRect().height;
+
+		const bottomPosition = Math.abs(scroll) + (scrollBottom);
+
+		this.applyInitialValues(bottomPosition);
+	};
+
 	private handleScroll = (offsetBottom = 0): void => {
 		const fixedTop = this.props.sandboxFixedTop;
 
@@ -67,6 +80,7 @@ class DocsPage extends React.Component<Props> {
 		this.applyInitialValues(bottomPosition);
 
 		window.onscroll = (): void => this.handleScroll(bottomPosition - this.props.offsetTop);
+		window.onresize = (): void => this.handleResize();
 	};
 
 	private applyInitialValues = (bottomPosition: number): void => {

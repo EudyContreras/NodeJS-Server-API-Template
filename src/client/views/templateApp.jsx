@@ -40,24 +40,34 @@ const DefaultLayout = (props) => {
 					`
 			window.__REDUX_STATE__= ${JSON.stringify(props.state).replace(/</g, '\\u003c')};
 
-			window.onload = function()
-			{
+			window.addEventListener('load', () => {
 				document.getElementById('robotoFont').removeAttribute('disabled');
 				document.getElementById('materialIcons').removeAttribute('disabled');
-			}
+			});
 
 			${props.enableSW ? `
-			
+
 			if ('serviceWorker' in navigator) {
-				window.addEventListener('load', function() {
-				  navigator.serviceWorker.register('service-worker.js').then(function(registration) {
-					 console.log('ServiceWorker registration successful with scope: ', registration.scope);
-				    //registration.pushManager.subscribe({userVisibleOnly: true});
-				  }, function(err) {
-					 console.log('ServiceWorker registration failed: ', err);
-				  }).catch(error => console.log(error));
+				window.addEventListener('load', () => {
+					navigator.serviceWorker.register('service-worker.js')
+						.then(function () {
+							return navigator.serviceWorker.ready;
+						})
+						.then(registration => {
+							console.log('ServiceWorker registration successful with scope: ', registration.scope);
+			
+						}, function (err) {
+							console.log('ServiceWorker registration failed: ', err);
+						}).catch(error => console.log(error));
+			
+					navigator.serviceWorker.ready.then(registration => {
+						if (registration.sync) {
+							registration.sync.register('initial-sync').catch(error => console.log(error));
+						}
+					});
 				});
-			 }
+			}
+			
 			`: ''}
 			
 			`
