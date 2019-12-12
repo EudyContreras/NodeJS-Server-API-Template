@@ -1,6 +1,10 @@
 $backgroundColor: rgb(55, 60, 64);
 $backgroundColorHovered: rgb(67, 72, 77);
 
+.menu-item-wrapper {
+   display: block;
+}
+
 .menu-item {
    display: flex;
    align-items: center;

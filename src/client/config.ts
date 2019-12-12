@@ -1,12 +1,12 @@
 
 const config = Object.freeze({
 	app: {
-		CSR: false,
+		CSR: process.env.CSR == 'true',
 		USE_SW: true,
-		TITLE: 'React App',
+		TITLE: 'Template Engine',
 		APP_LAYOUT: 'templateApp',
 		SHELL_LAYOUT: 'templateShell',
-		NAME: ''
+		NAME: '',
 	},
 	header: {
 		LABEL: 'Set-Cookie',

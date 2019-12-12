@@ -55,6 +55,16 @@ body::-webkit-scrollbar {
 	display: none;
 }
 
+.loadable {
+	opacity: 0;
+	transition: opacity 1.0s $standardInterpolator;
+}
+
+.loaded {
+	opacity: 1 !important;
+	transition: opacity 1.0s $standardInterpolator;
+}
+
 .side-menu::-webkit-scrollbar {
 	width: 8px;
 	display: none;

@@ -1,0 +1,24 @@
+version: '3'
+services:
+  api:
+    image: template-engine-image
+    build: .
+    networks:
+      - template-engine-network
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      - PROJECT_ID=$PROJECT_ID
+      - DB_USERNAME=$DB_USERNAME
+      - DB_PASSWORD=$DB_PASSWORD
+      - PORT=$PORT
+      - ATLAS_URI=$ATLAS_URI
+      - ADMIN_USERNAME=$ADMIN_USERNAME
+      - ADMIN_PASSWORD=$ADMIN_PASSWORD
+      - JWT_SECRET=$JWT_SECRET
+    command: npm run start:prod
+networks:
+  template-engine-network:
+    driver: bridge

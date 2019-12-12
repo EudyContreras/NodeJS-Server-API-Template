@@ -1,9 +1,10 @@
 .content-wrapper {
    display: flex;
    flex-direction: column;
-   will-change: transform;
-   margin-left: 17%;
+   will-change: margin-right margin-left;
+   margin-left: calc(17% - 1.5em);
    margin-right: 35%;
+   padding-left: 1.5em;
    background-color: rgb(48,53,57);
    transition: all 0.3s $standardInterpolator;
 }

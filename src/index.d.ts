@@ -8,6 +8,11 @@ declare module '*.scss' {
    export = value;
 }
 
+declare module '*.pem' {
+   const value: any;
+   export = value;
+}
+
 declare module 'express-react-views';
 
 declare module 'isomorphic-style-loader/withStyles';

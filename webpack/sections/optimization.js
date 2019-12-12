@@ -1,11 +1,11 @@
+/* eslint-disable @typescript-eslint/camelcase */
+/* eslint-disable @typescript-eslint/no-var-requires */
 const TerserPlugin = require('terser-webpack-plugin');
-const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
-const safePostCssParser = require('postcss-safe-parser');
 
 const minimizeVendors = true;
 
-module.exports = (enviroment, splitChunk, useSourceMap) => ({
-	minimize: enviroment == 'production',
+module.exports = ({ enviroment, splitChunk, useSourceMap, production = false }) => ({
+	minimize: production,
 	minimizer: [
 		new TerserPlugin({
 			test: /\.(js|jsx|tsx|ts)$/i,
@@ -13,7 +13,7 @@ module.exports = (enviroment, splitChunk, useSourceMap) => ({
 			extractComments: false,
 			chunkFilter: (chunk) => {
 				if (chunk.name.startsWith('vendor')) {
-					return minimizeVendors;
+					return minimizeVendors && production;
 				}
 				return true;
 			},
@@ -25,7 +25,7 @@ module.exports = (enviroment, splitChunk, useSourceMap) => ({
 					ecma: 5,
 					warnings: false,
 					comparisons: false,
-					drop_console: true,
+					drop_console: false,
 					inline: 2,
 				},
 				mangle: {
@@ -38,22 +38,13 @@ module.exports = (enviroment, splitChunk, useSourceMap) => ({
 					comments: false,
 					ascii_only: true,
 				},
-			},
-			sourceMap: useSourceMap,
-		}),
-		new OptimizeCSSAssetsPlugin({
-			cssProcessorOptions: {
-				parser: safePostCssParser,
-				map: useSourceMap ?
-					{
-						inline: false,
-						annotation: true,
-					} :
-					false,
-			},
-		}),
+			}
+		})
 	],
 	nodeEnv: enviroment,
+	providedExports: true,
+	removeAvailableModules: true,
+	mangleWasmImports: true,
 	removeEmptyChunks: true,
 	...splitChunk
 });
