@@ -2,13 +2,18 @@
    "presets": [
       "@babel/preset-react",
       "@babel/preset-typescript",
-      ["@babel/preset-env", { "targets": { "node": "current" } }]
+      ["@babel/preset-env", {
+         "targets": {
+            "node": "current"
+         }
+      }]
    ],
    "plugins": [
       // Stage 2
       ["@babel/plugin-proposal-decorators", {
          "legacy": true
       }],
+      "@babel/plugin-proposal-object-rest-spread",
       "@babel/plugin-proposal-function-sent",
       "@babel/plugin-proposal-export-namespace-from",
       "@babel/plugin-proposal-numeric-separator",

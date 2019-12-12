@@ -26,7 +26,6 @@
     "build:dev:start": "concurrently \"npm run build:dev && NODE_ENV=development\" \"nodemon --delay 2500ms build/server.js\"",
     "build:prod:start": "npm run build:prod && NODE_ENV=production node build/server.js",
     "start:dev": "nodemon ./build/server.js",
-    "start:prod": "nodemon ./build/server.js",
     "start": "node build/server.js"
   },
   "keywords": [
@@ -91,6 +90,7 @@
     "@babel/plugin-proposal-function-sent": "^7.7.0",
     "@babel/plugin-proposal-json-strings": "^7.2.0",
     "@babel/plugin-proposal-numeric-separator": "^7.2.0",
+    "@babel/plugin-proposal-object-rest-spread": "^7.7.4",
     "@babel/plugin-proposal-throw-expressions": "^7.2.0",
     "@babel/plugin-syntax-dynamic-import": "^7.2.0",
     "@babel/plugin-syntax-import-meta": "^7.2.0",
@@ -128,7 +128,9 @@
     "babel-loader": "^8.0.6",
     "babel-plugin-dynamic-import-node": "^2.3.0",
     "babel-plugin-syntax-dynamic-import": "^6.18.0",
+    "babel-preset-minify": "^0.5.1",
     "clean-webpack-plugin": "^3.0.0",
+    "compression-webpack-plugin": "^3.0.1",
     "concurrently": "^5.0.0",
     "copy-webpack-plugin": "^5.0.5",
     "css-loader": "^3.2.0",

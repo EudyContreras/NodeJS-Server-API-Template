@@ -1,11 +1,12 @@
-
 /* eslint-disable @typescript-eslint/no-var-requires */
+
 require('dotenv').config();
 
 const path = require('path');
+const CopyPlugin = require('copy-webpack-plugin');
 const WorkboxPlugin = require('workbox-webpack-plugin');
 const ManifestPlugin = require('webpack-manifest-plugin');
-const CopyPlugin = require('copy-webpack-plugin');
+const CompressPlugin = require('compression-webpack-plugin');
 const optimization = require('../sections/optimization');
 const splitchunks = require('../sections/splitchunks');
 const babelLoader = require('../loaders/babel.loader');
@@ -78,6 +79,15 @@ module.exports = {
 					entrypoints: entrypointFiles,
 				};
 			},
+		}),
+		new CompressPlugin({
+			filename: '[path].br[query]',
+			algorithm: 'brotliCompress',
+			test: /\.(jsx|tsx|js|ts|scss|css|html|svg)$/,
+			compressionOptions: { level: 11 },
+			threshold: 10240,
+			minRatio: 0.8,
+			deleteOriginalAssets: false,
 		}),
 		new WorkboxPlugin.InjectManifest({
 			swSrc: 'serviceWorker.js',

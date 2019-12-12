@@ -1,7 +1,8 @@
-
 /* eslint-disable @typescript-eslint/no-var-requires */
 
+
 const path = require('path');
+const CompressPlugin = require('compression-webpack-plugin');
 const NodeExternals = require('webpack-node-externals');
 const optimization = require('../sections/optimization');
 const babelLoader = require('../loaders/babel.loader');
@@ -26,7 +27,15 @@ module.exports = {
 		globalObject: 'this'
 	},
 	plugins: [
-
+		new CompressPlugin({
+			filename: '[path].br[query]',
+			algorithm: 'brotliCompress',
+			test: /\.(jsx|tsx|js|ts|scss|css|html|svg)$/,
+			compressionOptions: { level: 11 },
+			threshold: 10240,
+			minRatio: 0.8,
+			deleteOriginalAssets: false,
+		})
 	],
 	optimization: optimization({ enviroment: enviroment, production: true }),
 	externals: [NodeExternals()],
