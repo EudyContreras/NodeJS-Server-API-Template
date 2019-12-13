@@ -1,4 +1,5 @@
-const CACHE_NAME = 'eudcon-universal-react-cache';
+const STATIC_CACHE = 'eudcon-universal-static-cache';
+const DATA_CACHE = 'eudcon-universal-data-cache';
 
 const urlsToCache = [
 	'/',
@@ -105,7 +106,7 @@ self.addEventListener(events.PERIODIC_SYNC, (event) => {
 
 self.addEventListener(events.INSTALL, event => {
 	event.waitUntil(
-		caches.open(CACHE_NAME)
+		caches.open(STATIC_CACHE)
 			.then(cache => {
 				const cacheRes = self.__precacheManifest.map(x => x.url);
 				return cache.addAll([...urlsToCache, ...cacheRes]);
@@ -116,7 +117,7 @@ self.addEventListener(events.INSTALL, event => {
 });
 
 self.addEventListener(events.ACTIVATE, event => {
-	const expectedCaches = [CACHE_NAME];
+	const expectedCaches = [STATIC_CACHE];
 
 	event.waitUntil(
 		caches.keys().then(keys => Promise.all(
@@ -145,14 +146,14 @@ self.addEventListener(events.FETCH, event => {
 
 	if (isRequestForStatic(request)) {
 		event.respondWith(
-			caches.open(CACHE_NAME)
+			caches.open(STATIC_CACHE)
 				.then(cache => cacheFailingToCacheableRequestStrategy({ request, cache }))
 		);
 		return;
 	}
 
 	event.respondWith(
-		caches.open(CACHE_NAME)
+		caches.open(STATIC_CACHE)
 			.then(cache => cacheableRequestFailingToCacheStrategy({ request, cache }))
 	);
 });
@@ -172,7 +173,7 @@ self.addEventListener(events.MESSAGE, event => {
 		case messages.READ_OFFLINE: {
 			const request = new Request(command.payload);
 			fetch(request).then(throwOnError).then(response => {
-				caches.open(CACHE_NAME).then(cache => cache.put(request, response));
+				caches.open(STATIC_CACHE).then(cache => cache.put(request, response));
 			});
 		}
 			break;

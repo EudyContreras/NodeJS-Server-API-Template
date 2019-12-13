@@ -1,5 +1,13 @@
 const props = {};
 
+const time = ({ hour = 0, minutes = 0, seconds = 0, milli = 0 }) => (hour * minutes * seconds * milli);
+
+const hours = (hours = 0) => time(hours * 60 * 60 * 1000);
+
+const minutes = (minutes = 0) => time(1 * minutes * 60 * 1000);
+
+const seconds = (seconds = 0) => time(1 * 60 * seconds * 1000);
+
 window.__REDUX_STATE__ = props.state;
 
 window.onload = () => {
@@ -28,7 +36,6 @@ if ('serviceWorker' in navigator) {
 	});
 }
 
-
 function isOnline() {
 	const connectionStatus = document.getElementById('connectionStatus');
 
@@ -43,7 +50,6 @@ window.addEventListener('online', isOnline);
 window.addEventListener('offline', isOnline);
 
 isOnline();
-
 
 const updateContentOnPageLoad = () => {
 
@@ -66,7 +72,7 @@ if (status.state === 'granted') {
 		try {
 			await registration.periodicSync.register({
 				tag: 'content-sync',				// An interval of one day.
-				minInterval: 24 * 60 * 60 * 1000,
+				minInterval: time(24, 60, 60, 1000),
 				powerState: 'avoid-draining',
 				networkState: 'avoid-cellular'
 			});

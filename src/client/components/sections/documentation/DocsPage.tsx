@@ -35,7 +35,7 @@ class DocsPage extends React.Component<Props> {
 
 	shouldComponentUpdate = (): any => false;
 
-	private handleResize = (): void => {
+	private getBottomPosition = (): number => {
 		const body = document.body;
 		const sandbox = this.sandbox.current!;
 		const footer = this.footer.current!;
@@ -44,6 +44,12 @@ class DocsPage extends React.Component<Props> {
 		const scrollBottom = footer.getBoundingClientRect().top - sandbox.getBoundingClientRect().height;
 
 		const bottomPosition = Math.abs(scroll) + (scrollBottom);
+		
+		return bottomPosition;
+	};
+
+	private handleResize = (): void => {
+		const bottomPosition = this.getBottomPosition();
 
 		this.applyInitialValues(bottomPosition);
 	};
@@ -66,23 +72,6 @@ class DocsPage extends React.Component<Props> {
 		}
 	};
 
-	public componentDidMount = (): void => {
-
-		const body = document.body;
-		const sandbox = this.sandbox.current!;
-		const footer = this.footer.current!;
-
-		const scroll = body.getBoundingClientRect().top;
-		const scrollBottom = footer.getBoundingClientRect().top - sandbox.getBoundingClientRect().height;
-
-		const bottomPosition = Math.abs(scroll) + (scrollBottom);
-
-		this.applyInitialValues(bottomPosition);
-
-		window.onscroll = (): void => this.handleScroll(bottomPosition - this.props.offsetTop);
-		window.onresize = (): void => this.handleResize();
-	};
-
 	private applyInitialValues = (bottomPosition: number): void => {
 		const fixedTop = this.props.sandboxFixedTop;
 
@@ -95,6 +84,15 @@ class DocsPage extends React.Component<Props> {
 				this.props.setAll(false, false, false, bottomPosition);
 			}
 		}
+	};
+
+	public componentDidMount = (): void => {
+		const bottomPosition = this.getBottomPosition();
+		
+		this.applyInitialValues(bottomPosition);
+
+		window.onscroll = (): void => this.handleScroll(bottomPosition - this.props.offsetTop);
+		window.onresize = (): void => this.handleResize();
 	};
 
 	public render = (): JSX.Element => {
