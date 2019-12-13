@@ -95,12 +95,16 @@ const cacheFailingToCacheableRequestStrategy = ({ request, cache }) => {
 self.addEventListener(events.SYNC, event => {
 	if(event.tag === syncEvents.EXAMPLE) {
 		event.waitUntil(initialSynch());
+	} else {
+		console.log(`Received sync event: ${event.tag}`);
 	}
 });
 
 self.addEventListener(events.PERIODIC_SYNC, (event) => {
 	if (event.tag === syncEvents.CONTENT_SYNC) {
 		event.waitUntil(syncContent());
+	} else {
+		console.log(`Received periodic sync event: ${event.tag}`);
 	}
 });
 
