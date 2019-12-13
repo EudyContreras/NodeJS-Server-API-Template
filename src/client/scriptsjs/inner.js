@@ -44,7 +44,6 @@ window.addEventListener('offline', isOnline);
 
 isOnline();
 
-
 const updateContentOnPageLoad = () => {
 
 };
