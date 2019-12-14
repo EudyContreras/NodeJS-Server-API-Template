@@ -3,7 +3,7 @@ import rippleEffect from '../../../../appliers/ripple.applier';
 import FontFaceObserver from 'fontfaceobserver';
 import { connect } from 'react-redux';
 import { join } from '../../../../appliers/style.applier';
-import { showPrompt, register, isInstalled } from '../../../../scriptsjs/helpers/intallation.helper';
+import * as installHelper from '../../../../scriptsjs/helpers/intallation.helper';
 import { DispatchProps, Dispatchers } from '../../../../actions/common/application/appdata.action';
 
 interface StateProps {
@@ -29,8 +29,12 @@ class Action extends React.PureComponent<Props, any> {
 				iconLoaded: true
 			});
 		});
-		this.props.setInstalled(isInstalled());
-		register((state: boolean) => {
+		if (!installHelper.hasInstallInfo()) {
+			this.props.setInstalled(true);
+		} else {
+			this.props.setInstalled(installHelper.isInstalled());
+		}
+		installHelper.register((state: boolean) => {
 			this.props.setInstalled(state);
 		});
 	};
@@ -40,7 +44,7 @@ class Action extends React.PureComponent<Props, any> {
 
 		rippleEffect(event, style);
 
-		showPrompt();
+		installHelper.showPrompt();
 	};
 
 	public render = (): JSX.Element => {

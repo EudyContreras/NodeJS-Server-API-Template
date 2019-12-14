@@ -29,7 +29,7 @@ const subscribeUser = () => {
 		applicationServerKey: applicationServerKey
 	}).then(subscription => {
 		console.log('User has now subscribed to push notifications');
-
+		console.log(subscription);
 		isSubscribed = true;
 
 	}).catch(function (err) {

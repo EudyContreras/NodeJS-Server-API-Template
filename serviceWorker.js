@@ -49,7 +49,7 @@ const push = {
 
 const messages = {
 	READ_OFFLINE: 'READ_OFFLINE',
-	SKIP_WAITING: 'SKIP_WAITING',
+	SKIP_WAITING: 'SKIP_WAITING'
 };
 
 const throwOnError = (response) => {
@@ -87,7 +87,11 @@ const cacheableRequestFailingToCacheStrategy = ({ request, cache }) => {
 		.catch(() => cache.match(request));
 };
 
-const isRequestForStatic = (request) => {
+const isRequestForStaticHtml = (request) => {
+	return /.(html)$/.test(request.url);
+};
+
+const isRequestForStaticAsset = (request) => {
 	return /.(png|svg|json|jpg|jpeg|gif|ico|css|js)$/.test(request.url);
 };
 
@@ -135,22 +139,13 @@ const cacheFailingToCacheableRequestStrategy = ({ request, cache }) => {
 	}
 };
 
-self.addEventListener(events.SYNC, event => {
-	if(event.tag === syncEvents.EXAMPLE) {
-		event.waitUntil(initialSynch());
-	} else {
-		console.log(`Received sync event: ${event.tag}`);
-	}
-});
-
-self.addEventListener(events.PERIODIC_SYNC, (event) => {
-	if (event.tag === syncEvents.CONTENT_SYNC) {
-		event.waitUntil(syncContent());
-	} else {
-		console.log(`Received periodic sync event: ${event.tag}`);
-	}
-});
-
+/**
+ * Get stuff nice and ready on this event. Make 
+ * the preparations for the SW to work as desired.
+ * Store all static assets necessary to render the site
+ * as if it were a functional native application here. 
+ * Can be used to cache emidiate and non-emidiate resources.
+ */
 self.addEventListener(events.INSTALL, event => {
 	self.skipWaiting();
 
@@ -165,8 +160,12 @@ self.addEventListener(events.INSTALL, event => {
 	);
 });
 
+/**
+ * Do clean up here but keep lightweight to avoid
+ * a potential render block
+ */
 self.addEventListener(events.ACTIVATE, event => {
-	const expectedCaches = [STATIC_CACHE];
+	const expectedCaches = [STATIC_CACHE, DATA_CACHE];
 
 	event.waitUntil(
 		caches.keys().then(keys => Promise.all(
@@ -192,37 +191,67 @@ self.addEventListener(events.FETCH, event => {
 		return;
 	}
 
-	if (isRequestForStatic(request)) {
-		event.respondWith(
-			caches.open(STATIC_CACHE)
-				.then(cache => cacheFailingToCacheableRequestStrategy({ request, cache }))
-		);
+	if (isRequestForStaticAsset(request)) {
+		const cache = caches.open(STATIC_CACHE);
+		event.respondWith(cache.then(cache => cacheFailingToCacheableRequestStrategy({ request, cache })));
+		return;
+	}
+	
+	if (isRequestForStaticHtml(request)) {
+		// Responsd with an app-shell otherwise
+		if (request.mode === 'navigate') {
+			event.respondWith(async () => {
+				const normalizedUrl = new URL(request.url);
+				normalizedUrl.search = '';
+
+				const fetchResponseP = fetch(normalizedUrl);
+				const fetchResponseCloneP = fetchResponseP.then(r => r.clone());
+
+				event.waitUntil(async () => {
+					const cache = await caches.open(STATIC_CACHE);
+					await cache.put(normalizedUrl, await fetchResponseCloneP);
+				});
+
+				return (await caches.match(normalizedUrl)) || fetchResponseP;
+			});
+		} else {
+			const cache = caches.open(STATIC_CACHE);
+			event.respondWith(cache.then(cache => cacheFailingToCacheableRequestStrategy({ request, cache })));
+		}
 		return;
 	}
 
-	event.respondWith(
-		caches.open(STATIC_CACHE)
-			.then(cache => cacheableRequestFailingToCacheStrategy({ request, cache }))
-	);
+	const cache = caches.open(STATIC_CACHE);
+	event.respondWith(cache.then(cache => cacheableRequestFailingToCacheStrategy({ request, cache })));
 });
 
-self.addEventListener(events.PUSH, event => {
+/**
+ * Attempt to sync non-urgent content silently on the background
+ */
+self.addEventListener(events.SYNC, event => {
+	if(event.tag === syncEvents.EXAMPLE) {
+		event.waitUntil(initialSynch());
+	} else {
+		console.log(`Received sync event: ${event.tag}`);
+	}
+});
 
-	const title = 'Get Started With Workbox';
-	const options = {
-		body: event.data.text()
-	};
-	event.waitUntil(self.registration.showNotification(title, options));
+self.addEventListener(events.PERIODIC_SYNC, (event) => {
+	if (event.tag === syncEvents.CONTENT_SYNC) {
+		event.waitUntil(syncContent());
+	} else {
+		console.log(`Received periodic sync event: ${event.tag}`);
+	}
 });
 
 self.addEventListener(events.PUSH, event => {
 	console.log('Service Worker Push Received.');
 	console.log(`Service Worker Push had this data: "${event.data.text()}"`);
 
-	const title = 'Push Codelab';
+	const title = 'Template engine';
 	const options = {
 		body: 'Yay it works.',
-		icon: 'images/icon.png',
+		icon: 'static/images/favicon.png',
 		badge: 'static/images/icon-152x152.png'
 	};
 
@@ -247,6 +276,8 @@ self.addEventListener(events.PUSH, event => {
 });
  
 self.addEventListener(events.NOTIFY_CLICK, function (event) {
+	console.log('Notification has been clicked!');
+
 	if (event.notification.tag == push.NEW_UPDATE) {
 		// Assume that all of the resources needed to render
 		// /inbox/ have previously been cached, e.g. as part
