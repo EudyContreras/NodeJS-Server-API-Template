@@ -6,7 +6,6 @@ const applicationServerPublicKey = 'BEWGulnjPN48PcbKh6j2vriH-Z2tREZxe-I9zJJFqsGD
 
 let isSubscribed = false;
 let swRegistration = null;
-let deferredPrompt = null;
 
 const urlB64ToUint8Array = (base64String) => {
 	const padding = '='.repeat((4 - base64String.length % 4) % 4);
@@ -54,15 +53,6 @@ const initializeSubscription = () => {
 			}
 		});
 };
-
-const showInstallPromotion = () => {
-
-};
-
-window.addEventListener('beforeinstallprompt', event => {
-	deferredPrompt = event;
-	showInstallPromotion();
-});
 
 if ('serviceWorker' in navigator && 'PushManager' in window) {
 	window.addEventListener('load', () => {

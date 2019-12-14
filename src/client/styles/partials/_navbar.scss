@@ -1,6 +1,7 @@
 
 $peekyHeight: 65;
 $navbarColor:rgba(35, 40, 45, 1);
+$expandColorActive: rgba(0, 0, 0, 0.3);
 
 .nav {
    box-shadow: 0px 2px 8px 4px rgba(0, 0, 0, 0.4);
@@ -96,5 +97,38 @@ $navbarColor:rgba(35, 40, 45, 1);
             color: #eee;
          }
       }
+   }
+}
+
+.install-button {
+   cursor: pointer;
+   display: flex;
+   justify-items: center;
+   overflow: hidden;
+   width: 30px;
+   height: 30px;
+   margin-right: 1em;
+   border-radius: 50%;
+   background-color: rgb(31, 35, 40);
+   transform: translateX(15px);
+   box-shadow: 0px 1px 1px 1px rgba(0,0,0,0.4);
+   transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+
+   &-icon {
+      font-size: 22px;
+      color: rgba(255, 255, 255, 0.7);
+      transition: font-size 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      transform: rotate(-180deg);
+      margin: auto;
+   }
+
+   &:hover {
+      box-shadow: 1px 2px 2px 0px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+      background-color: rgb(32, 37, 43);
+   }
+
+   &:active {
+      transform: translateX(15px) scale(0.9);
+      box-shadow: 0px 0px 2px 1px $expandColorActive;
    }
 }

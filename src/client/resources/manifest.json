@@ -1,7 +1,7 @@
 {
 	"lang" : "English",
-	"name": "React SSR API Doc template engine",
-	"short_name": "React SSR Engine",
+	"name": "React PWA Template Engine",
+	"short_name": "React Template Engine",
 	"description": "An Isomorphic react PWA template engine",
 	"display": "standalone",
 	"icons": [{

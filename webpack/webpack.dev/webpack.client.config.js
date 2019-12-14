@@ -23,6 +23,9 @@ const entryPoint = './src/client.jsx';
 
 const resources = [
 	{
+		from: 'src/client/scriptsjs/loader.js',
+		to: 'static/scripts'
+	}, {
 		from: 'src/client/resources/manifest.json',
 		to: ''
 	}, {
@@ -60,14 +63,15 @@ module.exports = {
 		hints: false
 	},
 	plugins: [
-		new CleanWebpackPlugin(),
 		new CopyPlugin(resources),
 		new ManifestPlugin({
 			fileName: 'manifest-assets.json',
 			publicPath: publicPath,
 			generate: (seed, files, entrypoints) => {
 				const manifestFiles = files.reduce((manifest, file) => {
-					manifest[file.name] = file.path;
+					if (!file.name.endsWith('.DS_Store') && !file.name.endsWith('.js.br')) {
+						manifest[file.name] = file.path;
+					}
 					return manifest;
 				}, seed);
 				const entrypointFiles = entrypoints.main.filter(
@@ -92,6 +96,7 @@ module.exports = {
 		new WorkboxPlugin.InjectManifest({
 			swSrc: 'serviceWorker.js',
 			swDest: 'service-worker.js',
+			exclude: [/\.(js.br|DS_Store)$/, /manifest-assets.*\.json$/],
 			precacheManifestFilename: 'manifest-precache.[manifestHash].js'
 		})
 	],

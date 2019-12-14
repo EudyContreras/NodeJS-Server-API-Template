@@ -1,11 +1,13 @@
 import React from 'react';
 import memoize from 'fast-memoize';
+import Action from './children/NavabarAction';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { shallowEqual } from '../../utililties/comparer.utils';
 import { appendWhen, join } from '../../../appliers/style.applier';
 import { getNavigationBar } from '../../../selectors/navbar.selector';
 import { DispatchProps, Dispatchers } from '../../../actions/common/navigation.action';
+import rippleEffect from '../../../appliers/ripple.applier';
 
 interface StateProps {
 	anchored: boolean;
@@ -30,7 +32,7 @@ class Navbar extends React.Component<Props, any> {
 		};
 	}
 
-	public shouldComponentUpdate = (nextProps: any, nextState: any): boolean => {
+	public shouldComponentUpdate = (nextProps: any): boolean => {
 		return !shallowEqual(this.props.anchored, nextProps.anchored) 
 			|| !shallowEqual(this.props.mouseInside, nextProps.mouseInside)
 			|| !shallowEqual(this.props.activeTab, nextProps.activeTab);
@@ -158,6 +160,7 @@ class Navbar extends React.Component<Props, any> {
 						</li>
 					)}
 				</ul>
+				<Action styling={style}/>
 			</header>
 		);
 	};
