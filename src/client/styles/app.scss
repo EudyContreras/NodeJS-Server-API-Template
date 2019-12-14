@@ -105,6 +105,10 @@ body::-webkit-scrollbar {
 	display: none;
 }
 
+.hidden {
+	display: none;
+}
+
 .stagger-out {
 	transition: all 0.3s $easeInInterpolator !important;
 	transform: translateX(0px);

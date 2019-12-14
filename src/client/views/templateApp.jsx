@@ -23,18 +23,27 @@ const DefaultLayout = (props) => {
 			<meta name='apple-mobile-web-app-capable' content='yes' />
 			<meta name='apple-mobile-web-app-status-bar-style' content='black' />
 			<meta name='apple-mobile-web-app-title' content={props.title} />
+			
+			{/* <meta name="msapplication-square310x310logo" content="icon_largetile.png"></meta>
+			<meta name='msapplication-square70x70logo' content='icon_smalltile.png' />
+			<meta name='msapplication-square150x150logo' content='icon_mediumtile.png' />
+			<meta name='msapplication-wide310x150logo' content='icon_widetile.png' />
+			<meta name='apple-mobile-web-app-status-bar-style' content='black' />
+			<link rel='apple-touch-startup-image' href='icon.png' /> */}
+			
 			<link rel='manifest' href='/manifest.json' />
 			<link rel='icon' type='image/png' href='static/images/favicon.ico' />
 			<link rel='apple-touch-icon' type='image/png' href='static/images/favicon.ico' />
 			<link rel='shortcut icon' type='image/png' href='static/images/favicon.ico' />
-			<link rel='stylesheet' href='https://fonts.googleapis.com/icon?family=Material+Icons&display=swap' media="all" id='materialIcons' async disabled />
-			<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Roboto&display=optional' media="all" id='robotoFont' defer disabled />
+			<link rel='stylesheet' href='https://fonts.googleapis.com/icon?family=Material+Icons&display=swap' media='all' id='materialIcons' async disabled />
+			<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Roboto&display=optional' media='all' id='robotoFont' defer disabled />
 			<style defer id='shellStyle'>{props.css}</style>
 		</head>
 		<body >
 			<noscript>You need to enable JavaScript to fully be able to use this this web-app.</noscript>
 			<section id='content'>{props.content}</section>
-			<script rel="preconnect" src='https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js' defer />
+			<script rel='preconnect' src='https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js' defer />
+			<script async src='static/scripts/loader.js' />
 			<script dangerouslySetInnerHTML={{
 				__html:
 					`
@@ -47,26 +56,7 @@ const DefaultLayout = (props) => {
 
 			${props.enableSW ? `
 
-			if ('serviceWorker' in navigator) {
-				window.addEventListener('load', () => {
-					navigator.serviceWorker.register('service-worker.js')
-						.then(function () {
-							return navigator.serviceWorker.ready;
-						})
-						.then(registration => {
-							console.log('ServiceWorker registration successful with scope: ', registration.scope);
-			
-						}, function (err) {
-							console.log('ServiceWorker registration failed: ', err);
-						}).catch(error => console.log(error));
-			
-					navigator.serviceWorker.ready.then(registration => {
-						if (registration.sync) {
-							registration.sync.register('initial-sync').catch(error => console.log(error));
-						}
-					});
-				});
-			}
+
 			
 			`: ''}
 			
@@ -94,7 +84,6 @@ const DefaultLayout = (props) => {
 			<script type='text/javascript' src='static/scripts/vendor/vendor-main-symbol-observable.chunk.js' />
 			<script type='text/javascript' src='static/scripts/common/commons-main-tiny-invariant.esm.js.chunk.js' />
 			<script type='text/javascript' src='static/scripts/common/commons-main-value-equal.js.chunk.js' /> */}
-		
 		</body>
 	</html>;
 };

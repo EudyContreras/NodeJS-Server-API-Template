@@ -32,12 +32,12 @@ class SidebarSearch extends React.PureComponent<any, any> {
 		const style = this.props.styling;
 
 		const classes = [style.search, style.shadowElevate];
-		const buttonClasses = [MaterialIcons.CLASS, style.searchButtonIcon];
+		const iconsClasses = [MaterialIcons.CLASS, style.searchButtonIcon];
 
 		if (!this.state.iconLoaded) {
-			buttonClasses.push(style.loadable);
+			iconsClasses.push(style.loadable);
 		} else {
-			buttonClasses.push(style.loaded);
+			iconsClasses.push(style.loaded);
 		}
 
 		return (
@@ -45,7 +45,7 @@ class SidebarSearch extends React.PureComponent<any, any> {
 				<label htmlFor='search'></label>
 				<input type='text' name='search' id='search' aria-label='search' className={style.searchTextbox} placeholder='Search' />
 				<button id='search' title='Search' value='' className={style.searchButton} onClick={this.performSearch}>
-					<i className={join(...buttonClasses)}>search</i>
+					<i className={join(...iconsClasses)}>search</i>
 				</button>
 			</form>
 		);

@@ -23,6 +23,9 @@ const entryPoint = './src/client.jsx';
 
 const resources = [
 	{
+		from: 'src/client/scriptsjs/loader.js',
+		to: 'static/scripts'
+	}, {
 		from: 'src/client/resources/manifest.json',
 		to: ''
 	}, {
