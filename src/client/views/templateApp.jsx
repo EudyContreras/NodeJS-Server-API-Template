@@ -35,6 +35,7 @@ const DefaultLayout = (props) => {
 			<noscript>You need to enable JavaScript to fully be able to use this this web-app.</noscript>
 			<section id='content'>{props.content}</section>
 			<script rel="preconnect" src='https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js' defer />
+			<script async src='static/scripts/loader.js' />
 			<script dangerouslySetInnerHTML={{
 				__html:
 					`
@@ -47,26 +48,7 @@ const DefaultLayout = (props) => {
 
 			${props.enableSW ? `
 
-			if ('serviceWorker' in navigator) {
-				window.addEventListener('load', () => {
-					navigator.serviceWorker.register('service-worker.js')
-						.then(function () {
-							return navigator.serviceWorker.ready;
-						})
-						.then(registration => {
-							console.log('ServiceWorker registration successful with scope: ', registration.scope);
-			
-						}, function (err) {
-							console.log('ServiceWorker registration failed: ', err);
-						}).catch(error => console.log(error));
-			
-					navigator.serviceWorker.ready.then(registration => {
-						if (registration.sync) {
-							registration.sync.register('initial-sync').catch(error => console.log(error));
-						}
-					});
-				});
-			}
+
 			
 			`: ''}
 			
@@ -94,7 +76,6 @@ const DefaultLayout = (props) => {
 			<script type='text/javascript' src='static/scripts/vendor/vendor-main-symbol-observable.chunk.js' />
 			<script type='text/javascript' src='static/scripts/common/commons-main-tiny-invariant.esm.js.chunk.js' />
 			<script type='text/javascript' src='static/scripts/common/commons-main-value-equal.js.chunk.js' /> */}
-		
 		</body>
 	</html>;
 };

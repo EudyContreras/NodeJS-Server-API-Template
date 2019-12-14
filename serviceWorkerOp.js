@@ -5,8 +5,7 @@ const stragedies = Object.freeze({
 	CACHE_ONLY: 'cache_only_stragedy', // If there is available cache only serve the cache
 	CACHE_FIRST: 'cache_first_stragedy', // Ideal for resources that do not change often
 	NETWORK_ONLY: 'network_only_stragedy', // If there is a network connection only serve from network
-	NETWORK_FIRST: 'network_first_stragedy', // Ideal for resources or content that changes frequently
-	STALE_REVALIDATE: 'stale_revalidate_stragedy' // Ideal for when the latest resource is not essential
+	NETWORK_FIRST: 'network_first_stragedy' // Ideal for resources or content that changes frequently
 });
 
 const stragedy = stragedies.CACHE_FIRST;
@@ -28,7 +27,6 @@ const http = {
 };
 
 const events = {
-	NOTIFY_CLICK: 'notificationclick',
 	PERIODIC_SYNC: 'periodicsync',
 	INSTALL: 'install',
 	ACTIVATE: 'activate',
@@ -43,13 +41,9 @@ const syncEvents = {
 	CONTENT_SYNC: 'content-sync'
 };
 
-const push = {
-	NEW_UPDATE: 'new-update'
-};
-
 const messages = {
 	READ_OFFLINE: 'READ_OFFLINE',
-	SKIP_WAITING: 'SKIP_WAITING',
+	SKIP_WAITING: 'SKIP_WAITING'
 };
 
 const throwOnError = (response) => {
@@ -88,7 +82,7 @@ const cacheableRequestFailingToCacheStrategy = ({ request, cache }) => {
 };
 
 const isRequestForStatic = (request) => {
-	return /.(png|svg|json|jpg|jpeg|gif|ico|css|js)$/.test(request.url);
+	return /.(png|jpg|jpeg|gif|ico|css|js)$/.test(request.url);
 };
 
 const isSideEffectRequest = (request) => {
@@ -97,40 +91,31 @@ const isSideEffectRequest = (request) => {
 
 const cacheFailingToCacheableRequestStrategy = ({ request, cache }) => {
 	switch(stragedy) {
-		case stragedies.CACHE_ONLY: {
-			return cache.match(request).then(throwOnError);
-		}
-		case stragedies.NETWORK_ONLY: {
-			return fetch(request).then(throwOnError);
-		}
 		case stragedies.CACHE_FIRST: {
-			return cache.match(request).then(response => {
-				return response || fetch(request).then(response => {
-					cache.put(request, response.clone());
-					return response;
-				}).catch(() => {
-					return cache.match('/offline.html');
+			return cache.match(request)
+				.then(throwOnError)
+				.then(response => {
+					return response || fetch(request)
+						.then(throwOnError)
+						.then(response => {
+							cache.put(request, response.clone());
+							return response;
+						})
+						.catch(() => cache.match('/offline.html'));
 				});
-			});
 		}
 		case stragedies.NETWORK_FIRST: {
-			return fetch(request).then(response => {
-				cache.put(request, response.clone());
-				return response;
-			}).catch(() => {
-				return cache.match(request).then(response => {
-					return response || cache.match('/offline.html');
-				});
-			});
-		}
-		case stragedies.STALE_REVALIDATE: {
-			return cache.match(request).then(response => {
-				const fetchPromise = fetch(request).then(response => {
+			return fetch(request)
+				.then(response => {
 					cache.put(request, response.clone());
 					return response;
+				})
+				.catch(error => {
+					console.log(error);
+					return cache.match(request)
+						.then(throwOnError)
+						.catch(() => cache.match('/offline.html'));
 				});
-				return response || fetchPromise || cache.match('/offline.html');
-			});
 		}
 	}
 };
@@ -152,8 +137,6 @@ self.addEventListener(events.PERIODIC_SYNC, (event) => {
 });
 
 self.addEventListener(events.INSTALL, event => {
-	self.skipWaiting();
-
 	event.waitUntil(
 		caches.open(STATIC_CACHE)
 			.then(cache => {
@@ -213,46 +196,6 @@ self.addEventListener(events.PUSH, event => {
 		body: event.data.text()
 	};
 	event.waitUntil(self.registration.showNotification(title, options));
-});
-
-self.addEventListener(events.PUSH, event => {
-	console.log('Service Worker Push Received.');
-	console.log(`Service Worker Push had this data: "${event.data.text()}"`);
-
-	const title = 'Push Codelab';
-	const options = {
-		body: 'Yay it works.',
-		icon: 'images/icon.png',
-		badge: 'static/images/icon-152x152.png'
-	};
-
-	const notificationPromise = self.registration.showNotification(title, options);
-	event.waitUntil(notificationPromise);
-
-	// if (event.data.text() == push.NEW_UPDATE) {
-	// 	event.waitUntil(
-	// 		caches.open(DATA_CACHE).then(cache => {
-	// 			return fetch('/updates.json').then(response => {
-	// 				cache.put('/updates.json', response.clone());
-	// 				return response.json();
-	// 			});
-	// 		}).then(emails => {
-	// 			// registration.showNotification("New email", {
-	// 			// 	body: "From " + emails[0].from.name,
-	// 			// 	tag: "new-email"
-	// 			// });
-	// 		})
-	// 	);
-	// }
-});
- 
-self.addEventListener(events.NOTIFY_CLICK, function (event) {
-	if (event.notification.tag == push.NEW_UPDATE) {
-		// Assume that all of the resources needed to render
-		// /inbox/ have previously been cached, e.g. as part
-		// of the install handler.
-	
-	}
 });
 
 self.addEventListener(events.MESSAGE, event => {
