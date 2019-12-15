@@ -4,8 +4,16 @@
 
 const applicationServerPublicKey = 'BEWGulnjPN48PcbKh6j2vriH-Z2tREZxe-I9zJJFqsGDMEHg1IyBrhzRgQR1Cn3fFCSmcwG79h3MCCRDLfelvuw';
 
+const messages = {
+	APP_UPDATE: 'add_update',
+	READ_OFFLINE: 'read_offline',
+	SKIP_WAITING: 'skip_awaitng'
+};
+
 let isSubscribed = false;
 let swRegistration = null;
+
+const delay = ms => _ => new Promise(resolve => setTimeout(() => resolve(_), ms));
 
 const urlB64ToUint8Array = (base64String) => {
 	const padding = '='.repeat((4 - base64String.length % 4) % 4);
@@ -26,6 +34,8 @@ const urlB64ToUint8Array = (base64String) => {
  * Subscribe user from push notifications
  */
 const subscribeUser = () => {
+	if (!swRegistration) return;
+
 	const applicationServerKey = urlB64ToUint8Array(applicationServerPublicKey);
 	swRegistration.pushManager.subscribe({
 		userVisibleOnly: true,
@@ -44,6 +54,8 @@ const subscribeUser = () => {
  * Unsubscribe user from push notifications
  */
 const unsubscribeUser = () => {
+	if (!swRegistration) return;
+
 	swRegistration.pushManager.getSubscription()
 		.then(subscription => {
 			if (subscription) {
@@ -64,6 +76,8 @@ const unsubscribeUser = () => {
  */
 const initializeSubscription = () => {
 	// Set the initial subscription value
+	if (!swRegistration) return;
+
 	swRegistration.pushManager.getSubscription()
 		.then(subscription => {
 			isSubscribed = !(subscription === null);
@@ -79,6 +93,14 @@ const initializeSubscription = () => {
 		});
 };
 
+const registerBackgroundSync = () => {
+	if (!swRegistration) return;
+
+	swRegistration.sync.register('update-sync')
+		.then(() => console.log('Registered background sync'))
+		.catch(err => console.error('Error registering background sync', err));
+};
+
 if ('serviceWorker' in navigator) {
 	window.addEventListener('load', () => {
 		navigator.serviceWorker.register('service-worker.js')
@@ -87,6 +109,10 @@ if ('serviceWorker' in navigator) {
 			})
 			.then(registration => {
 				swRegistration = registration;
+
+				setTimeout(() => {
+					registerBackgroundSync();
+				}, 4000);
 
 				if ('PushManager' in window) {
 					initializeSubscription();
@@ -103,6 +129,23 @@ if ('serviceWorker' in navigator) {
 				registration.sync.register('initial-sync').catch(error => console.log(error));
 			}
 		});
+
+		navigator.serviceWorker.onmessage = event => {
+			const command = event.data;
+		
+			console.log('Message received', command);
+			
+			switch(command.type) {
+				case messages.APP_UPDATE: {
+					const message = JSON.parse(command);
+					console.log('Application update message', message);
+					break;
+				}
+				case messages.SKIP_WAITING: {
+					self.skipWaiting();
+				}
+			}
+		};
 	});
 } else {
 	console.warn('Service workers not supported on your current browser! Please use a modern browser to take advantage of offline capabitilies');

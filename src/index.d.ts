@@ -13,6 +13,11 @@ declare module '*.pem' {
    export = value;
 }
 
+declare module '*.json' {
+   const value: any;
+   export default value;
+ }
+
 declare module 'express-react-views';
 
 declare module 'isomorphic-style-loader/withStyles';

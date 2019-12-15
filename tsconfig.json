@@ -12,6 +12,7 @@
     //"checkJs": true,                       /* Report errors in .js files. */
     // "jsx": "preserve",                     /* Specify JSX code generation: 'preserve', 'react-native', or 'react'. */
     "jsx": "react",
+    "composite": true,
     //"declaration": true,                   /* Generates corresponding '.d.ts' file. */
     //"declarationMap": true,                /* Generates a sourcemap for each corresponding '.d.ts' file. */
     //"sourceMap": true,                     /* Generates corresponding '.map' file. */
@@ -58,7 +59,7 @@
     "esModuleInterop": true, /* Enables emit interoperability between CommonJS and ES Modules via creation of namespace objects for all imports. Implies 'allowSyntheticDefaultImports'. */
     // "preserveSymlinks": true,              /* Do not resolve the real path of symlinks. */
     // "allowUmdGlobalAccess": true,          /* Allow accessing UMD globals from modules. */
-
+    "resolveJsonModule": true,
     /* Source Map Options */
     // "sourceRoot": "",                      /* Specify the location where debugger should locate TypeScript files instead of source locations. */
     // "mapRoot": "",                         /* Specify the location where debugger should locate map files instead of generated locations. */
@@ -71,7 +72,7 @@
     "plugins": [
       {
         "name": "typescript-tslint-plugin",
-        "alwaysShowRuleFailuresAsWarnings": false,
+        "alwaysShowRuleFailuresAsWarnings": true,
         "ignoreDefinitionFiles": true,
         "configFile": "./tslint.json",
         "suppressWhileTypeErrorsPresent": false
@@ -86,6 +87,7 @@
     "webpack",
     "public",
     "build",
-    "dist"
+    "dist",
+    "ssl"
   ]
 }

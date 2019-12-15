@@ -54,7 +54,7 @@ export default class Application {
 			https.createServer({
 				key: fs.readFileSync('./ssl/sslkey.pem'),
 				cert: fs.readFileSync('./ssl/sslcert.pem'),
-				passphrase: config.ssl.PASS_PHRASE,
+				passphrase: config.ssl.PASS_PHRASE
 			}, this.app).listen(port, listener);
 		} else {
 			this.app.listen(port, listener);

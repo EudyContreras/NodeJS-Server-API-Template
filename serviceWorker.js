@@ -1,21 +1,6 @@
 const STATIC_CACHE = 'eudcon-universal-static-cache';
 const DATA_CACHE = 'eudcon-universal-data-cache';
 
-const worker = {
-	log: (...message) => {
-		const css = 'background: #00b6ffbd; padding: 2px; border-radius: 2px; color: white; font-weight: 600;';
-		console.log('%c ServiceWorker ', css, ...message);
-	},
-	warn: (message) => {
-		const css = 'background: #ffbf00bd; padding: 2px; border-radius: 2px; color: white; font-weight: 600;';
-		console.log('%c ServiceWorker ', css, ...message);
-	},
-	error: (message) => {
-		const css = 'background: #ff0038bd; padding: 2px; border-radius: 2px; color: white; font-weight: 600;';
-		console.log('%c ServiceWorker ', css, ...message);
-	}
-};
-
 const stragedies = Object.freeze({
 	CACHE_ONLY: 'cache_only_stragedy', // If there is available cache only serve the cache
 	CACHE_FIRST: 'cache_first_stragedy', // Ideal for resources that do not change often
@@ -24,7 +9,7 @@ const stragedies = Object.freeze({
 	STALE_REVALIDATE: 'stale_revalidate_stragedy' // Ideal for when the latest resource is not essential
 });
 
-const baseUrl = 'http://localhost:5000/';
+const baseUrl = 'http://localhost:5000';
 
 const urlsToCache = [
 	'/',
@@ -55,6 +40,7 @@ const events = {
 
 const syncEvents = {
 	INITIAL_SYNC: 'initial-sync',
+	UPDATE_SYNC: 'update-sync',
 	CONTENT_SYNC: 'content-sync'
 };
 
@@ -68,23 +54,28 @@ const messages = {
 	SKIP_WAITING: 'skip_awaitng'
 };
 
+const worker = {
+	log: (...message) => {
+		const css = 'background: #00b6ffbd; padding: 2px; border-radius: 2px; color: white; font-weight: 600;';
+		console.log('%c ServiceWorker ', css, ...message);
+	},
+	warn: (message) => {
+		const css = 'background: #ffbf00bd; padding: 2px; border-radius: 2px; color: white; font-weight: 600;';
+		console.log('%c ServiceWorker ', css, ...message);
+	},
+	error: (message) => {
+		const css = 'background: #ff0038bd; padding: 2px; border-radius: 2px; color: white; font-weight: 600;';
+		console.log('%c ServiceWorker ', css, ...message);
+	}
+};
+
+const delay = ms => _ => new Promise(resolve => setTimeout(() => resolve(_), ms));
+
 const throwOnError = (response) => {
 	if (response.status >= 200 && response.status < 300 || response.status === 0) {
 		return response;
 	}
 	throw new Error(response.statusText);
-};
-
-const initialSynch = ()=> {
-	return new Promise((resolve)=> {
-		return resolve(true);
-	});
-};
-
-const syncContent = () => {
-	return new Promise((resolve)=> {
-		return resolve(true);
-	});
 };
 
 const isRequestForStaticHtml = request => {
@@ -96,45 +87,55 @@ const isRequestForStaticAsset = request => {
 };
 
 const isSideEffectRequest = request => {
-	const isSideEffect = [...Object.values(http)].includes(request.method);
-	const isApiRequest = request.url.includes('/api/');
-
-	return isSideEffect || isApiRequest;
+	return [...Object.values(http)].includes(request.method);
 };
 
+const isApiRequest = request => {
+	return request.url.includes('/api/');
+};
 
 const update = request => {
-	return fetch(request.url)
-		.then(response => {
-			if (!response.ok) throw new Error('Network error');
-			
-			return caches.open(DATA_CACHE)
-				.then(cache => cache.put(request, response.clone()))
-				.then(() => response);
-		});
+	return fetch(request.url).then(response => {
+		if (!response.ok) throw new Error('Network error');
+
+		return caches.open(DATA_CACHE).then(cache => {
+			cache.put(request.url, response.clone());
+			return response;
+		}).then(response => response);
+	});
 };
 
 const refresh = response => {
 	return response.json()
-		.then(jsonResponse => {
+		.then(jsonResponse => {		
 			self.clients.matchAll().then(clients => {
 				clients.forEach(client => {
 					client.postMessage(JSON.stringify({
 						type: messages.APP_UPDATE,
 						data: {
 							url: response.url,
-							payload: jsonResponse.data
+							payload: jsonResponse.content
 						}
 					}));
 				});
 			});
-			return jsonResponse.data;
+			return jsonResponse.content;
 		});
 };
 
-const requestFailingWithNotFoundStrategy = ({ request, cache }) => {
+const requestFailingWithNotFoundStrategy = ({ request }) => {
+	return fetch(request)
+		.catch(() => {
+			const body = JSON.stringify({ error: 'ServiceWorker: Sorry, you are offline. Please, try again later.' });
+			const headers = { 'Content-Type': 'application/json' };
+			const response = new Response(body, { status: 404, statusText: 'Not Found', headers });
+			return response;
+		});
+};
+
+const requestCacheUpdateRefreshStrategy = ({ request, cache }) => {
 	return cache.match(request).then(response => {
-		return response;
+		return new Response(response);
 	}).catch(() => {
 		return fetch(request)
 			.then(response => {
@@ -216,7 +217,7 @@ self.addEventListener(events.INSTALL, event => {
 				return cache.addAll([...urlsToCache, ...cacheRes]);
 			})
 			.then(() => self.skipWaiting())
-			.catch(error => console.log(error))
+			.catch(error => worker.log(error))
 	);
 });
 
@@ -249,8 +250,13 @@ self.addEventListener(events.FETCH, event => {
 	}
 
 	if (isSideEffectRequest(request)) {
+		event.respondWith(requestFailingWithNotFoundStrategy({ request }));
+		return;
+	}
+
+	if (isApiRequest(request)) {
 		const cache = caches.open(DATA_CACHE);
-		event.respondWith(requestFailingWithNotFoundStrategy({ request, cache }));
+		event.respondWith(cache.then(cache => requestCacheUpdateRefreshStrategy({ request, cache })));
 		event.waitUntil(update(request).then(refresh)); 
 		return;
 	}
@@ -292,6 +298,27 @@ self.addEventListener(events.FETCH, event => {
 	event.respondWith(cache.then(cache => cacheableRequestFailingToCacheStrategy({ request, cache })));
 });
 
+
+const initialSync = ()=> {
+	return new Promise((resolve)=> {
+		return resolve(true);
+	});
+};
+
+const contentSync = () => {
+	return new Promise((resolve)=> {
+		return resolve(true);
+	});
+};
+
+const updateSync = () => {
+	return update({ url: baseUrl + '/rest/api/schema' })
+		.then(refresh)
+		.then(data => {
+			return self.registration.showNotification(`New api version ${data.version}`);
+		});
+};
+
 /**
  * Attempt to sync non-urgent content silently on the background
  */
@@ -299,7 +326,13 @@ self.addEventListener(events.SYNC, event => {
 	worker.log('Received sync event:', event.tag);
 	switch(event.tag) {
 		case syncEvents.INITIAL_SYNC: {
-			event.waitUntil(initialSynch().then(x => {
+			event.waitUntil(initialSync().then(x => {
+				worker.log('Sync event result:', x);
+			}));
+			break;
+		}
+		case syncEvents.UPDATE_SYNC: {
+			event.waitUntil(updateSync().then(x => {
 				worker.log('Sync event result:', x);
 			}));
 			break;
@@ -313,8 +346,18 @@ self.addEventListener(events.SYNC, event => {
 
 self.addEventListener(events.PERIODIC_SYNC, (event) => {
 	worker.log('Triggered periodic sync:', event);
-	if (event.tag === syncEvents.CONTENT_SYNC) {
-		event.waitUntil(syncContent());
+
+	switch(event.tag) {
+		case syncEvents.CONTENT_SYNC: {
+			event.waitUntil(contentSync().then(x => {
+				worker.log('Sync event result:', x);
+			}));
+			break;
+		}
+		default: {
+			worker.log('Received sync event:', event.tag);
+			break;
+		}
 	}
 });
 
@@ -366,30 +409,6 @@ self.addEventListener(events.NOTIFY_CLICK, function (event) {
 			event.waitUntil(
 				self.clients.openWindow(baseUrl)
 			);
-		}
-	}
-});
-
-self.addEventListener(events.MESSAGE, event => {
-	const command = event.data;
-
-	worker.log('Message received', command);
-	
-	switch(command.type) {
-		case messages.APP_UPDATE: {
-			const message = JSON.parse(command);
-			worker.log('Application update message', message);
-			break;
-		}
-		case messages.READ_OFFLINE: {
-			const request = new Request(command.payload);
-			fetch(request).then(throwOnError).then(response => {
-				caches.open(STATIC_CACHE).then(cache => cache.put(request, response));
-			});
-			break;
-		}
-		case messages.SKIP_WAITING: {
-			self.skipWaiting();
 		}
 	}
 });
