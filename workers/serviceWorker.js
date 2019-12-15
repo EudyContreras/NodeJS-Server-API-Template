@@ -1,3 +1,34 @@
+self.events = {
+	SYNC: 'sync',
+	PERIODIC_SYNC: 'periodicsync',
+	NOTIFY_CLICK: 'notificationclick',
+	INSTALL: 'install',
+	ACTIVATE: 'activate',
+	MESSAGE: 'message',
+	FETCH: 'fetch',
+	PUSH: 'push'
+};
+
+self.baseUrl = 'http://localhost:5000';
+
+self.worker = {
+	log: (...message) => {
+		const css = 'background: #00b6ffbd; padding: 2px; border-radius: 2px; color: white; font-weight: 600;';
+		console.log('%c ServiceWorker ', css, ...message);
+	},
+	warn: (message) => {
+		const css = 'background: #ffbf00bd; padding: 2px; border-radius: 2px; color: white; font-weight: 600;';
+		console.log('%c ServiceWorker ', css, ...message);
+	},
+	error: (message) => {
+		const css = 'background: #ff0038bd; padding: 2px; border-radius: 2px; color: white; font-weight: 600;';
+		console.log('%c ServiceWorker ', css, ...message);
+	}
+};
+
+self.importScripts('helpers/sync.helper.js');
+self.importScripts('helpers/fallback.helper.js');
+
 const STATIC_CACHE = 'eudcon-universal-static-cache';
 const DATA_CACHE = 'eudcon-universal-data-cache';
 
@@ -8,8 +39,6 @@ const stragedies = Object.freeze({
 	NETWORK_FIRST: 'network_first_stragedy', // Ideal for resources or content that changes frequently
 	STALE_REVALIDATE: 'stale_revalidate_stragedy' // Ideal for when the latest resource is not essential
 });
-
-const baseUrl = 'http://localhost:5000';
 
 const urlsToCache = [
 	'/',
@@ -27,23 +56,6 @@ const http = {
 	PATCH: 'PATCH'
 };
 
-const events = {
-	NOTIFY_CLICK: 'notificationclick',
-	PERIODIC_SYNC: 'periodicsync',
-	INSTALL: 'install',
-	ACTIVATE: 'activate',
-	MESSAGE: 'message',
-	FETCH: 'fetch',
-	SYNC: 'sync',
-	PUSH: 'push'
-};
-
-const syncEvents = {
-	INITIAL_SYNC: 'initial-sync',
-	UPDATE_SYNC: 'update-sync',
-	CONTENT_SYNC: 'content-sync'
-};
-
 const push = {
 	NEW_UPDATE: 'new-update'
 };
@@ -52,21 +64,6 @@ const messages = {
 	APP_UPDATE: 'add_update',
 	READ_OFFLINE: 'read_offline',
 	SKIP_WAITING: 'skip_awaitng'
-};
-
-const worker = {
-	log: (...message) => {
-		const css = 'background: #00b6ffbd; padding: 2px; border-radius: 2px; color: white; font-weight: 600;';
-		console.log('%c ServiceWorker ', css, ...message);
-	},
-	warn: (message) => {
-		const css = 'background: #ffbf00bd; padding: 2px; border-radius: 2px; color: white; font-weight: 600;';
-		console.log('%c ServiceWorker ', css, ...message);
-	},
-	error: (message) => {
-		const css = 'background: #ff0038bd; padding: 2px; border-radius: 2px; color: white; font-weight: 600;';
-		console.log('%c ServiceWorker ', css, ...message);
-	}
 };
 
 const delay = ms => _ => new Promise(resolve => setTimeout(() => resolve(_), ms));
@@ -94,7 +91,7 @@ const isApiRequest = request => {
 	return request.url.includes('/api/');
 };
 
-const update = request => {
+self.update = request => {
 	return fetch(request.url).then(response => {
 		if (!response.ok) throw new Error('Network error');
 
@@ -105,7 +102,7 @@ const update = request => {
 	});
 };
 
-const refresh = response => {
+self.refresh = response => {
 	return response.json()
 		.then(jsonResponse => {		
 			self.clients.matchAll().then(clients => {
@@ -122,6 +119,8 @@ const refresh = response => {
 			return jsonResponse.content;
 		});
 };
+
+self.importScripts('helpers/notify.helper.js');
 
 const requestFailingWithNotFoundStrategy = ({ request }) => {
 	return fetch(request)
@@ -208,8 +207,8 @@ const cacheFailingToCacheableRequestStrategy = ({ request, cache, stragedy = str
  * as if it were a functional native application here. 
  * Can be used to cache emidiate and non-emidiate resources.
  */
-self.addEventListener(events.INSTALL, event => {
-	worker.log('Installed:', event);
+self.addEventListener(self.events.INSTALL, event => {
+	self.worker.log('Installed:', event);
 	event.waitUntil(
 		caches.open(STATIC_CACHE)
 			.then(cache => {
@@ -217,7 +216,7 @@ self.addEventListener(events.INSTALL, event => {
 				return cache.addAll([...urlsToCache, ...cacheRes]);
 			})
 			.then(() => self.skipWaiting())
-			.catch(error => worker.log(error))
+			.catch(error => self.worker.log(error))
 	);
 });
 
@@ -225,8 +224,8 @@ self.addEventListener(events.INSTALL, event => {
  * Do clean up here but keep lightweight to avoid
  * a potential render block
  */
-self.addEventListener(events.ACTIVATE, event => {
-	worker.log('Activated:', event);
+self.addEventListener(self.events.ACTIVATE, event => {
+	self.worker.log('Activated:', event);
 
 	const expectedCaches = [STATIC_CACHE, DATA_CACHE];
 
@@ -242,7 +241,7 @@ self.addEventListener(events.ACTIVATE, event => {
 	return self.clients.claim();
 });
 
-self.addEventListener(events.FETCH, event => {
+self.addEventListener(self.events.FETCH, event => {
 	const request = event.request.clone();
 
 	if(!(request.url.indexOf('http') === 0)){
@@ -257,7 +256,7 @@ self.addEventListener(events.FETCH, event => {
 	if (isApiRequest(request)) {
 		const cache = caches.open(DATA_CACHE);
 		event.respondWith(cache.then(cache => requestCacheUpdateRefreshStrategy({ request, cache })));
-		event.waitUntil(update(request).then(refresh)); 
+		event.waitUntil(self.update(request).then(self.refresh)); 
 		return;
 	}
 
@@ -268,10 +267,10 @@ self.addEventListener(events.FETCH, event => {
 	}
 	
 	if (isRequestForStaticHtml(request)) {
-		worker.log('Static html request:', request);
+		self.worker.log('Static html request:', request);
 		// Responsd with an app-shell otherwise
 		if (request.mode === 'navigate') {
-			worker.log('Navigation fetch event:', request);
+			self.worker.log('Navigation fetch event:', request);
 			event.respondWith(async () => {
 				const normalizedUrl = new URL(request.url);
 				normalizedUrl.search = '';
@@ -287,7 +286,7 @@ self.addEventListener(events.FETCH, event => {
 				return (await caches.match(normalizedUrl)) || fetchResponseP;
 			});
 		} else {
-			worker.log('Regular fetch event:', request);
+			self.worker.log('Regular fetch event:', request);
 			const cache = caches.open(STATIC_CACHE);
 			event.respondWith(cache.then(cache => cacheFailingToCacheableRequestStrategy({ request, cache })));
 		}
@@ -298,78 +297,10 @@ self.addEventListener(events.FETCH, event => {
 	event.respondWith(cache.then(cache => cacheableRequestFailingToCacheStrategy({ request, cache })));
 });
 
-
-const initialSync = ()=> {
-	return new Promise((resolve)=> {
-		return resolve(true);
-	});
-};
-
-const contentSync = () => {
-	return new Promise((resolve)=> {
-		return resolve(true);
-	});
-};
-
-const updateSync = () => {
-	return update({ url: baseUrl + '/rest/api/schema' })
-		.then(refresh)
-		.then(data => {
-			return self.registration.showNotification(`New api version ${data.version}`);
-		});
-};
-
-/**
- * Attempt to sync non-urgent content silently on the background
- */
-self.addEventListener(events.SYNC, event => {
-	worker.log('Received sync event:', event.tag);
-	switch(event.tag) {
-		case syncEvents.INITIAL_SYNC: {
-			event.waitUntil(initialSync().then(x => {
-				worker.log('Sync event result:', x);
-			}));
-			break;
-		}
-		case syncEvents.UPDATE_SYNC: {
-			event.waitUntil(updateSync().then(x => {
-				worker.log('Sync event result:', x);
-			}));
-			break;
-		}
-		default: {
-			worker.log('Received sync event:', event.tag);
-			break;
-		}
-	}
-});
-
-self.addEventListener(events.PERIODIC_SYNC, (event) => {
-	worker.log('Triggered periodic sync:', event);
-
-	switch(event.tag) {
-		case syncEvents.CONTENT_SYNC: {
-			event.waitUntil(contentSync().then(x => {
-				worker.log('Sync event result:', x);
-			}));
-			break;
-		}
-		default: {
-			worker.log('Received sync event:', event.tag);
-			break;
-		}
-	}
-});
-
-self.addEventListener(events.PUSH, event => {
-	worker.log('Push event received:', event.data);
+self.addEventListener(self.events.PUSH, event => {
+	self.worker.log('Push event received:', event.data);
 	
-	const title = 'Template engine';
-	const options = {
-		body: 'Yay it works.',
-		icon: 'static/images/favicon.png',
-		badge: 'static/images/icon-152x152.png'
-	};
+	const { title, options } = self.updateNotification;
 
 	const notificationPromise = self.registration.showNotification(title, options);
 	event.waitUntil(notificationPromise);
@@ -391,8 +322,8 @@ self.addEventListener(events.PUSH, event => {
 	// }
 });
  
-self.addEventListener(events.NOTIFY_CLICK, function (event) {
-	worker.log('Notification has been clicked');
+self.addEventListener(self.events.NOTIFY_CLICK, function (event) {
+	self.worker.log('Notification has been clicked');
 	
 	event.notification.close();
 
@@ -401,13 +332,13 @@ self.addEventListener(events.NOTIFY_CLICK, function (event) {
 	switch(tag) {
 		case push.NEW_UPDATE: {
 			event.waitUntil(
-				self.clients.openWindow(baseUrl)
+				self.clients.openWindow(self.baseUrl)
 			);
 			break;
 		}
 		default: {
 			event.waitUntil(
-				self.clients.openWindow(baseUrl)
+				self.clients.openWindow(self.baseUrl)
 			);
 		}
 	}

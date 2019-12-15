@@ -29,6 +29,9 @@ const isDevelopement = enviroment == 'development';
 
 const resources = [
 	{
+		from: 'workers/helpers',
+		to: 'helpers'
+	}, {
 		from: 'src/client/scriptsjs/loader.js',
 		to: 'static/scripts'
 	}, {
@@ -101,7 +104,7 @@ module.exports = {
 			deleteOriginalAssets: false
 		}),
 		new WorkboxPlugin.InjectManifest({
-			swSrc: 'serviceWorker.js',
+			swSrc: 'workers/serviceWorker.js',
 			swDest: 'service-worker.js',
 			exclude: [/\.(js.br|DS_Store)$/, /manifest-assets.*\.json$/],
 			precacheManifestFilename: 'manifest-precache.[manifestHash].js'

@@ -133,7 +133,7 @@ if ('serviceWorker' in navigator) {
 		navigator.serviceWorker.onmessage = event => {
 			const command = event.data;
 		
-			console.log('Message received', command);
+			console.log('Message received', command.type);
 			
 			switch(command.type) {
 				case messages.APP_UPDATE: {
