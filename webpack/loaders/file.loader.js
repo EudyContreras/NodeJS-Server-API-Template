@@ -1,5 +1,5 @@
 module.exports = {
-	test: /\.(jpe?g|png|gif|svg)$/i,
+	test: /\.(jpe?g|png|gif)$/i,
 	loader: 'file-loader',
 	options: {
 		outputPath: 'public/images',
@@ -14,4 +14,4 @@ module.exports = {
 			return isIcon ? 'icons/[name].[ext]' : '[name].[ext]';
 		}
 	}
-}
+};

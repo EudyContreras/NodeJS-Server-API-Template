@@ -8,7 +8,7 @@ module.exports = (path) => ({
 				modules: {
 					mode: 'local',
 					localIdentName: '[name]__[local]',
-					context: path.resolve(__dirname, '../../src/client/components'),
+					context: path.resolve(__dirname, '../../src/client/components')
 				},
 				localsConvention: 'camelCase',
 				importLoaders: 1

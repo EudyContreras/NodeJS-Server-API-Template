@@ -65,7 +65,9 @@ class IndexViewRenderer extends ViewRenderer {
 			cache: true
 		};
 
-		res.setHeader(config.header.LABEL, config.header.VALUE);
+		config.headers.forEach(header => {
+			res.setHeader(header.LABEL, header.VALUE);
+		});
 		res.render(config.app.APP_LAYOUT, props);
 	};
 
@@ -84,7 +86,9 @@ class IndexViewRenderer extends ViewRenderer {
 			cache: true
 		};
 
-		res.setHeader(config.header.LABEL, config.header.VALUE);
+		config.headers.forEach(header => {
+			res.setHeader(header.LABEL, header.VALUE);
+		});
 		res.render(config.app.SHELL_LAYOUT, props);
 	};
 }

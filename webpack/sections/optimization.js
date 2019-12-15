@@ -19,30 +19,31 @@ module.exports = ({ enviroment, splitChunk, useSourceMap, production = false }) 
 			},
 			terserOptions: {
 				parse: {
-					ecma: 8,
+					ecma: 8
 				},
 				compress: {
 					ecma: 5,
 					warnings: false,
 					comparisons: false,
 					drop_console: false,
-					inline: 2,
+					inline: 2
 				},
 				mangle: {
-					safari10: true,
+					safari10: true
 				},
 				keep_classnames: false,
 				keep_fnames: false,
 				output: {
 					ecma: 5,
 					comments: false,
-					ascii_only: true,
-				},
+					ascii_only: true
+				}
 			}
 		})
 	],
 	nodeEnv: enviroment,
 	providedExports: true,
+	concatenateModules: true,
 	removeAvailableModules: true,
 	mangleWasmImports: true,
 	removeEmptyChunks: true,

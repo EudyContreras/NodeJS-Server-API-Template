@@ -10,8 +10,11 @@ const CompressPlugin = require('compression-webpack-plugin');
 const optimization = require('../sections/optimization');
 const splitchunks = require('../sections/splitchunks');
 const babelLoader = require('../loaders/babel.loader');
+const imageLoader = require('../loaders/image.loader');
 const styleLoader = require('../loaders/style.loader');
 const fileLoader = require('../loaders/file.loader');
+const urlLoader = require('../loaders/url.loader');
+const svgLoader = require('../loaders/svg.loader');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 const useCSR = process.env.CSR == 'true';
@@ -49,7 +52,7 @@ if (useCSR) {
 
 const splitChunk = {
 	splitChunks: {
-		...splitchunks
+		...splitchunks.singleShunk
 	}
 };
 
@@ -81,9 +84,9 @@ module.exports = {
 
 				return {
 					files: manifestFiles,
-					entrypoints: entrypointFiles,
+					entryPoints: entrypointFiles
 				};
-			},
+			}
 		}),
 		new CompressPlugin({
 			filename: '[path].br[query]',
@@ -92,36 +95,41 @@ module.exports = {
 			compressionOptions: { level: 11 },
 			threshold: 10240,
 			minRatio: 0.8,
-			deleteOriginalAssets: false,
+			deleteOriginalAssets: false
 		}),
 		new WorkboxPlugin.InjectManifest({
 			swSrc: 'serviceWorker.js',
 			swDest: 'service-worker.js',
 			exclude: [/\.(js.br|DS_Store)$/, /manifest-assets.*\.json$/],
 			precacheManifestFilename: 'manifest-precache.[manifestHash].js'
-		}),
+		})
 	],
 	output: {
 		path: path.join(__dirname, publicPath),
 		futureEmitAssets: true,
 		pathinfo: false,
-		filename: 'static/scripts/bundle.js',
-		chunkFilename: 'static/scripts/[name].chunk.js',
+		filename: 'static/scripts/[name].[chunkhash].js',
+		// chunkFilename: 'static/scripts/[name].[chunkhash].chunk.js',
 		publicPath: '/',
 		globalObject: 'this'
 	},
-	optimization: optimization({ enviroment, splitChunk, useSourceMap, production: true }),
+	optimization: {
+		...optimization({ enviroment, splitChunk, useSourceMap, production: true })
+	},
 	module: {
 		rules: [{
 			test: /\.txt$/,
 			use: 'raw-loader'
 		},
 		babelLoader,
+		imageLoader,
 		fileLoader,
+		urlLoader,
+		svgLoader,
 		styleLoader(path)
 		]
 	},
 	resolve: {
 		extensions: ['*', '.js', '.jsx', '.tsx', '.ts', '.scss', '.css']
-	},
+	}
 };

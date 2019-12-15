@@ -2,7 +2,7 @@ const singleShunk = {
 	cacheGroups: {
 		commons: {
 			test: /[\\/]node_modules[\\/]/,
-			name: 'vendor/vendor',
+			name: 'vendor/vendors',
 			chunks: 'all'
 		}
 	}
@@ -22,8 +22,8 @@ const multiChunk = {
 				const folder = 'common';
 				const moduleFileName = module.identifier().split('/').reduceRight(item => item);
 				const allChunksNames = chunks.map((item) => item.name).join('~');
-				return `${folder}/${cacheGroupKey}-${allChunksNames}-${moduleFileName}`;
-			},
+				return `${folder}/${cacheGroupKey}-${allChunksNames}-${moduleFileName.replace('.js', '')}`;
+			}
 		},
 		vendor: {
 			chunks: 'all',
@@ -33,9 +33,12 @@ const multiChunk = {
 				const packageName = module.context.match(/[\\/]node_modules[\\/](.*?)([\\/]|$)/)[1];
 				const allChunksNames = chunks.map((item) => item.name).join('~');
 				return `${folder}/${cacheGroupKey}-${allChunksNames}-${packageName.replace('@', '')}`;
-			},
-		},
-	},
+			}
+		}
+	}
 };
 
-module.exports = singleShunk;
+module.exports = {
+	singleShunk,
+	multiChunk
+};

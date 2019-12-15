@@ -6,12 +6,18 @@ const config = Object.freeze({
 		TITLE: 'Template Engine',
 		APP_LAYOUT: 'templateApp',
 		SHELL_LAYOUT: 'templateShell',
-		NAME: '',
+		NAME: ''
 	},
-	header: {
-		LABEL: 'Set-Cookie',
-		VALUE: 'promo_shown=1; SameSite=Strict;'
-	},
+	headers: [
+		{
+			LABEL: 'Set-Cookie',
+			VALUE: 'promo_shown=1; SameSite=Strict;'
+		},
+		{
+			LABEL: 'Cache-Control',
+			VALUE: 'max-age=31536000'
+		}
+	],
 	layout: {
 		CONTENT_TYPE: 'html',
 		TEMPLATE: 'template'
@@ -24,7 +30,7 @@ const config = Object.freeze({
 		PUT: 'put',
 		POST: 'post',
 		PATCH: 'patch',
-		DELETE: 'delete',
+		DELETE: 'delete'
 	}
 });
 

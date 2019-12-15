@@ -51,7 +51,7 @@
             "unix"
         ],
         "quotes": [
-            "error",
+            "warn",
             "single"
         ],
         "comma-dangle": ["error", "never"],

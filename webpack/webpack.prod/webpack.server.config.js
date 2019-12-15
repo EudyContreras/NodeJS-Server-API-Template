@@ -34,7 +34,7 @@ module.exports = {
 			compressionOptions: { level: 11 },
 			threshold: 10240,
 			minRatio: 0.8,
-			deleteOriginalAssets: false,
+			deleteOriginalAssets: false
 		})
 	],
 	optimization: optimization({ enviroment: enviroment, production: true }),
@@ -51,5 +51,5 @@ module.exports = {
 	},
 	resolve: {
 		extensions: ['*', '.js', '.jsx', '.tsx', '.ts', '.scss', '.css']
-	},
+	}
 };

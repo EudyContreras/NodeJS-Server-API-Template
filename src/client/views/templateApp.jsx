@@ -1,12 +1,21 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 
 import React, { Fragment } from 'react';
 import PropType from 'prop-types';
+import manifest from '../../../build/public/manifest-assets.json';
 
 export default (props) => {
+	const entryPoints = manifest.entryPoints;
+
+	const inProps = {
+		...props,
+		entryPoints: entryPoints
+	};
+
 	if (props.csr == true) {
 		return <Fragment></Fragment>;
 	} else {
-		return <DefaultLayout {...props} />;
+		return <DefaultLayout {...inProps} />;
 	}
 };
 
@@ -14,8 +23,7 @@ const DefaultLayout = (props) => {
 	return <html lang='en-US'>
 		<head>
 			<title>{props.title}</title>
-			<script async src='static/scripts/vendor/vendor.chunk.js' />
-			<script async src='static/scripts/bundle.js' />
+			{props.entryPoints.map((x, i) => <script key={i} async src={x} />)}
 			<meta charSet='utf-8' />
 			<meta name='viewport' content='width=device-width, initial-scale=1' />
 			<meta name='theme-color' content='#23282d' />
@@ -24,12 +32,14 @@ const DefaultLayout = (props) => {
 			<meta name='apple-mobile-web-app-status-bar-style' content='black' />
 			<meta name='apple-mobile-web-app-title' content={props.title} />
 			
-			{/* <meta name="msapplication-square310x310logo" content="icon_largetile.png"></meta>
+			{
+			/* <meta name="msapplication-square310x310logo" content="icon_largetile.png"></meta>
 			<meta name='msapplication-square70x70logo' content='icon_smalltile.png' />
 			<meta name='msapplication-square150x150logo' content='icon_mediumtile.png' />
 			<meta name='msapplication-wide310x150logo' content='icon_widetile.png' />
 			<meta name='apple-mobile-web-app-status-bar-style' content='black' />
-			<link rel='apple-touch-startup-image' href='icon.png' /> */}
+			<link rel='apple-touch-startup-image' href='icon.png' /> */
+			}
 			
 			<link rel='manifest' href='/manifest.json' />
 			<link rel='icon' type='image/png' href='static/images/favicon.ico' />
@@ -52,44 +62,16 @@ const DefaultLayout = (props) => {
 			window.addEventListener('load', () => {
 				document.getElementById('robotoFont').removeAttribute('disabled');
 				document.getElementById('materialIcons').removeAttribute('disabled');
-			});
-
-			${props.enableSW ? `
-
-
-			
-			`: ''}
-			
+			});			
 			`
 			}} />
-			{/* <script type='text/javascript' src='static/scripts/vendor/vendor-main-react-redux.chunk.js' />
-			<script type='text/javascript' src='static/scripts/common/commons-main-index.js.chunk.js' />
-			<script type='text/javascript' src='static/scripts/vendor/vendor-main-babel.chunk.js' />
-			<script type='text/javascript' src='static/scripts/vendor/vendor-main-isomorphic-style-loader.chunk.js' />
-			<script type='text/javascript' src='static/scripts/common/commons-main-browser.js.chunk.js' />
-			<script type='text/javascript' src='static/scripts/vendor/vendor-main-prop-types.chunk.js' />
-			<script type='text/javascript' src='static/scripts/vendor/vendor-main-webpack.chunk.js' />
-			<script type='text/javascript' src='static/scripts/common/commons-main-api.js.chunk.js' />
-			<script type='text/javascript' src='static/scripts/common/commons-main-history.js.chunk.js' />
-			<script type='text/javascript' src='static/scripts/common/commons-main-hoist-non-react-statics.cjs.js.chunk.js' />
-			<script type='text/javascript' src='static/scripts/common/commons-main-jquery.js.chunk.js' />
-			<script type='text/javascript' src='static/scripts/vendor/vendor-main-react-dom.chunk.js' />
-			<script type='text/javascript' src='static/scripts/vendor/vendor-main-react-is.chunk.js' />
-			<script type='text/javascript' src='static/scripts/common/commons-main-react-router-dom.js.chunk.js' />
-			<script type='text/javascript' src='static/scripts/common/commons-main-react-router.js.chunk.js' />
-			<script type='text/javascript' src='static/scripts/vendor/vendor-main-react.chunk.js' />
-			<script type='text/javascript' src='static/scripts/common/commons-main-redux.js.chunk.js' />
-			<script type='text/javascript' src='static/scripts/common/commons-main-resolve-pathname.js.chunk.js' />
-			<script type='text/javascript' src='static/scripts/vendor/vendor-main-scheduler.chunk.js' />
-			<script type='text/javascript' src='static/scripts/vendor/vendor-main-symbol-observable.chunk.js' />
-			<script type='text/javascript' src='static/scripts/common/commons-main-tiny-invariant.esm.js.chunk.js' />
-			<script type='text/javascript' src='static/scripts/common/commons-main-value-equal.js.chunk.js' /> */}
 		</body>
 	</html>;
 };
 
 DefaultLayout.propTypes = {
 	cache: PropType.any,
+	entryPoints: PropType.arrayOf(PropType.string),
 	enableSW: PropType.bool,
 	content: PropType.any,
 	title: PropType.string,
