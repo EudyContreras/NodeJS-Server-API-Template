@@ -22,9 +22,9 @@ function registerValidSW(swUrl, config) {
 	navigator.serviceWorker
 		.register(swUrl)
 		.then(registration => {
-			console.log(`ServiceWorker Registered succesfully with scope: ${registration.scope}`);
+			console.log(`ServiceWorker: Registered succesfully with scope: ${registration.scope}`);
 			registration.onupdatefound = () => {
-				console.log('ServiceWorker update found!');
+				console.log('ServiceWorker: update found!');
 				const installingWorker = registration.installing;
 				if (installingWorker == null) {
 					return;
@@ -36,7 +36,7 @@ function registerValidSW(swUrl, config) {
 							// but the previous service worker will still serve the older
 							// content until all client tabs are closed.
 							console.log(
-								'New content is available and will be used when all ' +
+								'ServiceWorker: New content is available and will be used when all ' +
 								'tabs for this page are closed. See https://bit.ly/CRA-PWA.'
 							);
 
@@ -48,7 +48,7 @@ function registerValidSW(swUrl, config) {
 							// At this point, everything has been precached.
 							// It's the perfect time to display a
 							// "Content is cached for offline use." message.
-							console.log('SW Content is precached for offline use');
+							console.log('ServiceWorker: Content is precached for offline use');
 
 							// Execute callback
 							if (config && config.onSuccess) {
@@ -83,7 +83,7 @@ function checkValidServiceWorker(swUrl, config) {
 		}
 	})
 		.catch(() => {
-			console.log('No internet connection found. App is running in offline mode.');
+			console.log('ServiceWorker: No internet connection found. App is running in offline mode.');
 		});
 }
 
@@ -99,13 +99,13 @@ export function register(config) {
 			return;
 		}
 
-		console.log('ServiceWorker being registered!');
+		console.log('ServiceWorker: being registered!');
 
 		window.addEventListener('load', () => {
 			const swUrl = 'service-worker.js';
 
 			if (isLocalhost) {
-				console.log('ServiceWorker in localhost!');
+				console.log('ServiceWorker: in localhost!');
 				// This is running on localhost. Let's check if a service worker still exists or not.
 				checkValidServiceWorker(swUrl, config);
 

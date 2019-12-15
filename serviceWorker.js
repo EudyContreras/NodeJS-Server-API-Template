@@ -59,18 +59,22 @@ const throwOnError = (response) => {
 	throw new Error(response.statusText);
 };
 
-const initialSynch = () => {
-	
+const initialSynch = ()=> {
+	return new Promise((resolve)=> {
+		return resolve(true);
+	});
 };
 
 const syncContent = () => {
-
+	return new Promise((resolve)=> {
+		return resolve(true);
+	});
 };
 
 const requestFailingWithNotFoundStrategy = ({ request }) => {
 	return fetch(request)
 		.catch(() => {
-			const body = JSON.stringify({ error: 'Sorry, you are offline. Please, try later.' });
+			const body = JSON.stringify({ error: 'ServiceWorker: Sorry, you are offline. Please, try later.' });
 			const headers = { 'Content-Type': 'application/json' };
 			const response = new Response(body, { status: 404, statusText: 'Not Found', headers });
 			return response;
@@ -147,7 +151,7 @@ const cacheFailingToCacheableRequestStrategy = ({ request, cache }) => {
  * Can be used to cache emidiate and non-emidiate resources.
  */
 self.addEventListener(events.INSTALL, event => {
-	self.skipWaiting();
+	console.log(`ServiceWorker: installed: ${event}`);
 
 	event.waitUntil(
 		caches.open(STATIC_CACHE)
@@ -165,6 +169,8 @@ self.addEventListener(events.INSTALL, event => {
  * a potential render block
  */
 self.addEventListener(events.ACTIVATE, event => {
+	console.log(`ServiceWorker: activated: ${event}`);
+
 	const expectedCaches = [STATIC_CACHE, DATA_CACHE];
 
 	event.waitUntil(
@@ -229,24 +235,33 @@ self.addEventListener(events.FETCH, event => {
  * Attempt to sync non-urgent content silently on the background
  */
 self.addEventListener(events.SYNC, event => {
-	if(event.tag === syncEvents.EXAMPLE) {
-		event.waitUntil(initialSynch());
-	} else {
-		console.log(`Received sync event: ${event.tag}`);
+	console.log(`ServiceWorker: Received sync event: ${event.tag}`);
+	switch(event.tag) {
+		case syncEvents.INITIAL_SYNC: {
+			event.waitUntil(initialSynch().then(x => {
+				console.log('ServiceWorker: Sync event result: ', x);
+			}));
+			break;
+		}
+		default: {
+			console.log(`ServiceWorker: Received sync event: ${event.tag}`);
+			break;
+		}
 	}
 });
 
 self.addEventListener(events.PERIODIC_SYNC, (event) => {
+	console.log(`ServiceWorker: triggered periodic sync: ${event}`);
 	if (event.tag === syncEvents.CONTENT_SYNC) {
 		event.waitUntil(syncContent());
 	} else {
-		console.log(`Received periodic sync event: ${event.tag}`);
+		console.log(`ServiceWorker: Received periodic sync event: ${event.tag}`);
 	}
 });
 
 self.addEventListener(events.PUSH, event => {
-	console.log('Service Worker Push Received.');
-	console.log(`Service Worker Push had this data: "${event.data.text()}"`);
+	console.log('ServiceWorker: Push Received.');
+	console.log(`ServiceWorker: Push had this data: "${event.data.text()}"`);
 
 	const title = 'Template engine';
 	const options = {
@@ -276,7 +291,7 @@ self.addEventListener(events.PUSH, event => {
 });
  
 self.addEventListener(events.NOTIFY_CLICK, function (event) {
-	console.log('Notification has been clicked!');
+	console.log('ServiceWorker: Notification has been clicked!');
 
 	if (event.notification.tag == push.NEW_UPDATE) {
 		// Assume that all of the resources needed to render
@@ -287,6 +302,8 @@ self.addEventListener(events.NOTIFY_CLICK, function (event) {
 });
 
 self.addEventListener(events.MESSAGE, event => {
+	console.log(`ServiceWorker: message received: ${event}`);
+
 	const command = event.data;
 	switch(command.type) {
 		case messages.READ_OFFLINE: {

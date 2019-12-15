@@ -54,7 +54,7 @@ const initializeSubscription = () => {
 		});
 };
 
-if ('serviceWorker' in navigator && 'PushManager' in window) {
+if ('serviceWorker' in navigator) {
 	window.addEventListener('load', () => {
 		navigator.serviceWorker.register('service-worker.js')
 			.then(function () {
@@ -62,7 +62,13 @@ if ('serviceWorker' in navigator && 'PushManager' in window) {
 			})
 			.then(registration => {
 				swRegistration = registration;
-				initializeSubscription();
+
+				if ('PushManager' in window) {
+					initializeSubscription();
+				} else {
+					console.warn('Push notifications is not supported by your current browser! Please use a modern browser to take advantage of push notifications capabitilies');
+				}
+	
 			}, err => {
 				console.log('ServiceWorker registration failed: ', err);
 			}).catch(error => console.log(error));
@@ -74,5 +80,5 @@ if ('serviceWorker' in navigator && 'PushManager' in window) {
 		});
 	});
 } else {
-	console.warn('Push messaging is not supported');
+	console.warn('Service workers not supported on your current browser! Please use a modern browser to take advantage of offline capabitilies');
 }
