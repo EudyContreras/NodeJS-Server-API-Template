@@ -1,6 +1,21 @@
 const STATIC_CACHE = 'eudcon-universal-static-cache';
 const DATA_CACHE = 'eudcon-universal-data-cache';
 
+const worker = {
+	log: (...message) => {
+		const css = 'background: #00b6ffbd; padding: 2px; border-radius: 2px; color: white; font-weight: 600;';
+		console.log('%c ServiceWorker ', css, ...message);
+	},
+	warn: (message) => {
+		const css = 'background: #ffbf00bd; padding: 2px; border-radius: 2px; color: white; font-weight: 600;';
+		console.log('%c ServiceWorker ', css, ...message);
+	},
+	error: (message) => {
+		const css = 'background: #ff0038bd; padding: 2px; border-radius: 2px; color: white; font-weight: 600;';
+		console.log('%c ServiceWorker ', css, ...message);
+	}
+};
+
 const stragedies = Object.freeze({
 	CACHE_ONLY: 'cache_only_stragedy', // If there is available cache only serve the cache
 	CACHE_FIRST: 'cache_first_stragedy', // Ideal for resources that do not change often
@@ -9,7 +24,7 @@ const stragedies = Object.freeze({
 	STALE_REVALIDATE: 'stale_revalidate_stragedy' // Ideal for when the latest resource is not essential
 });
 
-const stragedy = stragedies.CACHE_FIRST;
+const baseUrl = 'http://localhost:5000/';
 
 const urlsToCache = [
 	'/',
@@ -48,8 +63,9 @@ const push = {
 };
 
 const messages = {
-	READ_OFFLINE: 'READ_OFFLINE',
-	SKIP_WAITING: 'SKIP_WAITING'
+	APP_UPDATE: 'add_update',
+	READ_OFFLINE: 'read_offline',
+	SKIP_WAITING: 'skip_awaitng'
 };
 
 const throwOnError = (response) => {
@@ -71,14 +87,67 @@ const syncContent = () => {
 	});
 };
 
-const requestFailingWithNotFoundStrategy = ({ request }) => {
-	return fetch(request)
-		.catch(() => {
-			const body = JSON.stringify({ error: 'ServiceWorker: Sorry, you are offline. Please, try later.' });
-			const headers = { 'Content-Type': 'application/json' };
-			const response = new Response(body, { status: 404, statusText: 'Not Found', headers });
-			return response;
+const isRequestForStaticHtml = request => {
+	return /.(html)$/.test(request.url);
+};
+
+const isRequestForStaticAsset = request => {
+	return /.(png|svg|json|jpg|jpeg|gif|ico|css|js)$/.test(request.url);
+};
+
+const isSideEffectRequest = request => {
+	const isSideEffect = [...Object.values(http)].includes(request.method);
+	const isApiRequest = request.url.includes('/api/');
+
+	return isSideEffect || isApiRequest;
+};
+
+
+const update = request => {
+	return fetch(request.url)
+		.then(response => {
+			if (!response.ok) throw new Error('Network error');
+			
+			return caches.open(DATA_CACHE)
+				.then(cache => cache.put(request, response.clone()))
+				.then(() => response);
 		});
+};
+
+const refresh = response => {
+	return response.json()
+		.then(jsonResponse => {
+			self.clients.matchAll().then(clients => {
+				clients.forEach(client => {
+					client.postMessage(JSON.stringify({
+						type: messages.APP_UPDATE,
+						data: {
+							url: response.url,
+							payload: jsonResponse.data
+						}
+					}));
+				});
+			});
+			return jsonResponse.data;
+		});
+};
+
+const requestFailingWithNotFoundStrategy = ({ request, cache }) => {
+	return cache.match(request).then(response => {
+		return response;
+	}).catch(() => {
+		return fetch(request)
+			.then(response => {
+				cache.put(request, response.clone());
+				return response;
+			})
+			.catch(() => {
+				const body = JSON.stringify({ error: 'ServiceWorker: Sorry, you are offline. Please, try later.' });
+				const headers = { 'Content-Type': 'application/json' };
+				const response = new Response(body, { status: 404, statusText: 'Not Found', headers });
+				return response;
+			});
+	});
 };
 
 const cacheableRequestFailingToCacheStrategy = ({ request, cache }) => {
@@ -91,19 +160,7 @@ const cacheableRequestFailingToCacheStrategy = ({ request, cache }) => {
 		.catch(() => cache.match(request));
 };
 
-const isRequestForStaticHtml = (request) => {
-	return /.(html)$/.test(request.url);
-};
-
-const isRequestForStaticAsset = (request) => {
-	return /.(png|svg|json|jpg|jpeg|gif|ico|css|js)$/.test(request.url);
-};
-
-const isSideEffectRequest = (request) => {
-	return [...Object.values(http)].includes(request.method);
-};
-
-const cacheFailingToCacheableRequestStrategy = ({ request, cache }) => {
+const cacheFailingToCacheableRequestStrategy = ({ request, cache, stragedy = stragedies.CACHE_FIRST }) => {
 	switch(stragedy) {
 		case stragedies.CACHE_ONLY: {
 			return cache.match(request).then(throwOnError);
@@ -151,8 +208,7 @@ const cacheFailingToCacheableRequestStrategy = ({ request, cache }) => {
  * Can be used to cache emidiate and non-emidiate resources.
  */
 self.addEventListener(events.INSTALL, event => {
-	console.log(`ServiceWorker: installed: ${event}`);
-
+	worker.log('Installed:', event);
 	event.waitUntil(
 		caches.open(STATIC_CACHE)
 			.then(cache => {
@@ -169,7 +225,7 @@ self.addEventListener(events.INSTALL, event => {
  * a potential render block
  */
 self.addEventListener(events.ACTIVATE, event => {
-	console.log(`ServiceWorker: activated: ${event}`);
+	worker.log('Activated:', event);
 
 	const expectedCaches = [STATIC_CACHE, DATA_CACHE];
 
@@ -193,7 +249,9 @@ self.addEventListener(events.FETCH, event => {
 	}
 
 	if (isSideEffectRequest(request)) {
-		event.respondWith(requestFailingWithNotFoundStrategy({ request }));
+		const cache = caches.open(DATA_CACHE);
+		event.respondWith(requestFailingWithNotFoundStrategy({ request, cache }));
+		event.waitUntil(update(request).then(refresh)); 
 		return;
 	}
 
@@ -204,8 +262,10 @@ self.addEventListener(events.FETCH, event => {
 	}
 	
 	if (isRequestForStaticHtml(request)) {
+		worker.log('Static html request:', request);
 		// Responsd with an app-shell otherwise
 		if (request.mode === 'navigate') {
+			worker.log('Navigation fetch event:', request);
 			event.respondWith(async () => {
 				const normalizedUrl = new URL(request.url);
 				normalizedUrl.search = '';
@@ -221,6 +281,7 @@ self.addEventListener(events.FETCH, event => {
 				return (await caches.match(normalizedUrl)) || fetchResponseP;
 			});
 		} else {
+			worker.log('Regular fetch event:', request);
 			const cache = caches.open(STATIC_CACHE);
 			event.respondWith(cache.then(cache => cacheFailingToCacheableRequestStrategy({ request, cache })));
 		}
@@ -235,34 +296,31 @@ self.addEventListener(events.FETCH, event => {
  * Attempt to sync non-urgent content silently on the background
  */
 self.addEventListener(events.SYNC, event => {
-	console.log(`ServiceWorker: Received sync event: ${event.tag}`);
+	worker.log('Received sync event:', event.tag);
 	switch(event.tag) {
 		case syncEvents.INITIAL_SYNC: {
 			event.waitUntil(initialSynch().then(x => {
-				console.log('ServiceWorker: Sync event result: ', x);
+				worker.log('Sync event result:', x);
 			}));
 			break;
 		}
 		default: {
-			console.log(`ServiceWorker: Received sync event: ${event.tag}`);
+			worker.log('Received sync event:', event.tag);
 			break;
 		}
 	}
 });
 
 self.addEventListener(events.PERIODIC_SYNC, (event) => {
-	console.log(`ServiceWorker: triggered periodic sync: ${event}`);
+	worker.log('Triggered periodic sync:', event);
 	if (event.tag === syncEvents.CONTENT_SYNC) {
 		event.waitUntil(syncContent());
-	} else {
-		console.log(`ServiceWorker: Received periodic sync event: ${event.tag}`);
 	}
 });
 
 self.addEventListener(events.PUSH, event => {
-	console.log('ServiceWorker: Push Received.');
-	console.log(`ServiceWorker: Push had this data: "${event.data.text()}"`);
-
+	worker.log('Push event received:', event.data);
+	
 	const title = 'Template engine';
 	const options = {
 		body: 'Yay it works.',
@@ -291,28 +349,45 @@ self.addEventListener(events.PUSH, event => {
 });
  
 self.addEventListener(events.NOTIFY_CLICK, function (event) {
-	console.log('ServiceWorker: Notification has been clicked!');
-
-	if (event.notification.tag == push.NEW_UPDATE) {
-		// Assume that all of the resources needed to render
-		// /inbox/ have previously been cached, e.g. as part
-		// of the install handler.
+	worker.log('Notification has been clicked');
 	
+	event.notification.close();
+
+	const tag = event.notification.tag;
+
+	switch(tag) {
+		case push.NEW_UPDATE: {
+			event.waitUntil(
+				self.clients.openWindow(baseUrl)
+			);
+			break;
+		}
+		default: {
+			event.waitUntil(
+				self.clients.openWindow(baseUrl)
+			);
+		}
 	}
 });
 
 self.addEventListener(events.MESSAGE, event => {
-	console.log(`ServiceWorker: message received: ${event}`);
-
 	const command = event.data;
+
+	worker.log('Message received', command);
+	
 	switch(command.type) {
+		case messages.APP_UPDATE: {
+			const message = JSON.parse(command);
+			worker.log('Application update message', message);
+			break;
+		}
 		case messages.READ_OFFLINE: {
 			const request = new Request(command.payload);
 			fetch(request).then(throwOnError).then(response => {
 				caches.open(STATIC_CACHE).then(cache => cache.put(request, response));
 			});
-		}
 			break;
+		}
 		case messages.SKIP_WAITING: {
 			self.skipWaiting();
 		}

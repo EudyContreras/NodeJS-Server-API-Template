@@ -7,7 +7,6 @@ import { shallowEqual } from '../../utililties/comparer.utils';
 import { appendWhen, join } from '../../../appliers/style.applier';
 import { getNavigationBar } from '../../../selectors/navbar.selector';
 import { DispatchProps, Dispatchers } from '../../../actions/common/navigation.action';
-import rippleEffect from '../../../appliers/ripple.applier';
 
 interface StateProps {
 	anchored: boolean;
@@ -120,7 +119,7 @@ class Navbar extends React.Component<Props, any> {
 		const properties = {
 			className: join(...classes),
 			onClick: ((): void => this.handleLinkClick({ label: element.label, index: idx })),
-			to: element.link,
+			to: element.link
 		};
 
 		return properties;

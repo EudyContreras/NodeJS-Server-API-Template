@@ -3,6 +3,7 @@
 	"name": "React PWA Template Engine",
 	"short_name": "React Template Engine",
 	"description": "An Isomorphic react PWA template engine",
+	"orientation": "any",
 	"display": "standalone",
 	"icons": [{
 			"src": "static/images/favicon.ico",

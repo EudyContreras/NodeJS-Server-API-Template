@@ -22,6 +22,9 @@ const urlB64ToUint8Array = (base64String) => {
 	return outputArray;
 };
 
+/**
+ * Subscribe user from push notifications
+ */
 const subscribeUser = () => {
 	const applicationServerKey = urlB64ToUint8Array(applicationServerPublicKey);
 	swRegistration.pushManager.subscribe({
@@ -37,6 +40,28 @@ const subscribeUser = () => {
 	});
 };
 
+/**
+ * Unsubscribe user from push notifications
+ */
+const unsubscribeUser = () => {
+	swRegistration.pushManager.getSubscription()
+		.then(subscription => {
+			if (subscription) {
+				return subscription.unsubscribe();
+			}
+		})
+		.catch(error => {
+			console.log('Error unsubscribing', error);
+		})
+		.then(() => {
+			console.log('User is unsubscribed.');
+			isSubscribed = false;
+		});
+};
+
+/**
+ * Initialize push notifications subscription
+ */
 const initializeSubscription = () => {
 	// Set the initial subscription value
 	swRegistration.pushManager.getSubscription()
