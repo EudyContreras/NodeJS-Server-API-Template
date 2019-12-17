@@ -32,6 +32,9 @@ const resources = [
 		from: 'workers/helpers',
 		to: 'helpers'
 	}, {
+		from: 'workers/constants.js',
+		to: ''
+	}, {
 		from: 'src/client/scriptsjs/loader.js',
 		to: 'static/scripts'
 	}, {

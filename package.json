@@ -4,7 +4,10 @@
   "version": "1.0.0",
   "license": "MIT",
   "author": "Eudy Contreras",
-  "email": "econtreras12@live.com",
+  "email": "Econtreras12@live.com",
+  "contributors": [
+    "Eudy Contreras <Econtreras12@live.com> (https://github.com/EudyContreras)"
+  ],
   "homepage": "https://github.com/EudyContreras/NodeJS-Server-API-Template#readme",
   "description": "A NodeJS template API and Server meant to speed up the initial development process.",
   "repository": {

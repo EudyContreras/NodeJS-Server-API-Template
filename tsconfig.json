@@ -79,7 +79,7 @@
     ]
   },
   "include": [
-    "src/**/*", "*.ts", "*.jsx", "*.scss", ".js"
+    "src/**/*", "*.ts", "*.jsx", "*.scss", ".js", "build/public/manifest-assets.json"
   ],
   "exclude": [
     "node_modules",

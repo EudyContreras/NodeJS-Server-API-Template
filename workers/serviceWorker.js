@@ -1,15 +1,13 @@
-self.events = {
-	SYNC: 'sync',
-	PERIODIC_SYNC: 'periodicsync',
-	NOTIFY_CLICK: 'notificationclick',
-	INSTALL: 'install',
-	ACTIVATE: 'activate',
-	MESSAGE: 'message',
-	FETCH: 'fetch',
-	PUSH: 'push'
-};
 
-self.baseUrl = 'http://localhost:5000';
+self.STATIC_CACHE = 'eudcon-universal-static-cache';
+self.DATA_CACHE = 'eudcon-universal-data-cache';
+
+
+self.importScripts('constants.js');
+self.importScripts('helpers/shared.helper.js');
+self.importScripts('helpers/sync.helper.js');
+self.importScripts('helpers/fallback.helper.js');
+self.importScripts('helpers/notify.helper.js');
 
 self.worker = {
 	log: (...message) => {
@@ -24,46 +22,6 @@ self.worker = {
 		const css = 'background: #ff0038bd; padding: 2px; border-radius: 2px; color: white; font-weight: 600;';
 		console.log('%c ServiceWorker ', css, ...message);
 	}
-};
-
-self.importScripts('helpers/sync.helper.js');
-self.importScripts('helpers/fallback.helper.js');
-
-const STATIC_CACHE = 'eudcon-universal-static-cache';
-const DATA_CACHE = 'eudcon-universal-data-cache';
-
-const stragedies = Object.freeze({
-	CACHE_ONLY: 'cache_only_stragedy', // If there is available cache only serve the cache
-	CACHE_FIRST: 'cache_first_stragedy', // Ideal for resources that do not change often
-	NETWORK_ONLY: 'network_only_stragedy', // If there is a network connection only serve from network
-	NETWORK_FIRST: 'network_first_stragedy', // Ideal for resources or content that changes frequently
-	STALE_REVALIDATE: 'stale_revalidate_stragedy' // Ideal for when the latest resource is not essential
-});
-
-const urlsToCache = [
-	'/',
-	'/service-worker.js',
-	'https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js',
-	'https://fonts.googleapis.com/icon?family=Material+Icons&display=swap',
-	'https://fonts.googleapis.com/css?family=Roboto&display=optional',
-	'https://fonts.gstatic.com/s/materialicons/v48/flUhRq6tzZclQEJ-Vdg-IuiaDsNcIhQ8tQ.woff2'
-];
-
-const http = {
-	PUT: 'PUT',
-	POST: 'POST',
-	DELETE: 'DELETE',
-	PATCH: 'PATCH'
-};
-
-const push = {
-	NEW_UPDATE: 'new-update'
-};
-
-const messages = {
-	APP_UPDATE: 'add_update',
-	READ_OFFLINE: 'read_offline',
-	SKIP_WAITING: 'skip_awaitng'
 };
 
 const delay = ms => _ => new Promise(resolve => setTimeout(() => resolve(_), ms));
@@ -84,43 +42,12 @@ const isRequestForStaticAsset = request => {
 };
 
 const isSideEffectRequest = request => {
-	return [...Object.values(http)].includes(request.method);
+	return [...Object.values(self.http)].includes(request.method) || request.method != 'GET';
 };
 
 const isApiRequest = request => {
 	return request.url.includes('/api/');
 };
-
-self.update = request => {
-	return fetch(request.url).then(response => {
-		if (!response.ok) throw new Error('Network error');
-
-		return caches.open(DATA_CACHE).then(cache => {
-			cache.put(request.url, response.clone());
-			return response;
-		}).then(response => response);
-	});
-};
-
-self.refresh = response => {
-	return response.json()
-		.then(jsonResponse => {		
-			self.clients.matchAll().then(clients => {
-				clients.forEach(client => {
-					client.postMessage(JSON.stringify({
-						type: messages.APP_UPDATE,
-						data: {
-							url: response.url,
-							payload: jsonResponse.content
-						}
-					}));
-				});
-			});
-			return jsonResponse.content;
-		});
-};
-
-self.importScripts('helpers/notify.helper.js');
 
 const requestFailingWithNotFoundStrategy = ({ request }) => {
 	return fetch(request)
@@ -160,15 +87,15 @@ const cacheableRequestFailingToCacheStrategy = ({ request, cache }) => {
 		.catch(() => cache.match(request));
 };
 
-const cacheFailingToCacheableRequestStrategy = ({ request, cache, stragedy = stragedies.CACHE_FIRST }) => {
+const cacheFailingToCacheableRequestStrategy = ({ request, cache, stragedy = self.stragedies.CACHE_FIRST }) => {
 	switch(stragedy) {
-		case stragedies.CACHE_ONLY: {
+		case self.stragedies.CACHE_ONLY: {
 			return cache.match(request).then(throwOnError);
 		}
-		case stragedies.NETWORK_ONLY: {
+		case self.stragedies.NETWORK_ONLY: {
 			return fetch(request).then(throwOnError);
 		}
-		case stragedies.CACHE_FIRST: {
+		case self.stragedies.CACHE_FIRST: {
 			return cache.match(request).then(response => {
 				return response || fetch(request).then(response => {
 					cache.put(request, response.clone());
@@ -178,7 +105,7 @@ const cacheFailingToCacheableRequestStrategy = ({ request, cache, stragedy = str
 				});
 			});
 		}
-		case stragedies.NETWORK_FIRST: {
+		case self.stragedies.NETWORK_FIRST: {
 			return fetch(request).then(response => {
 				cache.put(request, response.clone());
 				return response;
@@ -188,7 +115,7 @@ const cacheFailingToCacheableRequestStrategy = ({ request, cache, stragedy = str
 				});
 			});
 		}
-		case stragedies.STALE_REVALIDATE: {
+		case self.stragedies.STALE_REVALIDATE: {
 			return cache.match(request).then(response => {
 				const fetchPromise = fetch(request).then(response => {
 					cache.put(request, response.clone());
@@ -210,10 +137,10 @@ const cacheFailingToCacheableRequestStrategy = ({ request, cache, stragedy = str
 self.addEventListener(self.events.INSTALL, event => {
 	self.worker.log('Installed:', event);
 	event.waitUntil(
-		caches.open(STATIC_CACHE)
+		caches.open(self.STATIC_CACHE)
 			.then(cache => {
 				const cacheRes = self.__precacheManifest.map(x => x.url);
-				return cache.addAll([...urlsToCache, ...cacheRes]);
+				return cache.addAll([...self.urlsToCache, ...cacheRes]);
 			})
 			.then(() => self.skipWaiting())
 			.catch(error => self.worker.log(error))
@@ -227,7 +154,7 @@ self.addEventListener(self.events.INSTALL, event => {
 self.addEventListener(self.events.ACTIVATE, event => {
 	self.worker.log('Activated:', event);
 
-	const expectedCaches = [STATIC_CACHE, DATA_CACHE];
+	const expectedCaches = [self.STATIC_CACHE, self.DATA_CACHE];
 
 	event.waitUntil(
 		caches.keys().then(keys => Promise.all(
@@ -254,14 +181,14 @@ self.addEventListener(self.events.FETCH, event => {
 	}
 
 	if (isApiRequest(request)) {
-		const cache = caches.open(DATA_CACHE);
+		const cache = caches.open(self.DATA_CACHE);
 		event.respondWith(cache.then(cache => requestCacheUpdateRefreshStrategy({ request, cache })));
 		event.waitUntil(self.update(request).then(self.refresh)); 
 		return;
 	}
 
 	if (isRequestForStaticAsset(request)) {
-		const cache = caches.open(STATIC_CACHE);
+		const cache = caches.open(self.STATIC_CACHE);
 		event.respondWith(cache.then(cache => cacheFailingToCacheableRequestStrategy({ request, cache })));
 		return;
 	}
@@ -279,7 +206,7 @@ self.addEventListener(self.events.FETCH, event => {
 				const fetchResponseCloneP = fetchResponseP.then(r => r.clone());
 
 				event.waitUntil(async () => {
-					const cache = await caches.open(STATIC_CACHE);
+					const cache = await caches.open(self.STATIC_CACHE);
 					await cache.put(normalizedUrl, await fetchResponseCloneP);
 				});
 
@@ -287,13 +214,13 @@ self.addEventListener(self.events.FETCH, event => {
 			});
 		} else {
 			self.worker.log('Regular fetch event:', request);
-			const cache = caches.open(STATIC_CACHE);
+			const cache = caches.open(self.STATIC_CACHE);
 			event.respondWith(cache.then(cache => cacheFailingToCacheableRequestStrategy({ request, cache })));
 		}
 		return;
 	}
 
-	const cache = caches.open(STATIC_CACHE);
+	const cache = caches.open(self.STATIC_CACHE);
 	event.respondWith(cache.then(cache => cacheableRequestFailingToCacheStrategy({ request, cache })));
 });
 
@@ -330,7 +257,7 @@ self.addEventListener(self.events.NOTIFY_CLICK, function (event) {
 	const tag = event.notification.tag;
 
 	switch(tag) {
-		case push.NEW_UPDATE: {
+		case self.push.NEW_UPDATE: {
 			event.waitUntil(
 				self.clients.openWindow(self.baseUrl)
 			);

@@ -23,7 +23,7 @@ const DefaultLayout = (props) => {
 	return <html lang='en-US'>
 		<head>
 			<title>{props.title}</title>
-			{props.entryPoints.map((x, i) => <script key={i} async src={x} />)}
+			{props.entryPoints.map((x, i) => <script key={i} defer src={x} />)}
 			<meta charSet='utf-8' />
 			<meta name='viewport' content='width=device-width, initial-scale=1' />
 			<meta name='theme-color' content='#23282d' />
