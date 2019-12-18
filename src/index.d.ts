@@ -20,4 +20,6 @@ declare module '*.json' {
 
 declare module 'express-react-views';
 
+declare module 'express-no-favicons';
+
 declare module 'isomorphic-style-loader/withStyles';

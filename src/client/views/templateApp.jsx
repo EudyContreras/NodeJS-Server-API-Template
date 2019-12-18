@@ -23,7 +23,6 @@ const DefaultLayout = (props) => {
 	return <html lang='en-US'>
 		<head>
 			<title>{props.title}</title>
-			{props.entryPoints.map((x, i) => <script key={i} defer src={x} />)}
 			<meta charSet='utf-8' />
 			<meta name='viewport' content='width=device-width, initial-scale=1' />
 			<meta name='theme-color' content='#23282d' />
@@ -47,12 +46,13 @@ const DefaultLayout = (props) => {
 			<link rel='shortcut icon' type='image/png' href='static/images/favicon.ico' />
 			<link rel='stylesheet' href='https://fonts.googleapis.com/icon?family=Material+Icons&display=swap' media='all' id='materialIcons' async disabled />
 			<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Roboto&display=optional' media='all' id='robotoFont' defer disabled />
-			<style defer id='shellStyle'>{props.css}</style>
+			<style async id='shellStyle'>{props.css}</style>
 		</head>
 		<body >
 			<noscript>You need to enable JavaScript to fully be able to use this this web-app.</noscript>
 			<section id='content'>{props.content}</section>
-			<script rel='preconnect' src='https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js' defer />
+			<script rel='preconnect' src='https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js' async />
+			{props.entryPoints.map((x, i) => <script key={i} async src={x} />)}
 			<script async src='static/scripts/loader.js' />
 			<script dangerouslySetInnerHTML={{
 				__html:

@@ -12,6 +12,8 @@ const initialState = window.__REDUX_STATE__ || {};
 
 delete window.__REDUX_STATE__;
 
+require('../workers/constants');
+
 const insertCss = (...styles) => {
 	const removeCss = styles.map(style => style._insertCss());
 	return () => removeCss.forEach(dispose => dispose());

@@ -23,11 +23,10 @@ class SidebarSearch extends React.PureComponent<any, any> {
 		rippleEffect(event, this.props.styling);
 
 		try {
-			const response = await axios.get('http://localhost:5000/rest/api/search', {
+			await axios.get('http://localhost:5000/rest/api/search', {
 				data: { searchText: this.inputRef.current!.value },
 				params: { searchText: this.inputRef.current!.value }
 			});
-			console.log(response);
 		} catch(error) {
 			console.log(error);
 		}

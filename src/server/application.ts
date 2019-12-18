@@ -6,6 +6,7 @@ import helmet from 'helmet';
 import express from 'express';
 import mongoose from 'mongoose';
 import config from './config';
+import noFavicon from 'express-no-favicons';
 import compression from 'compression';
 import Interceptor from './middleware/interceptor';
 import Controller from './controllers/controller';
@@ -71,6 +72,7 @@ export default class Application {
 		this.app.use(cors());
 		this.app.use(helmet());
 		this.app.use(compression());
+		this.app.use(noFavicon());
 		this.app.use(express.json());
 		this.app.use(express.urlencoded({ extended: false }));
 		this.app.use(express.static(config.application.FILE_DIRECTORY));

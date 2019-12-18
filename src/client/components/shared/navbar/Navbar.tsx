@@ -7,6 +7,7 @@ import { shallowEqual } from '../../utililties/comparer.utils';
 import { appendWhen, join } from '../../../appliers/style.applier';
 import { getNavigationBar } from '../../../selectors/navbar.selector';
 import { DispatchProps, Dispatchers } from '../../../actions/common/navigation.action';
+import swMessager from '../../../utilities/messageBus';
 
 interface StateProps {
 	anchored: boolean;
@@ -98,6 +99,8 @@ class Navbar extends React.Component<Props, any> {
 	};
 
 	private handleLinkClick = (tab: any): void => {
+		swMessager.emit(events.MESSAGE, { type: messages.ADD_TO_CACHE, payload: tab.link });
+
 		if (this.props.activeTab === null) {
 			this.props.setActiveTab(tab);
 		} else {
@@ -118,7 +121,7 @@ class Navbar extends React.Component<Props, any> {
 
 		const properties = {
 			className: join(...classes),
-			onClick: ((): void => this.handleLinkClick({ label: element.label, index: idx })),
+			onClick: ((): void => this.handleLinkClick({ ...element, index: idx })),
 			to: element.link
 		};
 

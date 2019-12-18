@@ -1,7 +1,13 @@
-self.DATA_CACHE = 'eudcon-universal-data-cache';
-self.STATIC_CACHE = 'eudcon-universal-static-cache';
 
-self.importScripts('constants.js', 'helpers/shared.helper.js','helpers/sync.helper.js', 'helpers/fallback.helper.js', 'helpers/notify.helper.js');
+self.STATIC_CACHE = 'eudcon-universal-static-cache';
+self.DATA_CACHE = 'eudcon-universal-data-cache';
+
+
+self.importScripts('constants.js');
+self.importScripts('helpers/shared.helper.js');
+self.importScripts('helpers/sync.helper.js');
+self.importScripts('helpers/fallback.helper.js');
+self.importScripts('helpers/notify.helper.js');
 
 self.worker = {
 	log: (...message) => {
@@ -43,13 +49,51 @@ const isApiRequest = request => {
 	return request.url.includes('/api/');
 };
 
-const useStragedy = ({ request, cache, stragedy = self.stragedies.CACHE_FIRST, contentType = self.contentTypes.HTML }) => {
+const requestFailingWithNotFoundStrategy = ({ request }) => {
+	return fetch(request)
+		.catch(() => {
+			const body = JSON.stringify({ error: 'ServiceWorker: Sorry, you are offline. Please, try again later.' });
+			const headers = { 'Content-Type': 'application/json' };
+			const response = new Response(body, { status: 404, statusText: 'Not Found', headers });
+			return response;
+		});
+};
+
+const requestCacheUpdateRefreshStrategy = ({ request, cache }) => {
+	return cache.match(request).then(response => {
+		return new Response(response);
+	}).catch(() => {
+		return fetch(request)
+			.then(response => {
+				cache.put(request, response.clone());
+				return response;
+			})
+			.catch(() => {
+				const body = JSON.stringify({ error: 'ServiceWorker: Sorry, you are offline. Please, try later.' });
+				const headers = { 'Content-Type': 'application/json' };
+				const response = new Response(body, { status: 404, statusText: 'Not Found', headers });
+				return response;
+			});
+	});
+};
+
+const cacheableRequestFailingToCacheStrategy = ({ request, cache }) => {
+	return fetch(request)
+		.then(throwOnError)
+		.then(response => {
+			cache.put(request, response.clone());
+			return response;
+		})
+		.catch(() => cache.match(request));
+};
+
+const cacheFailingToCacheableRequestStrategy = ({ request, cache, stragedy = self.stragedies.CACHE_FIRST }) => {
 	switch(stragedy) {
 		case self.stragedies.CACHE_ONLY: {
-			return cache.match(request).then(response => self.useFallback(contentType, response));
+			return cache.match(request).then(throwOnError);
 		}
 		case self.stragedies.NETWORK_ONLY: {
-			return fetch(request).then(response => self.useFallback(contentType, response));
+			return fetch(request).then(throwOnError);
 		}
 		case self.stragedies.CACHE_FIRST: {
 			return cache.match(request).then(response => {
@@ -62,12 +106,12 @@ const useStragedy = ({ request, cache, stragedy = self.stragedies.CACHE_FIRST, c
 			});
 		}
 		case self.stragedies.NETWORK_FIRST: {
-			return fetch(request).then(throwOnError).then(response => {
+			return fetch(request).then(response => {
 				cache.put(request, response.clone());
 				return response;
 			}).catch(() => {
 				return cache.match(request).then(response => {
-					return response || self.getFallback();
+					return response || cache.match('/offline.html');
 				});
 			});
 		}
@@ -77,46 +121,8 @@ const useStragedy = ({ request, cache, stragedy = self.stragedies.CACHE_FIRST, c
 					cache.put(request, response.clone());
 					return response;
 				});
-				return response || fetchPromise || self.useFallback();
+				return response || fetchPromise || cache.match('/offline.html');
 			});
-		}
-		case self.stragedies.UPDATE_REFRESH: {
-			return cache.match(request).then(response => {
-				return new Response(response);
-			}).catch(() => {
-				return fetch(request)
-					.then(response => {
-						cache.put(request, response.clone());
-						return response;
-					})
-					.catch(() => {
-						const body = JSON.stringify({ error: 'ServiceWorker: Sorry, you are offline. Please, try later.' });
-						const headers = { 'Content-Type': 'application/json' };
-						const response = new Response(body, { status: 404, statusText: 'Not Found', headers });
-						return response;
-					});
-			});
-		}
-		case self.stragedies.CACHE_THEN_PRELOAD: {
-			return caches.match(request).then(response => {
-				return response || event.preloadResponse.then(response => {
-					return response || fetch(request).then(response => {
-						cache.put(request, response.clone());
-						return response;
-					}).catch(() => {
-						return self.useFallback();
-					});
-				});
-			});
-		}
-		case self.stragedies.NON_FOUND: {
-			return fetch(request)
-				.catch(() => {
-					const body = JSON.stringify({ error: 'ServiceWorker: Sorry, you are offline. Please, try later.' });
-					const headers = { 'Content-Type': 'application/json' };
-					const response = new Response(body, { status: 404, statusText: 'Not Found', headers });
-					return response;
-				});
 		}
 	}
 };
@@ -159,7 +165,6 @@ self.addEventListener(self.events.ACTIVATE, event => {
 			})
 		))
 	);
-
 	return self.clients.claim();
 });
 
@@ -171,20 +176,20 @@ self.addEventListener(self.events.FETCH, event => {
 	}
 
 	if (isSideEffectRequest(request)) {
-		event.respondWith(useStragedy({ request, stragedy: self.stragedies.NON_FOUND }));
+		event.respondWith(requestFailingWithNotFoundStrategy({ request }));
 		return;
 	}
 
 	if (isApiRequest(request)) {
 		const cache = caches.open(self.DATA_CACHE);
-		event.respondWith(cache.then(cache => useStragedy({ request, cache, stragedy: self.stragedies.UPDATE_REFRESH })));
+		event.respondWith(cache.then(cache => requestCacheUpdateRefreshStrategy({ request, cache })));
 		event.waitUntil(self.update(request).then(self.refresh)); 
 		return;
 	}
 
 	if (isRequestForStaticAsset(request)) {
 		const cache = caches.open(self.STATIC_CACHE);
-		event.respondWith(cache.then(cache => useStragedy({ request, cache, stragedy: self.stragedies.CACHE_FIRST })));
+		event.respondWith(cache.then(cache => cacheFailingToCacheableRequestStrategy({ request, cache })));
 		return;
 	}
 	
@@ -197,26 +202,26 @@ self.addEventListener(self.events.FETCH, event => {
 				const normalizedUrl = new URL(request.url);
 				normalizedUrl.search = '';
 
-				const response = fetch(normalizedUrl);
-				const clone = response.then(x => x.clone());
+				const fetchResponseP = fetch(normalizedUrl);
+				const fetchResponseCloneP = fetchResponseP.then(r => r.clone());
 
 				event.waitUntil(async () => {
 					const cache = await caches.open(self.STATIC_CACHE);
-					await cache.put(normalizedUrl, await clone);
+					await cache.put(normalizedUrl, await fetchResponseCloneP);
 				});
 
-				return (await caches.match(normalizedUrl)) || response;
+				return (await caches.match(normalizedUrl)) || fetchResponseP;
 			});
 		} else {
 			self.worker.log('Regular fetch event:', request);
 			const cache = caches.open(self.STATIC_CACHE);
-			event.respondWith(cache.then(cache => useStragedy({ request, cache, stragedy: self.stragedies.CACHE_FIRST })));
+			event.respondWith(cache.then(cache => cacheFailingToCacheableRequestStrategy({ request, cache })));
 		}
 		return;
 	}
 
 	const cache = caches.open(self.STATIC_CACHE);
-	event.respondWith(cache.then(cache => useStragedy({ request, cache, stragedy: self.stragedies.CACHE_FIRST })));
+	event.respondWith(cache.then(cache => cacheableRequestFailingToCacheStrategy({ request, cache })));
 });
 
 self.addEventListener(self.events.PUSH, event => {
@@ -267,16 +272,11 @@ self.addEventListener(self.events.NOTIFY_CLICK, event => {
 });
 
 self.addEventListener(self.events.MESSAGE, event => {
-	self.worker.log('Received message', event);
-
 	const command = event.data;
-
 	switch (command.type) {
 		case self.messages.ADD_TO_CACHE: {
-			self.worker.log('Add to cache');
 			const request = new Request(command.payload);
 			fetch(request).then(throwOnError).then(response => {
-				self.worker.log('Adding message payload to cache', event);
 				caches.open(self.STATIC_CACHE).then(cache => cache.put(request, response));
 			});
 		}

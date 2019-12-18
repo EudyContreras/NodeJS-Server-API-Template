@@ -18,5 +18,7 @@ PWA Demo requirements:
 Allow user to subscribe and recieve push notifications: Done
 Allow user to unsubscribe from push notifications: WIP
 Only show native notification if web app is not on foreground
+Look into NGINX and compressed files
+
 
 

@@ -1,10 +1,8 @@
 /* eslint-env browser, es6 */
 
-'use strict';
-
 const applicationServerPublicKey = 'BEWGulnjPN48PcbKh6j2vriH-Z2tREZxe-I9zJJFqsGDMEHg1IyBrhzRgQR1Cn3fFCSmcwG79h3MCCRDLfelvuw';
 
-const messages = {
+const clientMessage = {
 	APP_UPDATE: 'add_update',
 	READ_OFFLINE: 'read_offline',
 	SKIP_WAITING: 'skip_awaitng'
@@ -136,12 +134,12 @@ if ('serviceWorker' in navigator) {
 			console.log('Message received', command);
 			
 			switch(command.type) {
-				case messages.APP_UPDATE: {
+				case clientMessage.APP_UPDATE: {
 					const message = JSON.parse(command);
 					console.log('Application update message', message);
 					break;
 				}
-				case messages.SKIP_WAITING: {
+				case clientMessage.SKIP_WAITING: {
 					self.skipWaiting();
 				}
 			}
