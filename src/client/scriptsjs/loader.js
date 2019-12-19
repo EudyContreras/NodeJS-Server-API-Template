@@ -108,12 +108,12 @@ if ('serviceWorker' in navigator) {
 			.then(registration => {
 				swRegistration = registration;
 
-				setTimeout(() => {
-					registerBackgroundSync();
-				}, 4000);
+				// setTimeout(() => {
+				// 	registerBackgroundSync();
+				// }, 4000);
 
 				if ('PushManager' in window) {
-					initializeSubscription();
+					//initializeSubscription();
 				} else {
 					console.warn('Push notifications is not supported by your current browser! Please use a modern browser to take advantage of push notifications capabitilies');
 				}
