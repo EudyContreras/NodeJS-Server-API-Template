@@ -39,7 +39,6 @@ const http = {
 	PATCH: 'PATCH'
 };
 
-
 const push = {
 	NEW_UPDATE: 'new-update'
 };
