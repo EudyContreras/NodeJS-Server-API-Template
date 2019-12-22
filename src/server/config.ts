@@ -37,17 +37,19 @@ const config = Object.freeze({
 	self: {
 		headers: {
 			AUTHORIZATION: 'authorization',
-			TOKEN_HEADER: 'x-auth-token',
+			TOKEN_HEADER: 'x-auth-token'
 		}
 	},
 	ssl: {
-		ACTIVE: false,
+		ACTIVE: process.env.USE_SSL === 'true',
 		PASS_PHRASE: process.env.PASS_PHRASE
 	},
 	host: {
 		APP_NAME: 'app name',
 		BASE_URL: '',
 		PORT: process.env.PORT,
+		PORT_HTTP: process.env.PORT_HTTP,
+		PORT_HTTPS: process.env.PORT_HTTPS
 	},
 	redis: {
 		HOST: 'localhost',
@@ -63,7 +65,7 @@ const config = Object.freeze({
 		DB_PREPEND: 'mongodb+srv://',
 		DB_URI_PATH: process.env.DB_URI_PATH,
 		DB_USERNAME: process.env.DB_USERNAME,
-		DB_PASSWORD: process.env.DB_PASSWORD,
+		DB_PASSWORD: process.env.DB_PASSWORD
 	},
 	api: {
 		someapi: {
@@ -75,8 +77,8 @@ const config = Object.freeze({
 				TOKEN: process.env.API_TOKEN,
 				USER_NAME: process.env.API_USERNAME,
 				PASSWORD: process.env.API_PASSWORD
-			},
-		},
+			}
+		}
 	},
 	roles: {
 		CLEARANCE: {
@@ -116,12 +118,12 @@ const config = Object.freeze({
 			MIN_LENGTH: 6,
 			MAX_LEGHTH: 32,
 			ALPHA_NUMERIC: true
-		},
+		}
 	},
 	jwt: {
 		PREFIX: 'Bearer ',
 		TOKEN_SECRET: process.env.JWT_SECRET || '',
-		EXPIRATION_TIME: '600d',
+		EXPIRATION_TIME: '600d'
 	},
 	encryption: {
 		SALT_ITERATIONS: 12
@@ -129,7 +131,7 @@ const config = Object.freeze({
 	admin: {
 		ADMIN_NAME: 'admin',
 		ADMIN_USERNAME: process.env.ADMIN_USERNAME,
-		ADMIN_PASSWORD: process.env.ADMIN_PASSWORD,
+		ADMIN_PASSWORD: process.env.ADMIN_PASSWORD
 	},
 	agenda: {
 		PRIORITY: 'high',

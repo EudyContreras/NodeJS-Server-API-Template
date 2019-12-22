@@ -43,5 +43,4 @@ export default (otherProps: any): any[] => [
 	{ ...routes[3], render: ((props: any): JSX.Element => <About {...props} {...otherProps}/>) },
 	{ ...routes[4], render: ((props: any): JSX.Element => <Admin {...props} {...otherProps}/>) },
 	{ ...routes[5], render: ((props: any): JSX.Element => <Lost {...props} {...otherProps}/>) }
-	
 ];

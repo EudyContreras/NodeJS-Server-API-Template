@@ -28,7 +28,6 @@ if ('serviceWorker' in navigator) {
 	});
 }
 
-
 function isOnline() {
 	const connectionStatus = document.getElementById('connectionStatus');
 

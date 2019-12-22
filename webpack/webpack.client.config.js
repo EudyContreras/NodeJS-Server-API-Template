@@ -18,7 +18,7 @@ const svgLoader = require('./loaders/svg.loader');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 const useCSR = process.env.CSR == 'true';
-const useSourceMap = process.env.GENERATE_SOURCEMAP !== 'false';
+const useSourceMap = process.env.GENERATE_SOURCEMAP == 'true';
 
 const enviroment = process.env.NODE_ENV;
 const publicPath = '../build/public/';
@@ -46,9 +46,6 @@ const resources = [
 	}, {
 		from: 'src/client/resources/images',
 		to: 'static/images'
-	}, {
-		from: 'src/client/resources/images/icons',
-		to: 'static/images/icons'
 	}];
 if (useCSR) {
 	resources.push(

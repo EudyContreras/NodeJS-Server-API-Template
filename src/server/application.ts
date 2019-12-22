@@ -1,6 +1,7 @@
 
 import fs from 'fs';
 import cors from 'cors';
+import http from 'http';
 import https from 'https';
 import helmet from 'helmet';
 import express from 'express';
@@ -43,21 +44,23 @@ export default class Application {
 	}
 
 	public startlistening(): void {
-		const port = config.host.PORT;
 		const secure = config.ssl.ACTIVE;
 
-		const listener = (): void => {
-			console.log(`Server listening on the port ${port}`);
-		};
-
 		if (secure) {
-			https.createServer({
-				key: fs.readFileSync('./ssl/sslkey.pem'),
-				cert: fs.readFileSync('./ssl/sslcert.pem'),
+			const port = config.host.PORT_HTTPS;
+			const options = {
+				key: fs.readFileSync('./ssl/localhost.key'),
+				cert: fs.readFileSync('./ssl/localhost.crt'),
 				passphrase: config.ssl.PASS_PHRASE
-			}, this.app).listen(port, listener);
+			};
+			https.createServer(options, this.app).listen(port, () => {
+				console.log(`Server listening on the port ${port}`);
+			});
 		} else {
-			this.app.listen(port, listener);
+			const port = config.host.PORT_HTTP;
+			http.createServer(this.app).listen(port, () => {
+				console.log(`Server listening on the port ${port}`);
+			});
 		}
 	}
 
