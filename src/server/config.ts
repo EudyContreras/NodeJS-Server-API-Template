@@ -49,7 +49,8 @@ const config = Object.freeze({
 		BASE_URL: '',
 		PORT: process.env.PORT,
 		PORT_HTTP: process.env.PORT_HTTP,
-		PORT_HTTPS: process.env.PORT_HTTPS
+		PORT_HTTPS: process.env.PORT_HTTPS,
+		REDIRECT_TO_HTTPS: false
 	},
 	redis: {
 		HOST: 'localhost',

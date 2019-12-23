@@ -24,7 +24,11 @@ const DefaultLayout = (props) => {
 		<head>
 			<title>{props.title}</title>
 			<meta charSet='utf-8' />
+
+			<meta name="author" content='Eudy Contreras' />
+			<meta name="copyright" content='Eudy Contreras' />
 			<meta name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no' />
+			<meta name="keywords" content='template engine, react-engine, pwa-isomorphic-react, pwa, isomorphic-react, universal-react' />
 			<meta name='theme-color' content='#23282d' />
 			<meta name='description' content='Template Web site generated the server api routing' />
 			<meta name="application-name" content={props.title} />

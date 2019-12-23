@@ -9,8 +9,7 @@ import redirectInterceptor from './interceptors/redirect.interceptor';
 class Interceptor {
 	public getInterceptors(): Array<(request: Request, response: Response, next: NextFunction) => void> {
 		return [
-			redirectInterceptor,
-			requestInterceptor
+			redirectInterceptor
 		];
 	}
 

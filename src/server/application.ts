@@ -2,7 +2,7 @@
 import fs from 'fs';
 import cors from 'cors';
 import http from 'http';
-import https from 'https';
+import http2 from 'spdy';
 import helmet from 'helmet';
 import express from 'express';
 import mongoose from 'mongoose';
@@ -47,15 +47,20 @@ export default class Application {
 		const secure = config.ssl.ACTIVE;
 
 		if (secure) {
-			const port = config.host.PORT_HTTPS;
+			const port1 = config.host.PORT_HTTPS;
+			const port2 = config.host.PORT_HTTP;
+
 			const options = {
 				key: fs.readFileSync('./ssl/localhost.key'),
-				cert: fs.readFileSync('./ssl/localhost.crt'),
-				passphrase: config.ssl.PASS_PHRASE
+				cert: fs.readFileSync('./ssl/localhost.crt')
 			};
-			https.createServer(options, this.app).listen(port, () => {
-				console.log(`Server listening on the port ${port}`);
+			http2.createServer(options, this.app).listen(port1, () => {
+				console.log(`Server listening on the port ${port1}`);
 			});
+			http.createServer(this.app).listen(port2, () => {
+				console.log(`Server listening on the port ${port2}`);
+			});
+		
 		} else {
 			const port = config.host.PORT_HTTP;
 			http.createServer(this.app).listen(port, () => {

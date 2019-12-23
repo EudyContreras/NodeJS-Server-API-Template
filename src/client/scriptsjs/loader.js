@@ -99,52 +99,52 @@ const registerBackgroundSync = () => {
 		.catch(err => console.error('Error registering background sync', err));
 };
 
-if ('serviceWorker' in navigator) {
-	window.addEventListener('load', () => {
-		navigator.serviceWorker.register('service-worker.js')
-			.then(function () {
-				return navigator.serviceWorker.ready;
-			})
-			.then(registration => {
-				swRegistration = registration;
+// if ('serviceWorker' in navigator) {
+// 	window.addEventListener('load', () => {
+// 		navigator.serviceWorker.register('service-worker.js')
+// 			.then(function () {
+// 				return navigator.serviceWorker.ready;
+// 			})
+// 			.then(registration => {
+// 				swRegistration = registration;
 
-				// setTimeout(() => {
-				// 	registerBackgroundSync();
-				// }, 4000);
+// 				// setTimeout(() => {
+// 				// 	registerBackgroundSync();
+// 				// }, 4000);
 
-				if ('PushManager' in window) {
-					//initializeSubscription();
-				} else {
-					console.warn('Push notifications is not supported by your current browser! Please use a modern browser to take advantage of push notifications capabitilies');
-				}
+// 				if ('PushManager' in window) {
+// 					//initializeSubscription();
+// 				} else {
+// 					console.warn('Push notifications is not supported by your current browser! Please use a modern browser to take advantage of push notifications capabitilies');
+// 				}
 	
-			}, err => {
-				console.log('ServiceWorker registration failed: ', err);
-			}).catch(error => console.log(error));
+// 			}, err => {
+// 				console.log('ServiceWorker registration failed: ', err);
+// 			}).catch(error => console.log(error));
 
-		navigator.serviceWorker.ready.then(registration => {
-			if (registration.sync) {
-				registration.sync.register('initial-sync').catch(error => console.log(error));
-			}
-		});
+// 		navigator.serviceWorker.ready.then(registration => {
+// 			if (registration.sync) {
+// 				registration.sync.register('initial-sync').catch(error => console.log(error));
+// 			}
+// 		});
 
-		navigator.serviceWorker.onmessage = event => {
-			const command = event.data;
+// 		navigator.serviceWorker.onmessage = event => {
+// 			const command = event.data;
 		
-			console.log('Message received', command);
+// 			console.log('Message received', command);
 			
-			switch(command.type) {
-				case clientMessage.APP_UPDATE: {
-					const message = JSON.parse(command);
-					console.log('Application update message', message);
-					break;
-				}
-				case clientMessage.SKIP_WAITING: {
-					self.skipWaiting();
-				}
-			}
-		};
-	});
-} else {
-	console.warn('Service workers not supported on your current browser! Please use a modern browser to take advantage of offline capabitilies');
-}
+// 			switch(command.type) {
+// 				case clientMessage.APP_UPDATE: {
+// 					const message = JSON.parse(command);
+// 					console.log('Application update message', message);
+// 					break;
+// 				}
+// 				case clientMessage.SKIP_WAITING: {
+// 					self.skipWaiting();
+// 				}
+// 			}
+// 		};
+// 	});
+// } else {
+// 	console.warn('Service workers not supported on your current browser! Please use a modern browser to take advantage of offline capabitilies');
+// }

@@ -14,7 +14,7 @@
     "type": "git",
     "url": "https://github.com/EudyContreras/NodeJS-Server-API-Template"
   },
-  "proxy": "https://localhost:5000/",
+  "proxy": "https://localhost:8080/",
   "main": "build/server.js",
   "scripts": {
     "build:ts": "tsc -p .",
@@ -63,6 +63,7 @@
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "express-favicon": "^2.0.1",
     "express-no-favicons": "0.0.1",
     "express-react-views": "^0.11.0",
     "fast-memoize": "^2.5.1",
