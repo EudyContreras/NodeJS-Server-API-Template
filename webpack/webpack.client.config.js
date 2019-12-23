@@ -22,7 +22,7 @@ const useSourceMap = process.env.GENERATE_SOURCEMAP == 'true';
 
 const enviroment = process.env.NODE_ENV;
 const publicPath = '../build/public/';
-const entryPoint = './src/client.jsx';
+const entryPoint = './src/client/client.jsx';
 
 const isProduction = enviroment == 'production';
 const isDevelopement = enviroment == 'development';
@@ -106,7 +106,7 @@ module.exports = {
 		new WorkboxPlugin.InjectManifest({
 			swSrc: 'workers/serviceWorker.js',
 			swDest: 'service-worker.js',
-			exclude: [/\.(js.br|DS_Store)$/, /manifest-assets.*\.json$/],
+			exclude: [/\.(DS_Store)$/, /manifest-assets.*\.json$/],
 			precacheManifestFilename: 'manifest-precache.[manifestHash].js'
 		})
 	],
@@ -128,8 +128,8 @@ module.exports = {
 			use: 'raw-loader'
 		},
 		babelLoader,
-		imageLoader,
 		fileLoader,
+		imageLoader,
 		urlLoader,
 		svgLoader,
 		styleLoader(path)

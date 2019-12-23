@@ -21,7 +21,7 @@ module.exports = {
 		hints: false
 	},
 	entry: [
-		'@babel/polyfill', './src/server.ts'
+		'@babel/polyfill', './src/server/server.ts'
 	],
 	output: {
 		path: path.join(__dirname, '../build'),

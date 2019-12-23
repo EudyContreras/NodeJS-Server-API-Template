@@ -4,6 +4,7 @@ const baseUrl = '';
 const urlsToCache = [
 	'/',
 	'/service-worker.js',
+	'/static/images/favicon.ico',
 	'https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js',
 	'https://fonts.googleapis.com/icon?family=Material+Icons&display=swap',
 	'https://fonts.googleapis.com/css?family=Roboto&display=optional',
