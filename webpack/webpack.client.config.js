@@ -7,6 +7,7 @@ const CopyPlugin = require('copy-webpack-plugin');
 const WorkboxPlugin = require('workbox-webpack-plugin');
 const ManifestPlugin = require('webpack-manifest-plugin');
 const CompressPlugin = require('compression-webpack-plugin');
+const BrotliPlugin = require('brotli-webpack-plugin');
 const optimization = require('./sections/optimization');
 const splitchunks = require('./sections/splitchunks');
 const babelLoader = require('./loaders/babel.loader');
@@ -79,7 +80,7 @@ module.exports = {
 			publicPath: publicPath,
 			generate: (seed, files, entrypoints) => {
 				const manifestFiles = files.reduce((manifest, file) => {
-					if (!file.name.endsWith('.DS_Store') && !file.name.endsWith('.js.br')) {
+					if (!file.name.endsWith('.DS_Store')) {
 						manifest[file.name] = file.path;
 					}
 					return manifest;
@@ -95,13 +96,19 @@ module.exports = {
 			}
 		}),
 		new CompressPlugin({
-			filename: '[path].br[query]',
-			algorithm: 'brotliCompress',
+			filename: '[path].gz[query]',
+			algorithm: 'gzip',
 			test: /\.(jsx|tsx|js|ts|scss|css|html|svg)$/,
-			compressionOptions: { level: 11 },
+			compressionOptions: { level: 9 },
 			threshold: 10240,
 			minRatio: 0.8,
 			deleteOriginalAssets: false
+		}),
+		new BrotliPlugin({
+			filename: '[path].br[query]',
+			test: /\.(jsx|tsx|js|ts|scss|css|html|svg)$/,
+			threshold: 10240,
+			minRatio: 0.8
 		}),
 		new WorkboxPlugin.InjectManifest({
 			swSrc: 'workers/serviceWorker.js',

@@ -18,15 +18,15 @@ const config = Object.freeze({
 			},
 			styles: {
 				path: 'src/client/styles',
-				alias: '/styles'
+				alias: '/static/styles'
 			},
 			scripts: {
 				path: 'src/client/scriptsjs',
-				alias: '/scripts'
+				alias: '/static/scripts'
 			},
 			images: {
 				path: 'src/client/resources/images',
-				alias: '/images'
+				alias: '/static/images'
 			},
 			resources: {
 				path: 'src/client/resources',

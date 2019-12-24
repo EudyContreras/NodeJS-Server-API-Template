@@ -13,6 +13,7 @@ import Controller from './controllers/controller';
 import ErrorHandler from './handlers/error.handler';
 import LoggingHandler from './handlers/logging.handler';
 import ViewRenderer from './middleware/renderer';
+import expressStaticGzip from 'express-static-gzip';
 import DataInitializer from './initializers/database.initializer';
 import reactRender from 'express-react-views';
 
@@ -81,11 +82,12 @@ export default class Application {
 		this.app.use(compression());
 		this.app.use(express.json());
 		this.app.use(express.urlencoded({ extended: false }));
-		this.app.use(express.static(config.application.FILE_DIRECTORY));
+		//this.app.use(express.static(config.application.FILE_DIRECTORY));
+		this.app.use('/', expressStaticGzip(config.application.FILE_DIRECTORY, {
+			enableBrotli: true,
+			orderPreference: ['br']
+		}));
 		this.app.use(clientRender.alias, express.static(clientRender.path));
-		this.app.use(stylesRender.alias, express.static(stylesRender.path));
-		this.app.use(scriptRender.alias, express.static(scriptRender.path));
-		this.app.use(imageRender.alias, express.static(imageRender.path));
 		this.app.set(render.viewEngine.alias, render.viewEngine.path);
 		this.app.set(render.viewEngine.label, render.viewEngine.type);
 		this.app.engine(render.viewEngine.type, reactRender.createEngine());

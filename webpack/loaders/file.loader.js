@@ -1,5 +1,5 @@
 module.exports = {
-	test: /\.(gif|png|jpe?g|svg)$/i,
+	test: /\.(gif|png|jpe?g|svg|ico)$/i,
 	loader: 'file-loader',
 	options: {
 		outputPath: 'public/images',

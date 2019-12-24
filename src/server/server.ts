@@ -22,7 +22,9 @@ const args = {
 		new PriviledgeController(ROOT, ADMIN),
 		new AuthenticationController(...ALL)
 	],
-	viewRenderer: [new IndexViewRender()],
+	viewRenderer: [
+		new IndexViewRender()
+	],
 	interceptor: new Interceptor()
 };
 

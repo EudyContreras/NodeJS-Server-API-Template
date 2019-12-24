@@ -5,6 +5,7 @@ const path = require('path');
 const CompressPlugin = require('compression-webpack-plugin');
 const NodeExternals = require('webpack-node-externals');
 const optimization = require('./sections/optimization');
+const imageLoader = require('./loaders/image.loader');
 const babelLoader = require('./loaders/babel.loader');
 const styleLoader = require('./loaders/style.loader');
 const fileLoader = require('./loaders/file.loader');
@@ -48,6 +49,7 @@ module.exports = {
 		},
 		babelLoader,
 		fileLoader,
+		imageLoader,
 		styleLoader(path)
 		]
 	},

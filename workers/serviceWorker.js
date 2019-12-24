@@ -1,22 +1,22 @@
 self.DATA_CACHE = 'eudcon-universal-data-cache';
 self.STATIC_CACHE = 'eudcon-universal-static-cache';
 
-self.importScripts('constants.js', 'helpers/shared.helper.js','helpers/sync.helper.js', 'helpers/fallback.helper.js', 'helpers/notify.helper.js');
-
 self.worker = {
 	log: (...message) => {
-		const css = 'background: #00b6ffbd; padding: 2px; border-radius: 2px; color: white; font-weight: 600;';
+		const css = 'background: #00b6ffbd; padding: 2px; border-radius: 4px; color: white; font-weight: 600;';
 		console.log('%c ServiceWorker ', css, ...message);
 	},
 	warn: (message) => {
-		const css = 'background: #ffbf00bd; padding: 2px; border-radius: 2px; color: white; font-weight: 600;';
+		const css = 'background: #ffbf00bd; padding: 2px; border-radius: 4px; color: white; font-weight: 600;';
 		console.log('%c ServiceWorker ', css, ...message);
 	},
 	error: (message) => {
-		const css = 'background: #ff0038bd; padding: 2px; border-radius: 2px; color: white; font-weight: 600;';
+		const css = 'background: #ff0038bd; padding: 2px; border-radius: 4px; color: white; font-weight: 600;';
 		console.log('%c ServiceWorker ', css, ...message);
 	}
 };
+
+self.importScripts('constants.js', 'helpers/shared.helper.js','helpers/sync.helper.js', 'helpers/fallback.helper.js', 'helpers/notify.helper.js');
 
 const delay = ms => _ => new Promise(resolve => setTimeout(() => resolve(_), ms));
 

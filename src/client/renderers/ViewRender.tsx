@@ -2,11 +2,13 @@ import config from '../config';
 import configureStore from '../stores/store';
 import ViewRenderer from '../../server/middleware/renderer';
 import appStyle from './../styles/app.scss';
+import favicon from '../resources/images/icons/icon-64x64.png';
 
 import { Store } from 'redux';
 import { application, shell } from '../views';
 import { routes } from '../components/Routes';
 import { Router, Request, Response } from 'express';
+import {a} from '../views/templateApp';
 
 class IndexViewRenderer extends ViewRenderer {
 
@@ -59,6 +61,7 @@ class IndexViewRenderer extends ViewRenderer {
 		const props = {
 			css: styling,
 			state: state,
+			favicon: favicon,
 			title: config.app.TITLE,
 			enableSW: config.app.USE_SW,
 			content: content,
