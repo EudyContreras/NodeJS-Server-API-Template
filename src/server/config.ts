@@ -15,22 +15,6 @@ const config = Object.freeze({
 			client: {
 				path: 'build/public',
 				alias: '/'
-			},
-			styles: {
-				path: 'src/client/styles',
-				alias: '/static/styles'
-			},
-			scripts: {
-				path: 'src/client/scriptsjs',
-				alias: '/static/scripts'
-			},
-			images: {
-				path: 'src/client/resources/images',
-				alias: '/static/images'
-			},
-			resources: {
-				path: 'src/client/resources',
-				alias: '/res'
 			}
 		}
 	},

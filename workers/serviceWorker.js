@@ -109,7 +109,16 @@ const staleWhileRevalidate = (event, cacheName) => {
 	);
 };
 
-const useStragedy = ({ request, cache, stragedy = self.stragedies.CACHE_FIRST, contentType = self.contentTypes.HTML }) => {
+const supportsWebp = async () => {
+	if (!self.createImageBitmap) return false;
+
+	const webpData = 'data:image/webp;base64,UklGRh4AAABXRUJQVlA4TBEAAAAvAAAAAAfQ//73v/+BiOh/AAA=';
+	const blob = await fetch(webpData).then(r => r.blob());
+
+	return createImageBitmap(blob).then(() => true, () => false);
+};
+
+const useStragedy = ({ event, request, cache, stragedy = self.stragedies.CACHE_FIRST, contentType = self.contentTypes.HTML }) => {
 	switch(stragedy) {
 		case self.stragedies.CACHE_ONLY: {
 			return cache.match(request).then(response => self.useFallback(contentType, response));
@@ -120,7 +129,7 @@ const useStragedy = ({ request, cache, stragedy = self.stragedies.CACHE_FIRST, c
 		case self.stragedies.CACHE_FIRST: {
 			return cache.match(request).then(response => {
 				return response || fetch(request).then(response => {
-					cache.put(request, response.clone());
+					event.waitUntil(cache.put(request, response.clone()));
 					return response;
 				}).catch(() => {
 					return cache.match('/offline.html');
@@ -236,20 +245,20 @@ self.addEventListener(self.events.FETCH, event => {
 	}
 
 	if (isSideEffectRequest(request)) {
-		event.respondWith(useStragedy({ request, stragedy: self.stragedies.NON_FOUND }));
+		event.respondWith(useStragedy({ event, request, stragedy: self.stragedies.NON_FOUND }));
 		return;
 	}
 
 	if (isApiRequest(request)) {
 		const cache = caches.open(self.DATA_CACHE);
-		event.respondWith(cache.then(cache => useStragedy({ request, cache, stragedy: self.stragedies.UPDATE_REFRESH })));
+		event.respondWith(cache.then(cache => useStragedy({ event, request, cache, stragedy: self.stragedies.UPDATE_REFRESH })));
 		event.waitUntil(self.update(request).then(self.refresh)); 
 		return;
 	}
 
 	if (isRequestForStaticAsset(request)) {
 		const cache = caches.open(self.STATIC_CACHE);
-		event.respondWith(cache.then(cache => useStragedy({ request, cache, stragedy: self.stragedies.CACHE_FIRST })));
+		event.respondWith(cache.then(cache => useStragedy({ event, request, cache, stragedy: self.stragedies.CACHE_FIRST })));
 		return;
 	}
 	
@@ -275,13 +284,13 @@ self.addEventListener(self.events.FETCH, event => {
 		} else {
 			self.worker.log('Regular fetch event:', request);
 			const cache = caches.open(self.STATIC_CACHE);
-			event.respondWith(cache.then(cache => useStragedy({ request, cache, stragedy: self.stragedies.CACHE_FIRST })));
+			event.respondWith(cache.then(cache => useStragedy({ event, request, cache, stragedy: self.stragedies.CACHE_FIRST })));
 		}
 		return;
 	}
 
 	const cache = caches.open(self.STATIC_CACHE);
-	event.respondWith(cache.then(cache => useStragedy({ request, cache, stragedy: self.stragedies.CACHE_FIRST })));
+	event.respondWith(cache.then(cache => useStragedy({ event, request, cache, stragedy: self.stragedies.CACHE_FIRST })));
 });
 
 self.addEventListener(self.events.PUSH, event => {

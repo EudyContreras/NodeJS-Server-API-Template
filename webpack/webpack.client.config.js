@@ -16,6 +16,7 @@ const styleLoader = require('./loaders/style.loader');
 const fileLoader = require('./loaders/file.loader');
 const urlLoader = require('./loaders/url.loader');
 const svgLoader = require('./loaders/svg.loader');
+const ImageminPlugin= require('imagemin-webp-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 const useCSR = process.env.CSR == 'true';
@@ -36,17 +37,11 @@ const resources = [
 		from: 'workers/constants.js',
 		to: ''
 	}, {
-		from: 'src/client/scriptsjs/loader.js',
-		to: 'static/scripts'
-	}, {
 		from: 'src/client/resources/manifest.json',
 		to: ''
 	}, {
 		from: 'src/client/resources/robots.txt',
 		to: ''
-	}, {
-		from: 'src/client/resources/images',
-		to: 'static/images'
 	}];
 if (useCSR) {
 	resources.push(
@@ -75,12 +70,18 @@ module.exports = {
 	plugins: [
 		new CleanWebpackPlugin(),
 		new CopyPlugin(resources),
+		new WorkboxPlugin.InjectManifest({
+			swSrc: 'workers/serviceWorker.js',
+			swDest: 'service-worker.js',
+			exclude: [/\.(js.br|js.gz|DS_Store)$/, /manifest-assets.*\.json$/],
+			precacheManifestFilename: 'manifest-precache.[manifestHash].js'
+		}),
 		new ManifestPlugin({
 			fileName: 'manifest-assets.json',
 			publicPath: publicPath,
 			generate: (seed, files, entrypoints) => {
 				const manifestFiles = files.reduce((manifest, file) => {
-					if (!file.name.endsWith('.DS_Store')) {
+					if (!file.name.endsWith('.DS_Store') && !file.name.endsWith('.js.br') && !file.name.endsWith('.js.gz')) {
 						manifest[file.name] = file.path;
 					}
 					return manifest;
@@ -95,6 +96,14 @@ module.exports = {
 				};
 			}
 		}),
+		new ImageminPlugin({
+			config: [{
+				test: /\.(jpe?g|png)/,
+				options: {
+					quality: 75
+				}
+			}]
+		}),
 		new CompressPlugin({
 			filename: '[path].gz[query]',
 			algorithm: 'gzip',
@@ -106,15 +115,9 @@ module.exports = {
 		}),
 		new BrotliPlugin({
 			filename: '[path].br[query]',
-			test: /\.(jsx|tsx|js|ts|scss|css|html|svg)$/,
+			test: /\.(jsx|tsx|js|ts|scss|css|html|json|svg)$/,
 			threshold: 10240,
 			minRatio: 0.8
-		}),
-		new WorkboxPlugin.InjectManifest({
-			swSrc: 'workers/serviceWorker.js',
-			swDest: 'service-worker.js',
-			exclude: [/\.(DS_Store)$/, /manifest-assets.*\.json$/],
-			precacheManifestFilename: 'manifest-precache.[manifestHash].js'
 		})
 	],
 	output: {

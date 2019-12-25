@@ -13,6 +13,7 @@ import Controller from './controllers/controller';
 import ErrorHandler from './handlers/error.handler';
 import LoggingHandler from './handlers/logging.handler';
 import ViewRenderer from './middleware/renderer';
+import shrinkRay from 'shrink-ray-current';
 import expressStaticGzip from 'express-static-gzip';
 import DataInitializer from './initializers/database.initializer';
 import reactRender from 'express-react-views';
@@ -73,24 +74,26 @@ export default class Application {
 	private setupExpress(): void {
 		const render = config.presentation;
 		const clientRender = render.viewEngine.client;
-		const stylesRender = render.viewEngine.styles;
-		const scriptRender = render.viewEngine.scripts;
-		const imageRender = render.viewEngine.images;
 
 		this.app.use(cors());
 		this.app.use(helmet());
-		this.app.use(compression());
+		this.app.use(shrinkRay());
 		this.app.use(express.json());
 		this.app.use(express.urlencoded({ extended: false }));
-		//this.app.use(express.static(config.application.FILE_DIRECTORY));
 		this.app.use('/', expressStaticGzip(config.application.FILE_DIRECTORY, {
+			index: false,
 			enableBrotli: true,
+			customCompressions: [{
+				encodingName: 'deflate',
+				fileExtension: 'zz'
+			}],
 			orderPreference: ['br']
 		}));
 		this.app.use(clientRender.alias, express.static(clientRender.path));
 		this.app.set(render.viewEngine.alias, render.viewEngine.path);
 		this.app.set(render.viewEngine.label, render.viewEngine.type);
 		this.app.engine(render.viewEngine.type, reactRender.createEngine());
+
 	}
 
 	private initializeMiddleware(middleware: Interceptor): void {

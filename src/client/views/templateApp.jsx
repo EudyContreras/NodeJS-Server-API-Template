@@ -1,8 +1,13 @@
 
 
-import React, { Fragment } from 'react';
+import React from 'react';
+import ReactDOMServer from 'react-dom/server';
 import PropType from 'prop-types';
 import manifest from '../../../build/public/manifest-assets.json';
+import favicon from '../resources/images/favicon.ico';
+
+import icon128x128 from '../resources/images/icons/icon-128x128.png';
+import icon192x192 from '../resources/images/icons/icon-192x192.png';
 
 export default (props) => {
 	const entryPoints = manifest.entryPoints;
@@ -12,11 +17,22 @@ export default (props) => {
 		entryPoints: entryPoints
 	};
 
-	if (props.csr == true) {
-		return <Fragment></Fragment>;
-	} else {
-		return <DefaultLayout {...inProps} />;
-	}
+	return <DefaultLayout {...inProps} />;
+};
+
+export const template = (props) => {
+	const entryPoints = manifest.entryPoints;
+
+	const inProps = {
+		...props,
+		favicon: favicon,
+		icon128x128: icon128x128,
+		icon192x192: icon192x192,
+		entryPoints: entryPoints
+	};
+
+	const layout = ReactDOMServer.renderToString(<DefaultLayout {...inProps} />);
+	return `<!doctype html>${layout}`;
 };
 
 const DefaultLayout = (props) => {
@@ -34,8 +50,8 @@ const DefaultLayout = (props) => {
 			<meta name='application-name' content={props.title} />
 
 			<link rel='manifest' href='/manifest.json' />
-			<link rel='apple-touch-icon' type='image/png' href={props.favicon} />
-			<link rel='shortcut icon' type='image/png' href={props.favicon} />
+			<link rel='apple-touch-icon' type='image/png' href={favicon} />
+			<link rel='shortcut icon' type='image/png' href={favicon} />
 
 			<meta name='mobile-web-app-capable' content='yes' />
 			<meta name='msapplication-navbutton-color' content='#FF9800' />
@@ -45,13 +61,13 @@ const DefaultLayout = (props) => {
 			<meta name='apple-mobile-web-app-capable' content='yes' />
 			<meta name='apple-mobile-web-app-status-bar-style' content='black' />
 			
-			<link rel='icon' type='image/png' href={props.favicon} />
+			<link rel='icon' type='image/png' href={favicon} />
 
-			<link rel='icon' sizes='128x128' href='/static/images/icons/icon-128x128.png' />
-			<link rel='apple-touch-icon' sizes='128x128' href='/static/images/iconsicon-128x128.png' />
+			<link rel='icon' sizes='128x128' href={icon128x128} />
+			<link rel='apple-touch-icon' sizes='128x128' href={icon128x128} />
 
-			<link rel='icon' sizes='192x192' href='/static/images/icons/icon-192x192.png' />
-			<link rel='apple-touch-icon' sizes='192x192' href='/static/images/icons/icon-192x192.png' />
+			<link rel='icon' sizes='192x192' href={icon192x192} />
+			<link rel='apple-touch-icon' sizes='192x192' href={icon192x192} />
 
 			<link rel='icon' sizes='256x256' href='/static/images/icons/icon-256x256.png' />
 			<link rel='apple-touch-icon' sizes='256x256' href='/static/images/icons/icon-256x256.png' />
@@ -89,7 +105,6 @@ const DefaultLayout = (props) => {
 
 DefaultLayout.propTypes = {
 	cache: PropType.any,
-	favicon: PropType.string,
 	entryPoints: PropType.arrayOf(PropType.string),
 	enableSW: PropType.bool,
 	content: PropType.any,
