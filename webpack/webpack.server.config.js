@@ -1,12 +1,28 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 require('dotenv').config();
 
+/*
+// Outputs placeholder image as a data URI, and three images with 100, 200, and 300px widths
+const responsiveImage = require('myImage.jpg?placeholder=true&sizes[]=100,sizes[]=200,sizes[]=300');
+
+// responsiveImage.placeholder => 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAIBAQE…'
+ReactDOM.render(
+  <div style={{
+    height: responsiveImage.height,
+    width: responsiveImage.width,
+    backgroundSize: 'cover',
+    backgroundImage: 'url("' + responsiveImage.placeholder + '")'
+  }}>
+    <img src={responsiveImage.src} srcSet={responsiveImage.srcSet} />
+  </div>, el);
+
+*/
+
 const path = require('path');
 const ImageminPlugin= require('imagemin-webp-webpack-plugin');
 const CompressPlugin = require('compression-webpack-plugin');
 const NodeExternals = require('webpack-node-externals');
 const optimization = require('./sections/optimization');
-const imageLoader = require('./loaders/image.loader');
 const babelLoader = require('./loaders/babel.loader');
 const styleLoader = require('./loaders/style.loader');
 const fileLoader = require('./loaders/file.loader');
@@ -59,7 +75,6 @@ module.exports = {
 		},
 		babelLoader,
 		fileLoader,
-		//imageLoader,
 		{
 			test: /\.(jpe?g|png)$/i,
 			loader: 'responsive-loader',

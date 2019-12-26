@@ -38,6 +38,5 @@
 	"scope": "/",
 	"start_url": "/",
 	"theme_color": "#23282d",
-	"background_color": "#2f3439",
-	"splash_pages": null
+	"background_color": "#2f3439"
 }

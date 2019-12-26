@@ -92,7 +92,6 @@ export default class Application {
 		this.app.set(render.viewEngine.alias, render.viewEngine.path);
 		this.app.set(render.viewEngine.label, render.viewEngine.type);
 		this.app.engine(render.viewEngine.type, reactRender.createEngine());
-
 	}
 
 	private initializeMiddleware(middleware: Interceptor): void {
