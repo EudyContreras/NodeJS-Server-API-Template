@@ -1,13 +1,11 @@
 
 
-import React from 'react';
+import React, { Fragment } from 'react';
 import ReactDOMServer from 'react-dom/server';
 import PropType from 'prop-types';
 import manifest from '../../../build/public/manifest-assets.json';
 import favicon from '../resources/images/favicon.ico';
-
-import icon128x128 from '../resources/images/icons/icon-128x128.png';
-import icon192x192 from '../resources/images/icons/icon-192x192.png';
+import touchIcon from '../resources/images/icons/touch-icon.png';
 
 export default (props) => {
 	const entryPoints = manifest.entryPoints;
@@ -26,13 +24,24 @@ export const template = (props) => {
 	const inProps = {
 		...props,
 		favicon: favicon,
-		icon128x128: icon128x128,
-		icon192x192: icon192x192,
+		toucIcon: touchIcon,
 		entryPoints: entryPoints
 	};
 
 	const layout = ReactDOMServer.renderToString(<DefaultLayout {...inProps} />);
 	return `<!doctype html>${layout}`;
+};
+
+const genAppleTouch = (icon) => {
+	const element = icon.images.map((x, idx) => {
+		const size = `${x.width}x${x.height};`;
+		const path = x.path.replace('.png','.webp').replace('public/','');
+		return(<Fragment key={idx}>
+			<link rel='icon' sizes={size} href={path} />
+			<link rel='apple-touch-icon' sizes={size} href={path} />
+		</Fragment>);
+	});
+	return element;
 };
 
 const DefaultLayout = (props) => {
@@ -48,13 +57,14 @@ const DefaultLayout = (props) => {
 			<meta name='theme-color' content='#23282d' />
 			<meta name='description' content='Template Web site generated the server api routing' />
 			<meta name='application-name' content={props.title} />
-
+			<meta name="twitter:card" content="summary" />
+			<meta name="twitter:image" content='images/icons/touch-icon-512x512.png' />
 			<link rel='manifest' href='/manifest.json' />
 			<link rel='apple-touch-icon' type='image/png' href={favicon} />
 			<link rel='shortcut icon' type='image/png' href={favicon} />
 
 			<meta name='mobile-web-app-capable' content='yes' />
-			<meta name='msapplication-navbutton-color' content='#FF9800' />
+			<meta name='msapplication-navbutton-color' content='#2f3439' />
 			<meta name='msapplication-starturl' content='/' />
 
 			<meta name='apple-mobile-web-app-title' content={props.title} />
@@ -63,20 +73,7 @@ const DefaultLayout = (props) => {
 			
 			<link rel='icon' type='image/png' href={favicon} />
 
-			<link rel='icon' sizes='128x128' href={icon128x128} />
-			<link rel='apple-touch-icon' sizes='128x128' href={icon128x128} />
-
-			<link rel='icon' sizes='192x192' href={icon192x192} />
-			<link rel='apple-touch-icon' sizes='192x192' href={icon192x192} />
-
-			<link rel='icon' sizes='256x256' href='/static/images/icons/icon-256x256.png' />
-			<link rel='apple-touch-icon' sizes='256x256' href='/static/images/icons/icon-256x256.png' />
-
-			<link rel='icon' sizes='384x384' href='/static/images/icons/icon-384x384.png' />
-			<link rel='apple-touch-icon' sizes='384x384' href='/static/images/icons/icon-384x384.png' />
-
-			<link rel='icon' sizes='512x512' href='/static/images/icons/icon-512x512.png' />
-			<link rel='apple-touch-icon' sizes='512x512' href='/static/images/icons/icon-512x512.png' />
+			{genAppleTouch(touchIcon)}
 			
 			<link rel='stylesheet' href='https://fonts.googleapis.com/icon?family=Material+Icons&display=swap' media='all' id='materialIcons' async disabled />
 			<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Roboto&display=optional' media='all' id='robotoFont' defer disabled />

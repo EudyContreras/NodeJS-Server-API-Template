@@ -17,6 +17,7 @@ const fileLoader = require('./loaders/file.loader');
 const urlLoader = require('./loaders/url.loader');
 const svgLoader = require('./loaders/svg.loader');
 const ImageminPlugin= require('imagemin-webp-webpack-plugin');
+const FileIncludePlugin = require('file-include-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 const useCSR = process.env.CSR == 'true';
@@ -70,12 +71,6 @@ module.exports = {
 	plugins: [
 		new CleanWebpackPlugin(),
 		new CopyPlugin(resources),
-		new WorkboxPlugin.InjectManifest({
-			swSrc: 'workers/serviceWorker.js',
-			swDest: 'service-worker.js',
-			exclude: [/\.(js.br|js.gz|DS_Store)$/, /manifest-assets.*\.json$/],
-			precacheManifestFilename: 'manifest-precache.[manifestHash].js'
-		}),
 		new ManifestPlugin({
 			fileName: 'manifest-assets.json',
 			publicPath: publicPath,
@@ -98,7 +93,7 @@ module.exports = {
 		}),
 		new ImageminPlugin({
 			config: [{
-				test: /\.(jpe?g|png)/,
+				test: /\.(jpe?g|png|gif|svg)$/i,
 				options: {
 					quality: 75
 				}
@@ -118,6 +113,12 @@ module.exports = {
 			test: /\.(jsx|tsx|js|ts|scss|css|html|json|svg)$/,
 			threshold: 10240,
 			minRatio: 0.8
+		}),
+		new WorkboxPlugin.InjectManifest({
+			swSrc: 'workers/serviceWorker.js',
+			swDest: 'service-worker.js',
+			exclude: [/\.(js.br|js.gz|DS_Store)$/, /manifest-assets.*\.json$/],
+			precacheManifestFilename: 'manifest-precache.[manifestHash].js'
 		})
 	],
 	output: {
@@ -142,6 +143,16 @@ module.exports = {
 		imageLoader,
 		urlLoader,
 		svgLoader,
+		{
+			test: /\.(jpe?g|png)$/i,
+			loader: 'responsive-loader',
+			options: {
+				sizes: [180, 300, 600, 1200, 2000],
+				placeholder: true,
+				placeholderSize: 50,
+				adapter: require('responsive-loader/sharp')
+			}
+		},
 		styleLoader(path)
 		]
 	},

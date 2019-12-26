@@ -34,7 +34,7 @@ module.exports = {
 	plugins: [
 		new ImageminPlugin({
 			config: [{
-				test: /\.(jpe?g|png)/,
+				test: /\.(jpe?g|png|gif|svg)$/i,
 				options: {
 					quality: 75
 				}
@@ -59,7 +59,19 @@ module.exports = {
 		},
 		babelLoader,
 		fileLoader,
-		imageLoader,
+		//imageLoader,
+		{
+			test: /\.(jpe?g|png)$/i,
+			loader: 'responsive-loader',
+			options: {
+				name: 'icons/[name]-[width]x[width].[ext]',
+				outputPath:'public/images',
+				sizes: [64, 128, 144, 192, 256, 348, 512],
+				placeholder: true,
+				placeholderSize: 50,
+				adapter: require('responsive-loader/sharp')
+			}
+		},
 		styleLoader(path)
 		]
 	},

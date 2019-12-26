@@ -7,7 +7,6 @@ import helmet from 'helmet';
 import express from 'express';
 import mongoose from 'mongoose';
 import config from './config';
-import compression from 'compression';
 import Interceptor from './middleware/interceptor';
 import Controller from './controllers/controller';
 import ErrorHandler from './handlers/error.handler';

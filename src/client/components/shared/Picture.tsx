@@ -6,6 +6,7 @@ interface Props {
 	src: string;
 	alt: string;
 	title: string;
+	styling: any;
 }
 
 const extensions = ['webp', 'jpg'];
@@ -16,7 +17,7 @@ const Picture: React.FunctionComponent<Props> = (props) => {
 	const path = props.src.replace(ext, '');
 
 	return (
-		<picture>
+		<picture className={props.styling.lazyImage}>
 			{extensions.map((x, idx) => <source key={idx} srcSet={path + x} type={'image/' + x}/>)}
 			<img src={path + ext} alt={props.alt} title={props.title} />
 		</picture>);
@@ -26,7 +27,8 @@ const Picture: React.FunctionComponent<Props> = (props) => {
 Picture.propTypes = {
 	src: PropType.string.isRequired,
 	alt: PropType.string.isRequired,
-	title: PropType.string.isRequired
+	title: PropType.string.isRequired,
+	styling: PropType.any
 };
 
 export default Picture;
