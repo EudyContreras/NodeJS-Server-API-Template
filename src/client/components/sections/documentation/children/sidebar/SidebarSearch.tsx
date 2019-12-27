@@ -57,7 +57,7 @@ class SidebarSearch extends React.PureComponent<any, any> {
 		return (
 			<form className={join(...classes)} method='post'>
 				<label htmlFor='search'></label>
-				<input ref={this.inputRef} type='text' name='search' id='search' aria-label='search' className={style.searchTextbox} placeholder='Search' />
+				<input ref={this.inputRef} type='text' name='search' aria-label='search' className={style.searchTextbox} placeholder='Search' />
 				<button id='search' title='Search' value='' className={style.searchButton} onClick={this.performSearch}>
 					<i className={join(...iconsClasses)}>search</i>
 				</button>

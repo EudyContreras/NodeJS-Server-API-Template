@@ -3,16 +3,16 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
-import { register } from './client/scriptsjs/serviceWorker';
+import { register } from './scriptsjs/serviceWorker';
 import StyleContext from 'isomorphic-style-loader/StyleContext';
-import Application from './client/components/App';
-import configureStore from './client/stores/store';
+import Application from './components/App';
+import configureStore from './stores/store';
 
 const initialState = window.__REDUX_STATE__ || {};
 
 delete window.__REDUX_STATE__;
 
-require('../workers/constants');
+require('../../workers/constants');
 
 const insertCss = (...styles) => {
 	const removeCss = styles.map(style => style._insertCss());

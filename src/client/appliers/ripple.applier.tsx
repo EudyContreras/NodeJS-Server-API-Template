@@ -1,5 +1,4 @@
 import React from 'react';
-import $ from 'jquery';
 
 const asClass = (name: string): string => '.'+name;
 

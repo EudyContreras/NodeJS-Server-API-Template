@@ -1,18 +1,19 @@
 
 import fs from 'fs';
 import cors from 'cors';
-import https from 'https';
+import http from 'http';
+import http2 from 'spdy';
 import helmet from 'helmet';
 import express from 'express';
 import mongoose from 'mongoose';
 import config from './config';
-import noFavicon from 'express-no-favicons';
-import compression from 'compression';
 import Interceptor from './middleware/interceptor';
 import Controller from './controllers/controller';
 import ErrorHandler from './handlers/error.handler';
 import LoggingHandler from './handlers/logging.handler';
 import ViewRenderer from './middleware/renderer';
+import shrinkRay from 'shrink-ray-current';
+import expressStaticGzip from 'express-static-gzip';
 import DataInitializer from './initializers/database.initializer';
 import reactRender from 'express-react-views';
 
@@ -44,42 +45,50 @@ export default class Application {
 	}
 
 	public startlistening(): void {
-		const port = config.host.PORT;
 		const secure = config.ssl.ACTIVE;
 
-		const listener = (): void => {
-			console.log(`Server listening on the port ${port}`);
-		};
-
 		if (secure) {
-			https.createServer({
-				key: fs.readFileSync('./ssl/sslkey.pem'),
-				cert: fs.readFileSync('./ssl/sslcert.pem'),
-				passphrase: config.ssl.PASS_PHRASE
-			}, this.app).listen(port, listener);
+			const port1 = config.host.PORT_HTTPS;
+			const port2 = config.host.PORT_HTTP;
+
+			const options = {
+				key: fs.readFileSync('./ssl/localhost.key'),
+				cert: fs.readFileSync('./ssl/localhost.crt')
+			};
+			http2.createServer(options, this.app).listen(port1, () => {
+				console.log(`Server listening on the port ${port1}`);
+			});
+			http.createServer(this.app).listen(port2, () => {
+				console.log(`Server listening on the port ${port2}`);
+			});
+		
 		} else {
-			this.app.listen(port, listener);
+			const port = config.host.PORT_HTTP;
+			http.createServer(this.app).listen(port, () => {
+				console.log(`Server listening on the port ${port}`);
+			});
 		}
 	}
 
 	private setupExpress(): void {
 		const render = config.presentation;
 		const clientRender = render.viewEngine.client;
-		const stylesRender = render.viewEngine.styles;
-		const scriptRender = render.viewEngine.scripts;
-		const imageRender = render.viewEngine.images;
 
 		this.app.use(cors());
 		this.app.use(helmet());
-		this.app.use(compression());
-		this.app.use(noFavicon());
+		this.app.use(shrinkRay());
 		this.app.use(express.json());
 		this.app.use(express.urlencoded({ extended: false }));
-		this.app.use(express.static(config.application.FILE_DIRECTORY));
+		this.app.use('/', expressStaticGzip(config.application.FILE_DIRECTORY, {
+			index: false,
+			enableBrotli: true,
+			customCompressions: [{
+				encodingName: 'deflate',
+				fileExtension: 'zz'
+			}],
+			orderPreference: ['br']
+		}));
 		this.app.use(clientRender.alias, express.static(clientRender.path));
-		this.app.use(stylesRender.alias, express.static(stylesRender.path));
-		this.app.use(scriptRender.alias, express.static(scriptRender.path));
-		this.app.use(imageRender.alias, express.static(imageRender.path));
 		this.app.set(render.viewEngine.alias, render.viewEngine.path);
 		this.app.set(render.viewEngine.label, render.viewEngine.type);
 		this.app.engine(render.viewEngine.type, reactRender.createEngine());

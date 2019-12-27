@@ -1,5 +1,5 @@
 
-const baseUrl = 'http://localhost:5000';
+const baseUrl = '';
 
 const urlsToCache = [
 	'/',
@@ -39,16 +39,17 @@ const http = {
 	PATCH: 'PATCH'
 };
 
-
 const push = {
 	NEW_UPDATE: 'new-update'
 };
 
 const messages = {
-	ADD_TO_CACHE: 'add_to_cache',
+	REFRESH: 'refresh',
 	APP_UPDATE: 'add_update',
 	READ_OFFLINE: 'read_offline',
-	SKIP_WAITING: 'skip_awaitng'
+	SKIP_WAITING: 'skip_awaitng',
+	ADD_TO_CACHE: 'add_to_cache',
+	REMOVE_FROM_CACHE: 'remove_from_cache'
 };
 
 if (typeof self !== 'undefined') {

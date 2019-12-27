@@ -1,22 +1,26 @@
 self.DATA_CACHE = 'eudcon-universal-data-cache';
 self.STATIC_CACHE = 'eudcon-universal-static-cache';
 
-self.importScripts('constants.js', 'helpers/shared.helper.js','helpers/sync.helper.js', 'helpers/fallback.helper.js', 'helpers/notify.helper.js');
-
 self.worker = {
 	log: (...message) => {
-		const css = 'background: #00b6ffbd; padding: 2px; border-radius: 2px; color: white; font-weight: 600;';
+		const css = 'background: #00b6ffbd; padding: 2px; border-radius: 4px; color: white; font-weight: 600;';
 		console.log('%c ServiceWorker ', css, ...message);
 	},
 	warn: (message) => {
-		const css = 'background: #ffbf00bd; padding: 2px; border-radius: 2px; color: white; font-weight: 600;';
+		const css = 'background: #ffbf00bd; padding: 2px; border-radius: 4px; color: white; font-weight: 600;';
 		console.log('%c ServiceWorker ', css, ...message);
 	},
 	error: (message) => {
-		const css = 'background: #ff0038bd; padding: 2px; border-radius: 2px; color: white; font-weight: 600;';
+		const css = 'background: #ff0038bd; padding: 2px; border-radius: 4px; color: white; font-weight: 600;';
 		console.log('%c ServiceWorker ', css, ...message);
 	}
 };
+
+require('./constants');
+require('./helpers/shared.helper.js');
+require('./helpers/sync.helper.js');
+require('./helpers/fallback.helper.js');
+require('./helpers/notify.helper.js');
 
 const delay = ms => _ => new Promise(resolve => setTimeout(() => resolve(_), ms));
 
@@ -43,7 +47,82 @@ const isApiRequest = request => {
 	return request.url.includes('/api/');
 };
 
-const useStragedy = ({ request, cache, stragedy = self.stragedies.CACHE_FIRST, contentType = self.contentTypes.HTML }) => {
+const fromNetwork = (request) => {
+	return new Promise((resolve, reject) => {
+		const timeoutId = setTimeout(reject, self.TIMEOUT);
+
+		fetch(request).then(response => {
+			clearTimeout(timeoutId);
+			resolve(response);
+		}, reject);
+	});
+};
+
+const fromCache = (request, cacheName) => {
+	return caches.open(cacheName)
+		.then(cache => cache.match(request))
+		.then(match => match || Promise.reject('no-request-match'));
+};
+
+const updateCache = (request, cacheName) => {
+	return caches.open(cacheName).then((cache) => {
+		return fetch(request).then((response) => {
+			return cache.put(request, response.clone());
+		});
+	});
+};
+
+const refreshClient = (response) => {
+	return self.clients.matchAll()
+		.then(clients => clients.forEach(client => {
+			client.postMessage(JSON.stringify({
+				type: self.REFRESH,
+				url: response.url
+			}));
+		}));
+};
+
+const networkOrCache = (request) => {
+	return fromNetwork(request).then(response => {
+		return response.ok ? response : fromCache(request);
+	}).catch(() => {
+		return fromCache(request);
+	});
+};
+
+const cacheOrNetwork = (request) => {
+	return fromCache(request).then(response => {
+		return response.ok ? response : fromNetwork(request);
+	}).catch(() => {
+		return fromNetwork(request);
+	});
+};
+
+const staleWhileRevalidate = (event, cacheName) => {
+	const request = event.request.clone();
+	event.respondWith(
+		caches.open(cacheName).then(cache => {
+			return cache.match(request).then(response => {
+				const fetchPromise = fetch(request).then(networkResponse => {
+					cache.put(request, networkResponse.clone());
+					return networkResponse;
+				});
+				return response || fetchPromise;
+			});
+		})
+	);
+};
+
+const supportsWebp = async () => {
+	if (!self.createImageBitmap) return false;
+
+	const webpData = 'data:image/webp;base64,UklGRh4AAABXRUJQVlA4TBEAAAAvAAAAAAfQ//73v/+BiOh/AAA=';
+	const blob = await fetch(webpData).then(r => r.blob());
+
+	return createImageBitmap(blob).then(() => true, () => false);
+};
+
+const useStragedy = ({ event, request, cache, stragedy = self.stragedies.CACHE_FIRST, contentType = self.contentTypes.HTML }) => {
 	switch(stragedy) {
 		case self.stragedies.CACHE_ONLY: {
 			return cache.match(request).then(response => self.useFallback(contentType, response));
@@ -54,7 +133,7 @@ const useStragedy = ({ request, cache, stragedy = self.stragedies.CACHE_FIRST, c
 		case self.stragedies.CACHE_FIRST: {
 			return cache.match(request).then(response => {
 				return response || fetch(request).then(response => {
-					cache.put(request, response.clone());
+					event.waitUntil(cache.put(request, response.clone()));
 					return response;
 				}).catch(() => {
 					return cache.match('/offline.html');
@@ -151,13 +230,12 @@ self.addEventListener(self.events.ACTIVATE, event => {
 	const expectedCaches = [self.STATIC_CACHE, self.DATA_CACHE];
 
 	event.waitUntil(
-		caches.keys().then(keys => Promise.all(
-			keys.map(key => {
-				if (!expectedCaches.includes(key)) {
-					return caches.delete(key);
-				}
-			})
-		))
+		caches.keys()
+			.then(keys => keys.filter(key => !expectedCaches.includes(key)))
+			.then(keys => Promise.all(keys.map(key => {
+				self.worker.log(`Deleting cache ${key}`);
+				return caches.delete(key);
+			})))
 	);
 
 	return self.clients.claim();
@@ -171,20 +249,20 @@ self.addEventListener(self.events.FETCH, event => {
 	}
 
 	if (isSideEffectRequest(request)) {
-		event.respondWith(useStragedy({ request, stragedy: self.stragedies.NON_FOUND }));
+		event.respondWith(useStragedy({ event, request, stragedy: self.stragedies.NON_FOUND }));
 		return;
 	}
 
 	if (isApiRequest(request)) {
 		const cache = caches.open(self.DATA_CACHE);
-		event.respondWith(cache.then(cache => useStragedy({ request, cache, stragedy: self.stragedies.UPDATE_REFRESH })));
+		event.respondWith(cache.then(cache => useStragedy({ event, request, cache, stragedy: self.stragedies.UPDATE_REFRESH })));
 		event.waitUntil(self.update(request).then(self.refresh)); 
 		return;
 	}
 
 	if (isRequestForStaticAsset(request)) {
 		const cache = caches.open(self.STATIC_CACHE);
-		event.respondWith(cache.then(cache => useStragedy({ request, cache, stragedy: self.stragedies.CACHE_FIRST })));
+		event.respondWith(cache.then(cache => useStragedy({ event, request, cache, stragedy: self.stragedies.CACHE_FIRST })));
 		return;
 	}
 	
@@ -210,13 +288,13 @@ self.addEventListener(self.events.FETCH, event => {
 		} else {
 			self.worker.log('Regular fetch event:', request);
 			const cache = caches.open(self.STATIC_CACHE);
-			event.respondWith(cache.then(cache => useStragedy({ request, cache, stragedy: self.stragedies.CACHE_FIRST })));
+			event.respondWith(cache.then(cache => useStragedy({ event, request, cache, stragedy: self.stragedies.CACHE_FIRST })));
 		}
 		return;
 	}
 
 	const cache = caches.open(self.STATIC_CACHE);
-	event.respondWith(cache.then(cache => useStragedy({ request, cache, stragedy: self.stragedies.CACHE_FIRST })));
+	event.respondWith(cache.then(cache => useStragedy({ event, request, cache, stragedy: self.stragedies.CACHE_FIRST })));
 });
 
 self.addEventListener(self.events.PUSH, event => {
@@ -226,22 +304,6 @@ self.addEventListener(self.events.PUSH, event => {
 
 	const notificationPromise = self.registration.showNotification(title, options);
 	event.waitUntil(notificationPromise);
-
-	// if (event.data.text() == push.NEW_UPDATE) {
-	// 	event.waitUntil(
-	// 		caches.open(DATA_CACHE).then(cache => {
-	// 			return fetch('/updates.json').then(response => {
-	// 				cache.put('/updates.json', response.clone());
-	// 				return response.json();
-	// 			});
-	// 		}).then(emails => {
-	// 			// registration.showNotification("New email", {
-	// 			// 	body: "From " + emails[0].from.name,
-	// 			// 	tag: "new-email"
-	// 			// });
-	// 		})
-	// 	);
-	// }
 });
  
 self.addEventListener(self.events.NOTIFY_CLICK, event => {
@@ -273,12 +335,13 @@ self.addEventListener(self.events.MESSAGE, event => {
 
 	switch (command.type) {
 		case self.messages.ADD_TO_CACHE: {
-			self.worker.log('Add to cache');
 			const request = new Request(command.payload);
-			fetch(request).then(throwOnError).then(response => {
-				self.worker.log('Adding message payload to cache', event);
-				caches.open(self.STATIC_CACHE).then(cache => cache.put(request, response));
-			});
+
+			fetch(request)
+				.then(throwOnError)
+				.then(response => {
+					caches.open(self.STATIC_CACHE).then(cache => cache.put(request, response));
+				});
 		}
 	}
 });

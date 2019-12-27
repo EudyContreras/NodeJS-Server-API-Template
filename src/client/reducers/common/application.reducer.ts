@@ -1,6 +1,6 @@
 import {
 	APPLICATION,
-	APPLICATION_INSTALLED,
+	APPLICATION_INSTALLED
 } from '../../actions/common/application/appdata.action';
 
 export const SOURCE = APPLICATION;

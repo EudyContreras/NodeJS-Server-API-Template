@@ -18,8 +18,6 @@ class ContentArea extends React.PureComponent<any, any> {
 					<Section styling={style}/>
 					<Section styling={style}/>
 					<Section styling={style}/>
-					<Section styling={style}/>
-					<Section styling={style}/>
 				</Wrapper>
 			</div>
 		);

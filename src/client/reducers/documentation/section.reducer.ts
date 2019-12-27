@@ -39,7 +39,7 @@ export default (state = InitialState, action: IAction): IDocumentationArea => {
 				...state,
 				sidebar: {
 					...state.sidebar,
-					fixed: action.payload.sidebarFixed,
+					fixed: action.payload.sidebarFixed
 				},
 				sandbox: {
 					...state.sandbox,
@@ -54,7 +54,7 @@ export default (state = InitialState, action: IAction): IDocumentationArea => {
 				...state,
 				sidebar: {
 					...state.sidebar,
-					fixed: action.payload.sidebarFixed,
+					fixed: action.payload.sidebarFixed
 				},
 				sandbox: {
 					...state.sandbox,
@@ -68,7 +68,7 @@ export default (state = InitialState, action: IAction): IDocumentationArea => {
 				...state,
 				sidebar: {
 					...state.sidebar,
-					fixed: action.payload,
+					fixed: action.payload
 				}
 			};
 		}
@@ -134,11 +134,11 @@ const handleNavbarActions = (state = InitialState, action: IAction): IDocumentat
 				...state,
 				sidebar: {
 					...state.sidebar,
-					fixed: action.payload,
+					fixed: action.payload
 				},
 				sandbox: {
 					...state.sandbox,
-					fixedTop:  !state.sandbox.fixedBottom ? action.payload : false,
+					fixedTop:  !state.sandbox.fixedBottom ? action.payload : false
 				}
 			};
 		}

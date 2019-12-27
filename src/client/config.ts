@@ -15,7 +15,7 @@ const config = Object.freeze({
 		},
 		{
 			LABEL: 'Cache-Control',
-			VALUE: 'max-age=31536000'
+			VALUE: 'max-age=600'
 		}
 	],
 	layout: {

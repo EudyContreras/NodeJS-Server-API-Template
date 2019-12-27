@@ -23,7 +23,7 @@ module.exports = ({ enviroment, splitChunk, useSourceMap, production = false }) 
 				},
 				compress: {
 					ecma: 5,
-					warnings: false,
+					warnings: true,
 					comparisons: false,
 					drop_console: false,
 					inline: 2

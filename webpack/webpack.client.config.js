@@ -7,6 +7,7 @@ const CopyPlugin = require('copy-webpack-plugin');
 const WorkboxPlugin = require('workbox-webpack-plugin');
 const ManifestPlugin = require('webpack-manifest-plugin');
 const CompressPlugin = require('compression-webpack-plugin');
+const BrotliPlugin = require('brotli-webpack-plugin');
 const optimization = require('./sections/optimization');
 const splitchunks = require('./sections/splitchunks');
 const babelLoader = require('./loaders/babel.loader');
@@ -15,40 +16,27 @@ const styleLoader = require('./loaders/style.loader');
 const fileLoader = require('./loaders/file.loader');
 const urlLoader = require('./loaders/url.loader');
 const svgLoader = require('./loaders/svg.loader');
+const NodeExternals = require('webpack-node-externals');
+const ImageminPlugin= require('imagemin-webp-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 const useCSR = process.env.CSR == 'true';
-const useSourceMap = process.env.GENERATE_SOURCEMAP !== 'false';
+const useSourceMap = process.env.GENERATE_SOURCEMAP == 'true';
 
 const enviroment = process.env.NODE_ENV;
 const publicPath = '../build/public/';
-const entryPoint = './src/client.jsx';
+const entryPoint = './src/client/client.jsx';
 
 const isProduction = enviroment == 'production';
 const isDevelopement = enviroment == 'development';
 
 const resources = [
 	{
-		from: 'workers/helpers',
-		to: 'helpers'
-	}, {
-		from: 'workers/constants.js',
-		to: ''
-	}, {
-		from: 'src/client/scriptsjs/loader.js',
-		to: 'static/scripts'
-	}, {
 		from: 'src/client/resources/manifest.json',
 		to: ''
 	}, {
 		from: 'src/client/resources/robots.txt',
 		to: ''
-	}, {
-		from: 'src/client/resources/images',
-		to: 'static/images'
-	}, {
-		from: 'src/client/resources/images/icons',
-		to: 'static/images/icons'
 	}];
 if (useCSR) {
 	resources.push(
@@ -82,7 +70,7 @@ module.exports = {
 			publicPath: publicPath,
 			generate: (seed, files, entrypoints) => {
 				const manifestFiles = files.reduce((manifest, file) => {
-					if (!file.name.endsWith('.DS_Store') && !file.name.endsWith('.js.br')) {
+					if (!file.name.endsWith('.DS_Store') && !file.name.endsWith('.js.br') && !file.name.endsWith('.js.gz')) {
 						manifest[file.name] = file.path;
 					}
 					return manifest;
@@ -97,19 +85,33 @@ module.exports = {
 				};
 			}
 		}),
+		new ImageminPlugin({
+			config: [{
+				test: /\.(jpe?g|png|gif|svg)$/i,
+				options: {
+					quality: 75
+				}
+			}]
+		}),
 		new CompressPlugin({
-			filename: '[path].br[query]',
-			algorithm: 'brotliCompress',
-			test: /\.(jsx|tsx|js|ts|scss|css|html|svg)$/,
-			compressionOptions: { level: 11 },
+			filename: '[path].gz[query]',
+			algorithm: 'gzip',
+			test: /\.(js|css|html|json|svg)$/,
+			compressionOptions: { level: 9 },
 			threshold: 10240,
 			minRatio: 0.8,
 			deleteOriginalAssets: false
 		}),
+		new BrotliPlugin({
+			filename: '[path].br[query]',
+			test: /\.(js|css|html|json|svg)$/,
+			threshold: 10240,
+			minRatio: 0.8
+		}),
 		new WorkboxPlugin.InjectManifest({
 			swSrc: 'workers/serviceWorker.js',
-			swDest: 'service-worker.js',
-			exclude: [/\.(js.br|DS_Store)$/, /manifest-assets.*\.json$/],
+			swDest: '../../workers/service-worker.js',
+			exclude: [/\.(js.br|js.gz|DS_Store)$/, /manifest-assets.*\.json$/],
 			precacheManifestFilename: 'manifest-precache.[manifestHash].js'
 		})
 	],
@@ -118,9 +120,11 @@ module.exports = {
 		futureEmitAssets: isProduction,
 		pathinfo: isDevelopement,
 		filename: 'static/scripts/[name].[chunkhash].js',
-		// chunkFilename: 'static/scripts/[name].[chunkhash].chunk.js',
 		publicPath: '/',
 		globalObject: 'this'
+	},
+	externals: {
+		jquery: 'jQuery'
 	},
 	optimization: {
 		...optimization({ enviroment, splitChunk, useSourceMap, production: isProduction })
@@ -131,10 +135,20 @@ module.exports = {
 			use: 'raw-loader'
 		},
 		babelLoader,
-		imageLoader,
 		fileLoader,
+		imageLoader,
 		urlLoader,
 		svgLoader,
+		{
+			test: /\.(jpe?g|png)$/i,
+			loader: 'responsive-loader',
+			options: {
+				sizes: [180, 300, 600, 1200, 2000],
+				placeholder: true,
+				placeholderSize: 50,
+				adapter: require('responsive-loader/sharp')
+			}
+		},
 		styleLoader(path)
 		]
 	},

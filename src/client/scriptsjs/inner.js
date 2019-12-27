@@ -28,7 +28,6 @@ if ('serviceWorker' in navigator) {
 	});
 }
 
-
 function isOnline() {
 	const connectionStatus = document.getElementById('connectionStatus');
 
@@ -49,7 +48,7 @@ const updateContentOnPageLoad = () => {
 };
 
 const status = await navigator.permissions.query({
-	name: 'periodic-background-sync',
+	name: 'periodic-background-sync'
 });
 
 if (status.state === 'granted') {

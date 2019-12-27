@@ -78,7 +78,7 @@ class SidebarMenu extends React.Component<Props, any> {
 
 		const actions = {
 			onMouseEnter: this.onMouseEnter,
-			onMouseLeave: this.onMouseExit,
+			onMouseLeave: this.onMouseExit
 		};
 
 		return { common, actions };
