@@ -20,7 +20,6 @@ ReactDOM.render(
 
 const path = require('path');
 const uglifyJS = require('uglify-js');
-const WebpackCleanPlugin = require('webpack-clean');
 const MergeIntoSingle = require('webpack-merge-and-include-globally');
 const ImageminPlugin= require('imagemin-webp-webpack-plugin');
 const CompressPlugin = require('compression-webpack-plugin');
@@ -67,11 +66,7 @@ module.exports = {
 			threshold: 10240,
 			minRatio: 0.8,
 			deleteOriginalAssets: false
-		}),
-		new WebpackCleanPlugin([
-			'dist/test1.js',
-			'dist/test2.js'
-		])
+		})
 	],
 	optimization: optimization({ enviroment: enviroment, production: isProduction }),
 	externals: [NodeExternals()],
