@@ -16,8 +16,8 @@ const styleLoader = require('./loaders/style.loader');
 const fileLoader = require('./loaders/file.loader');
 const urlLoader = require('./loaders/url.loader');
 const svgLoader = require('./loaders/svg.loader');
+const NodeExternals = require('webpack-node-externals');
 const ImageminPlugin= require('imagemin-webp-webpack-plugin');
-const FileIncludePlugin = require('file-include-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 const useCSR = process.env.CSR == 'true';
@@ -32,12 +32,6 @@ const isDevelopement = enviroment == 'development';
 
 const resources = [
 	{
-		from: 'workers/helpers',
-		to: 'helpers'
-	}, {
-		from: 'workers/constants.js',
-		to: ''
-	}, {
 		from: 'src/client/resources/manifest.json',
 		to: ''
 	}, {
@@ -116,7 +110,7 @@ module.exports = {
 		}),
 		new WorkboxPlugin.InjectManifest({
 			swSrc: 'workers/serviceWorker.js',
-			swDest: 'service-worker.js',
+			swDest: '../../workers/service-worker.js',
 			exclude: [/\.(js.br|js.gz|DS_Store)$/, /manifest-assets.*\.json$/],
 			precacheManifestFilename: 'manifest-precache.[manifestHash].js'
 		})
@@ -126,7 +120,6 @@ module.exports = {
 		futureEmitAssets: isProduction,
 		pathinfo: isDevelopement,
 		filename: 'static/scripts/[name].[chunkhash].js',
-		// chunkFilename: 'static/scripts/[name].[chunkhash].chunk.js',
 		publicPath: '/',
 		globalObject: 'this'
 	},
