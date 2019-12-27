@@ -10,6 +10,7 @@ const babelLoader = require('./loaders/babel.loader');
 
 const enviroment = process.env.NODE_ENV;
 const publicPath = '../build/public/';
+const entryPoint = './workers/service-worker.js';
 
 const isProduction = enviroment == 'production';
 const isDevelopement = enviroment == 'development';
@@ -19,7 +20,7 @@ module.exports = {
 	target: 'web',
 	mode: enviroment,
 	bail: isProduction,
-	entry: './workers/service-worker.js',
+	entry: entryPoint,
 	performance: {
 		hints: false
 	},

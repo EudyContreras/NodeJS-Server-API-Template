@@ -110,7 +110,7 @@ class DocsPage extends React.Component<Props> {
 const mapStateToProps = (state: any): any => ({
 	offsetTop: state.presentation.navigation.offsetTop,
 	sandboxFixedTop: state.presentation.documentation.sandbox.fixedTop,
-	sandboxFixedBottom: state.presentation.documentation.sandbox.fixedBottom,
+	sandboxFixedBottom: state.presentation.documentation.sandbox.fixedBottom
 });
 
 export default connect<StateProps, DispatchProps, any>(mapStateToProps, Dispatchers)(DocsPage);

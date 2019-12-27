@@ -1,9 +1,11 @@
 const singleShunk = {
 	cacheGroups: {
 		commons: {
+			reuseExistingChunk: true,
+			enforce: true,
+			chunks: 'all',
 			test: /[\\/]node_modules[\\/]/,
-			name: 'vendor/vendors',
-			chunks: 'all'
+			name: 'vendor/vendors'
 		}
 	}
 };

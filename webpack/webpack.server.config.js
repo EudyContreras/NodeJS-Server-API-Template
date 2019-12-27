@@ -19,10 +19,7 @@ ReactDOM.render(
 */
 
 const path = require('path');
-const uglifyJS = require('uglify-js');
-const MergeIntoSingle = require('webpack-merge-and-include-globally');
 const ImageminPlugin= require('imagemin-webp-webpack-plugin');
-const CompressPlugin = require('compression-webpack-plugin');
 const NodeExternals = require('webpack-node-externals');
 const optimization = require('./sections/optimization');
 const babelLoader = require('./loaders/babel.loader');
@@ -57,15 +54,6 @@ module.exports = {
 					quality: 75
 				}
 			}]
-		}),
-		new CompressPlugin({
-			filename: '[path].br[query]',
-			algorithm: 'brotliCompress',
-			test: /\.(jsx|tsx|js|ts|scss|css|html|svg)$/,
-			compressionOptions: { level: 11 },
-			threshold: 10240,
-			minRatio: 0.8,
-			deleteOriginalAssets: false
 		})
 	],
 	optimization: optimization({ enviroment: enviroment, production: isProduction }),
@@ -83,7 +71,7 @@ module.exports = {
 			options: {
 				name: 'icons/[name]-[width]x[width].[ext]',
 				outputPath:'public/images',
-				sizes: [64, 128, 144, 192, 256, 348, 512],
+				sizes: [16, 32, 48, 52, 57, 64, 72, 76, 96, 120, 128, 144, 152, 168, 192, 256, 348, 512],
 				placeholder: true,
 				placeholderSize: 50,
 				adapter: require('responsive-loader/sharp')

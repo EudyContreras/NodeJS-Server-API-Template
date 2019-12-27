@@ -7,19 +7,27 @@ import { Store } from 'redux';
 import { application, shell } from '../views';
 import { routes } from '../components/Routes';
 import { Router, Request, Response } from 'express';
-import { template } from '../views/templateApp';
+import favicon from '../resources/images/favicon.ico';
+import touchIcon from '../resources/images/icons/touch-icon.png';
+import manifest from '../../../build/public/manifest-assets.json';
 
 class IndexViewRenderer extends ViewRenderer {
 
 	private routing = '/';
+	private entries: any;
 	private router: Router;
 	private context = {};
 	private store: Store;
+	private state: any;
+	private appStyle: any;
 
 	constructor() {
 		super();
 		this.router = Router();
 		this.store = configureStore({});
+		this.state = this.store.getState();
+		this.appStyle = appStyle._getCss();
+		this.entries = manifest.entryPoints;
 		this.setupRoutes(this.router);
 	}
 
@@ -50,8 +58,8 @@ class IndexViewRenderer extends ViewRenderer {
 	};
 
 	private renderApplication = async (req: Request, res: Response): Promise<void> => {
-		const state = this.store.getState();
-		const styling = new Set([appStyle._getCss()]);
+	
+		const styling = new Set([this.appStyle]);
 
 		const insertCss = (...styles: any[]): void => styles.forEach(style => styling.add(style._getCss()));
 
@@ -59,8 +67,11 @@ class IndexViewRenderer extends ViewRenderer {
 		
 		const props = {
 			css: styling,
-			state: state,
+			state: this.state,
 			title: config.app.TITLE,
+			favicon: favicon,
+			entryPoints: this.entries,
+			touchIcon: touchIcon,
 			enableSW: config.app.USE_SW,
 			content: content,
 			cache: true
@@ -69,8 +80,8 @@ class IndexViewRenderer extends ViewRenderer {
 		config.headers.forEach(header => {
 			res.setHeader(header.LABEL, header.VALUE);
 		});
-		//res.render(config.app.APP_LAYOUT, props);
-		res.send(template(props));
+		res.render(config.app.APP_LAYOUT, props);
+		//res.send(template(props));
 	};
 
 	private renderShell = async (req: Request, res: Response): Promise<void> => {

@@ -96,7 +96,7 @@ module.exports = {
 		new CompressPlugin({
 			filename: '[path].gz[query]',
 			algorithm: 'gzip',
-			test: /\.(jsx|tsx|js|ts|scss|css|html|svg)$/,
+			test: /\.(js|css|html|json|svg)$/,
 			compressionOptions: { level: 9 },
 			threshold: 10240,
 			minRatio: 0.8,
@@ -104,7 +104,7 @@ module.exports = {
 		}),
 		new BrotliPlugin({
 			filename: '[path].br[query]',
-			test: /\.(jsx|tsx|js|ts|scss|css|html|json|svg)$/,
+			test: /\.(js|css|html|json|svg)$/,
 			threshold: 10240,
 			minRatio: 0.8
 		}),
@@ -122,6 +122,9 @@ module.exports = {
 		filename: 'static/scripts/[name].[chunkhash].js',
 		publicPath: '/',
 		globalObject: 'this'
+	},
+	externals: {
+		jquery: 'jQuery'
 	},
 	optimization: {
 		...optimization({ enviroment, splitChunk, useSourceMap, production: isProduction })

@@ -18,6 +18,5 @@ Only show native notification if web app is not on foreground
 Look into NGINX and compressed files
 Create 404 page to respond to unfound html requests.
 Cache fallback resources
-Use webp images for resources
 
 
