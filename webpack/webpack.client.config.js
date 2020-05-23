@@ -16,7 +16,6 @@ const styleLoader = require('./loaders/style.loader');
 const fileLoader = require('./loaders/file.loader');
 const urlLoader = require('./loaders/url.loader');
 const svgLoader = require('./loaders/svg.loader');
-const NodeExternals = require('webpack-node-externals');
 const ImageminPlugin= require('imagemin-webp-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
@@ -25,10 +24,9 @@ const useSourceMap = process.env.GENERATE_SOURCEMAP == 'true';
 
 const enviroment = process.env.NODE_ENV;
 const publicPath = '../build/public/';
-const entryPoint = './src/client/client.jsx';
+const entryPoint = './pre/client/client.js';
 
 const isProduction = enviroment == 'production';
-const isDevelopement = enviroment == 'development';
 
 const resources = [
 	{
@@ -37,15 +35,29 @@ const resources = [
 	}, {
 		from: 'src/client/resources/robots.txt',
 		to: ''
+	}, {
+		from: 'src/client/resources/styles/material.css',
+		to: 'styles/'
 	}];
 if (useCSR) {
 	resources.push(
 		{
-			from: 'src/client/resources/index.html',
+			from: 'src/client/resources/html/index.html',
 			to: ''
 		}
 	);
 }
+
+function getChunkHash() {
+	const date = new Date();
+	const day = date.getDay();
+	const month = date.getMonth();
+	const year = date.getFullYear();
+	const hour = date.getUTCHours();
+	return `${day}${month}${year}${hour}`;
+}
+
+const fileName = useCSR ? 'static/scripts/[name].js' : `static/scripts/[name]${getChunkHash()}.js`;
 
 const splitChunk = {
 	splitChunks: {
@@ -109,8 +121,8 @@ module.exports = {
 			minRatio: 0.8
 		}),
 		new WorkboxPlugin.InjectManifest({
-			swSrc: 'workers/serviceWorker.js',
-			swDest: '../../workers/service-worker.js',
+			swSrc: 'src/workers/serviceWorker.js',
+			swDest: '../../src/workers/service-worker.js',
 			exclude: [/\.(js.br|js.gz|DS_Store)$/, /manifest-assets.*\.json$/],
 			precacheManifestFilename: 'manifest-precache.[manifestHash].js'
 		})
@@ -118,8 +130,8 @@ module.exports = {
 	output: {
 		path: path.join(__dirname, publicPath),
 		futureEmitAssets: isProduction,
-		pathinfo: isDevelopement,
-		filename: 'static/scripts/[name].[chunkhash].js',
+		pathinfo: !isProduction,
+		filename: fileName,
 		publicPath: '/',
 		globalObject: 'this'
 	},

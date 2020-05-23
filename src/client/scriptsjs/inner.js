@@ -47,11 +47,11 @@ const updateContentOnPageLoad = () => {
 
 };
 
-const status = await navigator.permissions.query({
+const permissionStatus = await navigator.permissions.query({
 	name: 'periodic-background-sync'
 });
 
-if (status.state === 'granted') {
+if (permissionStatus.state === 'granted') {
 
 	const registration = await navigator.serviceWorker.ready;
 

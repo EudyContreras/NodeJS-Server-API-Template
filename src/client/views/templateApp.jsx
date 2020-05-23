@@ -7,28 +7,11 @@ export default (props) => {
 	return <DefaultLayout {...props} />;
 };
 
-// export const template = (props) => {
-// 	const layout = ReactDOMServer.renderToString(<DefaultLayout {...props} />);
-// 	return `<!doctype html>${layout}`;
-// };
-
-// const genAppleTouch = (icon) => {
-// 	const element = icon.images.map((x, idx) => {
-// 		const size = `${x.width}x${x.height}`;
-// 		const path = x.path.replace(".png",".webp").replace("public/","");
-// 		return(<Fragment key={idx}>
-// 			<link rel="icon" sizes={size} href={path} />
-// 			<link rel="apple-touch-icon" sizes={size} href={path} />
-// 		</Fragment>);
-// 	});
-// 	return element;
-// };
-
 const DefaultLayout = (props) => {
 	return <html lang="en-US">
 		<head>
 			<title>{props.title}</title>
-	
+
 			<meta charSet="utf-8" />
 			<meta name="author" content="Eudy Contreras" />
 			<meta name="copyright" content="Eudy Contreras" />
@@ -36,7 +19,7 @@ const DefaultLayout = (props) => {
 			<meta name="keywords" content="template engine, react-engine, pwa-isomorphic-react, pwa, isomorphic-react, universal-react" />
 			<meta name="description" content="Template Web site generated the server api routing" />
 			<meta name="application-name" content={props.title} />
-		
+
 			{/*!-- Android  --> */}
 			<meta name="theme-color" content="#23282d" />
 
@@ -44,7 +27,7 @@ const DefaultLayout = (props) => {
 			<meta name="apple-mobile-web-app-title" content={props.title} />
 			<meta name="apple-mobile-web-app-capable" content="yes" />
 			<meta name="apple-mobile-web-app-status-bar-style" content="default" />
-			
+
 			{/* <!-- Windows  --> */}
 			<meta name="msapplication-navbutton-color" content="#23282d" />
 			<meta name="msapplication-TileColor" content="#23282d" />
@@ -81,7 +64,7 @@ const DefaultLayout = (props) => {
 
 			<meta httpEquiv="Content-Type" content="text/html; charset=utf-8" />
 			<meta httpEquiv="X-UA-Compatible" content="IE=edge" />
-				
+
 			{/* <!-- Startup Image  --> */}
 			<link href="images/icons/touch-icon-348x348.png" rel="apple-touch-startup-image" defer />
 
@@ -108,10 +91,10 @@ const DefaultLayout = (props) => {
 			<link rel="apple-touch-icon" type="image/png" sizes="256x256" href="images/icons/touch-icon-256x256.png" defer />
 			<link rel="apple-touch-icon" type="image/png" sizes="348x348" href="images/icons/touch-icon-348x348.png" defer />
 			<link rel="apple-touch-icon" type="image/png" sizes="512x512" href="images/icons/touch-icon-512x512.png" defer />
-			
-			<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons&display=swap" media="all" id="materialIcons" async disabled />
+
+			<link rel="stylesheet" href="styles/material.css" media="all" id="materialIcons" async disabled />
 			<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto&display=optional" media="all" id="robotoFont" defer disabled />
-			
+
 			{/* <!-- Manifest.json  --> */}
 			<link rel="manifest" href="/manifest.json" />
 

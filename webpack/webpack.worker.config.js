@@ -10,10 +10,9 @@ const babelLoader = require('./loaders/babel.loader');
 
 const enviroment = process.env.NODE_ENV;
 const publicPath = '../build/public/';
-const entryPoint = './workers/service-worker.js';
+const entryPoint = './src/workers/service-worker.js';
 
 const isProduction = enviroment == 'production';
-const isDevelopement = enviroment == 'development';
 
 module.exports = {
 	name: 'client',
@@ -26,13 +25,13 @@ module.exports = {
 	},
 	plugins: [
 		new CleanPlugin([
-			'../workers/service-worker.js'
+			'../src/workers/service-worker.js'
 		])
 	],
 	output: {
 		path: path.join(__dirname, publicPath),
 		futureEmitAssets: isProduction,
-		pathinfo: isDevelopement,
+		pathinfo: !isProduction,
 		filename: 'service-worker.js',
 		publicPath: '/',
 		globalObject: 'this'

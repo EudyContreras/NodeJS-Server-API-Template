@@ -12,7 +12,7 @@ const initialState = window.__REDUX_STATE__ || {};
 
 delete window.__REDUX_STATE__;
 
-require('../../workers/constants');
+require('../workers/constants');
 
 const insertCss = (...styles) => {
 	const removeCss = styles.map(style => style._insertCss());
@@ -21,7 +21,7 @@ const insertCss = (...styles) => {
 
 const store = configureStore(initialState);
 
-ReactDOM.hydrate(
+ReactDOM.render(
 	<Provider store={store} suppressHydrationWarning={true}>
 		<BrowserRouter onUpdate={() => window.scrollTo(0, 0)}>
 			<StyleContext.Provider value={{ insertCss }}>

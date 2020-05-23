@@ -3,7 +3,6 @@
 self.STATIC_CACHE = 'eudcon-universal-static-cache';
 self.DATA_CACHE = 'eudcon-universal-data-cache';
 
-
 self.importScripts('constants.js');
 
 self.worker = {

@@ -12,8 +12,10 @@ module.exports = ({ enviroment, splitChunk, useSourceMap, production = false }) 
 			sourceMap: useSourceMap,
 			extractComments: false,
 			chunkFilter: (chunk) => {
-				if (chunk.name.startsWith('vendor')) {
-					return minimizeVendors && production;
+				if (chunk.name != null) {
+					if (chunk.name.startsWith('vendor')) {
+						return minimizeVendors && production;
+					}
 				}
 				return true;
 			},
@@ -25,17 +27,17 @@ module.exports = ({ enviroment, splitChunk, useSourceMap, production = false }) 
 					ecma: 5,
 					warnings: true,
 					comparisons: false,
-					drop_console: false,
+					drop_console: production,
 					inline: 2
 				},
 				mangle: {
 					safari10: true
 				},
-				keep_classnames: false,
-				keep_fnames: false,
+				keep_classnames: !production,
+				keep_fnames: !production,
 				output: {
 					ecma: 5,
-					comments: false,
+					comments: !production,
 					ascii_only: true
 				}
 			}

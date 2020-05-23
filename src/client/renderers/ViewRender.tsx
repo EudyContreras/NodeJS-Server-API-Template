@@ -81,7 +81,15 @@ class IndexViewRenderer extends ViewRenderer {
 			res.setHeader(header.LABEL, header.VALUE);
 		});
 		res.render(config.app.APP_LAYOUT, props);
-		//res.send(template(props));
+	};
+
+	private getChunkHash = (): string => {
+		const date = new Date();
+		const day = date.getDay();
+		const month = date.getMonth();
+		const year = date.getFullYear();
+		const hour = date.getUTCHours();
+		return `${day}${month}${year}${hour}`;
 	};
 
 	private renderShell = async (req: Request, res: Response): Promise<void> => {
