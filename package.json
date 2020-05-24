@@ -20,13 +20,14 @@
   "proxy": "https://localhost:8080/",
   "main": "build/server.js",
   "scripts": {
-    "build": "tsc -b .",
-    "postbuild": "cpy --cwd=src --parents '**/*' '!**/*.(ts|js|tsx|jsx)' ../pre/",
+    "build": "prettier tsc -b .",
+    "postbuild": "cpy --cwd=src --parents '**/*' '!**/*.(ts|js|tsx|jsx)' ../pre/ prettier --write **/*.js",
+    "post-compile": "",
     "build:server": "webpack --config webpack/webpack.server.config.js",
     "build:client": "webpack --config webpack/webpack.client.config.js",
     "build:worker": "webpack --config webpack/webpack.worker.config.js",
-    "build:prod": "npm run build:client && npm run build:server && npm run build:worker",
-    "build:prod:start": "npm run build:prod && npm run start",
+    "build:all": "npm run build:client && npm run build:server && npm run build:worker",
+    "build:all:start": "npm run build:all && npm run start",
     "start": "node build/server.js"
   },
   "keywords": [

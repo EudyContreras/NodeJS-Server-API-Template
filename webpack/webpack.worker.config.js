@@ -3,7 +3,6 @@
 require('dotenv').config();
 
 const path = require('path');
-const CleanPlugin = require('webpack-clean');
 const NodeExternals = require('webpack-node-externals');
 const optimization = require('./sections/optimization');
 const babelLoader = require('./loaders/babel.loader');
@@ -33,7 +32,7 @@ module.exports = {
 		globalObject: 'this'
 	},
 	externals: [NodeExternals()],
-	optimization: optimization({ enviroment: enviroment, production: isProduction }),
+	optimization: optimization({ enviroment: enviroment, useSourceMap: !isProduction, production: isProduction }),
 	module: {
 		rules: [babelLoader]
 	},

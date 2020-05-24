@@ -18,6 +18,7 @@ module.exports = {
 	name: 'server',
 	target: 'node',
 	mode: enviroment,
+	devtool: 'inline-source-map',
 	performance: {
 		hints: false
 	},
@@ -39,7 +40,7 @@ module.exports = {
 			}]
 		})
 	],
-	optimization: optimization({ enviroment: enviroment, production: isProduction }),
+	optimization: optimization({ enviroment: enviroment, useSourceMap: !isProduction, production: isProduction }),
 	externals: [NodeExternals()],
 	module: {
 		rules: [{

@@ -49,7 +49,7 @@
 	},
 	"scope": "/",
 	"gcm_sender_id": "",
-   "gcm_user_visible_only": true,
+    "gcm_user_visible_only": true,
 	"start_url": "/?utm_source=homescreen",
 	"permissions": [
 	  "gcm"

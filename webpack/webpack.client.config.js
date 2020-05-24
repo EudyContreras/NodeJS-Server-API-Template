@@ -21,7 +21,6 @@ const LoadablePlugin = require('@loadable/webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 const useCSR = process.env.CSR == 'true';
-const useSourceMap = process.env.GENERATE_SOURCEMAP == 'true';
 
 const enviroment = process.env.NODE_ENV;
 const publicPath = '../build/public/';
@@ -49,16 +48,7 @@ if (useCSR) {
 	);
 }
 
-function getChunkHash() {
-	const date = new Date();
-	const day = date.getDay();
-	const month = date.getMonth();
-	const year = date.getFullYear();
-	const hour = date.getUTCHours();
-	return '';//`${day}${month}${year}${hour}`;
-}
-
-const fileName = useCSR ? 'static/scripts/[name].js' : `static/scripts/[name]${getChunkHash()}.js`;
+const fileName = useCSR ? 'static/scripts/[name].js' : 'static/scripts/[name].[chunkhash].js';
 
 const splitChunk = {
 	splitChunks: {
@@ -71,6 +61,7 @@ module.exports = {
 	target: 'web',
 	mode: enviroment,
 	bail: isProduction,
+	devtool: 'inline-source-map',
 	entry: entryPoint,
 	performance: {
 		hints: false
@@ -141,7 +132,7 @@ module.exports = {
 		jquery: 'jQuery'
 	},
 	optimization: {
-		...optimization({ enviroment, splitChunk, useSourceMap, production: isProduction })
+		...optimization({ enviroment, splitChunk, useSourceMap: !isProduction, production: isProduction })
 	},
 	module: {
 		rules: [{
@@ -153,14 +144,11 @@ module.exports = {
 		imageLoader,
 		urlLoader,
 		svgLoader,
-		fileLoader,
 		{
 			test: /\.(jpe?g|png)$/i,
 			loader: 'responsive-loader',
 			options: {
-				name: 'icons/[name]-[width]x[width].[ext]',
-				outputPath:'public/images',
-				sizes: [16, 32, 48, 52, 57, 64, 72, 76, 96, 120, 128, 144, 152, 168, 192, 256, 348, 512],
+				sizes: [180, 300, 600, 1200, 2000],
 				placeholder: true,
 				placeholderSize: 50,
 				adapter: require('responsive-loader/sharp')
