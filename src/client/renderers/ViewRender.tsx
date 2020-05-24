@@ -1,8 +1,9 @@
 import config from '../config';
+import path from 'path';
 import configureStore from '../stores/store';
 import ViewRenderer from '../../server/middleware/renderer';
 import appStyle from './../styles/app.scss';
-
+import { ChunkExtractor } from '@loadable/server';
 import { Store } from 'redux';
 import { application, shell } from '../views';
 import { routes } from '../components/Routes';
@@ -18,6 +19,7 @@ class IndexViewRenderer extends ViewRenderer {
 	private context = {};
 	private store: Store;
 	private state: any;
+	private styling: Set<any>;
 	private appStyle: any;
 
 	constructor() {
@@ -26,6 +28,7 @@ class IndexViewRenderer extends ViewRenderer {
 		this.store = configureStore({});
 		this.state = this.store.getState();
 		this.appStyle = appStyle._getCss();
+		this.styling = new Set([this.appStyle]);
 		//this.entries = manifest.entryPoints;
 		this.setupRoutes(this.router);
 	}
@@ -45,31 +48,47 @@ class IndexViewRenderer extends ViewRenderer {
 	private renderRoutes = async (req: Request, res: Response): Promise<void> => {
 		const shell = req.query.shell !== undefined;
 
+		const statsFile = path.resolve('./build/public/loadable-stats.json');
+
+		const extractor = new ChunkExtractor({ statsFile });
+
+		const cssInjector = (...styles: any[]): void => styles.forEach(style => this.styling.add(style._getCss()));
+
 		if (config.app.CSR) {
 			res.status(200).send('');
 		} else {
 			if (shell) {
-				return await this.renderShell(req, res);
+				return await this.renderShell(req, res, cssInjector);
 			} else {
-				return await this.renderApplication(req, res);
+				return await this.renderApplication(req, res, cssInjector, extractor);
 			}
 		}
 	};
 
-	private renderApplication = async (req: Request, res: Response): Promise<void> => {
-	
-		const styling = new Set([this.appStyle]);
-
-		const insertCss = (...styles: any[]): void => styles.forEach(style => styling.add(style._getCss()));
-
-		const content = application(req.url, this.store, this.context, insertCss);
+	private renderApplication = async (req: Request, res: Response, cssInjector: Function, extractor: ChunkExtractor): Promise<void> => {
+		const content = extractor.collectChunks(application(req.url, this.store, this.context, cssInjector));
 		
+		//const html = renderToString(content);
+	
+		// You can now collect your script tags
+		const scriptTags = extractor.getScriptTags(); // or extractor.getScriptElements();
+		// You can also collect your "preload/prefetch" links
+		const linkTags = extractor.getLinkTags(); // or extractor.getLinkElements();
+		// And you can even collect your style tags (if you use "mini-css-extract-plugin")
+		const styleTags = extractor.getStyleTags(); // or extractor.getStyleElements();
+	
+		console.log(scriptTags);
+
+		console.log(extractor.getScriptElements());
+
+		console.log(extractor.getMainAssets());
+	
 		const props = {
-			css: styling,
+			css: this.styling,
 			state: this.state,
 			title: config.app.TITLE,
 			favicon: favicon,
-			entryPoints: this.entries,
+			entryPoints: extractor.getScriptTags(),
 			touchIcon: touchIcon,
 			enableSW: config.app.USE_SW,
 			content: content,
@@ -82,24 +101,12 @@ class IndexViewRenderer extends ViewRenderer {
 		res.render(config.app.APP_LAYOUT, props);
 	};
 
-	private getChunkHash = (): string => {
-		const date = new Date();
-		const day = date.getDay();
-		const month = date.getMonth();
-		const year = date.getFullYear();
-		const hour = date.getUTCHours();
-		return `${day}${month}${year}${hour}`;
-	};
-
-	private renderShell = async (req: Request, res: Response): Promise<void> => {
-		const styling = new Set([appStyle._getCss()]);
-
-		const insertCss = (...styles: any[]): void => styles.forEach(style => styling.add(style._getCss()));
-
-		const content = shell(req.url, this.store, this.context, insertCss);
+	private renderShell = async (req: Request, res: Response, cssInjector: Function): Promise<void> => {
+	
+		const content = shell(req.url, this.store, this.context, cssInjector);
 
 		const props = {
-			css: styling,
+			css: this.styling,
 			title: config.app.TITLE,
 			enableSW: config.app.USE_SW,
 			content: content,

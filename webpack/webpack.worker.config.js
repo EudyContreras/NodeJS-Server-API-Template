@@ -23,11 +23,7 @@ module.exports = {
 	performance: {
 		hints: false
 	},
-	plugins: [
-		new CleanPlugin([
-			entryPoint
-		])
-	],
+	plugins: [],
 	output: {
 		path: path.join(__dirname, publicPath),
 		futureEmitAssets: isProduction,

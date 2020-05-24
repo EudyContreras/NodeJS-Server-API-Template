@@ -17,6 +17,7 @@ const fileLoader = require('./loaders/file.loader');
 const urlLoader = require('./loaders/url.loader');
 const svgLoader = require('./loaders/svg.loader');
 const ImageminPlugin= require('imagemin-webp-webpack-plugin');
+const LoadablePlugin = require('@loadable/webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 const useCSR = process.env.CSR == 'true';
@@ -125,7 +126,8 @@ module.exports = {
 			swDest: '../../pre/workers/service-worker.js',
 			exclude: [/\.(js.br|js.gz|DS_Store)$/, /manifest-assets.*\.json$/],
 			precacheManifestFilename: 'manifest-precache.[manifestHash].js'
-		})
+		}),
+		new LoadablePlugin()
 	],
 	output: {
 		path: path.join(__dirname, publicPath),
@@ -151,11 +153,14 @@ module.exports = {
 		imageLoader,
 		urlLoader,
 		svgLoader,
+		fileLoader,
 		{
 			test: /\.(jpe?g|png)$/i,
 			loader: 'responsive-loader',
 			options: {
-				sizes: [180, 300, 600, 1200, 2000],
+				name: 'icons/[name]-[width]x[width].[ext]',
+				outputPath:'public/images',
+				sizes: [16, 32, 48, 52, 57, 64, 72, 76, 96, 120, 128, 144, 152, 168, 192, 256, 348, 512],
 				placeholder: true,
 				placeholderSize: 50,
 				adapter: require('responsive-loader/sharp')
