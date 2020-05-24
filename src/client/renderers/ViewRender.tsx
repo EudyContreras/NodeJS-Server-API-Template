@@ -9,7 +9,6 @@ import { routes } from '../components/Routes';
 import { Router, Request, Response } from 'express';
 import favicon from '../resources/images/favicon.ico';
 import touchIcon from '../resources/images/icons/touch-icon.png';
-import manifest from '../../../build/public/manifest-assets.json';
 
 class IndexViewRenderer extends ViewRenderer {
 
@@ -27,7 +26,7 @@ class IndexViewRenderer extends ViewRenderer {
 		this.store = configureStore({});
 		this.state = this.store.getState();
 		this.appStyle = appStyle._getCss();
-		this.entries = manifest.entryPoints;
+		//this.entries = manifest.entryPoints;
 		this.setupRoutes(this.router);
 	}
 

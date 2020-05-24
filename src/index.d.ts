@@ -26,10 +26,12 @@ declare module '*.pem' {
 declare module '*.json' {
    const value: any;
    export default value;
- }
+}
 
 declare module 'express-react-views';
 
 declare module 'express-no-favicons';
+
+declare module 'isomorphic-style-loader/StyleContext';
 
 declare module 'isomorphic-style-loader/withStyles';

@@ -59,6 +59,8 @@ function DefaultLayout(props) {
 			`
 			}} />
 
+			<script async type='text/javascript' src='static/scripts/vendor/vendors.js'></script>
+			<script async type='text/javascript' src='static/scripts/main.js'></script>
 			<script type="text/javascript" src="/scripts/loader.js" />
 		</body>
 	</html>;

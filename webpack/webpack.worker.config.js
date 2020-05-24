@@ -10,7 +10,7 @@ const babelLoader = require('./loaders/babel.loader');
 
 const enviroment = process.env.NODE_ENV;
 const publicPath = '../build/public/';
-const entryPoint = './src/workers/service-worker.js';
+const entryPoint = './pre/workers/service-worker.js';
 
 const isProduction = enviroment == 'production';
 
@@ -25,7 +25,7 @@ module.exports = {
 	},
 	plugins: [
 		new CleanPlugin([
-			'../src/workers/service-worker.js'
+			entryPoint
 		])
 	],
 	output: {

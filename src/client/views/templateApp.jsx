@@ -105,7 +105,9 @@ const DefaultLayout = (props) => {
 			<section id="content">{props.content}</section>
 			<script async rel="preconnect" src="https://cdn.jsdelivr.net/npm/pwacompat@2.0.9/pwacompat.min.js" integrity="sha384-VcI6S+HIsE80FVM1jgbd6WDFhzKYA0PecD/LcIyMQpT4fMJdijBh0I7Iblaacawc" crossOrigin="anonymous" />
 			<script defer rel="preconnect" src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js" />
-			{props.entryPoints.map((x, i) => <script key={i} async src={x} />)}
+			<script async type='text/javascript' src='static/scripts/vendor/vendors.js'></script>
+			<script async type='text/javascript' src='static/scripts/main.js'></script>
+			{/*{props.entryPoints.map((x, i) => <script key={i} async src={x} />)}*/}
 			<script dangerouslySetInnerHTML={{
 				__html:
 					`

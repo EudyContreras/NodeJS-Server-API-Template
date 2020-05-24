@@ -79,10 +79,9 @@
     ]
   },
   "include": [
-    "src/**/*", "*.ts", "*.jsx", "*.scss", ".js", ".scss", ".css", ".ico", ".png", ".html"
+    "src/**/*", "*.ts", "*.jsx", "*.scss", ".js", ".scss/**/*", ".css", ".ico", ".png", ".html"
   ],
   "exclude": [
-    "src/workers",
     "node_modules",
     "lib", 
     "tests",

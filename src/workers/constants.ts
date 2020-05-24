@@ -52,12 +52,18 @@ const messages = {
 	REMOVE_FROM_CACHE: 'remove_from_cache'
 };
 
-if (typeof self !== 'undefined') {
-	self.push = push;
-	self.http = http;
-	self.events = events;
-	self.baseUrl = baseUrl;
-	self.urlsToCache = urlsToCache;
-	self.stragedies = stragedies;
-	self.messages = messages;
-}
+const config = Object.freeze({
+	push: push,
+	http: http,
+	events: events,
+	baseUrl: baseUrl,
+	urlsToCache: urlsToCache,
+	stragedies: stragedies,
+	messages: messages
+});
+
+export {
+	events,
+	messages
+};
+export default config;

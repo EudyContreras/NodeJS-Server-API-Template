@@ -26,8 +26,8 @@ module.exports = ({ enviroment, splitChunk, useSourceMap, production = false }) 
 				compress: {
 					ecma: 5,
 					warnings: true,
-					comparisons: false,
-					drop_console: production,
+					comparisons: true,
+					drop_console: false,
 					inline: 2
 				},
 				mangle: {

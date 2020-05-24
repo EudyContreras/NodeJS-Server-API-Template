@@ -54,7 +54,7 @@ function getChunkHash() {
 	const month = date.getMonth();
 	const year = date.getFullYear();
 	const hour = date.getUTCHours();
-	return `${day}${month}${year}${hour}`;
+	return '';//`${day}${month}${year}${hour}`;
 }
 
 const fileName = useCSR ? 'static/scripts/[name].js' : `static/scripts/[name]${getChunkHash()}.js`;
@@ -121,8 +121,8 @@ module.exports = {
 			minRatio: 0.8
 		}),
 		new WorkboxPlugin.InjectManifest({
-			swSrc: 'src/workers/serviceWorker.js',
-			swDest: '../../src/workers/service-worker.js',
+			swSrc: 'pre/workers/serviceWorker.js',
+			swDest: '../../pre/workers/service-worker.js',
 			exclude: [/\.(js.br|js.gz|DS_Store)$/, /manifest-assets.*\.json$/],
 			precacheManifestFilename: 'manifest-precache.[manifestHash].js'
 		})

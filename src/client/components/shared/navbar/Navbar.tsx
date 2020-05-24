@@ -7,7 +7,9 @@ import { shallowEqual } from '../../utililties/comparer.utils';
 import { appendWhen, join } from '../../../appliers/style.applier';
 import { getNavigationBar } from '../../../selectors/navbar.selector';
 import { DispatchProps, Dispatchers } from '../../../actions/common/navigation.action';
+import { events, messages } from '../../../../workers/constants';
 import swMessager from '../../../utilities/messageBus';
+import { format } from 'path';
 
 interface StateProps {
 	anchored: boolean;

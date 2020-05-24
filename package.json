@@ -21,6 +21,7 @@
   "main": "build/server.js",
   "scripts": {
     "build:ts": "tsc -b .",
+    "copy-files": "copyfiles -u 1 src/clients/resources**/*.js lib",
     "build:server": "webpack --config webpack/webpack.server.config.js",
     "build:client": "webpack --config webpack/webpack.client.config.js",
     "build:worker": "webpack --config webpack/webpack.worker.config.js",
