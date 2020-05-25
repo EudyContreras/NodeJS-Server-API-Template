@@ -7,10 +7,12 @@ import { MaterialIcons } from '../../../../../stores/icon.library';
 
 class SidebarSearch extends React.PureComponent<any, any> {
 
+	private _isMounted: boolean;
 	private inputRef: RefObject<HTMLInputElement>;
 
 	constructor(props: any) {
 		super(props);
+		this._isMounted = false;
 		this.inputRef = createRef();
 		this.state = {
 			iconLoaded: false
@@ -23,7 +25,7 @@ class SidebarSearch extends React.PureComponent<any, any> {
 		rippleEffect(event, this.props.styling);
 
 		try {
-			await axios.get('http://localhost:5000/rest/api/search', {
+			await axios.get('http://localhost:8080/rest/api/search', {
 				data: { searchText: this.inputRef.current!.value },
 				params: { searchText: this.inputRef.current!.value }
 			});
@@ -32,13 +34,20 @@ class SidebarSearch extends React.PureComponent<any, any> {
 		}
 	};
 
+	public componentWillUnmount = (): void => {
+		this._isMounted = false;
+	};
+	
 	public componentDidMount = (): void => {
+		this._isMounted = true;
 		const font = new FontFaceObserver('Material Icons');
 
 		font.load().then( () => {
-			this.setState({
-				iconLoaded: true
-			});
+			if (this._isMounted) {
+				this.setState({
+					iconLoaded: true
+				});
+			}
 		});
 	};
 

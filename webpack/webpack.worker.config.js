@@ -8,10 +8,10 @@ const optimization = require('./sections/optimization');
 const babelLoader = require('./loaders/babel.loader');
 
 const enviroment = process.env.NODE_ENV;
-const publicPath = '../build/public/';
+const isProduction = enviroment === 'production';
+const publicPath = isProduction ? '../build/public/' : '../build/dist/';
 const entryPoint = './pre/workers/service-worker.js';
 
-const isProduction = enviroment == 'production';
 
 module.exports = {
 	name: 'client',
@@ -28,11 +28,11 @@ module.exports = {
 		futureEmitAssets: isProduction,
 		pathinfo: !isProduction,
 		filename: 'service-worker.js',
-		publicPath: '/',
+		publicPath: publicPath,
 		globalObject: 'this'
 	},
 	externals: [NodeExternals()],
-	optimization: optimization({ enviroment: enviroment, useSourceMap: !isProduction, production: isProduction }),
+	optimization: optimization({ splitChunk: null, production: isProduction }),
 	module: {
 		rules: [babelLoader]
 	},

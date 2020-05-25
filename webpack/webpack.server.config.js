@@ -11,8 +11,8 @@ const fileLoader = require('./loaders/file.loader');
 
 const enviroment = process.env.NODE_ENV;
 
-const publicPath = '../build';
-const isProduction = enviroment == 'production';
+const isProduction = enviroment === 'production';
+const publicPath = isProduction ? '../build' : '../dist';
 
 module.exports = {
 	name: 'server',
@@ -27,6 +27,7 @@ module.exports = {
 	],
 	output: {
 		path: path.join(__dirname, publicPath),
+		publicPath: publicPath,
 		filename: 'server.js',
 		globalObject: 'this'
 	},
@@ -40,7 +41,7 @@ module.exports = {
 			}]
 		})
 	],
-	optimization: optimization({ enviroment: enviroment, useSourceMap: !isProduction, production: isProduction }),
+	optimization: optimization({ splitChunk: null, production: isProduction }),
 	externals: [NodeExternals()],
 	module: {
 		rules: [{

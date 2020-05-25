@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 
 import fs from 'fs';
 import cors from 'cors';
@@ -88,6 +89,22 @@ export default class Application {
 			}],
 			orderPreference: ['br']
 		}));
+		if (process.env.NODE_ENV === 'development') {
+			const webpack = require('webpack');
+			const webpackHotMiddleware = require('webpack-hot-middleware');
+			const webpackDevMiddleware = require('webpack-dev-middleware');
+			const config = require('../../webpack/webpack.server.config');
+
+			const compiler = webpack(config);
+
+			this.app.use(webpackHotMiddleware(compiler));
+			this.app.use(webpackDevMiddleware(compiler,{
+				publicPath: config.output.publicPath,
+				writeToDisk(filePath: string): boolean {
+					return /loadable-stats/.test(filePath);
+				}
+			}));
+		}
 		this.app.use(clientRender.alias, express.static(clientRender.path));
 		this.app.set(render.viewEngine.alias, render.viewEngine.path);
 		this.app.set(render.viewEngine.label, render.viewEngine.type);

@@ -21,12 +21,11 @@ const LoadablePlugin = require('@loadable/webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 const useCSR = process.env.CSR == 'true';
-
 const enviroment = process.env.NODE_ENV;
-const publicPath = '../build/public/';
-const entryPoint = './pre/client/client.js';
-
 const isProduction = enviroment == 'production';
+
+const publicPath = isProduction ? '../build/public/' : '../dist/public/';
+const entryPoint = './pre/client/client.js';
 
 const resources = [
 	{
@@ -125,14 +124,14 @@ module.exports = {
 		futureEmitAssets: isProduction,
 		pathinfo: !isProduction,
 		filename: fileName,
-		publicPath: '/',
+		publicPath: publicPath,
 		globalObject: 'this'
 	},
 	externals: {
 		jquery: 'jQuery'
 	},
 	optimization: {
-		...optimization({ enviroment, splitChunk, useSourceMap: !isProduction, production: isProduction })
+		...optimization({ splitChunk: splitChunk, production: isProduction })
 	},
 	module: {
 		rules: [{

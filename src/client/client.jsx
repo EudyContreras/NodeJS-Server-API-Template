@@ -9,11 +9,13 @@ import Application from './components/App';
 import configureStore from './stores/store';
 import { loadableReady } from '@loadable/component';
 
-const initialState = window.__REDUX_STATE__ || {};
-
-delete window.__REDUX_STATE__;
+const reactRender = module.hot ? ReactDOM.render : ReactDOM.hydrate;
 
 loadableReady(() => {
+	const initialState = window.__REDUX_STATE__ || {};
+
+	delete window.__REDUX_STATE__;
+
 	const insertCss = (...styles) => {
 		const removeCss = styles.map(style => style._insertCss());
 		return () => removeCss.forEach(dispose => dispose());
@@ -22,7 +24,7 @@ loadableReady(() => {
 	const store = configureStore(initialState);
 	const content = document.getElementById('content');
 
-	ReactDOM.hydrate(
+	reactRender(
 		<Provider store={store} suppressHydrationWarning={true}>
 			<BrowserRouter onUpdate={() => window.scrollTo(0, 0)}>
 				<StyleContext.Provider value={{ insertCss }}>
