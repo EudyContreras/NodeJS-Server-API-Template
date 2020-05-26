@@ -9,9 +9,8 @@ const babelLoader = require('./loaders/babel.loader');
 
 const enviroment = process.env.NODE_ENV;
 const isProduction = enviroment === 'production';
-const publicPath = isProduction ? '../build/public/' : '../build/dist/';
+const publicPath = '../build/public/';
 const entryPoint = './pre/workers/service-worker.js';
-
 
 module.exports = {
 	name: 'client',

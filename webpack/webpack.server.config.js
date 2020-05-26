@@ -2,6 +2,7 @@
 require('dotenv').config();
 
 const path = require('path');
+const webpack = require('webpack');
 const ImageminPlugin= require('imagemin-webp-webpack-plugin');
 const NodeExternals = require('webpack-node-externals');
 const optimization = require('./sections/optimization');
@@ -12,7 +13,7 @@ const fileLoader = require('./loaders/file.loader');
 const enviroment = process.env.NODE_ENV;
 
 const isProduction = enviroment === 'production';
-const publicPath = isProduction ? '../build' : '../dist';
+const publicPath = '../build';
 
 module.exports = {
 	name: 'server',
@@ -23,15 +24,16 @@ module.exports = {
 		hints: false
 	},
 	entry: [
-		'@babel/polyfill', './pre/server/server.js'
+		'@babel/polyfill', isProduction ? './pre/server/server.js' : './src/server/server.ts'
 	],
 	output: {
 		path: path.join(__dirname, publicPath),
-		publicPath: publicPath,
+		publicPath: '/',
 		filename: 'server.js',
 		globalObject: 'this'
 	},
 	plugins: [
+		new webpack.HotModuleReplacementPlugin(),
 		new ImageminPlugin({
 			config: [{
 				test: /\.(jpe?g|png|gif|svg)$/i,

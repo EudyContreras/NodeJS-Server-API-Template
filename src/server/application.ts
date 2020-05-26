@@ -93,13 +93,13 @@ export default class Application {
 			const webpack = require('webpack');
 			const webpackHotMiddleware = require('webpack-hot-middleware');
 			const webpackDevMiddleware = require('webpack-dev-middleware');
-			const config = require('../../webpack/webpack.server.config');
-
-			const compiler = webpack(config);
-
-			this.app.use(webpackHotMiddleware(compiler));
-			this.app.use(webpackDevMiddleware(compiler,{
-				publicPath: config.output.publicPath,
+			const serverConfig = require('../../webpack/webpack.server.config');
+		
+			const serverCompiler = webpack(serverConfig);
+		
+			this.app.use(webpackHotMiddleware(serverCompiler));
+			this.app.use(webpackDevMiddleware(serverCompiler,{
+				publicPath: serverConfig.output.publicPath,
 				writeToDisk(filePath: string): boolean {
 					return /loadable-stats/.test(filePath);
 				}

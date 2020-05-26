@@ -1,5 +1,7 @@
-import constants from './constants';
+/* eslint-disable @typescript-eslint/no-unused-vars */
+require('./constants');
 
+const constants = self.constants;
 const TIMEOUT = 1000;
 
 const DATA_CACHE = 'eudcon-universal-data-cache';
@@ -64,7 +66,7 @@ const contentSync = (): Promise<boolean> => {
 	});
 };
 
-const delay = (ms: number) => (): any => new Promise(resolve => setTimeout(() => resolve(), ms));
+const addDelay = (ms: number) => (): any => new Promise(resolve => setTimeout(() => resolve(), ms));
 
 const getFallback = async (contentType: string = contentTypes.HTML): Promise<any> => {
 	switch(contentType) {
@@ -322,7 +324,7 @@ self.addEventListener(constants.events.INSTALL, (event: Event | any) => {
 		caches.open(STATIC_CACHE)
 			.then(cache => {
 				const cacheRes = self.__precacheManifest.map((x: any) => x.url);
-				return cache.addAll([...self.urlsToCache, ...cacheRes]);
+				return cache.addAll([...constants.urlsToCache, ...cacheRes]);
 			})
 			.then(() => self.skipWaiting())
 			.catch(error => worker.log(error))

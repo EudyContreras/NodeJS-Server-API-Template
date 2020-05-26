@@ -52,7 +52,7 @@ const messages = {
 	REMOVE_FROM_CACHE: 'remove_from_cache'
 };
 
-const config = Object.freeze({
+const constants = Object.freeze({
 	push: push,
 	http: http,
 	events: events,
@@ -62,8 +62,12 @@ const config = Object.freeze({
 	messages: messages
 });
 
+if (typeof self !== 'undefined') {
+	self.constants = constants;
+}
+
 export {
 	events,
 	messages
 };
-export default config;
+export default constants;

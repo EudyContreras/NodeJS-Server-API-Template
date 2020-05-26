@@ -5,6 +5,7 @@ declare global {
       __precacheManifest: any;
       urlsToCache: any;
       clients: any;
+      constants: any;
       registration: any;
       skipWaiting: Function;
    }

@@ -16,7 +16,6 @@ const statsFile = path.resolve('./build/public/loadable-stats.json');
 class IndexViewRenderer extends ViewRenderer {
 
 	private routing = '/';
-	private entries: any;
 	private router: Router;
 	private context = {};
 	private store: Store;

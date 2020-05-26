@@ -3,6 +3,7 @@
 require('dotenv').config();
 
 const path = require('path');
+const webpack = require('webpack');
 const CopyPlugin = require('copy-webpack-plugin');
 const WorkboxPlugin = require('workbox-webpack-plugin');
 const ManifestPlugin = require('webpack-manifest-plugin');
@@ -22,10 +23,10 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 const useCSR = process.env.CSR == 'true';
 const enviroment = process.env.NODE_ENV;
-const isProduction = enviroment == 'production';
+const isProduction = enviroment === 'production';
 
-const publicPath = isProduction ? '../build/public/' : '../dist/public/';
-const entryPoint = './pre/client/client.js';
+const publicPath = '../build/public/';
+const entryPoint = isProduction ? './pre/client/client.js' : './src/client/client.jsx';
 
 const resources = [
 	{
@@ -55,47 +56,48 @@ const splitChunk = {
 	}
 };
 
-module.exports = {
-	name: 'client',
-	target: 'web',
-	mode: enviroment,
-	bail: isProduction,
-	devtool: 'inline-source-map',
-	entry: entryPoint,
-	performance: {
-		hints: false
-	},
-	plugins: [
-		new CleanWebpackPlugin(),
-		new CopyPlugin(resources),
-		new ManifestPlugin({
-			fileName: 'manifest-assets.json',
-			publicPath: publicPath,
-			generate: (seed, files, entrypoints) => {
-				const manifestFiles = files.reduce((manifest, file) => {
-					if (!file.name.endsWith('.DS_Store') && !file.name.endsWith('.js.br') && !file.name.endsWith('.js.gz')) {
-						manifest[file.name] = file.path;
-					}
-					return manifest;
-				}, seed);
-				const entrypointFiles = entrypoints.main.filter(
-					fileName => !fileName.endsWith('.map')
-				);
-
-				return {
-					files: manifestFiles,
-					entryPoints: entrypointFiles
-				};
-			}
-		}),
-		new ImageminPlugin({
-			config: [{
-				test: /\.(jpe?g|png|gif|svg)$/i,
-				options: {
-					quality: 75
+const pluggins = [
+	new CleanWebpackPlugin({ cleanStaleWebpackAssets: !isProduction }),
+	new CopyPlugin(resources),
+	new ManifestPlugin({
+		fileName: 'manifest-assets.json',
+		publicPath: publicPath,
+		generate: (seed, files, entrypoints) => {
+			const manifestFiles = files.reduce((manifest, file) => {
+				if (!file.name.endsWith('.DS_Store') && !file.name.endsWith('.js.br') && !file.name.endsWith('.js.gz')) {
+					manifest[file.name] = file.path;
 				}
-			}]
-		}),
+				return manifest;
+			}, seed);
+			const entrypointFiles = entrypoints.main.filter(
+				fileName => !fileName.endsWith('.map')
+			);
+
+			return {
+				files: manifestFiles,
+				entryPoints: entrypointFiles
+			};
+		}
+	}),
+	new ImageminPlugin({
+		config: [{
+			test: /\.(jpe?g|png|gif|svg)$/i,
+			options: {
+				quality: 75
+			}
+		}]
+	}),
+	new WorkboxPlugin.InjectManifest({
+		swSrc: 'pre/workers/serviceWorker.js',
+		swDest: '../../pre/workers/service-worker.js',
+		exclude: [/\.(js.br|js.gz|DS_Store)$/, /manifest-assets.*\.json$/],
+		precacheManifestFilename: 'manifest-precache.[manifestHash].js'
+	}),
+	new LoadablePlugin()
+];
+
+if (isProduction) {
+	pluggins.push(
 		new CompressPlugin({
 			filename: '[path].gz[query]',
 			algorithm: 'gzip',
@@ -110,21 +112,27 @@ module.exports = {
 			test: /\.(js|css|html|json|svg)$/,
 			threshold: 10240,
 			minRatio: 0.8
-		}),
-		new WorkboxPlugin.InjectManifest({
-			swSrc: 'pre/workers/serviceWorker.js',
-			swDest: '../../pre/workers/service-worker.js',
-			exclude: [/\.(js.br|js.gz|DS_Store)$/, /manifest-assets.*\.json$/],
-			precacheManifestFilename: 'manifest-precache.[manifestHash].js'
-		}),
-		new LoadablePlugin()
-	],
+		})
+	);
+}
+
+module.exports = {
+	name: 'client',
+	target: 'web',
+	mode: enviroment,
+	bail: isProduction,
+	devtool: 'inline-cheap-module-source-map',
+	entry: entryPoint,
+	performance: {
+		hints: false
+	},
+	plugins: pluggins,
 	output: {
 		path: path.join(__dirname, publicPath),
 		futureEmitAssets: isProduction,
 		pathinfo: !isProduction,
 		filename: fileName,
-		publicPath: publicPath,
+		publicPath: '/',
 		globalObject: 'this'
 	},
 	externals: {
