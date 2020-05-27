@@ -3,6 +3,7 @@ require('dotenv').config();
 
 const path = require('path');
 const webpack = require('webpack');
+const ManifestPlugin = require('webpack-manifest-plugin');
 const ImageminPlugin= require('imagemin-webp-webpack-plugin');
 const NodeExternals = require('webpack-node-externals');
 const optimization = require('./sections/optimization');
@@ -34,6 +35,26 @@ module.exports = {
 	},
 	plugins: [
 		new webpack.HotModuleReplacementPlugin(),
+		new ManifestPlugin({
+			fileName: 'manifest-assets.json',
+			publicPath: publicPath,
+			generate: (seed, files, entrypoints) => {
+				const manifestFiles = files.reduce((manifest, file) => {
+					if (!file.name.endsWith('.DS_Store') && !file.name.endsWith('.js.br') && !file.name.endsWith('.js.gz')) {
+						manifest[file.name] = file.path;
+					}
+					return manifest;
+				}, seed);
+				const entrypointFiles = entrypoints.main.filter(
+					fileName => !fileName.endsWith('.map')
+				);
+	
+				return {
+					files: manifestFiles,
+					entryPoints: entrypointFiles
+				};
+			}
+		}),
 		new ImageminPlugin({
 			config: [{
 				test: /\.(jpe?g|png|gif|svg)$/i,

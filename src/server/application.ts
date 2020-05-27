@@ -89,7 +89,7 @@ export default class Application {
 			}],
 			orderPreference: ['br']
 		}));
-		if (process.env.NODE_ENV === 'development') {
+		/* 		if (process.env.NODE_ENV === 'development') {
 			const webpack = require('webpack');
 			const webpackHotMiddleware = require('webpack-hot-middleware');
 			const webpackDevMiddleware = require('webpack-dev-middleware');
@@ -104,7 +104,7 @@ export default class Application {
 					return /loadable-stats/.test(filePath);
 				}
 			}));
-		}
+		} */
 		this.app.use(clientRender.alias, express.static(clientRender.path));
 		this.app.set(render.viewEngine.alias, render.viewEngine.path);
 		this.app.set(render.viewEngine.label, render.viewEngine.type);

@@ -53,9 +53,9 @@ const productionOptimization = (splitChunk) => ({
 	nodeEnv: 'production',
 	providedExports: true,
 	concatenateModules: true,
-	removeAvailableModules: true,
+	removeAvailableModules: false,
+	removeEmptyChunks: false,
 	mangleWasmImports: true,
-	removeEmptyChunks: true,
 	...splitChunk
 });
 

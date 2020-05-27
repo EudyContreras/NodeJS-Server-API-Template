@@ -22,6 +22,7 @@
   "scripts": {
     "build": "tsc -b .",
     "postbuild": "cpy --cwd=src --parents '**/*' '!**/*.(ts|js|tsx|jsx)' ../pre/",
+    "pack": "npm run build && webpack --config webpack/webpack.config.js",
     "build:server": "webpack --config webpack/webpack.server.config.js",
     "build:client": "webpack --config webpack/webpack.client.config.js",
     "build:worker": "webpack --config webpack/webpack.worker.config.js",

@@ -2,7 +2,7 @@ module.exports = {
 	test: /\.(ico)$/i,
 	loader: 'file-loader',
 	options: {
-		outputPath: 'public/images',
+		outputPath: 'images',
 		publicPath: 'images',
 		name(file) {
 			const parts = file.split('/');
