@@ -19,7 +19,6 @@ const urlLoader = require('./loaders/url.loader');
 const svgLoader = require('./loaders/svg.loader');
 const ImageminPlugin= require('imagemin-webp-webpack-plugin');
 const LoadablePlugin = require('@loadable/webpack-plugin');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 const useCSR = process.env.CSR == 'true';
 const enviroment = process.env.NODE_ENV;
@@ -48,7 +47,7 @@ if (useCSR) {
 	);
 }
 
-const fileName = useCSR ? 'static/scripts/[name].js' : 'static/scripts/[name].[chunkhash].js';
+const fileName = useCSR ? 'scripts/[name].js' : 'scripts/[name].[chunkhash].js';
 
 const splitChunk = {
 	splitChunks: {
@@ -57,7 +56,6 @@ const splitChunk = {
 };
 
 const pluggins = [
-	new CleanWebpackPlugin({ cleanStaleWebpackAssets: !isProduction }),
 	new CopyPlugin(resources),
 	new ManifestPlugin({
 		fileName: 'manifest-assets.json',
@@ -65,17 +63,16 @@ const pluggins = [
 		generate: (seed, files, entrypoints) => {
 			const manifestFiles = files.reduce((manifest, file) => {
 				if (!file.name.endsWith('.DS_Store') && !file.name.endsWith('.js.br') && !file.name.endsWith('.js.gz')) {
-					manifest[file.name] = file.path;
+					const parts = file.name.split('/');
+					const name = parts[parts.length - 1];
+					manifest[name] = file.path;
 				}
 				return manifest;
 			}, seed);
-			const entrypointFiles = entrypoints.main.filter(
-				fileName => !fileName.endsWith('.map')
-			);
-
+	
 			return {
 				files: manifestFiles,
-				entryPoints: entrypointFiles
+				entryPoints: entrypoints
 			};
 		}
 	}),
@@ -86,12 +83,6 @@ const pluggins = [
 				quality: 75
 			}
 		}]
-	}),
-	new WorkboxPlugin.InjectManifest({
-		swSrc: 'pre/workers/serviceWorker.js',
-		swDest: '../../pre/workers/service-worker.js',
-		exclude: [/\.(js.br|js.gz|DS_Store)$/, /manifest-assets.*\.json$/],
-		precacheManifestFilename: 'manifest-precache.[manifestHash].js'
 	}),
 	new LoadablePlugin()
 ];
@@ -112,6 +103,12 @@ if (isProduction) {
 			test: /\.(js|css|html|json|svg)$/,
 			threshold: 10240,
 			minRatio: 0.8
+		}),
+		new WorkboxPlugin.InjectManifest({
+			swSrc: 'pre/workers/serviceWorker.js',
+			swDest: '../../pre/workers/service-worker.js',
+			exclude: [/\.(js.br|js.gz|DS_Store)$/, /manifest-assets.*\.json$/],
+			precacheManifestFilename: 'manifest-precache.[manifestHash].js'
 		})
 	);
 }

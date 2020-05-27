@@ -1,5 +1,6 @@
 TODO:
 
+* Make sure that all referenced resources are tracked by the SW
 * Add hot-reloding for development mode.
 * Use loadable components or something similar for react code splitting.
 * Use react isomorphic code splitting with React Universal Component

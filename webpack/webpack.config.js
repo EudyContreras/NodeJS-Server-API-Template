@@ -31,19 +31,19 @@ const publicPath = '../build/public/';
 const resources = [
 	{
 		from: 'src/client/resources/manifest.json',
-		to: 'static/'
+		to: 'public/static/'
 	}, {
 		from: 'src/client/resources/robots.txt',
-		to: 'static/'
+		to: 'public/static/'
 	}, {
 		from: 'src/client/resources/styles/material.css',
-		to: 'static/styles/'
+		to: 'public/static/styles/'
 	}];
 if (useCSR) {
 	resources.push(
 		{
 			from: 'src/client/resources/html/index.html',
-			to: ''
+			to: 'public/'
 		}
 	);
 }
@@ -58,7 +58,7 @@ const pluggins = [
 	new CleanWebpackPlugin({ cleanStaleWebpackAssets: !isProduction }),
 	new CopyPlugin(resources),
 	new ManifestPlugin({
-		fileName: 'manifest-assets.json',
+		fileName: 'public/manifest-assets.json',
 		publicPath: publicPath,
 		generate: (seed, files, entrypoints) => {
 			const manifestFiles = files.reduce((manifest, file) => {
@@ -69,10 +69,7 @@ const pluggins = [
 				}
 				return manifest;
 			}, seed);
-			const entrypointFiles = !entrypoints.main ? null : entrypoints.main.filter(
-				fileName => !fileName.endsWith('.map')
-			);
-
+	
 			return {
 				files: manifestFiles,
 				entryPoints: entrypoints
@@ -91,7 +88,7 @@ const pluggins = [
 		swSrc: 'pre/workers/serviceWorker.js',
 		swDest: '../../pre/workers/service-worker.js',
 		exclude: [/\.(js.br|js.gz|DS_Store)$/, /manifest-assets.*\.json$/],
-		precacheManifestFilename: 'manifest-precache.[manifestHash].js'
+		precacheManifestFilename: 'public/manifest-precache.[manifestHash].js'
 	}),
 	new LoadablePlugin()
 ];
@@ -131,11 +128,12 @@ module.exports = {
 	},
 	plugins: pluggins,
 	output: {
-		path: path.join(__dirname, publicPath),
+		path: path.join(__dirname, '../build'),
+		//filename: 'public/static/scripts/[name].bundle.[chunkhash].js',
 		filename: (pathData) => {
 			const clientFiles = isProduction ? 'static/scripts/[name].bundle.js' : 'static/scripts/[name].bundle.[chunkhash].js';
 			const serverFiles = '[name].bundle.js';
-			return pathData.chunk.name === 'server' ? serverFiles : clientFiles;
+			return pathData.chunk.filename;
 		},
 		publicPath: publicPath,
 		globalObject: 'this'
@@ -161,7 +159,7 @@ module.exports = {
 			loader: 'responsive-loader',
 			options: {
 				name: 'icons/[name]-[width]x[width].[ext]',
-				outputPath:'images',
+				outputPath:'public/images',
 				sizes: [16, 32, 48, 52, 57, 64, 72, 76, 96, 120, 128, 144, 152, 168, 192, 256, 348, 512],
 				placeholder: true,
 				placeholderSize: 50,

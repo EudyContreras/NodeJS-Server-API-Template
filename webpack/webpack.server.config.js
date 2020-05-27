@@ -10,7 +10,7 @@ const optimization = require('./sections/optimization');
 const babelLoader = require('./loaders/babel.loader');
 const styleLoader = require('./loaders/style.loader');
 const fileLoader = require('./loaders/file.loader');
-
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const enviroment = process.env.NODE_ENV;
 
 const isProduction = enviroment === 'production';
@@ -34,24 +34,23 @@ module.exports = {
 		globalObject: 'this'
 	},
 	plugins: [
+		new CleanWebpackPlugin({ cleanStaleWebpackAssets: !isProduction }),
 		new webpack.HotModuleReplacementPlugin(),
 		new ManifestPlugin({
-			fileName: 'manifest-assets.json',
+			fileName: 'public/manifest-image-assets.json',
 			publicPath: publicPath,
-			generate: (seed, files, entrypoints) => {
+			generate: (seed, files) => {
 				const manifestFiles = files.reduce((manifest, file) => {
 					if (!file.name.endsWith('.DS_Store') && !file.name.endsWith('.js.br') && !file.name.endsWith('.js.gz')) {
-						manifest[file.name] = file.path;
+						const parts = file.name.split('/');
+						const name = parts[parts.length - 1];
+						manifest[name] = file.path;
 					}
 					return manifest;
 				}, seed);
-				const entrypointFiles = entrypoints.main.filter(
-					fileName => !fileName.endsWith('.map')
-				);
-	
+		
 				return {
-					files: manifestFiles,
-					entryPoints: entrypointFiles
+					files: manifestFiles
 				};
 			}
 		}),
