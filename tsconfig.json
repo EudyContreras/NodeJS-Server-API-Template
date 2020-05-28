@@ -27,7 +27,6 @@
     // "importHelpers": true,                 /* Import emit helpers from 'tslib'. */
     // "downlevelIteration": true,            /* Provide full support for iterables in 'for-of', spread, and destructuring when targeting 'ES5' or 'ES3'. */
     // "isolatedModules": true,               /* Transpile each file as a separate module (similar to 'ts.transpileModule'). */
-
     /* Strict Type-Checking Options */
     "strict": true,
     /* Enable all strict type-checking options. */
@@ -79,9 +78,11 @@
     ]
   },
   "include": [
-    "src/**/*", "*.ts", "*.jsx", "*.scss", ".js", ".scss/**/*", ".css", ".ico", ".png", ".html"
+    "src/**/*", "*.ts", "*.jsx",".js", ".css", ".ico", ".png", ".html"
   ],
   "exclude": [
+    ".scss/**/*",
+    "*.scss", 
     "node_modules",
     "lib", 
     "tests",

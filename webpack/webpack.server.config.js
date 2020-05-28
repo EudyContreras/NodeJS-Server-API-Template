@@ -39,7 +39,7 @@ module.exports = {
 		new ManifestPlugin({
 			fileName: 'public/manifest-image-assets.json',
 			publicPath: publicPath,
-			generate: (seed, files) => {
+			generate: (seed, files, entrypoints) => {
 				const manifestFiles = files.reduce((manifest, file) => {
 					if (!file.name.endsWith('.DS_Store') && !file.name.endsWith('.js.br') && !file.name.endsWith('.js.gz')) {
 						const parts = file.name.split('/');
@@ -50,7 +50,8 @@ module.exports = {
 				}, seed);
 		
 				return {
-					files: manifestFiles
+					files: manifestFiles,
+					entries: entrypoints
 				};
 			}
 		}),
@@ -78,7 +79,7 @@ module.exports = {
 			options: {
 				name: 'icons/[name]-[width]x[width].[ext]',
 				outputPath:'public/images',
-				sizes: [16, 32, 48, 52, 57, 64, 72, 76, 96, 120, 128, 144, 152, 168, 192, 256, 348, 512],
+				sizes: [16, 24, 32, 48, 52, 57, 64, 72, 76, 96, 120, 128, 144, 152, 168, 192, 256, 348, 512],
 				placeholder: true,
 				placeholderSize: 50,
 				adapter: require('responsive-loader/sharp')

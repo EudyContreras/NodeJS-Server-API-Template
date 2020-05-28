@@ -103,22 +103,23 @@ if (isProduction) {
 			test: /\.(js|css|html|json|svg)$/,
 			threshold: 10240,
 			minRatio: 0.8
-		}),
-		new WorkboxPlugin.InjectManifest({
-			swSrc: 'pre/workers/serviceWorker.js',
-			swDest: '../../pre/workers/service-worker.js',
-			exclude: [/\.(js.br|js.gz|DS_Store)$/, /manifest-assets.*\.json$/],
-			precacheManifestFilename: 'manifest-precache.[manifestHash].js'
 		})
 	);
 }
+
+pluggins.push(new WorkboxPlugin.InjectManifest({
+	swSrc: 'pre/workers/serviceWorker.js',
+	swDest: '../../pre/workers/service-worker.js',
+	exclude: [/\.(js.br|js.gz|DS_Store)$/, /manifest-assets.*\.json$/],
+	precacheManifestFilename: 'manifest-precache.[manifestHash].js'
+}));
 
 module.exports = {
 	name: 'client',
 	target: 'web',
 	mode: enviroment,
 	bail: isProduction,
-	devtool: 'inline-cheap-module-source-map',
+	devtool: 'inline-source-map',
 	entry: entryPoint,
 	performance: {
 		hints: false

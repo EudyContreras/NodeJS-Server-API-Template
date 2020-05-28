@@ -75,6 +75,24 @@ export default class Application {
 		const render = config.presentation;
 		const clientRender = render.viewEngine.client;
 
+		if (process.env.NODE_ENV === 'development') {
+
+			const webpack = require('webpack');
+			const webpackHotMiddleware = require('webpack-hot-middleware');
+			const webpackDevMiddleware = require('webpack-dev-middleware');
+			const serverConfig = require('../../webpack/webpack.server.config');
+
+			const serverCompiler = webpack(serverConfig);
+		
+			this.app.use(webpackHotMiddleware(serverCompiler));
+			this.app.use(webpackDevMiddleware(serverCompiler,{
+				serverSideRender: true,
+				publicPath: serverConfig.output.publicPath,
+				writeToDisk(filePath: string): boolean {
+					return /loadable-stats/.test(filePath);
+				}
+			}));
+		}
 		this.app.use(cors());
 		this.app.use(helmet());
 		this.app.use(shrinkRay());
@@ -89,22 +107,6 @@ export default class Application {
 			}],
 			orderPreference: ['br']
 		}));
-		/* 		if (process.env.NODE_ENV === 'development') {
-			const webpack = require('webpack');
-			const webpackHotMiddleware = require('webpack-hot-middleware');
-			const webpackDevMiddleware = require('webpack-dev-middleware');
-			const serverConfig = require('../../webpack/webpack.server.config');
-		
-			const serverCompiler = webpack(serverConfig);
-		
-			this.app.use(webpackHotMiddleware(serverCompiler));
-			this.app.use(webpackDevMiddleware(serverCompiler,{
-				publicPath: serverConfig.output.publicPath,
-				writeToDisk(filePath: string): boolean {
-					return /loadable-stats/.test(filePath);
-				}
-			}));
-		} */
 		this.app.use(clientRender.alias, express.static(clientRender.path));
 		this.app.set(render.viewEngine.alias, render.viewEngine.path);
 		this.app.set(render.viewEngine.label, render.viewEngine.type);
