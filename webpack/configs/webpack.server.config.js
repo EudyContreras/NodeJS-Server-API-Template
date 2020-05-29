@@ -6,15 +6,17 @@ const webpack = require('webpack');
 const ManifestPlugin = require('webpack-manifest-plugin');
 const ImageminPlugin= require('imagemin-webp-webpack-plugin');
 const NodeExternals = require('webpack-node-externals');
-const optimization = require('./sections/optimization');
-const babelLoader = require('./loaders/babel.loader');
-const styleLoader = require('./loaders/style.loader');
-const fileLoader = require('./loaders/file.loader');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const optimization = require('../sections/optimization');
+const babelLoader = require('../loaders/babel.loader');
+const imageLoader = require('../loaders/image.loader');
+const styleLoader = require('../loaders/style.loader');
+const fileLoader = require('../loaders/file.loader');
 const enviroment = process.env.NODE_ENV;
 
 const isProduction = enviroment === 'production';
-const publicPath = '../build';
+const publicPath = '../../build/public';
+
+const manifestExclude = ['.DS_Store', '.js.br', '.js.gz', '.js'];
 
 module.exports = {
 	name: 'server',
@@ -30,28 +32,33 @@ module.exports = {
 	output: {
 		path: path.join(__dirname, publicPath),
 		publicPath: '/',
-		filename: 'server.js',
+		filename: '../server.js',
 		globalObject: 'this'
 	},
 	plugins: [
-		new CleanWebpackPlugin({ cleanStaleWebpackAssets: !isProduction }),
 		new webpack.HotModuleReplacementPlugin(),
 		new ManifestPlugin({
-			fileName: 'public/manifest-image-assets.json',
-			publicPath: publicPath,
-			generate: (seed, files, entrypoints) => {
+			fileName: 'manifest-image-assets.json',
+			publicPath: '',
+			generate: (seed, files) => {
 				const manifestFiles = files.reduce((manifest, file) => {
-					if (!file.name.endsWith('.DS_Store') && !file.name.endsWith('.js.br') && !file.name.endsWith('.js.gz')) {
+					const endChecker = (ending) => file.name.endsWith(ending);
+					if (!manifestExclude.some(endChecker)) {
 						const parts = file.name.split('/');
 						const name = parts[parts.length - 1];
-						manifest[name] = file.path;
+						const nameSections = name.split('.');
+						const extension = nameSections[nameSections.length - 1];
+
+						if (!(extension in manifest)) {
+							manifest[extension] = [];
+						}
+						manifest[extension].push({ name: name, path: file.path });
 					}
 					return manifest;
 				}, seed);
 		
 				return {
-					files: manifestFiles,
-					entries: entrypoints
+					files: manifestFiles
 				};
 			}
 		}),
@@ -73,18 +80,7 @@ module.exports = {
 		},
 		babelLoader,
 		fileLoader,
-		{
-			test: /\.(jpe?g|png)$/i,
-			loader: 'responsive-loader',
-			options: {
-				name: 'icons/[name]-[width]x[width].[ext]',
-				outputPath:'public/images',
-				sizes: [16, 24, 32, 48, 52, 57, 64, 72, 76, 96, 120, 128, 144, 152, 168, 192, 256, 348, 512],
-				placeholder: true,
-				placeholderSize: 50,
-				adapter: require('responsive-loader/sharp')
-			}
-		},
+		...imageLoader,
 		styleLoader(path)
 		]
 	},

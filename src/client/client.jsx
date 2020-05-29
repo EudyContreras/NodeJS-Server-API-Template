@@ -1,18 +1,15 @@
 
-import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter } from 'react-router-dom';
-import { Provider } from 'react-redux';
 import { register } from './scriptsjs/serviceWorker';
-import StyleContext from 'isomorphic-style-loader/StyleContext';
-import Application from './components/App';
 import configureStore from './stores/store';
 import { loadableReady } from '@loadable/component';
+import { application } from './views';
 
 const reactRender = module.hot ? ReactDOM.render : ReactDOM.hydrate;
 
 loadableReady(() => {
 	const initialState = window.__REDUX_STATE__ || {};
+	const context = window.__CONTEXT__ || {};
 
 	delete window.__REDUX_STATE__;
 
@@ -25,13 +22,7 @@ loadableReady(() => {
 	const content = document.getElementById('content');
 
 	reactRender(
-		<Provider store={store} suppressHydrationWarning={true}>
-			<BrowserRouter onUpdate={() => window.scrollTo(0, 0)}>
-				<StyleContext.Provider value={{ insertCss }}>
-					<Application location={window.location.pathname} />
-				</StyleContext.Provider>
-			</BrowserRouter>
-		</Provider>,
+		application(window.location.pathname, store, context, insertCss),
 		content
 	);
 

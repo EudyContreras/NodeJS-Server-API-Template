@@ -15,7 +15,7 @@ export const shell = (url, store, context, insertCss) => (
 );
 
 export const application = (url, store, context, insertCss) => (
-	<Provider store={store}>
+	<Provider store={store} suppressHydrationWarning={true}>
 		<StaticRouter onUpdate={() => window.scrollTo(0, 0)} location={url} context={context}>
 			<StyleContext.Provider value={{ insertCss }}>
 				<Application location={url} />

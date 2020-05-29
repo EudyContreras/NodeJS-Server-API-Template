@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 require('./constants');
 
@@ -373,7 +374,7 @@ self.addEventListener(constants.events.FETCH, (event: Event | any) => {
 
 	if (isRequestForStaticAsset(request)) {
 		const cache = caches.open(STATIC_CACHE);
-		event.respondWith(cache.then(cache => useStragedy({ event, request, cache, stragedy: constants.stragedies.CACHE_FIRST })));
+		event.respondWith(cache.then(cache => useStragedy({ event, request, cache, stragedy: constants.stragedies.CACHE_FIRST})));
 		return;
 	}
 	

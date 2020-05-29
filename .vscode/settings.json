@@ -70,5 +70,6 @@
    "editor.mouseWheelZoom": true,
    "eslint.alwaysShowStatus": true,
    "eslint.lintTask.enable": true,
+   "python.pythonPath": "/usr/local/opt/python/bin/python3.7",
 
 }

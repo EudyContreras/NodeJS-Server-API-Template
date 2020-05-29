@@ -4,17 +4,17 @@ require('dotenv').config();
 
 const path = require('path');
 const NodeExternals = require('webpack-node-externals');
-const optimization = require('./sections/optimization');
-const babelLoader = require('./loaders/babel.loader');
-
+const optimization = require('../sections/optimization');
+const babelLoader = require('../loaders/babel.loader');
+const fileLoader = require('../loaders/file.loader');
 const enviroment = process.env.NODE_ENV;
 const isProduction = enviroment === 'production';
-const publicPath = '../build/public/';
+const publicPath = '../../build/public/';
 const entryPoint = './pre/workers/service-worker.js';
 
 module.exports = {
 	name: 'client',
-	target: 'web',
+	target: 'node',
 	mode: enviroment,
 	bail: isProduction,
 	entry: entryPoint,
@@ -33,7 +33,13 @@ module.exports = {
 	externals: [NodeExternals()],
 	optimization: optimization({ splitChunk: null, production: isProduction }),
 	module: {
-		rules: [babelLoader]
+		rules: [{
+			test: /\.txt$/,
+			use: 'raw-loader'
+		},
+		babelLoader,
+		fileLoader
+		]
 	},
 	resolve: {
 		extensions: ['*', '.js']

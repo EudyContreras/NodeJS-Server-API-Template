@@ -5,7 +5,7 @@ import ViewRenderer from '../../server/middleware/renderer';
 import appStyle from './../styles/app.scss';
 import { ChunkExtractor } from '@loadable/server';
 import { Store } from 'redux';
-import { application, shell } from '../views';
+import { application } from '../views';
 import { routes } from '../components/Routes';
 import { Router, Request, Response } from 'express';
 import favicon from '../resources/images/favicon.ico';
@@ -86,7 +86,7 @@ class IndexViewRenderer extends ViewRenderer {
 
 	private renderShell = async (req: Request, res: Response, cssInjector: Function): Promise<void> => {
 	
-		const content = shell(req.url, this.store, this.context, cssInjector);
+		const content = application(req.url, this.store, this.context, cssInjector);
 
 		const props = {
 			css: this.styling,

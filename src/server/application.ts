@@ -80,7 +80,7 @@ export default class Application {
 			const webpack = require('webpack');
 			const webpackHotMiddleware = require('webpack-hot-middleware');
 			const webpackDevMiddleware = require('webpack-dev-middleware');
-			const serverConfig = require('../../webpack/webpack.server.config');
+			const serverConfig = require('../../webpack/configs/webpack.server.config');
 
 			const serverCompiler = webpack(serverConfig);
 		

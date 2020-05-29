@@ -2,8 +2,8 @@ module.exports = {
 	test: /\.(ico)$/i,
 	loader: 'file-loader',
 	options: {
-		outputPath: 'public/images',
-		publicPath: 'public/images',
+		outputPath: 'images',
+		publicPath: 'images',
 		name(file) {
 			const parts = file.split('/');
 			const isIcon = parts[parts.length - 1].startsWith('icon');
