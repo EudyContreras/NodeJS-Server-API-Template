@@ -3,13 +3,13 @@ import ReactDOM from 'react-dom';
 import { register } from './scriptsjs/serviceWorker';
 import configureStore from './stores/store';
 import { loadableReady } from '@loadable/component';
-import { application } from './views';
+import { client } from './views';
 
 const reactRender = module.hot ? ReactDOM.render : ReactDOM.hydrate;
 
 loadableReady(() => {
 	const initialState = window.__REDUX_STATE__ || {};
-	const context = window.__CONTEXT__ || {};
+	const renderOptions = window.__RENDER_OPTIONS__ || {};
 
 	delete window.__REDUX_STATE__;
 
@@ -21,12 +21,14 @@ loadableReady(() => {
 	const store = configureStore(initialState);
 	const content = document.getElementById('content');
 
-	ReactDOM.hydrate(
-		application(window.location.pathname, store, context, insertCss),
+	reactRender(
+		client(window.location.pathname, store, insertCss),
 		content
 	);
 
 	document.getElementById('shellStyle').remove();
 
-	register();
+	if (renderOptions.enableSW == true) {
+		register();
+	}
 });

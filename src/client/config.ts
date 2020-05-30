@@ -2,7 +2,7 @@
 const config = Object.freeze({
 	app: {
 		CSR: process.env.CSR == 'true',
-		USE_SW: true,
+		USE_SW: process.env.USE_SW == 'true',
 		TITLE: 'Template Engine',
 		APP_LAYOUT: 'templateApp',
 		SHELL_LAYOUT: 'templateShell',

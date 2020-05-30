@@ -30,7 +30,7 @@ class App extends React.PureComponent<any, State> {
 
 		this.setState({
 			navPadding: padder.clientHeight
-		});	
+		});
 	};
 
 	public render = (): JSX.Element => {
@@ -41,15 +41,15 @@ class App extends React.PureComponent<any, State> {
 		});
 
 		const routings = routes.map((route, idx) => <Route exact key={idx} path={route.path} render={route.render} />);
-		
+
 		return (
 			<Fragment>
 				<NavbarPadder self={this.padder} styling={style} />
 				<Switch> {routings} </Switch>
-				<NavbarMenu 
-					styling={style} 
-					location={this.props.location} 
-					brandName={config.app.NAME} 
+				<NavbarMenu
+					styling={style}
+					location={this.props.location}
+					brandName={config.app.NAME}
 					routings={elements} />
 			</Fragment>
 		);

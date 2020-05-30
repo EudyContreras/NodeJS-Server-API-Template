@@ -8,6 +8,9 @@ export default (props) => {
 };
 
 const DefaultLayout = (props) => {
+	const options = {
+		enableSW: props.enableSW
+	};
 	return <html lang="en-US">
 		<head>
 			<title>{props.title}</title>
@@ -109,6 +112,7 @@ const DefaultLayout = (props) => {
 			<script dangerouslySetInnerHTML={{
 				__html:
 					`
+			window.__RENDER_OPTIONS__=${JSON.stringify(options).replace(/</g, '\\u003c')};
 			window.__REDUX_STATE__= ${JSON.stringify(props.state).replace(/</g, '\\u003c')};
 
 			window.addEventListener("load", () => {
