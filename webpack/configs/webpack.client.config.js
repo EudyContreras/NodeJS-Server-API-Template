@@ -115,12 +115,42 @@ if (isProduction) {
 	);
 }
 
+const hashCode = s => s.split('').reduce((a, b) => (((a << 5) - a) + b.charCodeAt(0)) | 0, 0).toString();
+
+function getEntries() {
+	const manifest = require(`${publicPath}manifest-image-assets.json`);
+	const files = [];
+
+	Object.keys(manifest.files).forEach(e => {
+		manifest.files[e].forEach(file => {
+			files.push({
+				url: file.path,
+				revision: hashCode(JSON.stringify(file.name))
+			});
+		});
+	});
+	return files;
+};
+
+pluggins.push(
+	new WorkboxPlugin.InjectManifest({
+		mode: enviroment,
+		swSrc: path.join(process.cwd(), 'pre/workers/serviceWorker.js'),
+		additionalManifestEntries: getEntries(),
+		swDest: `${publicPath}service-worker.js`,
+		exclude: [/\.(js.br|js.gz|DS_Store)$/, /manifest-assets.*\.json$/, /loadable-stats.*\.json$/],
+		maximumFileSizeToCacheInBytes: isProduction ? 2500000 : 5000000
+	})
+);
+
+/*
 pluggins.push(new WorkboxPlugin.InjectManifest({
 	swSrc: 'pre/workers/serviceWorker.js',
 	swDest: '../../pre/workers/service-worker.js',
 	exclude: [/\.(js.br|js.gz|DS_Store)$/, /manifest-assets.*\.json$/, /loadable-stats.*\.json$/],
 	precacheManifestFilename: 'manifest-precache.[manifestHash].js'
 }));
+*/
 
 module.exports = {
 	name: 'client',

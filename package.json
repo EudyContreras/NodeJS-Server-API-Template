@@ -27,8 +27,7 @@
     "postbuild:ts": "cpy --cwd=src --parents '**/*' '!**/*.(ts|js|tsx|jsx)' ../pre/",
     "build:server": "webpack --config webpack/configs/webpack.server.config.js",
     "build:client": "webpack --config webpack/configs/webpack.client.config.js",
-    "build:worker": "webpack --config webpack/configs/webpack.worker.config.js",
-    "build:all": "webpack --config webpack/configs/webpack.combo.config.js && npm run build:worker",
+    "build:all": "npm run build:server && npm run build:client",
     "build:all:clean": "rimraf build && npm run build:all",
     "build:all:start": "npm run build:all && npm run start",
     "start": "node build/server.js"
@@ -198,6 +197,6 @@
     "webpack-manifest-plugin": "^2.2.0",
     "webpack-merge-and-include-globally": "^2.1.24",
     "webpack-node-externals": "^1.7.2",
-    "workbox-webpack-plugin": "^4.3.1"
+    "workbox-webpack-plugin": "^5.1.2"
   }
 }

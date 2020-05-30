@@ -2,6 +2,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 require('./constants');
 
+self.__WB_MANIFEST;
+
 const constants = self.constants;
 const TIMEOUT = 1000;
 
@@ -324,7 +326,8 @@ self.addEventListener(constants.events.INSTALL, (event: Event | any) => {
 	event.waitUntil(
 		caches.open(STATIC_CACHE)
 			.then(cache => {
-				const cacheRes = self.__precacheManifest.map((x: any) => x.url);
+				const cacheRes = self.__WB_MANIFEST.map((x: any) => x.url);
+				console.log(self.__WB_MANIFEST);
 				return cache.addAll([...constants.urlsToCache, ...cacheRes]);
 			})
 			.then(() => self.skipWaiting())

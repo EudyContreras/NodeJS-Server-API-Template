@@ -21,7 +21,7 @@ loadableReady(() => {
 	const store = configureStore(initialState);
 	const content = document.getElementById('content');
 
-	reactRender(
+	ReactDOM.hydrate(
 		application(window.location.pathname, store, context, insertCss),
 		content
 	);
