@@ -25,7 +25,7 @@ const enviroment = process.env.NODE_ENV;
 const isProduction = enviroment === 'production';
 
 const publicPath = '../../build/public/';
-const entryPoint = isProduction ? './pre/client/client.js' : './src/client/client.jsx';
+const entryPoint = !isProduction ? './pre/client/client.js' : './src/client/client.jsx';
 
 const resources = [
 	{
@@ -91,8 +91,7 @@ const pluggins = [
 				quality: 75
 			}
 		}]
-	}),
-	new LoadablePlugin()
+	})
 ];
 
 if (isProduction) {
@@ -118,25 +117,31 @@ if (isProduction) {
 const hashCode = s => s.split('').reduce((a, b) => (((a << 5) - a) + b.charCodeAt(0)) | 0, 0).toString();
 
 function getEntries() {
-	const manifest = require(`${publicPath}manifest-image-assets.json`);
 	const files = [];
 
-	Object.keys(manifest.files).forEach(e => {
-		manifest.files[e].forEach(file => {
-			files.push({
-				url: file.path,
-				revision: hashCode(JSON.stringify(file.name))
+	try {
+		const manifest = require(`${publicPath}manifest-image-assets.json`);
+		Object.keys(manifest.files).forEach(e => {
+			manifest.files[e].forEach(file => {
+				files.push({
+					url: file.path,
+					revision: hashCode(JSON.stringify(file.name))
+				});
 			});
 		});
-	});
-	return files;
+	} catch(e) {
+		console.log(e);
+	}
+	return isProduction ? {
+		additionalManifestEntries: files
+	} : undefined;
 };
 
 pluggins.push(
 	new WorkboxPlugin.InjectManifest({
 		mode: enviroment,
-		swSrc: path.join(process.cwd(), 'pre/workers/serviceWorker.js'),
-		additionalManifestEntries: getEntries(),
+		swSrc: path.join(process.cwd(), 'src/workers/serviceWorker.ts'),
+		...getEntries(),
 		swDest: `${publicPath}service-worker.js`,
 		exclude: [/\.(js.br|js.gz|DS_Store)$/, /manifest-assets.*\.json$/, /loadable-stats.*\.json$/],
 		maximumFileSizeToCacheInBytes: isProduction ? 2500000 : 5000000

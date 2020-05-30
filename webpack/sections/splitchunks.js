@@ -4,7 +4,7 @@ const singleShunk = {
 			reuseExistingChunk: true,
 			enforce: true,
 			chunks: 'all',
-			test: /[\\/]node_modules[\\/](react|react-dom)[\\/]/,
+			test: /[\\/]node_modules[\\/]/,
 			name: 'vendor/vendors'
 		}
 	}
@@ -19,7 +19,7 @@ const multiChunk = {
 			reuseExistingChunk: true,
 			enforce: true,
 			chunks: 'all',
-			test: /[\\/]node_modules[\\/](react|react-dom)[\\/]/,
+			test: /[\\/]node_modules[\\/]/,
 			name(module, chunks, cacheGroupKey) {
 				const folder = 'common';
 				const moduleFileName = module.identifier().split('/').reduceRight(item => item);
@@ -29,7 +29,7 @@ const multiChunk = {
 		},
 		vendor: {
 			chunks: 'all',
-			test: /[\\/]node_modules[\\/](react|react-dom)[\\/]/,
+			test: /[\\/]node_modules[\\/]/,
 			name(module, chunks, cacheGroupKey) {
 				const folder = 'vendor';
 				const packageName = module.context.match(/[\\/]node_modules[\\/](.*?)([\\/]|$)/)[1];

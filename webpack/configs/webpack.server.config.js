@@ -15,6 +15,7 @@ const enviroment = process.env.NODE_ENV;
 
 const isProduction = enviroment === 'production';
 const publicPath = '../../build/public';
+const entryPoint = !isProduction ? './pre/server/server.js' : './src/server/server.ts';
 
 const manifestExclude = ['.DS_Store', '.js.br', '.js.gz', '.js'];
 
@@ -27,7 +28,7 @@ module.exports = {
 		hints: false
 	},
 	entry: [
-		'@babel/polyfill', isProduction ? './pre/server/server.js' : './src/server/server.ts'
+		'@babel/polyfill', entryPoint
 	],
 	output: {
 		path: path.join(__dirname, publicPath),

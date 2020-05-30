@@ -33,7 +33,7 @@ const productionOptimization = (splitChunk) => ({
 				compress: {
 					ecma: 5,
 					warnings: true,
-					comparisons: true,
+					comparisons: false,
 					drop_console: false,
 					inline: 2
 				},
@@ -53,8 +53,8 @@ const productionOptimization = (splitChunk) => ({
 	nodeEnv: 'production',
 	providedExports: true,
 	concatenateModules: true,
-	removeAvailableModules: false,
-	removeEmptyChunks: false,
+	removeAvailableModules: true,
+	removeEmptyChunks: true,
 	mangleWasmImports: true,
 	...splitChunk
 });
