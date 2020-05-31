@@ -1,3 +1,5 @@
+importScripts("/manifest-precache.9b0f2352802c01bbd6ca05d9306c287a.js", "https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
+
 /* eslint-disable @typescript-eslint/no-var-requires */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 

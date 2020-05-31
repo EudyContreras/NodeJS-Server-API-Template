@@ -7,14 +7,15 @@ const NodeExternals = require('webpack-node-externals');
 const optimization = require('../sections/optimization');
 const babelLoader = require('../loaders/babel.loader');
 const fileLoader = require('../loaders/file.loader');
+const urlLoader = require('../loaders/url.loader');
 const enviroment = process.env.NODE_ENV;
 const isProduction = enviroment === 'production';
 const publicPath = '../../build/public/';
-const entryPoint = './pre/workers/service-worker.js';
+const entryPoint = './src/workers/service-worker.ts';
 
 module.exports = {
-	name: 'client',
-	target: 'node',
+	name: 'worker',
+	target: 'web',
 	mode: enviroment,
 	bail: isProduction,
 	entry: entryPoint,
@@ -41,10 +42,11 @@ module.exports = {
 			use: 'raw-loader'
 		},
 		babelLoader,
-		fileLoader
+		fileLoader,
+		urlLoader
 		]
 	},
 	resolve: {
-		extensions: ['*', '.js']
+		extensions: ['*', '.js', '.ts']
 	}
 };

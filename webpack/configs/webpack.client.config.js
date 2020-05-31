@@ -115,32 +115,11 @@ if (isProduction) {
 	);
 }
 
-const hashCode = s => s.split('').reduce((a, b) => (((a << 5) - a) + b.charCodeAt(0)) | 0, 0).toString();
-
-function getEntries() {
-	const files = [];
-
-	try {
-		const manifest = require(`${publicPath}manifest-image-assets.json`);
-		Object.keys(manifest.files).forEach(e => {
-			manifest.files[e].forEach(file => {
-				files.push({
-					url: file.path,
-					revision: hashCode(JSON.stringify(file.name))
-				});
-			});
-		});
-	} catch(e) {
-		console.log(e);
-	}
-	return isProduction ? {
-		additionalManifestEntries: files
-	} : undefined;
-};
-
 pluggins.push(new WorkboxPlugin.InjectManifest({
-	swSrc: 'pre/workers/serviceWorker.js',
-	swDest: '../../pre/workers/service-worker.js',
+	/*swSrc: 'pre/workers/serviceWorker.js',
+	swDest: '../../pre/workers/service-worker.js',*/
+	swSrc: path.join(process.cwd(), 'src/workers/serviceWorker.ts'),
+	swDest: '../../src/workers/service-worker.ts',
 	exclude: [/\.(js.br|js.gz|DS_Store)$/, /manifest-assets.*\.json$/, /loadable-stats.*\.json$/],
 	precacheManifestFilename: 'manifest-precache.[manifestHash].js'
 }));

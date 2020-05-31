@@ -1,11 +1,8 @@
-
 const baseUrl = '';
 
 const urlsToCache = [
 	'/',
-	'/service-worker.js',
 	'https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js',
-	'https://fonts.googleapis.com/icon?family=Material+Icons&display=swap',
 	'https://fonts.googleapis.com/css?family=Roboto&display=optional',
 	'https://fonts.gstatic.com/s/materialicons/v48/flUhRq6tzZclQEJ-Vdg-IuiaDsNcIhQ8tQ.woff2'
 ];
@@ -62,12 +59,4 @@ const constants = Object.freeze({
 	messages: messages
 });
 
-if (typeof self !== 'undefined') {
-	self.constants = constants;
-}
-
-export {
-	events,
-	messages
-};
 export default constants;

@@ -6,7 +6,6 @@ declare global {
       __WB_MANIFEST: any;
       urlsToCache: any;
       clients: any;
-      constants: any;
       registration: any;
       skipWaiting: Function;
    }
