@@ -10,6 +10,7 @@ import { routes } from '../components/Routes';
 import { Router, Request, Response } from 'express';
 import favicon from '../resources/images/favicon.ico';
 import touchIcon from '../resources/images/icons/touch-icon.png';
+import IAction from '../actions/action';
 
 const statsFile = path.resolve('./build/public/loadable-stats.json');
 
@@ -18,7 +19,7 @@ class IndexViewRenderer extends ViewRenderer {
 	private routing = '/';
 	private router: Router;
 	private context = {};
-	private store: Store;
+	private store: Store<any, IAction>;
 	private state: any;
 	private styling: Set<any>;
 	private appStyle: any;

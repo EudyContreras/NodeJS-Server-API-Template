@@ -28,7 +28,7 @@ module.exports = [{
 	options: {
 		name: 'icons/[name]-[width]x[width].[ext]',
 		outputPath:'images',
-		sizes: [16, 24, 32, 48, 52, 57, 64, 72, 76, 96, 120, 128, 144, 152, 168, 192, 256, 348, 512],
+		sizes: [72, 76, 96, 120, 128, 144, 152, 180, 192, 257, 384, 512],
 		placeholder: true,
 		placeholderSize: 50,
 		adapter: require('responsive-loader/sharp')

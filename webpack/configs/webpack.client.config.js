@@ -91,7 +91,8 @@ const pluggins = [
 				quality: 75
 			}
 		}]
-	})
+	}),
+	new LoadablePlugin()
 ];
 
 if (isProduction) {
@@ -137,25 +138,12 @@ function getEntries() {
 	} : undefined;
 };
 
-pluggins.push(
-	new WorkboxPlugin.InjectManifest({
-		mode: enviroment,
-		swSrc: path.join(process.cwd(), 'src/workers/serviceWorker.ts'),
-		...getEntries(),
-		swDest: `${publicPath}service-worker.js`,
-		exclude: [/\.(js.br|js.gz|DS_Store)$/, /manifest-assets.*\.json$/, /loadable-stats.*\.json$/],
-		maximumFileSizeToCacheInBytes: isProduction ? 2500000 : 5000000
-	})
-);
-
-/*
 pluggins.push(new WorkboxPlugin.InjectManifest({
 	swSrc: 'pre/workers/serviceWorker.js',
 	swDest: '../../pre/workers/service-worker.js',
 	exclude: [/\.(js.br|js.gz|DS_Store)$/, /manifest-assets.*\.json$/, /loadable-stats.*\.json$/],
 	precacheManifestFilename: 'manifest-precache.[manifestHash].js'
 }));
-*/
 
 module.exports = {
 	name: 'client',
