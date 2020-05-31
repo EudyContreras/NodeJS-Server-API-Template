@@ -104,3 +104,5 @@ build/
 dist/
 pre/
 ssl/
+
+src/workers/service-worker.ts
