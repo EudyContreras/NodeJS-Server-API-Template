@@ -30,7 +30,7 @@
     "build:client": "webpack --config webpack/configs/webpack.client.config.js",
     "build:all": "npm run build:client && npm run build:server && npm run build:worker",
     "build:all:start": "npm run build:all && npm run start",
-    "start": "npm run build:all && node build/server.js"
+    "start": "node build/server.js"
   },
   "keywords": [
     "ssr",

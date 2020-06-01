@@ -1,0 +1,351 @@
+{
+  "errors": [],
+  "warnings": [],
+  "version": "4.43.0",
+  "hash": "1f84d2eb961371a73aca",
+  "publicPath": "/",
+  "outputPath": "/Users/personal/Documents/Repositories/NodeJS-Server-API-Template/build/public/",
+  "assetsByChunkName": {
+    "vendor/vendors": "scripts/vendor/vendors.bundle.ffbfc2f5670b91fe2c9f.js",
+    "sections-administration-AdminPage": "scripts/sections-administration-AdminPage.bundle.f35610c8b70286296aaf.js",
+    "sections-documentation-DocsPage": "scripts/sections-documentation-DocsPage.bundle.fb34cf20621a22e2f58e.js",
+    "sections-information-AboutPage": "scripts/sections-information-AboutPage.bundle.01916e1f038d410792ff.js",
+    "shared-states-LostState": "scripts/shared-states-LostState.bundle.ae51f316b314f1e78257.js",
+    "main": "scripts/main.bundle.779c786f3681920a2f6e.js"
+  },
+  "assets": [
+    {
+      "name": "manifest.json",
+      "size": 1836,
+      "chunks": [],
+      "chunkNames": [],
+      "info": {},
+      "emitted": false
+    },
+    {
+      "name": "robots.txt",
+      "size": 57,
+      "chunks": [],
+      "chunkNames": [],
+      "info": {},
+      "emitted": false
+    },
+    {
+      "name": "scripts/main.bundle.779c786f3681920a2f6e.js",
+      "size": 50394,
+      "chunks": [
+        5
+      ],
+      "chunkNames": [
+        "main"
+      ],
+      "info": {
+        "immutable": true
+      },
+      "emitted": false
+    },
+    {
+      "name": "scripts/main.bundle.779c786f3681920a2f6e.js.br",
+      "size": 10775,
+      "chunks": [],
+      "chunkNames": [],
+      "info": {},
+      "emitted": false
+    },
+    {
+      "name": "scripts/main.bundle.779c786f3681920a2f6e.js.gz",
+      "size": 12529,
+      "chunks": [],
+      "chunkNames": [],
+      "info": {},
+      "emitted": false
+    },
+    {
+      "name": "scripts/sections-administration-AdminPage.bundle.f35610c8b70286296aaf.js",
+      "size": 423,
+      "chunks": [
+        1
+      ],
+      "chunkNames": [
+        "sections-administration-AdminPage"
+      ],
+      "info": {
+        "immutable": true
+      },
+      "emitted": false
+    },
+    {
+      "name": "scripts/sections-documentation-DocsPage.bundle.fb34cf20621a22e2f58e.js",
+      "size": 14962,
+      "chunks": [
+        2
+      ],
+      "chunkNames": [
+        "sections-documentation-DocsPage"
+      ],
+      "info": {
+        "immutable": true
+      },
+      "emitted": false
+    },
+    {
+      "name": "scripts/sections-documentation-DocsPage.bundle.fb34cf20621a22e2f58e.js.br",
+      "size": 3305,
+      "chunks": [],
+      "chunkNames": [],
+      "info": {},
+      "emitted": false
+    },
+    {
+      "name": "scripts/sections-documentation-DocsPage.bundle.fb34cf20621a22e2f58e.js.gz",
+      "size": 3701,
+      "chunks": [],
+      "chunkNames": [],
+      "info": {},
+      "emitted": false
+    },
+    {
+      "name": "scripts/sections-information-AboutPage.bundle.01916e1f038d410792ff.js",
+      "size": 423,
+      "chunks": [
+        3
+      ],
+      "chunkNames": [
+        "sections-information-AboutPage"
+      ],
+      "info": {
+        "immutable": true
+      },
+      "emitted": false
+    },
+    {
+      "name": "scripts/shared-states-LostState.bundle.ae51f316b314f1e78257.js",
+      "size": 420,
+      "chunks": [
+        4
+      ],
+      "chunkNames": [
+        "shared-states-LostState"
+      ],
+      "info": {
+        "immutable": true
+      },
+      "emitted": false
+    },
+    {
+      "name": "scripts/vendor/vendors.bundle.ffbfc2f5670b91fe2c9f.js",
+      "size": 207133,
+      "chunks": [
+        0
+      ],
+      "chunkNames": [
+        "vendor/vendors"
+      ],
+      "info": {
+        "immutable": true
+      },
+      "emitted": false
+    },
+    {
+      "name": "scripts/vendor/vendors.bundle.ffbfc2f5670b91fe2c9f.js.br",
+      "size": 55946,
+      "chunks": [],
+      "chunkNames": [],
+      "info": {},
+      "emitted": false
+    },
+    {
+      "name": "scripts/vendor/vendors.bundle.ffbfc2f5670b91fe2c9f.js.gz",
+      "size": 64532,
+      "chunks": [],
+      "chunkNames": [],
+      "info": {},
+      "emitted": false
+    },
+    {
+      "name": "styles/material.css",
+      "size": 612,
+      "chunks": [],
+      "chunkNames": [],
+      "info": {},
+      "emitted": false
+    }
+  ],
+  "filteredAssets": 0,
+  "entrypoints": {
+    "main": {
+      "chunks": [
+        0,
+        5
+      ],
+      "assets": [
+        "scripts/vendor/vendors.bundle.ffbfc2f5670b91fe2c9f.js",
+        "scripts/main.bundle.779c786f3681920a2f6e.js"
+      ],
+      "children": {
+        "prefetch": [
+          {
+            "name": "sections-documentation-DocsPage",
+            "chunks": [
+              0,
+              2
+            ],
+            "assets": [
+              "scripts/vendor/vendors.bundle.ffbfc2f5670b91fe2c9f.js",
+              "scripts/sections-documentation-DocsPage.bundle.fb34cf20621a22e2f58e.js"
+            ]
+          },
+          {
+            "name": "sections-administration-AdminPage",
+            "chunks": [
+              1
+            ],
+            "assets": [
+              "scripts/sections-administration-AdminPage.bundle.f35610c8b70286296aaf.js"
+            ]
+          },
+          {
+            "name": "sections-information-AboutPage",
+            "chunks": [
+              3
+            ],
+            "assets": [
+              "scripts/sections-information-AboutPage.bundle.01916e1f038d410792ff.js"
+            ]
+          },
+          {
+            "name": "shared-states-LostState",
+            "chunks": [
+              4
+            ],
+            "assets": [
+              "scripts/shared-states-LostState.bundle.ae51f316b314f1e78257.js"
+            ]
+          }
+        ]
+      },
+      "childAssets": {
+        "prefetch": [
+          "scripts/vendor/vendors.bundle.ffbfc2f5670b91fe2c9f.js",
+          "scripts/sections-documentation-DocsPage.bundle.fb34cf20621a22e2f58e.js",
+          "scripts/sections-administration-AdminPage.bundle.f35610c8b70286296aaf.js",
+          "scripts/sections-information-AboutPage.bundle.01916e1f038d410792ff.js",
+          "scripts/shared-states-LostState.bundle.ae51f316b314f1e78257.js"
+        ]
+      }
+    }
+  },
+  "namedChunkGroups": {
+    "main": {
+      "chunks": [
+        0,
+        5
+      ],
+      "assets": [
+        "scripts/vendor/vendors.bundle.ffbfc2f5670b91fe2c9f.js",
+        "scripts/main.bundle.779c786f3681920a2f6e.js"
+      ],
+      "children": {
+        "prefetch": [
+          {
+            "name": "sections-documentation-DocsPage",
+            "chunks": [
+              0,
+              2
+            ],
+            "assets": [
+              "scripts/vendor/vendors.bundle.ffbfc2f5670b91fe2c9f.js",
+              "scripts/sections-documentation-DocsPage.bundle.fb34cf20621a22e2f58e.js"
+            ]
+          },
+          {
+            "name": "sections-administration-AdminPage",
+            "chunks": [
+              1
+            ],
+            "assets": [
+              "scripts/sections-administration-AdminPage.bundle.f35610c8b70286296aaf.js"
+            ]
+          },
+          {
+            "name": "sections-information-AboutPage",
+            "chunks": [
+              3
+            ],
+            "assets": [
+              "scripts/sections-information-AboutPage.bundle.01916e1f038d410792ff.js"
+            ]
+          },
+          {
+            "name": "shared-states-LostState",
+            "chunks": [
+              4
+            ],
+            "assets": [
+              "scripts/shared-states-LostState.bundle.ae51f316b314f1e78257.js"
+            ]
+          }
+        ]
+      },
+      "childAssets": {
+        "prefetch": [
+          "scripts/vendor/vendors.bundle.ffbfc2f5670b91fe2c9f.js",
+          "scripts/sections-documentation-DocsPage.bundle.fb34cf20621a22e2f58e.js",
+          "scripts/sections-administration-AdminPage.bundle.f35610c8b70286296aaf.js",
+          "scripts/sections-information-AboutPage.bundle.01916e1f038d410792ff.js",
+          "scripts/shared-states-LostState.bundle.ae51f316b314f1e78257.js"
+        ]
+      }
+    },
+    "sections-documentation-DocsPage": {
+      "chunks": [
+        0,
+        2
+      ],
+      "assets": [
+        "scripts/vendor/vendors.bundle.ffbfc2f5670b91fe2c9f.js",
+        "scripts/sections-documentation-DocsPage.bundle.fb34cf20621a22e2f58e.js"
+      ],
+      "children": {},
+      "childAssets": {}
+    },
+    "sections-information-AboutPage": {
+      "chunks": [
+        3
+      ],
+      "assets": [
+        "scripts/sections-information-AboutPage.bundle.01916e1f038d410792ff.js"
+      ],
+      "children": {},
+      "childAssets": {}
+    },
+    "sections-administration-AdminPage": {
+      "chunks": [
+        1
+      ],
+      "assets": [
+        "scripts/sections-administration-AdminPage.bundle.f35610c8b70286296aaf.js"
+      ],
+      "children": {},
+      "childAssets": {}
+    },
+    "shared-states-LostState": {
+      "chunks": [
+        4
+      ],
+      "assets": [
+        "scripts/shared-states-LostState.bundle.ae51f316b314f1e78257.js"
+      ],
+      "children": {},
+      "childAssets": {}
+    }
+  },
+  "logging": {
+    "webpack.buildChunkGraph.visitModules": {
+      "entries": [],
+      "filteredEntries": 5,
+      "debug": false
+    }
+  },
+  "children": []
+}

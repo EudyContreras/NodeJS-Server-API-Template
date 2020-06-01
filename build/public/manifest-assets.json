@@ -1,0 +1,28 @@
+{
+  "files": {
+    "json": [
+      {
+        "name": "manifest.json",
+        "path": "manifest.json"
+      }
+    ],
+    "txt": [
+      {
+        "name": "robots.txt",
+        "path": "robots.txt"
+      }
+    ],
+    "css": [
+      {
+        "name": "material.css",
+        "path": "styles/material.css"
+      }
+    ]
+  },
+  "entryPoints": {
+    "main": [
+      "scripts/vendor/vendors.bundle.ffbfc2f5670b91fe2c9f.js",
+      "scripts/main.bundle.779c786f3681920a2f6e.js"
+    ]
+  }
+}
