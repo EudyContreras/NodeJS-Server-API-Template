@@ -11,6 +11,7 @@ const imageLoader = require('../loaders/image.loader');
 const styleLoader = require('../loaders/style.loader');
 const fileLoader = require('../loaders/file.loader');
 const WriteFilePlugin = require('write-file-webpack-plugin');
+const LoadablePlugin = require('@loadable/webpack-plugin');
 const enviroment = process.env.NODE_ENV;
 
 const isProduction = enviroment === 'production';
@@ -67,6 +68,9 @@ plugins.push(
 				quality: 75
 			}
 		}]
+	}),
+	new LoadablePlugin({
+		filename: '../loadable-stats.json'
 	})
 );
 

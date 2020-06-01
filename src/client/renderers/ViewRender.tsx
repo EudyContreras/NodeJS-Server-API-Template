@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 
+import path from 'path';
 import config from '../config';
 import configureStore from '../stores/store';
 import ViewRenderer from '../../server/middleware/renderer';
@@ -11,8 +12,9 @@ import { Router, Request, Response } from 'express';
 import favicon from '../resources/images/favicon.ico';
 import touchIcon from '../resources/images/icons/touch-icon.png';
 import IAction from '../actions/action';
-import { getBundles } from 'react-loadable-ssr-addon';
-const manifest = require('../../../build/public/loadable-assets-manifest.json');
+import { ChunkExtractor } from '@loadable/server';
+
+const statsFile = path.resolve('build/public/loadable-stats.json');
 
 class IndexViewRenderer extends ViewRenderer {
 
@@ -63,23 +65,18 @@ class IndexViewRenderer extends ViewRenderer {
 	};
 
 	private renderApplication = async (req: Request, res: Response, cssInjector: Function): Promise<void> => {
-		const modules = new Set();
-		const content = application(req.url, this.store, this.context, cssInjector, modules);
+		const extractor = new ChunkExtractor({ statsFile });
 
-		const modulesToBeLoaded = [...manifest.entrypoints, ...Array.from(modules)];
-	
-		const bundles = getBundles(manifest, modulesToBeLoaded);
+		const content = extractor.collectChunks(application(req.url, this.store, this.context, cssInjector));
 
-		const styles = bundles.css || [];
-		const scripts = bundles.js || [];
+		const entryPoints = extractor.getMainAssets();
 
 		const props = {
 			css: this.styling,
 			state: this.state,
 			title: config.app.TITLE,
 			favicon: favicon,
-			entryPoints: scripts,
-			stylesChuncks: styles,
+			entryPoints: entryPoints,
 			touchIcon: touchIcon,
 			enableSW: config.app.USE_SW,
 			content: content,

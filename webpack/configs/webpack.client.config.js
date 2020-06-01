@@ -9,8 +9,7 @@ const WorkboxPlugin = require('workbox-webpack-plugin');
 const ManifestPlugin = require('webpack-manifest-plugin');
 const CompressPlugin = require('compression-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const ReactLoadableSSRAddon = require('react-loadable-ssr-addon');
-const { ReactLoadablePlugin } = require('react-loadable/webpack');
+const LoadablePlugin = require('@loadable/webpack-plugin');
 const ExtractCssChunks = require('extract-css-chunks-webpack-plugin');
 const BrotliPlugin = require('brotli-webpack-plugin');
 const optimization = require('../sections/optimization');
@@ -121,9 +120,7 @@ if (isProduction) {
 }
 
 pluggins.push(
-	new ReactLoadableSSRAddon({
-		filename: 'loadable-assets-manifest.json'
-	}),
+	new LoadablePlugin(),
 	new WorkboxPlugin.InjectManifest({
 		swSrc: path.join(process.cwd(), 'src/workers/serviceWorker.ts'),
 		swDest: '../../src/workers/service-worker.ts',

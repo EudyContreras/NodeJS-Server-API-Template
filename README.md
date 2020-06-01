@@ -24,6 +24,7 @@ Some information about the technologies used and what the application does. Its 
 * Express
 * Eslint AirBNB Template
 * MVC
+* Code Splitting using loadable/components
 
 ## Requirements
 

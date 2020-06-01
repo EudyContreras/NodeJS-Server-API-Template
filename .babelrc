@@ -10,6 +10,7 @@
    ],
    "plugins": [
       // Stage 2
+      "@loadable/babel-plugin",
       ["@babel/plugin-proposal-decorators", {
          "legacy": true
       }],

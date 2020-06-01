@@ -1,27 +1,10 @@
 import React from 'react';
-import Loadable from 'react-loadable';
-import { Loading } from './utililties/loadable.utils';
+import loadable from '@loadable/component';
 
-const Docs = Loadable({
-	loader: () => import('./sections/documentation/DocsPage'),
-	delay: 300,
-	loading: Loading
-});
-const About = Loadable({
-	loader: () => import('./sections/information/AboutPage'),
-	delay: 300,
-	loading: Loading
-});
-const Admin = Loadable({
-	loader: () => import('./sections/administration/AdminPage'),
-	delay: 300,
-	loading: Loading
-});
-const Lost = Loadable({
-	loader: () => import('./shared/states/LostState'),
-	delay: 300,
-	loading: Loading
-});
+const Docs = loadable(() => import(/* webpackPrefetch: true */ './sections/documentation/DocsPage'));
+const About = loadable(() => import(/* webpackPrefetch: true */ './sections/information/AboutPage'));
+const Admin = loadable(() => import(/* webpackPrefetch: true */ './sections/administration/AdminPage'));
+const Lost = loadable(() => import(/* webpackPrefetch: true */ './shared/states/LostState'));
 
 export const routes = [
 	{
@@ -64,10 +47,10 @@ export type RouteMapping = {
 };
 
 export default (otherProps: any): RouteMapping[] => [
-	{ mapping: { ...routes[0] }, render: (props?: any): JSX.Element => { Docs.preload(); return (<Docs {...props} {...otherProps} />); } },
-	{ mapping: { ...routes[1] }, render: (props?: any): JSX.Element => { Docs.preload(); return (<Docs {...props} {...otherProps} />); } },
-	{ mapping: { ...routes[2] }, render: (props?: any): JSX.Element => { About.preload(); return (<About {...props} {...otherProps} />); } },
-	{ mapping: { ...routes[3] }, render: (props?: any): JSX.Element => { Docs.preload(); return (<Docs {...props} {...otherProps} />); } },
-	{ mapping: { ...routes[4] }, render: (props?: any): JSX.Element => { Admin.preload(); return (<Admin {...props} {...otherProps} />); } },
-	{ mapping: { ...routes[5] }, render: (props?: any): JSX.Element => { Lost.preload(); return (<Lost {...props} {...otherProps} />); } }
+	{ mapping: { ...routes[0] }, render: (props?: any): JSX.Element => <Docs {...props} {...otherProps} /> },
+	{ mapping: { ...routes[1] }, render: (props?: any): JSX.Element => <Docs {...props} {...otherProps} /> },
+	{ mapping: { ...routes[2] }, render: (props?: any): JSX.Element => <About {...props} {...otherProps} /> },
+	{ mapping: { ...routes[3] }, render: (props?: any): JSX.Element => <Docs {...props} {...otherProps} /> },
+	{ mapping: { ...routes[4] }, render: (props?: any): JSX.Element => <Admin {...props} {...otherProps} /> },
+	{ mapping: { ...routes[5] }, render: (props?: any): JSX.Element => <Lost {...props} {...otherProps} /> }
 ];

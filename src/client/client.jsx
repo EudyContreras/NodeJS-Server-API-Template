@@ -1,31 +1,35 @@
 
 import ReactDOM from 'react-dom';
-import { register } from './scriptsjs/serviceWorker';
 import configureStore from './stores/store';
+import { loadableReady } from '@loadable/component';
+import { register } from './scriptsjs/serviceWorker';
 import { client } from './views';
 
-const reactRender = ReactDOM.hydrate;
+loadableReady(() => {
 
-const initialState = window.__REDUX_STATE__ || {};
-const renderOptions = window.__RENDER_OPTIONS__ || {};
+	const reactRender = ReactDOM.hydrate;
 
-delete window.__REDUX_STATE__;
+	const initialState = window.__REDUX_STATE__ || {};
+	const renderOptions = window.__RENDER_OPTIONS__ || {};
 
-const insertCss = (...styles) => {
-	const removeCss = styles.map(style => style._insertCss());
-	return () => removeCss.forEach(dispose => dispose());
-};
+	delete window.__REDUX_STATE__;
 
-const store = configureStore(initialState);
-const content = document.getElementById('content');
+	const insertCss = (...styles) => {
+		const removeCss = styles.map(style => style._insertCss());
+		return () => removeCss.forEach(dispose => dispose());
+	};
 
-reactRender(
-	client(window.location.pathname, store, insertCss),
-	content
-);
+	const store = configureStore(initialState);
+	const content = document.getElementById('content');
 
-document.getElementById('shellStyle').remove();
+	reactRender(
+		client(window.location.pathname, store, insertCss),
+		content
+	);
 
-if (renderOptions.enableSW == true) {
-	register();
-}
+	document.getElementById('shellStyle').remove();
+
+	if (renderOptions.enableSW == true) {
+		register();
+	}
+});
