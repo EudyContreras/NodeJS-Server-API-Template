@@ -75,7 +75,7 @@ export default class Application {
 		const render = config.presentation;
 		const clientRender = render.viewEngine.client;
 
-		if (process.env.NODE_ENV === 'development') {
+		/*if (process.env.NODE_ENV === 'development') {
 
 			const webpack = require('webpack');
 			const webpackHotMiddleware = require('webpack-hot-middleware');
@@ -92,7 +92,7 @@ export default class Application {
 					return /loadable-stats/.test(filePath);
 				}
 			}));
-		}
+		}*/
 		this.app.use(cors());
 		this.app.use(helmet());
 		this.app.use(shrinkRay());

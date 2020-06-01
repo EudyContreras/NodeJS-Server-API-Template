@@ -7,6 +7,43 @@ const urlsToCache = [
 	'https://fonts.gstatic.com/s/materialicons/v48/flUhRq6tzZclQEJ-Vdg-IuiaDsNcIhQ8tQ.woff2'
 ];
 
+const cacheKeys = {
+	DATA_CACHE: 'eudcon-universal-data-cache',
+	IMAGE_CACHE: 'eudcon-universal-image-cache',
+	STATIC_CACHE: 'eudcon-universal-static-cache',
+	FALLBACK_CACHE: 'eudcon-universal-fallback-cache'
+};
+
+const syncEvents = {
+	INITIAL_SYNC: 'initial-sync',
+	UPDATE_SYNC: 'update-sync',
+	CONTENT_SYNC: 'content-sync'
+};
+
+const contentTypes = {
+	HTML: 'text/html',
+	SVG: 'image/svg+xml',
+	IMAGE: 'image/png',
+	FONT: ''
+};
+
+const updateNotification = {
+	title: 'Template engine',
+	options: {
+		requireInteraction: true,
+		body: 'There is update available! Would you like to see it?',
+		icon: '../static/images/icons/icon-152x152.png',
+		badge: '../static/images/icons/icon-152x152.png',
+		actions: [{
+			title: 'yes',
+			action: 'action-1'
+		}, {
+			title: 'no',
+			action: 'action-2'
+		}]
+	}
+};
+
 const events = {
 	SYNC: 'sync',
 	PERIODIC_SYNC: 'periodicsync',
@@ -56,7 +93,26 @@ const constants = Object.freeze({
 	baseUrl: baseUrl,
 	urlsToCache: urlsToCache,
 	stragedies: stragedies,
-	messages: messages
+	messages: messages,
+	cacheKeys: cacheKeys,
+	syncEvents: syncEvents,
+	contentTypes: contentTypes,
+	updateNotification: updateNotification
 });
+
+export {
+	push,
+	http,
+	events,
+	baseUrl,
+	urlsToCache,
+	stragedies,
+	messages,
+	cacheKeys,
+	syncEvents,
+	contentTypes,
+	updateNotification,
+	constants
+};
 
 export default constants;

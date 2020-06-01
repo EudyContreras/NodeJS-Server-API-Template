@@ -3,7 +3,6 @@
 require('dotenv').config();
 
 const path = require('path');
-const webpack = require('webpack');
 const CopyPlugin = require('copy-webpack-plugin');
 const WorkboxPlugin = require('workbox-webpack-plugin');
 const ManifestPlugin = require('webpack-manifest-plugin');
@@ -25,7 +24,7 @@ const enviroment = process.env.NODE_ENV;
 const isProduction = enviroment === 'production';
 
 const publicPath = '../../build/public/';
-const entryPoint = !isProduction ? './pre/client/client.js' : './src/client/client.jsx';
+const entryPoint = './src/client/client.jsx';
 
 const resources = [
 	{
@@ -55,7 +54,7 @@ const splitChunk = {
 	}
 };
 
-const manifestExclude = ['stats.json', '.DS_Store', '.js.br', '.js.gz', '.js', 'service-worker.js'];
+const manifestExclude = ['stats.json', '.DS_Store', '.js.br', '.js.gz', '.js', 'service-worker.ts'];
 const pluggins = [
 	new CopyPlugin(resources),
 	new ManifestPlugin({
@@ -116,8 +115,6 @@ if (isProduction) {
 }
 
 pluggins.push(new WorkboxPlugin.InjectManifest({
-	/*swSrc: 'pre/workers/serviceWorker.js',
-	swDest: '../../pre/workers/service-worker.js',*/
 	swSrc: path.join(process.cwd(), 'src/workers/serviceWorker.ts'),
 	swDest: '../../src/workers/service-worker.ts',
 	exclude: [/\.(js.br|js.gz|DS_Store)$/, /manifest-assets.*\.json$/, /loadable-stats.*\.json$/],
@@ -154,7 +151,58 @@ module.exports = {
 			test: /\.txt$/,
 			use: 'raw-loader'
 		},
-		babelLoader,
+		{
+			test: /\.(jsx|tsx|ts|js)$/,
+			exclude: /(node_modules|bower_components)/,
+			use: {
+				loader: 'babel-loader',
+				options: {
+					env: {
+						development: {
+							presets: [
+								['minify', {
+									builtIns: false
+								}]
+							]
+						},
+						production: {
+							presets: [
+								['minify', {
+									builtIns: false
+								}]
+							]
+						}
+					},
+					presets: [
+						'@babel/preset-react',
+						'@babel/preset-typescript',
+						['@babel/preset-env', {
+							targets: {
+								node: 'current'
+							}
+						}]
+					],
+					plugins: [
+						['@babel/plugin-proposal-decorators', {
+							'legacy': true
+						}],
+						'@loadable/babel-plugin',
+						'@babel/plugin-proposal-object-rest-spread',
+						'@babel/plugin-proposal-function-sent',
+						'@babel/plugin-proposal-export-namespace-from',
+						'@babel/plugin-proposal-numeric-separator',
+						'@babel/plugin-proposal-throw-expressions',
+		
+						// Stage 3
+						'@babel/plugin-syntax-dynamic-import',
+						'@babel/plugin-syntax-import-meta',
+						'@babel/plugin-proposal-class-properties',
+						'@babel/plugin-proposal-json-strings',
+						['@babel/plugin-transform-async-to-generator']
+					]
+				}
+			}
+		},
 		fileLoader,
 		...imageLoader,
 		urlLoader,

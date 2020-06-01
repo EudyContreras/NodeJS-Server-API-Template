@@ -5,9 +5,9 @@ import configureStore from './stores/store';
 import { loadableReady } from '@loadable/component';
 import { client } from './views';
 
-const reactRender = module.hot ? ReactDOM.render : ReactDOM.hydrate;
-
 loadableReady(() => {
+	const reactRender = ReactDOM.hydrate;
+
 	const initialState = window.__REDUX_STATE__ || {};
 	const renderOptions = window.__RENDER_OPTIONS__ || {};
 

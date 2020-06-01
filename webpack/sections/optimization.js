@@ -2,14 +2,15 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const TerserPlugin = require('terser-webpack-plugin');
 
-const developmentOptimization = {
+const developmentOptimization = (splitChunk) => ({
 	minimize: false,
 	namedModules: true,
 	namedChunks: true,
 	nodeEnv: 'development',
 	mangleWasmImports: false,
-	concatenateModules: false
-};
+	concatenateModules: false,
+	...splitChunk
+});
 
 const productionOptimization = (splitChunk) => ({
 	minimize: true,
@@ -60,5 +61,5 @@ const productionOptimization = (splitChunk) => ({
 });
 
 module.exports = ({ splitChunk, production = false }) => (
-	{ ...(production ? productionOptimization(splitChunk) : developmentOptimization) }
+	{ ...(production ? productionOptimization(splitChunk) : developmentOptimization(splitChunk)) }
 );
