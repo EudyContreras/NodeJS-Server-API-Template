@@ -3,21 +3,22 @@
 require('dotenv').config();
 
 const path = require('path');
+const webpack = require('webpack');
 const CopyPlugin = require('copy-webpack-plugin');
 const WorkboxPlugin = require('workbox-webpack-plugin');
 const ManifestPlugin = require('webpack-manifest-plugin');
 const CompressPlugin = require('compression-webpack-plugin');
+const ReactLoadableSSRAddon = require('react-loadable-ssr-addon');
+const ExtractCssChunks = require('extract-css-chunks-webpack-plugin');
 const BrotliPlugin = require('brotli-webpack-plugin');
 const optimization = require('../sections/optimization');
 const splitchunks = require('../sections/splitchunks');
-const babelLoader = require('../loaders/babel.loader');
 const imageLoader = require('../loaders/image.loader');
 const styleLoader = require('../loaders/style.loader');
 const fileLoader = require('../loaders/file.loader');
 const urlLoader = require('../loaders/url.loader');
 const svgLoader = require('../loaders/svg.loader');
 const ImageminPlugin= require('imagemin-webp-webpack-plugin');
-const LoadablePlugin = require('@loadable/webpack-plugin');
 
 const useCSR = process.env.CSR == 'true';
 const enviroment = process.env.NODE_ENV;
@@ -56,6 +57,7 @@ const splitChunk = {
 
 const manifestExclude = ['stats.json', '.DS_Store', '.js.br', '.js.gz', '.js', 'service-worker.ts'];
 const pluggins = [
+	new ExtractCssChunks(),
 	new CopyPlugin(resources),
 	new ManifestPlugin({
 		fileName: 'manifest-assets.json',
@@ -90,12 +92,13 @@ const pluggins = [
 				quality: 75
 			}
 		}]
-	}),
-	new LoadablePlugin()
+	})
 ];
 
 if (isProduction) {
 	pluggins.push(
+		new webpack.optimize.ModuleConcatenationPlugin(),
+		new webpack.optimize.OccurrenceOrderPlugin(),
 		new CompressPlugin({
 			filename: '[path].gz[query]',
 			algorithm: 'gzip',
@@ -114,19 +117,24 @@ if (isProduction) {
 	);
 }
 
-pluggins.push(new WorkboxPlugin.InjectManifest({
-	swSrc: path.join(process.cwd(), 'src/workers/serviceWorker.ts'),
-	swDest: '../../src/workers/service-worker.ts',
-	exclude: [/\.(js.br|js.gz|DS_Store)$/, /manifest-assets.*\.json$/, /loadable-stats.*\.json$/],
-	precacheManifestFilename: 'manifest-precache.[manifestHash].js'
-}));
+pluggins.push(
+	new ReactLoadableSSRAddon({
+		filename: 'loadable-assets-manifest.json'
+	}),
+	new WorkboxPlugin.InjectManifest({
+		swSrc: path.join(process.cwd(), 'src/workers/serviceWorker.ts'),
+		swDest: '../../src/workers/service-worker.ts',
+		exclude: [/\.(js.br|js.gz|DS_Store)$/, /manifest-assets.*\.json$/, /loadable-stats.*\.json$/],
+		precacheManifestFilename: 'manifest-precache.[manifestHash].js'
+	})
+);
 
 module.exports = {
 	name: 'client',
 	target: 'web',
 	mode: enviroment,
 	bail: isProduction,
-	devtool: 'inline-source-map',
+	devtool: 'source-map',
 	entry: entryPoint,
 	performance: {
 		hints: false
@@ -148,60 +156,24 @@ module.exports = {
 	},
 	module: {
 		rules: [{
-			test: /\.txt$/,
-			use: 'raw-loader'
-		},
-		{
 			test: /\.(jsx|tsx|ts|js)$/,
 			exclude: /(node_modules|bower_components)/,
-			use: {
-				loader: 'babel-loader',
-				options: {
-					env: {
-						development: {
-							presets: [
-								['minify', {
-									builtIns: false
-								}]
-							]
-						},
-						production: {
-							presets: [
-								['minify', {
-									builtIns: false
-								}]
-							]
-						}
-					},
-					presets: [
-						'@babel/preset-react',
-						'@babel/preset-typescript',
-						['@babel/preset-env', {
-							targets: {
-								node: 'current'
-							}
-						}]
-					],
-					plugins: [
-						['@babel/plugin-proposal-decorators', {
-							'legacy': true
-						}],
-						'@loadable/babel-plugin',
-						'@babel/plugin-proposal-object-rest-spread',
-						'@babel/plugin-proposal-function-sent',
-						'@babel/plugin-proposal-export-namespace-from',
-						'@babel/plugin-proposal-numeric-separator',
-						'@babel/plugin-proposal-throw-expressions',
-		
-						// Stage 3
-						'@babel/plugin-syntax-dynamic-import',
-						'@babel/plugin-syntax-import-meta',
-						'@babel/plugin-proposal-class-properties',
-						'@babel/plugin-proposal-json-strings',
-						['@babel/plugin-transform-async-to-generator']
-					]
+			use: 'babel-loader'
+		}, {
+			test: /\.txt$/,
+			use: 'raw-loader'
+		}, {
+			test: /\.css$/,
+			use: [
+				ExtractCssChunks.loader,
+				{
+					loader: 'css-loader',
+					options: {
+						modules: true,
+						localIdentName: '[name]__[local]--[hash:base64:5]'
+					}
 				}
-			}
+			]
 		},
 		fileLoader,
 		...imageLoader,

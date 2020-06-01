@@ -1,37 +1,10 @@
 import React from 'react';
-import loadable from 'react-loadable-visibility/loadable-components';
 
-import Loading from './shared/states/LoadingState';
 import Home from './sections/documentation/DocsPage';
-
-const Docs = loadable(
-	() => import('./sections/documentation/DocsPage'), 
-	{ 
-		ssr: true,
-		fallback: <Loading />
-	}
-);
-const About = loadable(
-	() => import('./sections/information/AboutPage'),
-	{ 
-		ssr: true,
-		fallback: <Loading />
-	}
-);
-const Admin = loadable(
-	() => import('./sections/administration/AdminPage'), 
-	{ 
-		ssr: true,
-		fallback: <Loading />
-	}
-);
-const Lost = loadable(
-	() => import('./shared/states/LostState'), 
-	{ 
-		ssr: true,
-		fallback: <Loading />
-	}
-);
+import Docs from './sections/documentation/DocsPage';
+import About from './sections/information/AboutPage';
+import Admin from './sections/administration/AdminPage';
+import Lost from './shared/states/LostState';
 
 export const routes = [
 	{

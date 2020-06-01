@@ -75,24 +75,6 @@ export default class Application {
 		const render = config.presentation;
 		const clientRender = render.viewEngine.client;
 
-		/*if (process.env.NODE_ENV === 'development') {
-
-			const webpack = require('webpack');
-			const webpackHotMiddleware = require('webpack-hot-middleware');
-			const webpackDevMiddleware = require('webpack-dev-middleware');
-			const serverConfig = require('../../webpack/configs/webpack.server.config');
-
-			const serverCompiler = webpack(serverConfig);
-		
-			this.app.use(webpackHotMiddleware(serverCompiler));
-			this.app.use(webpackDevMiddleware(serverCompiler,{
-				serverSideRender: true,
-				publicPath: serverConfig.output.publicPath,
-				writeToDisk(filePath: string): boolean {
-					return /loadable-stats/.test(filePath);
-				}
-			}));
-		}*/
 		this.app.use(cors());
 		this.app.use(helmet());
 		this.app.use(shrinkRay());

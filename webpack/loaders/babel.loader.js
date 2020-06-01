@@ -1,4 +1,4 @@
-module.exports = (plugins) => ({
+module.exports = {
 	test: /\.(jsx|tsx|ts|js)$/,
 	exclude: /(node_modules|bower_components)/,
 	use: {
@@ -33,7 +33,6 @@ module.exports = (plugins) => ({
 				['@babel/plugin-proposal-decorators', {
 					'legacy': true
 				}],
-				...plugins,
 				'@babel/plugin-proposal-object-rest-spread',
 				'@babel/plugin-proposal-function-sent',
 				'@babel/plugin-proposal-export-namespace-from',
@@ -49,4 +48,4 @@ module.exports = (plugins) => ({
 			]
 		}
 	}
-});
+};
