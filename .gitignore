@@ -96,11 +96,8 @@ typings/
 # DynamoDB Local files
 .dynamodb/
 
-build/public/
-/build
 /dist
 /ssl
-build/
 dist/
 pre/
 ssl/
