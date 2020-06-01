@@ -8,7 +8,9 @@ const CopyPlugin = require('copy-webpack-plugin');
 const WorkboxPlugin = require('workbox-webpack-plugin');
 const ManifestPlugin = require('webpack-manifest-plugin');
 const CompressPlugin = require('compression-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const ReactLoadableSSRAddon = require('react-loadable-ssr-addon');
+const { ReactLoadablePlugin } = require('react-loadable/webpack');
 const ExtractCssChunks = require('extract-css-chunks-webpack-plugin');
 const BrotliPlugin = require('brotli-webpack-plugin');
 const optimization = require('../sections/optimization');
@@ -57,6 +59,7 @@ const splitChunk = {
 
 const manifestExclude = ['stats.json', '.DS_Store', '.js.br', '.js.gz', '.js', 'service-worker.ts'];
 const pluggins = [
+	new CleanWebpackPlugin(),
 	new ExtractCssChunks(),
 	new CopyPlugin(resources),
 	new ManifestPlugin({

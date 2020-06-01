@@ -9,7 +9,6 @@ import SearchController from './controllers/restful/api/Search';
 import InviteController from './controllers/restful/api/invitations';
 import PriviledgeController from './controllers/restful/api/priviledges';
 import AuthenticationController from './controllers/restful/api/authentication';
-
 import { ROOT, ADMIN, USER, ALL } from './localstore/accessrole.store';
 
 const args = {

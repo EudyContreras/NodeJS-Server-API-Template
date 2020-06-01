@@ -8,6 +8,7 @@ import helmet from 'helmet';
 import express from 'express';
 import mongoose from 'mongoose';
 import config from './config';
+import Loadable from 'react-loadable';
 import Interceptor from './middleware/interceptor';
 import Controller from './controllers/controller';
 import ErrorHandler from './handlers/error.handler';
@@ -46,29 +47,31 @@ export default class Application {
 	}
 
 	public startlistening(): void {
-		const secure = config.ssl.ACTIVE;
+		Loadable.preloadAll().then(() => {
+			const secure = config.ssl.ACTIVE;
 
-		if (secure) {
-			const port1 = config.host.PORT_HTTPS;
-			const port2 = config.host.PORT_HTTP;
+			if (secure) {
+				const port1 = config.host.PORT_HTTPS;
+				const port2 = config.host.PORT_HTTP;
 
-			const options = {
-				key: fs.readFileSync('./ssl/localhost.key'),
-				cert: fs.readFileSync('./ssl/localhost.crt')
-			};
-			http2.createServer(options, this.app).listen(port1, () => {
-				console.log(`Server listening on the port ${port1}`);
-			});
-			http.createServer(this.app).listen(port2, () => {
-				console.log(`Server listening on the port ${port2}`);
-			});
-		
-		} else {
-			const port = config.host.PORT_HTTP;
-			http.createServer(this.app).listen(port, () => {
-				console.log(`Server listening on the port ${port}`);
-			});
-		}
+				const options = {
+					key: fs.readFileSync('./ssl/localhost.key'),
+					cert: fs.readFileSync('./ssl/localhost.crt')
+				};
+				http2.createServer(options, this.app).listen(port1, () => {
+					console.log(`Server listening on the port ${port1}`);
+				});
+				http.createServer(this.app).listen(port2, () => {
+					console.log(`Server listening on the port ${port2}`);
+				});
+
+			} else {
+				const port = config.host.PORT_HTTP;
+				http.createServer(this.app).listen(port, () => {
+					console.log(`Server listening on the port ${port}`);
+				});
+			}
+		});
 	}
 
 	private setupExpress(): void {

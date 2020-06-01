@@ -1,9 +1,28 @@
 import React from 'react';
-import baseLoadable, { DefaultComponent, LoadableComponent } from '@loadable/component';
+import Loadable from 'react-loadable';
+import LoadingState from '../shared/states/LoadingState';
 
-export default function loadable<T>(func: (props: T) => Promise<DefaultComponent<T>>, options: any): LoadableComponent<T> {
-	return baseLoadable(func, { 
+const DEFAULT_DELAY = 300;
+
+export function Loading(props?: any): JSX.Element | null {
+	if (props.error) {
+		return <div>Error! <button onClick={props.retry}>Retry</button></div>;
+	} else if (props.timedOut) {
+		return <div>Taking a long time... <button onClick={props.retry}>Retry</button></div>;
+	} else if (props.pastDelay) {
+		return <LoadingState/>;
+	} else {
+		return null;
+	}
+}
+
+export function lazyLoad(func: (props?: any) => Promise<React.Component>, options?: any): (React.ComponentClass<unknown, any> & Loadable.LoadableComponent) | (React.FunctionComponent<unknown> & Loadable.LoadableComponent) {
+	return Loadable({
+		loader: func,
 		...options,
-		fallback: <div>Loading...</div> 
+		delay: DEFAULT_DELAY,
+		loading: Loading
 	});
 }
+
+
