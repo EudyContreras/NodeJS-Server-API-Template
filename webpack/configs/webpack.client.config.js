@@ -8,24 +8,25 @@ const CopyPlugin = require('copy-webpack-plugin');
 const WorkboxPlugin = require('workbox-webpack-plugin');
 const ManifestPlugin = require('webpack-manifest-plugin');
 const CompressPlugin = require('compression-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const LoadablePlugin = require('@loadable/webpack-plugin');
+const ExtractCssChunks = require('extract-css-chunks-webpack-plugin');
 const BrotliPlugin = require('brotli-webpack-plugin');
 const optimization = require('../sections/optimization');
 const splitchunks = require('../sections/splitchunks');
-const babelLoader = require('../loaders/babel.loader');
 const imageLoader = require('../loaders/image.loader');
 const styleLoader = require('../loaders/style.loader');
 const fileLoader = require('../loaders/file.loader');
 const urlLoader = require('../loaders/url.loader');
 const svgLoader = require('../loaders/svg.loader');
 const ImageminPlugin= require('imagemin-webp-webpack-plugin');
-const LoadablePlugin = require('@loadable/webpack-plugin');
 
 const useCSR = process.env.CSR == 'true';
 const enviroment = process.env.NODE_ENV;
 const isProduction = enviroment === 'production';
 
 const publicPath = '../../build/public/';
-const entryPoint = !isProduction ? './pre/client/client.js' : './src/client/client.jsx';
+const entryPoint = './src/client/client.jsx';
 
 const resources = [
 	{
@@ -55,8 +56,10 @@ const splitChunk = {
 	}
 };
 
-const manifestExclude = ['stats.json', '.DS_Store', '.js.br', '.js.gz', '.js', 'service-worker.js'];
+const manifestExclude = ['stats.json', '.DS_Store', '.js.br', '.js.gz', '.js', 'service-worker.ts'];
 const pluggins = [
+	new CleanWebpackPlugin(),
+	new ExtractCssChunks(),
 	new CopyPlugin(resources),
 	new ManifestPlugin({
 		fileName: 'manifest-assets.json',
@@ -91,12 +94,13 @@ const pluggins = [
 				quality: 75
 			}
 		}]
-	}),
-	new LoadablePlugin()
+	})
 ];
 
 if (isProduction) {
 	pluggins.push(
+		new webpack.optimize.ModuleConcatenationPlugin(),
+		new webpack.optimize.OccurrenceOrderPlugin(),
 		new CompressPlugin({
 			filename: '[path].gz[query]',
 			algorithm: 'gzip',
@@ -115,21 +119,22 @@ if (isProduction) {
 	);
 }
 
-pluggins.push(new WorkboxPlugin.InjectManifest({
-	/*swSrc: 'pre/workers/serviceWorker.js',
-	swDest: '../../pre/workers/service-worker.js',*/
-	swSrc: path.join(process.cwd(), 'src/workers/serviceWorker.ts'),
-	swDest: '../../src/workers/service-worker.ts',
-	exclude: [/\.(js.br|js.gz|DS_Store)$/, /manifest-assets.*\.json$/, /loadable-stats.*\.json$/],
-	precacheManifestFilename: 'manifest-precache.[manifestHash].js'
-}));
+pluggins.push(
+	new LoadablePlugin(),
+	new WorkboxPlugin.InjectManifest({
+		swSrc: path.join(process.cwd(), 'src/workers/serviceWorker.ts'),
+		swDest: '../../src/workers/service-worker.ts',
+		exclude: [/\.(js.br|js.gz|DS_Store)$/, /manifest-assets.*\.json$/, /loadable-stats.*\.json$/],
+		precacheManifestFilename: 'manifest-precache.[manifestHash].js'
+	})
+);
 
 module.exports = {
 	name: 'client',
 	target: 'web',
 	mode: enviroment,
 	bail: isProduction,
-	devtool: 'inline-source-map',
+	devtool: 'source-map',
 	entry: entryPoint,
 	performance: {
 		hints: false
@@ -151,10 +156,25 @@ module.exports = {
 	},
 	module: {
 		rules: [{
+			test: /\.(jsx|tsx|ts|js)$/,
+			exclude: /(node_modules|bower_components)/,
+			use: 'babel-loader'
+		}, {
 			test: /\.txt$/,
 			use: 'raw-loader'
+		}, {
+			test: /\.css$/,
+			use: [
+				ExtractCssChunks.loader,
+				{
+					loader: 'css-loader',
+					options: {
+						modules: true,
+						localIdentName: '[name]__[local]--[hash:base64:5]'
+					}
+				}
+			]
 		},
-		babelLoader,
 		fileLoader,
 		...imageLoader,
 		urlLoader,

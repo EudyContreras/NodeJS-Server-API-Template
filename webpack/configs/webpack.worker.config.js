@@ -5,7 +5,6 @@ require('dotenv').config();
 const path = require('path');
 const NodeExternals = require('webpack-node-externals');
 const optimization = require('../sections/optimization');
-const babelLoader = require('../loaders/babel.loader');
 const fileLoader = require('../loaders/file.loader');
 const urlLoader = require('../loaders/url.loader');
 const enviroment = process.env.NODE_ENV;
@@ -38,10 +37,13 @@ module.exports = {
 	}),
 	module: {
 		rules: [{
+			test: /\.(jsx|tsx|ts|js)$/,
+			exclude: /(node_modules|bower_components)/,
+			use: 'babel-loader'
+		}, {
 			test: /\.txt$/,
 			use: 'raw-loader'
 		},
-		babelLoader,
 		fileLoader,
 		urlLoader
 		]

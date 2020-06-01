@@ -33,7 +33,6 @@ module.exports = {
 				['@babel/plugin-proposal-decorators', {
 					'legacy': true
 				}],
-				'@loadable/babel-plugin',
 				'@babel/plugin-proposal-object-rest-spread',
 				'@babel/plugin-proposal-function-sent',
 				'@babel/plugin-proposal-export-namespace-from',

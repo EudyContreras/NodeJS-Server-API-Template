@@ -35,3 +35,5 @@ declare module 'express-no-favicons';
 declare module 'isomorphic-style-loader/StyleContext';
 
 declare module 'isomorphic-style-loader/withStyles';
+
+declare module 'react-loadable-ssr-addon'

@@ -1,10 +1,10 @@
 import React from 'react';
-import Home from './sections/documentation/DocsPage';
-import Docs from './sections/documentation/DocsPage';
-import Guide from './sections/information/AboutPage';
-import About from './sections/documentation/DocsPage';
-import Admin from './sections/administration/AdminPage';
-import Lost from './shared/Lost';
+import loadable from '@loadable/component';
+
+const Docs = loadable(() => import(/* webpackPrefetch: true */ './sections/documentation/DocsPage'));
+const About = loadable(() => import(/* webpackPrefetch: true */ './sections/information/AboutPage'));
+const Admin = loadable(() => import(/* webpackPrefetch: true */ './sections/administration/AdminPage'));
+const Lost = loadable(() => import(/* webpackPrefetch: true */ './shared/states/LostState'));
 
 export const routes = [
 	{
@@ -35,11 +35,22 @@ export const routes = [
 	}
 ];
 
-export default (otherProps: any): any[] => [
-	{ ...routes[0], render: ((props: any): JSX.Element => <Home {...props} {...otherProps} />) },
-	{ ...routes[1], render: ((props: any): JSX.Element => <Docs {...props} {...otherProps} />) },
-	{ ...routes[2], render: ((props: any): JSX.Element => <Guide {...props} {...otherProps} />) },
-	{ ...routes[3], render: ((props: any): JSX.Element => <About {...props} {...otherProps} />) },
-	{ ...routes[4], render: ((props: any): JSX.Element => <Admin {...props} {...otherProps} />) },
-	{ ...routes[5], render: ((props: any): JSX.Element => <Lost {...props} {...otherProps} />) }
+export type Mapping = { 
+	navLink: boolean | undefined;
+	label: string | undefined;
+	path: string;
+} | any;
+
+export type RouteMapping = {
+	mapping: Mapping;
+	render: (props?: any) => JSX.Element;
+};
+
+export default (otherProps: any): RouteMapping[] => [
+	{ mapping: { ...routes[0] }, render: (props?: any): JSX.Element => <Docs {...props} {...otherProps} /> },
+	{ mapping: { ...routes[1] }, render: (props?: any): JSX.Element => <Docs {...props} {...otherProps} /> },
+	{ mapping: { ...routes[2] }, render: (props?: any): JSX.Element => <About {...props} {...otherProps} /> },
+	{ mapping: { ...routes[3] }, render: (props?: any): JSX.Element => <Docs {...props} {...otherProps} /> },
+	{ mapping: { ...routes[4] }, render: (props?: any): JSX.Element => <Admin {...props} {...otherProps} /> },
+	{ mapping: { ...routes[5] }, render: (props?: any): JSX.Element => <Lost {...props} {...otherProps} /> }
 ];

@@ -4,43 +4,9 @@
 self.__WB_MANIFEST;
 
 import manifest from '../client/resources/manifest.json';
-import constants from './constants';
+import { contentTypes, cacheKeys, syncEvents, updateNotification, constants } from './constants';
 
 const TIMEOUT = 1000;
-
-const DATA_CACHE = 'eudcon-universal-data-cache';
-const STATIC_CACHE = 'eudcon-universal-static-cache';
-const FALLBACK_CACHE = 'eudcon-universal-fallback-cache';
-
-const syncEvents = {
-	INITIAL_SYNC: 'initial-sync',
-	UPDATE_SYNC: 'update-sync',
-	CONTENT_SYNC: 'content-sync'
-};
-
-const contentTypes = {
-	HTML: 'text/html',
-	SVG: 'image/svg+xml',
-	IMAGE: 'image/png',
-	FONT: ''
-};
-
-const updateNotification = {
-	title: 'Template engine',
-	options: {
-		requireInteraction: true,
-		body: 'There is update available! Would you like to see it?',
-		icon: '../static/images/icons/icon-152x152.png',
-		badge: '../static/images/icons/icon-152x152.png',
-		actions: [{
-			title: 'yes',
-			action: 'action-1'
-		}, {
-			title: 'no',
-			action: 'action-2'
-		}]
-	}
-};
 
 const worker = {
 	log: (...message: any): void => {
@@ -56,7 +22,6 @@ const worker = {
 		console.log('%c ServiceWorker ', css, ...message);
 	}
 };
-
 
 const initialSync = (): Promise<boolean> => {
 	return new Promise((resolve)=> {
@@ -75,7 +40,7 @@ const addDelay = (ms: number) => (): any => new Promise(resolve => setTimeout(()
 const getFallback = async (contentType: string = contentTypes.HTML): Promise<any> => {
 	switch(contentType) {
 		case contentTypes.HTML: {
-			const cache = await caches.open(FALLBACK_CACHE);
+			const cache = await caches.open(cacheKeys.FALLBACK_CACHE);
 			return cache.match('/offline.html');
 		}
 	}
@@ -84,7 +49,7 @@ const getFallback = async (contentType: string = contentTypes.HTML): Promise<any
 const useFallback = (contentType: string = contentTypes.HTML): any => {
 	switch(contentType) {
 		case contentTypes.IMAGE: {
-			return Promise.resolve(new Response(FALLBACK_CACHE, {
+			return Promise.resolve(new Response(cacheKeys.FALLBACK_CACHE, {
 				headers: {
 					'Content-Type': 'image/svg+xml'
 				}
@@ -151,7 +116,7 @@ const refreshClient = (response: Response): void => {
 		}));
 };
 
-const update = (request: RequestInfo, cacheName: string = DATA_CACHE): Promise<any> => {
+const update = (request: RequestInfo, cacheName: string = cacheKeys.DATA_CACHE): Promise<any> => {
 	return fetch(request).then(response => {
 		if (!response.ok) throw new Error('Network error');
 
@@ -181,7 +146,7 @@ const refresh = (response: Response): Promise<any> => {
 };
 
 const updateSync = (baseUrl: string): Promise<any> => {
-	return update(baseUrl + '/rest/api/schema', DATA_CACHE)
+	return update(baseUrl + '/rest/api/schema', cacheKeys.DATA_CACHE)
 		.then(refresh)
 		.then((data: any) => {
 			self.registration.showNotification(`New api version ${data.version}`);
@@ -325,7 +290,7 @@ const useStragedy = ({ event, request, cache, stragedy = constants.stragedies.CA
 self.addEventListener(constants.events.INSTALL, (event: Event | any) => {
 	worker.log('Installed:', event);
 	event.waitUntil(
-		caches.open(STATIC_CACHE)
+		caches.open(cacheKeys.STATIC_CACHE)
 			.then(cache => {
 				const images = manifest.icons.map((x: any) => x.src);
 				const cacheRes = (self.__WB_MANIFEST || self.__precacheManifest).map((x: any) => x.url);
@@ -343,7 +308,7 @@ self.addEventListener(constants.events.INSTALL, (event: Event | any) => {
 self.addEventListener(constants.events.ACTIVATE, (event: Event | any) => {
 	worker.log('Activated:', event);
 
-	const expectedCaches = [STATIC_CACHE, DATA_CACHE];
+	const expectedCaches = [cacheKeys.STATIC_CACHE, cacheKeys.DATA_CACHE, cacheKeys.IMAGE_CACHE];
 
 	event.waitUntil(
 		caches.keys()
@@ -370,15 +335,15 @@ self.addEventListener(constants.events.FETCH, (event: Event | any) => {
 	}
 
 	if (isApiRequest(request)) {
-		const cache = caches.open(DATA_CACHE);
+		const cache = caches.open(cacheKeys.DATA_CACHE);
 		event.respondWith(cache.then(cache => useStragedy({ event, request, cache, stragedy: constants.stragedies.UPDATE_REFRESH })));
 		event.waitUntil(update(request).then(refresh)); 
 		return;
 	}
 
 	if (isRequestForStaticAsset(request)) {
-		const cache = caches.open(STATIC_CACHE);
-		event.respondWith(cache.then(cache => useStragedy({ event, request, cache, stragedy: constants.stragedies.CACHE_FIRST})));
+		const cache = caches.open(cacheKeys.STATIC_CACHE);
+		event.respondWith(cache.then(cache => useStragedy({ event, request, cache, stragedy: constants.stragedies.CACHE_FIRST })));
 		return;
 	}
 	
@@ -395,7 +360,7 @@ self.addEventListener(constants.events.FETCH, (event: Event | any) => {
 				const clone = response.then(x => x.clone());
 
 				event.waitUntil(async () => {
-					const cache = await caches.open(STATIC_CACHE);
+					const cache = await caches.open(cacheKeys.STATIC_CACHE);
 					await cache.put(normalizedUrl.toString(), await clone);
 				});
 
@@ -403,13 +368,13 @@ self.addEventListener(constants.events.FETCH, (event: Event | any) => {
 			});
 		} else {
 			worker.log('Regular fetch event:', request);
-			const cache = caches.open(STATIC_CACHE);
+			const cache = caches.open(cacheKeys.STATIC_CACHE);
 			event.respondWith(cache.then(cache => useStragedy({ event, request, cache, stragedy: constants.stragedies.CACHE_FIRST })));
 		}
 		return;
 	}
 
-	const cache = caches.open(STATIC_CACHE);
+	const cache = caches.open(cacheKeys.STATIC_CACHE);
 	event.respondWith(cache.then(cache => useStragedy({ event, request, cache, stragedy: constants.stragedies.CACHE_FIRST })));
 });
 
@@ -499,7 +464,7 @@ self.addEventListener(constants.events.MESSAGE, (event: Event | any) => {
 			fetch(request)
 				.then(throwOnError)
 				.then(response => {
-					caches.open(STATIC_CACHE).then(cache => cache.put(request, response));
+					caches.open(cacheKeys.STATIC_CACHE).then(cache => cache.put(request, response));
 				});
 		}
 	}

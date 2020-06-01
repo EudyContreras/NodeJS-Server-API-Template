@@ -47,7 +47,6 @@ export default class Application {
 
 	public startlistening(): void {
 		const secure = config.ssl.ACTIVE;
-
 		if (secure) {
 			const port1 = config.host.PORT_HTTPS;
 			const port2 = config.host.PORT_HTTP;
@@ -62,7 +61,7 @@ export default class Application {
 			http.createServer(this.app).listen(port2, () => {
 				console.log(`Server listening on the port ${port2}`);
 			});
-		
+
 		} else {
 			const port = config.host.PORT_HTTP;
 			http.createServer(this.app).listen(port, () => {
@@ -75,24 +74,6 @@ export default class Application {
 		const render = config.presentation;
 		const clientRender = render.viewEngine.client;
 
-		if (process.env.NODE_ENV === 'development') {
-
-			const webpack = require('webpack');
-			const webpackHotMiddleware = require('webpack-hot-middleware');
-			const webpackDevMiddleware = require('webpack-dev-middleware');
-			const serverConfig = require('../../webpack/configs/webpack.server.config');
-
-			const serverCompiler = webpack(serverConfig);
-		
-			this.app.use(webpackHotMiddleware(serverCompiler));
-			this.app.use(webpackDevMiddleware(serverCompiler,{
-				serverSideRender: true,
-				publicPath: serverConfig.output.publicPath,
-				writeToDisk(filePath: string): boolean {
-					return /loadable-stats/.test(filePath);
-				}
-			}));
-		}
 		this.app.use(cors());
 		this.app.use(helmet());
 		this.app.use(shrinkRay());
@@ -154,7 +135,7 @@ export default class Application {
 		const password = config.database.DB_PASSWORD;
 		const dbURIPath = config.database.DB_URI_PATH;
 
-		const connectionString = `${prepend}${userName}:${password}${dbURIPath}`; 
+		const connectionString = `${prepend}${userName}:${password}${dbURIPath}`;
 
 		mongoose.connect(connectionString, this.dbOptions);
 
@@ -163,7 +144,7 @@ export default class Application {
 			if (createInitialData) {
 				await dataInitializer.createInitialRoles();
 				await dataInitializer.createInitialAdministrators();
-			}     
+			}
 		});
 	}
 }

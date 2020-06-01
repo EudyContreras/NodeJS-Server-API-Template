@@ -36,11 +36,11 @@ class App extends React.PureComponent<any, State> {
 	public render = (): JSX.Element => {
 		const routes = router({ styling: style });
 
-		const elements = routes.filter((x) => x.navLink === true).map((x) => {
-			return { link: x.path, label: x.label };
+		const elements = routes.filter((x) => x.mapping.navLink === true).map((x) => {
+			return { link: x.mapping.path, label: x.mapping.label };
 		});
 
-		const routings = routes.map((route, idx) => <Route exact key={idx} path={route.path} render={route.render} />);
+		const routings = routes.map((route, idx) => <Route exact key={idx} path={route.mapping.path} component={route.render} />);
 
 		return (
 			<Fragment>
