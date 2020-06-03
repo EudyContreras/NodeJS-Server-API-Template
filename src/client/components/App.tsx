@@ -1,6 +1,7 @@
 
 import React, { Fragment } from 'react';
 import config from '../config';
+import ErrorBoundary from './shared/ErrorBoundary';
 import NavbarMenu from './shared/navbar/Navbar';
 import NavbarPadder from './shared/navbar/NavbarPadder';
 import withStyles from 'isomorphic-style-loader/withStyles';
@@ -45,7 +46,9 @@ class App extends React.PureComponent<any, State> {
 		return (
 			<Fragment>
 				<NavbarPadder self={this.padder} styling={style} />
-				<Switch> {routings} </Switch>
+				<ErrorBoundary>
+					<Switch> {routings} </Switch>
+				</ErrorBoundary>
 				<NavbarMenu
 					styling={style}
 					location={this.props.location}
