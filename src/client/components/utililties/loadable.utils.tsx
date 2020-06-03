@@ -4,8 +4,8 @@ import { timeout } from 'promise-timeout';
 import baseLoadable, { LoadableComponent, DefaultComponent } from '@loadable/component';
 import LoadingState from '../shared/states/LoadingState';
 
-const DEFAULT_DELAY = 1300;
-const DEFAULT_TIMEOUT = 3000;
+const DEFAULT_DELAY = 300;
+const DEFAULT_TIMEOUT = 5000;
 
 export function Loading(props?: any): JSX.Element | null {
 	console.log(props);

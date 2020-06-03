@@ -9,7 +9,8 @@ export default (props) => {
 
 const DefaultLayout = (props) => {
 	const options = {
-		enableSW: props.enableSW
+		enableSW: props.enableSW,
+		watchConnection: props.watchConnection
 	};
 	return <html lang="en-US">
 		<head>
@@ -129,6 +130,7 @@ const DefaultLayout = (props) => {
 DefaultLayout.propTypes = {
 	cache: PropType.any,
 	favicon: PropType.any,
+	watchConnection: PropType.bool,
 	entryPoints: PropType.arrayOf(PropType.any),
 	enableSW: PropType.bool,
 	content: PropType.any,

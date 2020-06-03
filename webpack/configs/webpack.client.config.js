@@ -20,6 +20,7 @@ const fileLoader = require('../loaders/file.loader');
 const urlLoader = require('../loaders/url.loader');
 const svgLoader = require('../loaders/svg.loader');
 const ImageminPlugin= require('imagemin-webp-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const useCSR = process.env.CSR == 'true';
 const enviroment = process.env.NODE_ENV;
@@ -61,6 +62,13 @@ const pluggins = [
 	new CleanWebpackPlugin(),
 	new ExtractCssChunks(),
 	new CopyPlugin(resources),
+	new HtmlWebpackPlugin({
+		template: 'src/client/resources/html/offline.html',
+		filename: 'offline.html',
+		minify: {
+			collapseWhitespace: true
+		}
+	}),
 	new ManifestPlugin({
 		fileName: 'manifest-assets.json',
 		publicPath: '',

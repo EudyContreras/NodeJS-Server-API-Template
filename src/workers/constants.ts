@@ -1,7 +1,10 @@
-const baseUrl = '';
+const baseUrl = '/';
+const offlineFallbackPage = '/offline.html';
+
 
 const urlsToCache = [
-	'/',
+	'',
+	'/offline.html',
 	'https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js',
 	'https://fonts.googleapis.com/css?family=Roboto&display=optional',
 	'https://fonts.gstatic.com/s/materialicons/v48/flUhRq6tzZclQEJ-Vdg-IuiaDsNcIhQ8tQ.woff2'
@@ -97,6 +100,7 @@ const constants = Object.freeze({
 	cacheKeys: cacheKeys,
 	syncEvents: syncEvents,
 	contentTypes: contentTypes,
+	offlineFallbackPage: offlineFallbackPage,
 	updateNotification: updateNotification
 });
 
@@ -112,6 +116,7 @@ export {
 	syncEvents,
 	contentTypes,
 	updateNotification,
+	offlineFallbackPage,
 	constants
 };
 

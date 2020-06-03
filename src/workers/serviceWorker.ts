@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 
 self.__WB_MANIFEST;
 
@@ -292,9 +290,9 @@ self.addEventListener(constants.events.INSTALL, (event: Event | any) => {
 	event.waitUntil(
 		caches.open(cacheKeys.STATIC_CACHE)
 			.then(cache => {
-				const images = manifest.icons.map((x: any) => x.src);
+				const touchIcons = manifest.icons.map((x: any) => x.src);
 				const cacheRes = (self.__WB_MANIFEST || self.__precacheManifest).map((x: any) => x.url);
-				return cache.addAll([...constants.urlsToCache, ...cacheRes, ...images]);
+				return cache.addAll([...constants.urlsToCache, ...cacheRes, ...touchIcons]);
 			})
 			.then(() => self.skipWaiting())
 			.catch(error => worker.log(error))
@@ -353,18 +351,26 @@ self.addEventListener(constants.events.FETCH, (event: Event | any) => {
 		if (request.mode === 'navigate') {
 			worker.log('Navigation fetch event:', request);
 			event.respondWith(async () => {
-				const normalizedUrl = new URL(request.url);
-				normalizedUrl.search = '';
+				try {
+					const preloadedResponse = await event.preloadResponse;
 
-				const response = fetch(normalizedUrl.toString());
-				const clone = response.then(x => x.clone());
+					if (preloadedResponse) {
+						return preloadedResponse;
+					}
 
-				event.waitUntil(async () => {
+					const response = await fetch(event.request);
+					const clone = response.clone();
+
+					caches.open(cacheKeys.STATIC_CACHE).then(cache => {
+						cache.put(request, clone);
+					});
+
+					return response;
+				} catch (error) {
 					const cache = await caches.open(cacheKeys.STATIC_CACHE);
-					await cache.put(normalizedUrl.toString(), await clone);
-				});
-
-				return (await caches.match(normalizedUrl.toString())) || response;
+					const cachedResponse = await cache.match(constants.offlineFallbackPage);
+					return cachedResponse;
+				}
 			});
 		} else {
 			worker.log('Regular fetch event:', request);
@@ -458,6 +464,10 @@ self.addEventListener(constants.events.MESSAGE, (event: Event | any) => {
 	const command = event.data;
 
 	switch (command.type) {
+		case constants.messages.SKIP_WAITING: {
+			self.skipWaiting();
+			break;
+		}
 		case constants.messages.ADD_TO_CACHE: {
 			const request = new Request(command.payload);
 

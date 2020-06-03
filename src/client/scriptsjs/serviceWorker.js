@@ -139,6 +139,14 @@ const registerValidSW = (swUrl, config) => {
 		})
 		.then(registration => {
 			logger.log(`ServiceWorker: Registered succesfully with scope: ${registration.scope}`);
+			if (registration.sync) {
+				registration.sync.register('initial-sync').catch(error => console.log(error));
+			}
+			if ('PushManager' in window) {
+				initializeSubscription();
+			} else {
+				console.warn('Push notifications is not supported by your current browser! Please use a modern browser to take advantage of push notifications capabitilies');
+			}
 			registration.onupdatefound = () => {
 				logger.log('ServiceWorker: update found!');
 				const installingWorker = registration.installing;
@@ -228,11 +236,14 @@ const registerWorker = (config) => {
 	
 					// Add some additional logging to localhost, pointing developers to the
 					// service worker/PWA documentation.
-					navigator.serviceWorker.ready.then(() => {
+					navigator.serviceWorker.ready.then(registration => {
 						logger.log(
 							'This web app is being served cache-first by a service ' +
 							'worker. To learn more, visit https://bit.ly/CRA-PWA'
 						);
+						if (registration.sync) {
+							registration.sync.register('initial-sync').catch(error => console.log(error));
+						}
 					});
 				} else {
 					// Is not localhost. Just register service worker
@@ -254,15 +265,13 @@ const registerWorker = (config) => {
 };
 
 const addBackgroundSync = (syncName) => {
-	if ('serviceWorker' in navigator) {
-		navigator.serviceWorker.ready.then(registration => {
-			if (registration.sync) {
-				registration.sync.register(syncName)
-					.then(() => logger.log('Registered background sync: ', syncName))
-					.catch(err => logger.error('Error registering background sync', err));
-			}
-		});
-	}
+	onRegistration(registration => {
+		if (registration.sync) {
+			registration.sync.register(syncName)
+				.then(() => logger.log('Registered background sync: ', syncName))
+				.catch(err => logger.error('Error registering background sync', err));
+		}
+	});
 };
 
 const updateContentOnPageLoad = () => {
@@ -299,7 +308,7 @@ const addPeriodicBackgroundSync = async () => {
 			updateContentOnPageLoad();
 		}
 	} else {
-		// Periodic background sync cannot be used.
+		// Permision for periodic background sync has not been granted
 	}
 	
 };
@@ -332,6 +341,22 @@ const unregisterWorker = () => {
 };
 
 
+const watchOnlineStatus = () => {
+	function isOnline() {
+		const connectionStatus = document.getElementById('connectionStatus');
+	
+		if (navigator.onLine) {
+			connectionStatus.innerHTML = 'You are currently online!';
+		} else {
+			connectionStatus.innerHTML = 'You are currently offline. Any requests made will be queued and synced as soon as you are connected again.';
+		}
+	}
+	
+	window.addEventListener('online', isOnline);
+	window.addEventListener('offline', isOnline);
+};
+
 export const register = registerWorker;
 export const unregister = unregisterWorker;
 export const addSync = addBackgroundSync;
+export const watchConnection = watchOnlineStatus;

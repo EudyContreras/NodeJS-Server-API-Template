@@ -79,6 +79,7 @@ class IndexViewRenderer extends ViewRenderer {
 			entryPoints: entryPoints,
 			touchIcon: touchIcon,
 			enableSW: config.app.USE_SW,
+			watchConnection: true,
 			content: content,
 			cache: true
 		};

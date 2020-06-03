@@ -2,7 +2,7 @@
 import ReactDOM from 'react-dom';
 import configureStore from './stores/store';
 import { loadableReady } from '@loadable/component';
-import { register } from './scriptsjs/serviceWorker';
+import { register, watchConnection } from './scriptsjs/serviceWorker';
 import { client } from './views';
 
 loadableReady(() => {
@@ -31,5 +31,9 @@ loadableReady(() => {
 
 	if (renderOptions.enableSW == true) {
 		register();
+	}
+
+	if (renderOptions.watchConnection == true) {
+		watchConnection();
 	}
 });
