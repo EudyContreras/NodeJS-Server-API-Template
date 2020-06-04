@@ -53,7 +53,7 @@ class SidebarMenuItem extends React.PureComponent<any, State>{
 		const style = this.props.styling;
 
 		const classes = [style.menuItem];
-		const iconClasses = [MaterialIcons.CLASS];
+		const iconClasses = [MaterialIcons.class];
 
 		if (this.state.expanded) {
 			classes.push(style.active);

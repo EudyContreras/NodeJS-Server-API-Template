@@ -1,5 +1,6 @@
 import { combineReducers } from 'redux';
 
+import notifierReducer, { INavNotifier } from './common/notifier.reducer';
 import navigationReducer, { INavigationBar } from './common/navigation.reducer';
 import documentationReducer, { IDocumentationArea } from './documentation/section.reducer';
 import appdataReducer, { IApplicationData } from './common/application.reducer';
@@ -10,20 +11,23 @@ export interface IPresentation {
 }
 
 export interface IGeneralData {
+	notifier: INavNotifier;
 	appData: IApplicationData;
 }
 
 export interface IStateTree {
-	presentation: IPresentation;
-	appData: IApplicationData;
+	presentation: IPresentation | any;
+	generalData: IApplicationData | any;
 }
 
-export default combineReducers({
+const reduxState: IStateTree = {
 	presentation: combineReducers({
 		navigation: navigationReducer,
 		documentation: documentationReducer
 	}),
 	generalData: combineReducers({
+		notifier: notifierReducer,
 		appData: appdataReducer
 	})
-});
+};
+export default combineReducers(reduxState);

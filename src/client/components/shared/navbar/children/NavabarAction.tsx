@@ -1,4 +1,5 @@
 import React from 'react';
+import { MaterialIcons } from '../../../../stores/icon.library';
 import rippleEffect from '../../../../appliers/ripple.applier';
 import FontFaceObserver from 'fontfaceobserver';
 import { connect } from 'react-redux';
@@ -51,7 +52,7 @@ class Action extends React.PureComponent<Props, any> {
 		const style = this.props.styling;
 
 		const classes = [style.installButton];
-		const iconsClasses = ['material-icons', style.installButtonIcon];
+		const iconsClasses = [MaterialIcons.class, style.installButtonIcon];
 
 		if (!this.state.iconLoaded) {
 			iconsClasses.push(style.loadable);

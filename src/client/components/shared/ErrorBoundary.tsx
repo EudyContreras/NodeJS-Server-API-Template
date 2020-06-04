@@ -16,7 +16,7 @@ export default class ErrorBoundary extends React.PureComponent<Props, any> {
 		this.state = { hasError: false };
 	}
 
-	static getDerivedStateFromError(error: any): Props {
+	static getDerivedStateFromError(): Props {
 		return { hasError: true };
 	}
 

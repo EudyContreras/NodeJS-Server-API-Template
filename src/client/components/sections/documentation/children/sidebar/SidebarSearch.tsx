@@ -55,7 +55,7 @@ class SidebarSearch extends React.PureComponent<any, any> {
 		const style = this.props.styling;
 
 		const classes = [style.search, style.shadowElevate];
-		const iconsClasses = [MaterialIcons.CLASS, style.searchButtonIcon];
+		const iconsClasses = [MaterialIcons.class, style.searchButtonIcon];
 
 		if (!this.state.iconLoaded) {
 			iconsClasses.push(style.loadable);
