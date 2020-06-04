@@ -26,24 +26,25 @@ const useCSR = process.env.CSR == 'true';
 const enviroment = process.env.NODE_ENV;
 const isProduction = enviroment === 'production';
 
+const sourceLocation = isProduction ? 'pre' : 'src';
 const publicPath = '../../build/public/';
-const entryPoint = './src/client/client.jsx';
+const entryPoint = `./${sourceLocation}/client/client.${isProduction ? 'js' : 'jsx'}`;
 
 const resources = [
 	{
-		from: 'src/client/resources/manifest.json',
+		from: `${sourceLocation}/client/resources/manifest.json`,
 		to: ''
 	}, {
-		from: 'src/client/resources/robots.txt',
+		from: `${sourceLocation}/client/resources/robots.txt`,
 		to: ''
 	}, {
-		from: 'src/client/resources/styles/material.css',
+		from: `${sourceLocation}/client/resources/styles/material.css`,
 		to: 'styles/'
 	}];
 if (useCSR) {
 	resources.push(
 		{
-			from: 'src/client/resources/html/index.html',
+			from: `${sourceLocation}/client/resources/html/index.html`,
 			to: ''
 		}
 	);
@@ -63,7 +64,7 @@ const pluggins = [
 	new ExtractCssChunks(),
 	new CopyPlugin(resources),
 	new HtmlWebpackPlugin({
-		template: 'src/client/resources/html/offline.html',
+		template: `${sourceLocation}/client/resources/html/offline.html`,
 		filename: 'offline.html',
 		minify: {
 			collapseWhitespace: true
@@ -130,8 +131,8 @@ if (isProduction) {
 pluggins.push(
 	new LoadablePlugin(),
 	new WorkboxPlugin.InjectManifest({
-		swSrc: path.join(process.cwd(), 'src/workers/serviceWorker.ts'),
-		swDest: '../../src/workers/service-worker.ts',
+		swSrc: path.join(process.cwd(), `${sourceLocation}/workers/serviceWorker.${isProduction ? 'js' : 'ts'}`),
+		swDest: `../../${sourceLocation}/workers/service-worker.${isProduction ? 'js' : 'ts'}`,
 		exclude: [/\.(js.br|js.gz|DS_Store)$/, /manifest-assets.*\.json$/, /loadable-stats.*\.json$/],
 		precacheManifestFilename: 'manifest-precache.[manifestHash].js'
 	})
@@ -142,7 +143,7 @@ module.exports = {
 	target: 'web',
 	mode: enviroment,
 	bail: isProduction,
-	devtool: 'source-map',
+	devtool: isProduction ? 'source-map' : 'eval-cheap-module-source-map',
 	entry: entryPoint,
 	performance: {
 		hints: false

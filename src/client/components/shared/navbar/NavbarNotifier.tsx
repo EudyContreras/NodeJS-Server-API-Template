@@ -95,12 +95,12 @@ class NavBarNotifier extends React.PureComponent<Props, State> {
 				this.props.hideNotifier();
 			}, props.dimissDelay);	
 		}
-		
+
 		return (
 			<div className={join(...styling.container.style)} {...this.props}>
 				<i className={join(...styling.icon.style)}>{styling.icon.icon}</i>
 				<p className={styling.text.style}>{props.text}</p>
-				<i className={join(...styling.action.style)} onClick={() => this.dimissNotification()}>{styling.action.icon}</i>
+				<i className={styling.action.style} onClick={() => this.dimissNotification()}>{styling.action.icon}</i>
 			</div>
 		);
 	};

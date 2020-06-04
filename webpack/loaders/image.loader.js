@@ -1,5 +1,5 @@
 module.exports = [{
-	test: /\.(jpe?g|png|gif|svg|ico)$/,
+	test: /\.(jpe?g|png|svg|ico)$/,
 	loader: 'image-webpack-loader',
 	enforce: 'pre',
 	options: {

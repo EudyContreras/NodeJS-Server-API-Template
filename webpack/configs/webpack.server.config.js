@@ -15,8 +15,10 @@ const LoadablePlugin = require('@loadable/webpack-plugin');
 const enviroment = process.env.NODE_ENV;
 
 const isProduction = enviroment === 'production';
+
+const sourceLocation = isProduction ? 'pre' : 'src';
 const publicPath = '../../build/public';
-const entryPoint = './src/server/server.ts';
+const entryPoint = `./${sourceLocation}/server/server.${isProduction ? 'js' : 'ts'}`;
 
 const manifestExclude = ['.DS_Store', '.js.br', '.js.gz', '.js'];
 
@@ -78,7 +80,7 @@ module.exports = {
 	name: 'server',
 	target: 'node',
 	mode: enviroment,
-	devtool: 'source-map',
+	devtool: isProduction ? 'source-map' : 'eval-cheap-module-source-map',
 	performance: {
 		hints: false
 	},

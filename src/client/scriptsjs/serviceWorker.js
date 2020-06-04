@@ -139,14 +139,15 @@ const registerValidSW = (swUrl, config) => {
 		})
 		.then(registration => {
 			logger.log(`ServiceWorker: Registered succesfully with scope: ${registration.scope}`);
-			if (registration.sync) {
-				registration.sync.register('initial-sync').catch(error => console.log(error));
+		
+			if (config.registerPushNotifications) {
+				if ('PushManager' in window) {
+					initializeSubscription();
+				} else {
+					logger.log('Push notifications is not supported by your current browser! Please use a modern browser to take advantage of push notifications capabitilies');
+				}
 			}
-			if ('PushManager' in window) {
-				initializeSubscription();
-			} else {
-				console.warn('Push notifications is not supported by your current browser! Please use a modern browser to take advantage of push notifications capabitilies');
-			}
+		
 			registration.onupdatefound = () => {
 				logger.log('ServiceWorker: update found!');
 				const installingWorker = registration.installing;
@@ -207,7 +208,7 @@ const checkValidServiceWorker = (swUrl, config) => {
 		}
 	})
 		.catch(() => {
-			console.log('ServiceWorker: No internet connection found. App is running in offline mode.');
+			logger.log('ServiceWorker: No internet connection found. App is running in offline mode.');
 		});
 };
 
@@ -223,9 +224,7 @@ const registerWorker = (config) => {
 				// serve assets; see https://github.com/facebook/create-react-app/issues/2374
 				return;
 			}
-	
-			logger.log('ServiceWorker: being registered!');
-	
+
 			window.addEventListener('load', () => {
 				const swUrl = 'service-worker.js';
 	
@@ -236,14 +235,11 @@ const registerWorker = (config) => {
 	
 					// Add some additional logging to localhost, pointing developers to the
 					// service worker/PWA documentation.
-					navigator.serviceWorker.ready.then(registration => {
+					navigator.serviceWorker.ready.then(() => {
 						logger.log(
 							'This web app is being served cache-first by a service ' +
 							'worker. To learn more, visit https://bit.ly/CRA-PWA'
 						);
-						if (registration.sync) {
-							registration.sync.register('initial-sync').catch(error => console.log(error));
-						}
 					});
 				} else {
 					// Is not localhost. Just register service worker

@@ -30,10 +30,9 @@ loadableReady(() => {
 	document.getElementById('shellStyle').remove();
 
 	if (renderOptions.enableSW == true) {
-		register();
-	}
-
-	if (renderOptions.watchConnection == true) {
-		watchConnection();
+		register({ 
+			registerPushNotifications: false,
+			registerBackgroundSync: false
+		});
 	}
 });

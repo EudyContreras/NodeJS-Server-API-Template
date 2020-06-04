@@ -9,7 +9,9 @@ const developmentOptimization = (splitChunk) => ({
 	nodeEnv: 'development',
 	mangleWasmImports: false,
 	concatenateModules: false,
-	...splitChunk
+	removeAvailableModules: false,
+	removeEmptyChunks: false,
+	splitChunks: false
 });
 
 const productionOptimization = (splitChunk) => ({
@@ -18,6 +20,7 @@ const productionOptimization = (splitChunk) => ({
 		new TerserPlugin({
 			test: /\.(js|jsx|tsx|ts)$/i,
 			sourceMap: false,
+			parallel: true,
 			extractComments: false,
 			chunkFilter: (chunk) => {
 				if (chunk.name != null) {
@@ -52,8 +55,11 @@ const productionOptimization = (splitChunk) => ({
 		})
 	],
 	nodeEnv: 'production',
+	chunkIds: false,
+	moduleIds: false,
 	providedExports: true,
 	concatenateModules: true,
+	mergeDuplicateChunks: true,
 	removeAvailableModules: true,
 	removeEmptyChunks: true,
 	mangleWasmImports: true,

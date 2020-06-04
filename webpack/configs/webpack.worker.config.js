@@ -10,7 +10,8 @@ const urlLoader = require('../loaders/url.loader');
 const enviroment = process.env.NODE_ENV;
 const isProduction = enviroment === 'production';
 const publicPath = '../../build/public/';
-const entryPoint = './src/workers/service-worker.ts';
+const sourceLocation = isProduction ? 'pre' : 'src';
+const entryPoint = `./${sourceLocation}/workers/service-worker.${isProduction ? 'js' : 'ts'}`;
 
 module.exports = {
 	name: 'worker',
@@ -37,7 +38,7 @@ module.exports = {
 	}),
 	module: {
 		rules: [{
-			test: /\.(jsx|tsx|ts|js)$/,
+			test: /\.(ts|js)$/,
 			exclude: /(node_modules|bower_components)/,
 			use: 'babel-loader'
 		}, {
