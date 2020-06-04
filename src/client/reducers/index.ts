@@ -20,7 +20,7 @@ export interface IStateTree {
 	generalData: IApplicationData | any;
 }
 
-const reduxState: IStateTree = {
+export default combineReducers({
 	presentation: combineReducers({
 		navigation: navigationReducer,
 		documentation: documentationReducer
@@ -29,5 +29,4 @@ const reduxState: IStateTree = {
 		notifier: notifierReducer,
 		appData: appdataReducer
 	})
-};
-export default combineReducers(reduxState);
+});

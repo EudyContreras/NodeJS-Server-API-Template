@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import React from 'react';
 import Styles from '../../../styles/modules/notifier.module.scss';
 import { MaterialIcons } from '../../../stores/icon.library';
@@ -14,9 +15,9 @@ interface StateProps {
 	icon: string;
 }
 
-interface DispatchProps {
+type DispatchProps = {
 	hideNotifier: () => void;
-}
+};
 
 type NotificationStyling = {
 	icon: { style: string[]; icon: string };
@@ -25,7 +26,6 @@ type NotificationStyling = {
 	action: { 
 		style: string;
 		icon: string;
-		handler: ((event: React.MouseEvent<HTMLElement, MouseEvent>) => void);
 	};
 };
 
@@ -48,8 +48,7 @@ class NavBarNotifier extends React.PureComponent<Props, State> {
 		container: { style: [Styles.snackbar, active ? Styles.show : Styles.hide] },
 		action: { 
 			style: Styles.action,
-			icon: MaterialIcons.icons.CLOSE,
-			handler: this.dimissNotification
+			icon: MaterialIcons.icons.CLOSE
 		}
 	});
 
@@ -59,8 +58,7 @@ class NavBarNotifier extends React.PureComponent<Props, State> {
 		container: { style: [Styles.snackbarWarning, active ? Styles.show : Styles.hide] },
 		action: { 
 			style: Styles.action,
-			icon: MaterialIcons.icons.CLOSE,
-			handler: this.dimissNotification
+			icon: MaterialIcons.icons.CLOSE
 		}
 	});
 
@@ -70,14 +68,15 @@ class NavBarNotifier extends React.PureComponent<Props, State> {
 		container: { style: [Styles.snackbarError, active ? Styles.show : Styles.hide] },
 		action: { 
 			style: Styles.action,
-			icon: MaterialIcons.icons.CLOSE,
-			handler: this.dimissNotification
+			icon: MaterialIcons.icons.CLOSE
 		}
 	});
 
 	public render = (): JSX.Element => {
 		const props = {
-			text: this.props.text
+			text: this.props.text,
+			autoDismiss: this.props.autoDismiss,
+			dimissDelay: this.props.dimissDelay
 		};
 		
 		let styling = this.messageStyling(this.props.isActive);
@@ -90,11 +89,18 @@ class NavBarNotifier extends React.PureComponent<Props, State> {
 				styling = this.errorStyling(this.props.isActive);
 				break;
 		}
+
+		if (props.autoDismiss) {
+			setTimeout(() => {
+				this.props.hideNotifier();
+			}, props.dimissDelay);	
+		}
+		
 		return (
 			<div className={join(...styling.container.style)} {...this.props}>
 				<i className={join(...styling.icon.style)}>{styling.icon.icon}</i>
 				<p className={styling.text.style}>{props.text}</p>
-				<i className={join(...styling.action.style)} onClick={styling.action.handler}>{styling.action.icon}</i>
+				<i className={join(...styling.action.style)} onClick={() => this.dimissNotification()}>{styling.action.icon}</i>
 			</div>
 		);
 	};

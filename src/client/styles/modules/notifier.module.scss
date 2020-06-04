@@ -19,7 +19,7 @@ $notifierColorError: rgba(35, 40, 45, 1);
    font-size: 1rem;
 
    &.show {
-      visibility: visible; /* Show the snackbar */
+      visibility: visible; 
      -webkit-animation: fadein 0.5s;
      animation: fadein 0.5s;
    }
@@ -27,6 +27,26 @@ $notifierColorError: rgba(35, 40, 45, 1);
       -webkit-animation: fadeout 2.5s;
       animation: fadeout 2.5s;  
    }
+ }
+
+ .hide {
+
+ }
+
+ .show {
+
+ }
+
+ .text {
+
+ }
+
+ .icon {
+
+ }
+
+ .action {
+
  }
  
  /* Animations to fade the snackbar in and out */

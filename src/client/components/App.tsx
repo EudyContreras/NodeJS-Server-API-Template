@@ -4,6 +4,7 @@ import config from '../config';
 import ErrorBoundary from './shared/ErrorBoundary';
 import NavbarMenu from './shared/navbar/Navbar';
 import NavbarPadder from './shared/navbar/NavbarPadder';
+import Notifier from '../components/shared/navbar/NavbarNotifier';
 import withStyles from 'isomorphic-style-loader/withStyles';
 import style from '../styles/app.scss';
 import router from './Routes';
@@ -54,6 +55,7 @@ class App extends React.PureComponent<any, State> {
 					location={this.props.location}
 					brandName={config.app.NAME}
 					routings={elements} />
+				<Notifier isActive={false}/>
 			</Fragment>
 		);
 	};

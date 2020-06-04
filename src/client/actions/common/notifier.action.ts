@@ -8,8 +8,20 @@ export enum NotificationType {
 	ERROR, WARNING, MESSAGE
 }
 
-export const showNotifier = (icon: string, text: string, type: NotificationType = NotificationType.MESSAGE) => (dispatch: Function): void => {
-	dispatch({ ...notifieShowrAction, payload: { icon: icon, text: text, notificationType: type } }); 
+export const showNotifier = (
+	icon: string, 
+	text: string, 
+	autoDimiss = true,
+	dismissDelay = 3000,
+	type = NotificationType.MESSAGE
+) => (dispatch: Function): void => {
+	dispatch({ ...notifieShowrAction, payload: { 
+		icon: icon, 
+		text: text, 
+		autoDimiss: autoDimiss,
+		dismissDelay: dismissDelay,
+		notificationType: type 
+	} }); 
 };
 
 export const hideNotifier = () => (dispatch: Function): void => {
