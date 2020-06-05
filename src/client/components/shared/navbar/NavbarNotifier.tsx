@@ -2,9 +2,7 @@
 import React from 'react';
 import Styles from '../../../styles/modules/notifier.module.scss';
 import { MaterialIcons } from '../../../stores/icon.library';
-import { hideNotifier, NotificationType } from '../../../actions/common/notifier.action';
-import { IStateTree } from '../../../reducers/index';
-import { INavNotifier } from '../../../reducers/common/notifier.reducer';
+import { NotificationType, DispatchProps, Dispatchers } from '../../../actions/common/notifier.action';
 import { join } from '../../utililties/react.utils';
 import { connect } from 'react-redux';
 
@@ -14,10 +12,6 @@ interface StateProps {
 	text: string;
 	icon: string;
 }
-
-type DispatchProps = {
-	hideNotifier: () => void;
-};
 
 type NotificationStyling = {
 	icon: { style: string[]; icon: string };
@@ -29,10 +23,9 @@ type NotificationStyling = {
 	};
 };
 
-type State = INavNotifier;
 type Props = StateProps & DispatchProps & any;
 
-class NavBarNotifier extends React.PureComponent<Props, State> {
+class NavBarNotifier extends React.PureComponent<Props, any> {
 
 	constructor(props: any) {
 		super(props);
@@ -97,7 +90,7 @@ class NavBarNotifier extends React.PureComponent<Props, State> {
 		}
 
 		return (
-			<div className={join(...styling.container.style)} {...this.props}>
+			<div className={join(...styling.container.style)}>
 				<i className={join(...styling.icon.style)}>{styling.icon.icon}</i>
 				<p className={styling.text.style}>{props.text}</p>
 				<i className={styling.action.style} onClick={() => this.dimissNotification()}>{styling.action.icon}</i>
@@ -106,10 +99,10 @@ class NavBarNotifier extends React.PureComponent<Props, State> {
 	};
 }
 
-const mapStateToProps = (state: IStateTree | any ): any => {
+const mapStateToProps = (state: any ): any => {
 	return {
 		...state.generalData.notifier.isActive
 	};
 };
 
-export default connect<StateProps, DispatchProps, any>(mapStateToProps, { hideNotifier })(NavBarNotifier);
+export default connect<StateProps, DispatchProps, any>(mapStateToProps, Dispatchers)(NavBarNotifier);

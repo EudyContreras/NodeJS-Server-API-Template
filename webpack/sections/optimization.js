@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const TerserPlugin = require('terser-webpack-plugin');
 
-const developmentOptimization = (splitChunk) => ({
+const developmentOptimization = () => ({
 	minimize: false,
 	namedModules: true,
 	namedChunks: true,

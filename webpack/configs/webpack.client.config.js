@@ -25,10 +25,10 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const useCSR = process.env.CSR == 'true';
 const enviroment = process.env.NODE_ENV;
 const isProduction = enviroment === 'production';
-
-const sourceLocation = isProduction ? 'pre' : 'src';
+const usePreCompiled = false;
+const sourceLocation = usePreCompiled ? 'pre' : 'src';
 const publicPath = '../../build/public/';
-const entryPoint = `./${sourceLocation}/client/client.${isProduction ? 'js' : 'jsx'}`;
+const entryPoint = `./${sourceLocation}/client/client.${usePreCompiled ? 'js' : 'jsx'}`;
 
 const resources = [
 	{
@@ -61,7 +61,6 @@ const splitChunk = {
 const manifestExclude = ['stats.json', '.DS_Store', '.js.br', '.js.gz', '.js', 'service-worker.ts'];
 const pluggins = [
 	new CleanWebpackPlugin(),
-	new ExtractCssChunks(),
 	new CopyPlugin(resources),
 	new HtmlWebpackPlugin({
 		template: `${sourceLocation}/client/resources/html/offline.html`,
@@ -95,19 +94,12 @@ const pluggins = [
 				entryPoints: entrypoints
 			};
 		}
-	}),
-	new ImageminPlugin({
-		config: [{
-			test: /\.(jpe?g|png|gif|svg)$/i,
-			options: {
-				quality: 75
-			}
-		}]
 	})
 ];
 
 if (isProduction) {
 	pluggins.push(
+		new ExtractCssChunks(),
 		new webpack.optimize.ModuleConcatenationPlugin(),
 		new webpack.optimize.OccurrenceOrderPlugin(),
 		new CompressPlugin({
@@ -124,6 +116,14 @@ if (isProduction) {
 			test: /\.(js|css|html|json|svg)$/,
 			threshold: 10240,
 			minRatio: 0.8
+		}),
+		new ImageminPlugin({
+			config: [{
+				test: /\.(jpe?g|png|gif|svg)$/i,
+				options: {
+					quality: 75
+				}
+			}]
 		})
 	);
 }
@@ -131,8 +131,8 @@ if (isProduction) {
 pluggins.push(
 	new LoadablePlugin(),
 	new WorkboxPlugin.InjectManifest({
-		swSrc: path.join(process.cwd(), `${sourceLocation}/workers/serviceWorker.${isProduction ? 'js' : 'ts'}`),
-		swDest: `../../${sourceLocation}/workers/service-worker.${isProduction ? 'js' : 'ts'}`,
+		swSrc: path.join(process.cwd(), `${sourceLocation}/workers/serviceWorker.${usePreCompiled ? 'js' : 'ts'}`),
+		swDest: `../../${sourceLocation}/workers/service-worker.${usePreCompiled ? 'js' : 'ts'}`,
 		exclude: [/\.(js.br|js.gz|DS_Store)$/, /manifest-assets.*\.json$/, /loadable-stats.*\.json$/],
 		precacheManifestFilename: 'manifest-precache.[manifestHash].js'
 	})
@@ -143,10 +143,10 @@ module.exports = {
 	target: 'web',
 	mode: enviroment,
 	bail: isProduction,
-	devtool: isProduction ? 'source-map' : 'eval-cheap-module-source-map',
+	devtool: isProduction ? 'source-map' : 'inline-source-map',
 	entry: entryPoint,
 	performance: {
-		hints: false
+		hints: 'warning'
 	},
 	plugins: pluggins,
 	output: {
@@ -166,7 +166,7 @@ module.exports = {
 	module: {
 		rules: [{
 			test: /\.(jsx|tsx|ts|js)$/,
-			exclude: /(node_modules|bower_components)/,
+			exclude: /(node_modules)/,
 			use: 'babel-loader'
 		}, {
 			test: /\.txt$/,

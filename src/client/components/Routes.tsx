@@ -1,7 +1,6 @@
 import React from 'react';
 import { loadable, delayBoundary } from './utililties/loadable.utils';
 
-
 const Docs = loadable(() => delayBoundary(import(/* webpackPrefetch: true */ './sections/documentation/DocsPage')));
 const About = loadable(() => delayBoundary(import(/* webpackPrefetch: true */ './sections/information/AboutPage')));
 const Admin = loadable(() => delayBoundary(import(/* webpackPrefetch: true */ './sections/administration/AdminPage')));

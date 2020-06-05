@@ -8,6 +8,16 @@ export enum NotificationType {
 	ERROR, WARNING, MESSAGE
 }
 
+export interface DispatchProps {
+	showNotifier: (
+		icon: string, 
+		text: string, 
+		autoDimiss: boolean,
+		dismissDelay: number,
+		type: NotificationType) => void;
+	hideNotifier: () => void;
+}
+
 export const showNotifier = (
 	icon: string, 
 	text: string, 
@@ -36,4 +46,9 @@ export const notifieShowrAction = {
 export const notifieHideAction = {
 	from: NAV_NOTIFIER,
 	type: NAV_NOTIFIER_HIDE
+};
+
+export const Dispatchers = { 
+	showNotifier, 
+	hideNotifier
 };

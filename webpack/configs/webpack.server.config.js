@@ -15,10 +15,10 @@ const LoadablePlugin = require('@loadable/webpack-plugin');
 const enviroment = process.env.NODE_ENV;
 
 const isProduction = enviroment === 'production';
-
-const sourceLocation = isProduction ? 'pre' : 'src';
+const usePreCompiled = false;
+const sourceLocation = usePreCompiled ? 'pre' : 'src';
 const publicPath = '../../build/public';
-const entryPoint = `./${sourceLocation}/server/server.${isProduction ? 'js' : 'ts'}`;
+const entryPoint = `./${sourceLocation}/server/server.${usePreCompiled ? 'js' : 'ts'}`;
 
 const manifestExclude = ['.DS_Store', '.js.br', '.js.gz', '.js'];
 
@@ -103,7 +103,7 @@ module.exports = {
 		},
 		{
 			test: /\.(jsx|tsx|ts|js)$/,
-			exclude: /(node_modules|bower_components)/,
+			exclude: /(node_modules)/,
 			use: 'babel-loader'
 		},
 		fileLoader,

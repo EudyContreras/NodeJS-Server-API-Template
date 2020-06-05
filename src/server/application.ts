@@ -63,7 +63,7 @@ export default class Application {
 			});
 
 		} else {
-			const port = config.host.PORT;
+			const port = config.host.PORT_HTTP;
 			http.createServer(this.app).listen(port, () => {
 				console.log(`Server listening on the port ${port}`);
 			});

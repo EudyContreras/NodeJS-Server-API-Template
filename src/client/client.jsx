@@ -2,12 +2,11 @@
 import ReactDOM from 'react-dom';
 import configureStore from './stores/store';
 import { loadableReady } from '@loadable/component';
-import { register, watchConnection } from './scriptsjs/serviceWorker';
+import { register } from './scriptsjs/serviceWorker';
 import { client } from './views';
 
 loadableReady(() => {
-
-	const reactRender = ReactDOM.hydrate;
+	const renderMethod = !module.hot ? ReactDOM.render : ReactDOM.hydrate;
 
 	const initialState = window.__REDUX_STATE__ || {};
 	const renderOptions = window.__RENDER_OPTIONS__ || {};
@@ -22,7 +21,7 @@ loadableReady(() => {
 	const store = configureStore(initialState);
 	const content = document.getElementById('content');
 
-	reactRender(
+	renderMethod(
 		client(window.location.pathname, store, insertCss),
 		content
 	);
@@ -31,6 +30,7 @@ loadableReady(() => {
 
 	if (renderOptions.enableSW == true) {
 		register({ 
+			watchConnnectionState: false,
 			registerPushNotifications: false,
 			registerBackgroundSync: false
 		});
