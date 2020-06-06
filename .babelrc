@@ -35,10 +35,6 @@
       "@babel/plugin-proposal-function-bind"
    ],
    "env": {
-      "development": {
-        "plugins": [
-          "react-hot-loader/babel"
-        ]
-      }
+      
     }
 }

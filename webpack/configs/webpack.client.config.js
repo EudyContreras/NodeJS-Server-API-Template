@@ -16,7 +16,6 @@ const optimization = require('../sections/optimization');
 const splitchunks = require('../sections/splitchunks');
 const imageLoader = require('../loaders/image.loader');
 const styleLoader = require('../loaders/style.loader');
-const fileLoader = require('../loaders/file.loader');
 const urlLoader = require('../loaders/url.loader');
 const svgLoader = require('../loaders/svg.loader');
 const ImageminPlugin= require('imagemin-webp-webpack-plugin');
@@ -58,7 +57,7 @@ const splitChunk = {
 	}
 };
 
-const manifestExclude = ['stats.json', '.DS_Store', '.js.br', '.js.gz', '.js', 'service-worker.ts'];
+const manifestExclude = ['stats.json', '.DS_Store', '.js.br', '.js.gz', '.js', 'service-worker.ts', 'loadable-stats.json'];
 const pluggins = [
 	new CleanWebpackPlugin(),
 	new CopyPlugin(resources),
@@ -171,24 +170,11 @@ module.exports = {
 		}, {
 			test: /\.txt$/,
 			use: 'raw-loader'
-		}, {
-			test: /\.css$/,
-			use: [
-				ExtractCssChunks.loader,
-				{
-					loader: 'css-loader',
-					options: {
-						modules: true,
-						localIdentName: '[name]__[local]--[hash:base64:5]'
-					}
-				}
-			]
 		},
-		fileLoader,
-		...imageLoader,
+		...imageLoader('images'),
+		...styleLoader(path, isProduction),
 		urlLoader,
-		svgLoader,
-		styleLoader(path)
+		svgLoader
 		]
 	},
 	resolve: {

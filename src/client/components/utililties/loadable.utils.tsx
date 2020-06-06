@@ -3,8 +3,9 @@ import minDelay from 'p-min-delay';
 import { timeout } from 'promise-timeout';
 import baseLoadable, { Options, LoadableComponent, DefaultComponent } from '@loadable/component';
 import LoadingState from '../shared/states/LoadingState';
+import Loader from '../shared/Loader';
 
-const DEFAULT_DELAY = 100;
+const DEFAULT_DELAY = 250;
 const DEFAULT_TIMEOUT = 5000;
 
 export function Loading(props?: any): JSX.Element | null {
@@ -20,8 +21,8 @@ export function Loading(props?: any): JSX.Element | null {
 }
 
 type DelayOptions = {
-	delay?: number;
-	timeout?: number;
+	delay: number;
+	timeout?: number ;
 };
 
 export function delayBoundary<T>(
@@ -31,7 +32,7 @@ export function delayBoundary<T>(
 		timeout: DEFAULT_TIMEOUT
 	}
 ): Promise<DefaultComponent<T>> {
-	const delay = options.delay || DEFAULT_DELAY;
+	const delay = options.delay;
 	const timeoutTime = options.timeout || DEFAULT_TIMEOUT;
 	return timeout(minDelay(call, delay), timeoutTime);
 };
@@ -40,7 +41,7 @@ export function loadable<T>(
 	call: (props: T) => Promise<DefaultComponent<T>>,
 	options: Options<T> = { 
 		ssr: true,
-		fallback: <LoadingState/>
+		fallback: <Loader/>
 	}
 ): LoadableComponent<T> {
 	return baseLoadable(call, options);

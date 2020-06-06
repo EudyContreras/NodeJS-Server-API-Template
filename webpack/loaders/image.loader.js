@@ -1,4 +1,4 @@
-module.exports = [{
+module.exports = (path) => [{
 	test: /\.(jpe?g|png|svg|ico)$/,
 	loader: 'image-webpack-loader',
 	enforce: 'pre',
@@ -27,11 +27,28 @@ module.exports = [{
 	loader: 'responsive-loader',
 	options: {
 		name: 'icons/[name]-[width]x[width].[ext]',
-		outputPath:'images',
+		outputPath: path,
 		sizes: [72, 76, 96, 120, 128, 144, 152, 180, 192, 257, 384, 512],
 		placeholder: true,
 		placeholderSize: 50,
 		adapter: require('responsive-loader/sharp')
+	}
+},
+{
+	test: /\.(ico)$/i,
+	loader: 'file-loader',
+	options: {
+		outputPath: path,
+		publicPath: path,
+		name(file) {
+			const parts = file.split('/');
+			const isIcon = parts[parts.length - 1].startsWith('icon');
+
+			if (process.env.NODE_ENV === 'development') {
+				return isIcon ? 'icons/[name].[ext]' : '[name].[ext]';
+			}
+			return isIcon ? 'icons/[name].[ext]' : '[name].[ext]';
+		}
 	}
 }
 ];

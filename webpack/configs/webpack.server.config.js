@@ -9,7 +9,6 @@ const NodeExternals = require('webpack-node-externals');
 const optimization = require('../sections/optimization');
 const imageLoader = require('../loaders/image.loader');
 const styleLoader = require('../loaders/style.loader');
-const fileLoader = require('../loaders/file.loader');
 const WriteFilePlugin = require('write-file-webpack-plugin');
 const LoadablePlugin = require('@loadable/webpack-plugin');
 const enviroment = process.env.NODE_ENV;
@@ -17,7 +16,7 @@ const enviroment = process.env.NODE_ENV;
 const isProduction = enviroment === 'production';
 const usePreCompiled = false;
 const sourceLocation = usePreCompiled ? 'pre' : 'src';
-const publicPath = '../../build/public';
+const publicPath = '../../build';
 const entryPoint = `./${sourceLocation}/server/server.${usePreCompiled ? 'js' : 'ts'}`;
 
 const manifestExclude = ['.DS_Store', '.js.br', '.js.gz', '.js'];
@@ -39,7 +38,7 @@ plugins.push(
 		maxChunks: 1
 	}),
 	new ManifestPlugin({
-		fileName: 'manifest-image-assets.json',
+		fileName: './public/manifest-image-assets.json',
 		publicPath: '',
 		generate: (seed, files) => {
 			const manifestFiles = files.reduce((manifest, file) => {
@@ -53,7 +52,7 @@ plugins.push(
 					if (!(extension in manifest)) {
 						manifest[extension] = [];
 					}
-					manifest[extension].push({ name: name, path: file.path });
+					manifest[extension].push({ name: name, path: file.path.replace('public/','') });
 				}
 				return manifest;
 			}, seed);
@@ -71,18 +70,16 @@ plugins.push(
 			}
 		}]
 	}),
-	new LoadablePlugin({
-		filename: '../loadable-stats.json'
-	})
+	new LoadablePlugin()
 );
 
 module.exports = {
 	name: 'server',
 	target: 'node',
 	mode: enviroment,
-	devtool: isProduction ? 'source-map' : 'eval-cheap-module-source-map',
+	devtool: isProduction ? 'source-map' : 'inline-source-map',
 	performance: {
-		hints: false
+		hints: 'warning'
 	},
 	entry: [
 		'@babel/polyfill', entryPoint
@@ -90,7 +87,7 @@ module.exports = {
 	output: {
 		path: path.join(__dirname, publicPath),
 		publicPath: '/',
-		filename: '../server.js',
+		filename: 'server.js',
 		globalObject: 'this'
 	},
 	plugins: plugins,
@@ -106,9 +103,8 @@ module.exports = {
 			exclude: /(node_modules)/,
 			use: 'babel-loader'
 		},
-		fileLoader,
-		...imageLoader,
-		styleLoader(path)
+		...imageLoader('public/images'),
+		...styleLoader(path, isProduction)
 		]
 	},
 	resolve: {

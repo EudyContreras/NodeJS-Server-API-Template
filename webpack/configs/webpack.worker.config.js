@@ -5,7 +5,6 @@ require('dotenv').config();
 const path = require('path');
 const NodeExternals = require('webpack-node-externals');
 const optimization = require('../sections/optimization');
-const fileLoader = require('../loaders/file.loader');
 const urlLoader = require('../loaders/url.loader');
 const enviroment = process.env.NODE_ENV;
 const isProduction = enviroment === 'production';
@@ -46,7 +45,6 @@ module.exports = {
 			test: /\.txt$/,
 			use: 'raw-loader'
 		},
-		fileLoader,
 		urlLoader
 		]
 	},

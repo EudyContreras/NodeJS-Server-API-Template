@@ -1,10 +1,12 @@
 import React from 'react';
-import { loadable, delayBoundary } from './utililties/loadable.utils';
+import loadable from '@loadable/component';
+import Loader from './shared/Loader';
+import { delayBoundary } from './utililties/loadable.utils';
 
-const Docs = loadable(() => delayBoundary(import(/* webpackPrefetch: true */ './sections/documentation/DocsPage')));
-const About = loadable(() => delayBoundary(import(/* webpackPrefetch: true */ './sections/information/AboutPage')));
-const Admin = loadable(() => delayBoundary(import(/* webpackPrefetch: true */ './sections/administration/AdminPage')));
-const Lost = loadable(() => delayBoundary(import(/* webpackPrefetch: true */ './shared/states/LostState')));
+import Docs from './sections/documentation/DocsPage';
+const About = loadable(() => delayBoundary(import(/* webpackPrefetch: true */ './sections/information/AboutPage')), { ssr: true, fallback: <Loader/> });
+const Admin = loadable(() => delayBoundary(import(/* webpackPrefetch: true */ './sections/administration/AdminPage')), { ssr: true, fallback: <Loader/> });
+const Lost = loadable(() => delayBoundary(import(/* webpackPrefetch: true */ './shared/states/LostState')), { ssr: true, fallback: <Loader/> });
 
 export const routes = [
 	{

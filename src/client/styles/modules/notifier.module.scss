@@ -1,71 +1,118 @@
-
 $notifierColor: rgba(35, 40, 45, 1);
 $notifierColorWarning:rgba(35, 40, 45, 1);
 $notifierColorError: rgba(35, 40, 45, 1);
 
 .snackbar {
-   visibility: hidden;
-   min-width: 250px;
-   margin-left: -125px;
-   background-color: #333;
-   color: #fff;
-   text-align: center;
-   border-radius: 2px;
-   padding: 16px;
-   position: fixed;
-   z-index: 1;
-   left: 50%;
-   bottom: 30px;
-   font-size: 1rem;
+  visibility: hidden;
+  min-width: 250px;
+  margin-left: -125px;
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  border-radius: 2px;
+  padding: 16px;
+  position: fixed;
+  z-index: 1;
+  left: 50%;
+  bottom: 30px;
+  font-size: 1rem;
 
-   &.show {
-      visibility: visible; 
-     -webkit-animation: fadein 0.5s;
-     animation: fadein 0.5s;
-   }
-   &.hide {
-      -webkit-animation: fadeout 2.5s;
-      animation: fadeout 2.5s;  
-   }
- }
+  &.show {
+    visibility: visible;
+    -webkit-animation: fadein 0.5s;
+    animation: fadein 0.5s;
+  }
 
- .hide {
+  &.hide {
+    -webkit-animation: fadeout 2.5s;
+    animation: fadeout 2.5s;
+  }
+}
 
- }
+.textWarning {
+  visibility: visible;
+}
 
- .show {
+.hide {
+  visibility: hidden;
+}
 
- }
+.show {
+  visibility: visible;
+}
 
- .text {
+.text {
+  visibility: visible;
+}
 
- }
+.icon {
+  visibility: visible;
+}
 
- .icon {
+.action {
+  visibility: visible;
+}
 
- }
+.text {
+  visibility: visible;
+}
 
- .action {
+.snackbarWarning {
+  visibility: visible;
+}
 
- }
- 
- /* Animations to fade the snackbar in and out */
- @-webkit-keyframes fadein {
-   from {bottom: 0; opacity: 0;} 
-   to {bottom: 30px; opacity: 1;}
- }
- 
- @keyframes fadein {
-   from {bottom: 0; opacity: 0;}
-   to {bottom: 30px; opacity: 1;}
- }
- 
- @-webkit-keyframes fadeout {
-   from {bottom: 30px; opacity: 1;} 
-   to {bottom: 0; opacity: 0;}
- }
- 
- @keyframes fadeout {
-   from {bottom: 30px; opacity: 1;}
-   to {bottom: 0; opacity: 0;}
- }
+.snackbarError {
+  visibility: visible;
+}
+
+.textError {
+  visibility: visible;
+}
+/* Animations to fade the snackbar in and out */
+@-webkit-keyframes fadein {
+  from {
+    bottom: 0;
+    opacity: 0;
+  }
+
+  to {
+    bottom: 30px;
+    opacity: 1;
+  }
+}
+
+@keyframes fadein {
+  from {
+    bottom: 0;
+    opacity: 0;
+  }
+
+  to {
+    bottom: 30px;
+    opacity: 1;
+  }
+}
+
+@-webkit-keyframes fadeout {
+  from {
+    bottom: 30px;
+    opacity: 1;
+  }
+
+  to {
+    bottom: 0;
+    opacity: 0;
+  }
+}
+
+@keyframes fadeout {
+  from {
+    bottom: 30px;
+    opacity: 1;
+  }
+
+  to {
+    bottom: 0;
+    opacity: 0;
+  }
+}

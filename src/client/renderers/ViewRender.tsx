@@ -4,7 +4,7 @@ import path from 'path';
 import config from '../config';
 import configureStore from '../stores/store';
 import ViewRenderer from '../../server/middleware/renderer';
-import appStyle from './../styles/app.scss';
+import AppStyle from './../styles/app.scss';
 import { routes } from '../components/Routes';
 import { Store } from 'redux';
 import { application } from '../views';
@@ -15,6 +15,7 @@ import IAction from '../actions/action';
 import { ChunkExtractor } from '@loadable/server';
 
 const statsFile = path.resolve('build/public/loadable-stats.json');
+const appStyle: any = AppStyle;
 
 class IndexViewRenderer extends ViewRenderer {
 
