@@ -1,3 +1,33 @@
+.route-page {
+	height: 100vh;
+	width: 100vw;
+	display: flex;
+	align-items: center;
+   justify-content: center;
+   position: absolute;
+   top: 0;
+   left: 0;
+   
+   &-loading {
+      background-color: rgba(46, 50, 54, 1);
+      animation: backgroundAnim 0.5s cubic-bezier(0, 0.2, 0.8, 1) normal forwards;
+   }
+   &-loaded {
+      background-color: rgba(46, 50, 54, 0);
+   }
+}
+
+@keyframes backgroundAnim {
+	0% {
+      color: rgba(255, 255, 255, 0);
+      background-color: rgba(46, 50, 54, 1);
+	}
+	100% {
+      color: rgba(255, 255, 255, 1);
+      background-color: rgba(46, 50, 54, 0);
+	}
+}
+
 .content-wrapper {
    display: flex;
    flex-direction: column;

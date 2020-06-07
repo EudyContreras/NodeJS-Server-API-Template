@@ -12,7 +12,7 @@ interface StateProps {
 
 type Props = StateProps & DispatchProps;
 
-class AboutPage extends React.Component<Props, any> {
+class ApplicationPage extends React.Component<Props, any> {
 
 	constructor(props: Props) {
 		super(props);
@@ -43,7 +43,7 @@ class AboutPage extends React.Component<Props, any> {
 		}
 		
 		return <section className={join(...classes)}>
-			<h2>About Page</h2>
+			<h2>Application Page</h2>
 		</section>;
 	};
 }
@@ -52,4 +52,4 @@ const mapStateToProps = (state: IStateTree & any): any => ({
 	loadedRoutes: state.generalData.routeLoader.loadedRoutes
 });
 
-export default connect<StateProps, DispatchProps, any>(mapStateToProps, { showLoader, hideLoader })(AboutPage);
+export default connect<StateProps, DispatchProps, any>(mapStateToProps, { showLoader, hideLoader })(ApplicationPage);

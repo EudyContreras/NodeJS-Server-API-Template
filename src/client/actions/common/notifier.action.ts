@@ -25,7 +25,7 @@ export const showNotifier = (
 	dismissDelay = 3000,
 	type = NotificationType.MESSAGE
 ) => (dispatch: Function): void => {
-	dispatch({ ...notifieShowrAction, payload: { 
+	dispatch({ ...notifierShowAction, payload: { 
 		icon: icon, 
 		text: text, 
 		autoDimiss: autoDimiss,
@@ -35,15 +35,15 @@ export const showNotifier = (
 };
 
 export const hideNotifier = () => (dispatch: Function): void => {
-	dispatch(notifieHideAction); 
+	dispatch(notifierHideAction); 
 };
 
-export const notifieShowrAction = {
+export const notifierShowAction = {
 	from: NAV_NOTIFIER,
 	type: NAV_NOTIFIER_SHOW
 };
 
-export const notifieHideAction = {
+export const notifierHideAction = {
 	from: NAV_NOTIFIER,
 	type: NAV_NOTIFIER_HIDE
 };

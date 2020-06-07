@@ -1,12 +1,38 @@
-import React from 'react';
-import Styles from '../../styles/modules/loader.module.scss';
+import React, { Fragment } from 'react';
+import { connect } from 'react-redux';
+import { IStateTree } from '../../reducers';
+import { DispatchProps, Dispatchers } from '../../actions/common/loader.action';
 
-export default class Loading extends React.PureComponent<any> {
-	
+interface StateProps {
+	styling: any;
+	isActive: boolean;
+}
+
+type Props = StateProps & DispatchProps;
+
+class Loading extends React.PureComponent<Props, any> {
+
+	constructor(props: Props) {
+		super(props);
+	}
+
 	public render = (): JSX.Element => {
-		return <div className={Styles.loading}>
-			<div></div>
-			<div></div>
-		</div>;
+		const styling = this.props.styling;
+
+		if (this.props.isActive) {
+			return <section className={styling.loadingPage}>
+				<div className={styling.loading}>
+					<div></div>
+					<div></div>
+				</div>
+			</section>;
+		}
+		return <Fragment/>;
 	};
 } 
+
+const mapStateToProps = (state: IStateTree & any): any => ({
+	isActive: state.generalData.routeLoader.isActive
+});
+
+export default connect<StateProps, DispatchProps, any>(mapStateToProps, Dispatchers)(Loading);

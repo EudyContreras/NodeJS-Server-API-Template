@@ -5,7 +5,7 @@ import baseLoadable, { Options, LoadableComponent, DefaultComponent } from '@loa
 import LoadingState from '../shared/states/LoadingState';
 import Loader from '../shared/Loader';
 
-const DEFAULT_DELAY = 250;
+const DEFAULT_DELAY = 1250;
 const DEFAULT_TIMEOUT = 5000;
 
 export function Loading(props?: any): JSX.Element | null {

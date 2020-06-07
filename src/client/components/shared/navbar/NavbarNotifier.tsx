@@ -101,7 +101,7 @@ class NavBarNotifier extends React.PureComponent<Props, any> {
 
 const mapStateToProps = (state: any ): any => {
 	return {
-		...state.generalData.notifier.isActive
+		...state.generalData.notifier
 	};
 };
 

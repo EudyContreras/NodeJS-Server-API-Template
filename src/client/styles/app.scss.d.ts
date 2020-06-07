@@ -2,7 +2,7 @@
 // Please do not change this file!
 interface CssExports {
   'active': string;
-  'adminLabel': string;
+  'backgroundAnim': string;
   'bottom': string;
   'content': string;
   'content-padder': string;
@@ -41,6 +41,9 @@ interface CssExports {
   'invisible': string;
   'loadable': string;
   'loaded': string;
+  'loading': string;
+  'loading-page': string;
+  'loadingPage': string;
   'main-section': string;
   'mainSection': string;
   'menu-header': string;
@@ -77,6 +80,13 @@ interface CssExports {
   'ripple-effect': string;
   'rippleDrop': string;
   'rippleEffect': string;
+  'route': string;
+  'route-page': string;
+  'route-page-loaded ': string;
+  'route-page-loading': string;
+  'routePage': string;
+  'routePageLoaded': string;
+  'routePageLoading': string;
   'sandbox-area': string;
   'sandboxArea': string;
   'search': string;

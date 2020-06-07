@@ -1,16 +1,55 @@
-import React, { Fragment } from 'react';
+import React from 'react';
+import { connect } from 'react-redux';
+import { IStateTree } from '../../../reducers';
+import { join } from '../../utililties/react.utils';
+import { hideLoader, showLoader, DispatchProps } from '../../../actions/common/loader.action';
 
-interface Props {
+interface StateProps {
+	path: any;
 	styling: any;
-	self: any;
+	loadedRoutes: string[];
 }
-class AdminPage extends React.PureComponent<Props> {
-	
-	public render = (): JSX.Element => {
-		const style = this.props.styling;
 
-		return (<Fragment><h2>Admin Page</h2></Fragment>);
+type Props = StateProps & DispatchProps;
+
+class AdminPage extends React.Component<Props, any> {
+
+	constructor(props: Props) {
+		super(props);
+	}
+
+	public shouldComponentUpdate = (nextProps: any, nextState: any): boolean => {
+		return false;
+	};
+
+	public componentDidMount = (): void => {
+		const route = this.props.path;
+		const empty = this.props.loadedRoutes.length <= 0;
+		if (empty || !this.props.loadedRoutes.includes(route)) {
+			this.props.hideLoader(route);
+		}
+	};
+
+	public render = (): JSX.Element => {
+		const route = this.props.path;
+		const style = this.props.styling;
+		const classes = [style.routePage];
+		
+		const empty = this.props.loadedRoutes.length <= 0;
+		if (empty || !this.props.loadedRoutes.includes(route)) {
+			classes.push(style.routePageLoading);
+		} else {
+			classes.push(style.routePageloaded);
+		}
+		
+		return <section className={join(...classes)}>
+			<h2>Adming Page</h2>
+		</section>;
 	};
 }
 
-export default AdminPage;
+const mapStateToProps = (state: IStateTree & any): any => ({
+	loadedRoutes: state.generalData.routeLoader.loadedRoutes
+});
+
+export default connect<StateProps, DispatchProps, any>(mapStateToProps, { showLoader, hideLoader })(AdminPage);

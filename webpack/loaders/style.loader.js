@@ -9,7 +9,7 @@ module.exports = (path, isProduction) => [
 				options: {
 					modules: {
 						mode: 'local',
-						localIdentName: isProduction ? '[hash:base64]' : '[local]',
+						localIdentName: isProduction ? '[hash:base64:10]' : '[local]',
 						context: path.resolve(__dirname, '../../src/client/components')
 					},
 					localsConvention: 'camelCase',

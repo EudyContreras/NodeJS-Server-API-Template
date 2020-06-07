@@ -1,11 +1,11 @@
 
 import React, { Fragment } from 'react';
-import config from '../config';
 import ErrorBoundary from './shared/ErrorBoundary';
 import NavbarMenu from './shared/navbar/Navbar';
 import NavbarPadder from './shared/navbar/NavbarPadder';
 import Notifier from '../components/shared/navbar/NavbarNotifier';
 import withStyles from 'isomorphic-style-loader/withStyles';
+import Loader from './shared/Loader';
 import style from '../styles/app.scss';
 import router from './Routes';
 
@@ -14,6 +14,8 @@ import { Switch, Route } from 'react-router-dom';
 interface State {
 	navPadding: number;
 }
+
+const Styling: any = style;
 
 class App extends React.PureComponent<any, State> {
 
@@ -36,26 +38,25 @@ class App extends React.PureComponent<any, State> {
 	};
 
 	public render = (): JSX.Element => {
-		const routes = router({ styling: style });
+		const routes = router({ styling: Styling });
 
 		const elements = routes.filter((x) => x.mapping.navLink === true).map((x) => {
-			return { link: x.mapping.path, label: x.mapping.label };
+			return { link: x.mapping.path, label: x.mapping.label, lazyLoaded: x.mapping.lazyLoaded };
 		});
 
 		const routings = routes.map((route, idx) => <Route exact key={idx} path={route.mapping.path} component={route.render} />);
 
 		return (
 			<Fragment>
-				<NavbarPadder self={this.padder} styling={style} />
+				<NavbarPadder self={this.padder} styling={Styling} />
 				<ErrorBoundary>
+					<Loader styling={Styling}/>
 					<Switch> {routings} </Switch>
 				</ErrorBoundary>
 				<NavbarMenu
-					styling={style}
+					styling={Styling}
 					location={this.props.location}
-					brandName={config.app.NAME}
 					routings={elements} />
-				<Notifier isActive={false}/>
 			</Fragment>
 		);
 	};

@@ -3,23 +3,31 @@ import memoize from 'fast-memoize';
 import Action from './children/NavabarAction';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+import swMessager from '../../../utilities/messageBus';
+import { IStateTree } from '../../../reducers';
 import { shallowEqual } from '../../utililties/comparer.utils';
 import { appendWhen, join } from '../../../appliers/style.applier';
 import { getNavigationBar } from '../../../selectors/navbar.selector';
+import { showLoader } from '../../../actions/common/loader.action';
 import { DispatchProps, Dispatchers } from '../../../actions/common/navigation.action';
 import constants from '../../../../workers/constants';
-import swMessager from '../../../utilities/messageBus';
 
 interface StateProps {
 	anchored: boolean;
 	mouseInside: boolean | null;
+	loadedRoutes: string[];
 	activeTab: null | {
 		label: string;
 		index: string;
 	};
 }
 
-type Props = StateProps & DispatchProps & any;
+interface DispatchPropsLoader {
+	showLoader: () => void;
+	hideLoader: (loadedRoute?: string) => void;
+}
+
+type Props = StateProps & DispatchProps & DispatchPropsLoader & any;
 
 class Navbar extends React.Component<Props, any> {
 
@@ -99,14 +107,26 @@ class Navbar extends React.Component<Props, any> {
 		}
 	};
 
+	private manageLoader = (tab: any): void => {
+		const empty = this.props.loadedRoutes.length <= 0;
+		if (empty || !this.props.loadedRoutes.includes(tab.link)) {
+			if (tab.lazyLoaded) {
+				this.props.showLoader();
+			}
+		}
+	};
+
 	private handleLinkClick = (tab: any): void => {
 		const { events, messages } = constants;
+
 		swMessager.emit(events.MESSAGE, { type: messages.ADD_TO_CACHE, payload: tab.link });
 
 		if (this.props.activeTab === null) {
+			this.manageLoader(tab);
 			this.props.setActiveTab(tab);
 		} else {
 			if (this.props.activeTab.label !== tab.label) {
+				this.manageLoader(tab)
 				this.props.setActiveTab(tab);
 			}
 		}
@@ -170,6 +190,9 @@ class Navbar extends React.Component<Props, any> {
 	};
 }
 
-const mapStateToProps = (state: any): any => getNavigationBar(state.presentation);
+const mapStateToProps = (state: IStateTree | any): any => ({
+	...getNavigationBar(state.presentation),
+	loadedRoutes: state.generalData.routeLoader.loadedRoutes
+});
 
-export default connect<StateProps, DispatchProps, any>(mapStateToProps, Dispatchers)(Navbar);
+export default connect<StateProps, DispatchProps | DispatchPropsLoader, any>(mapStateToProps, { ...Dispatchers, showLoader })(Navbar);

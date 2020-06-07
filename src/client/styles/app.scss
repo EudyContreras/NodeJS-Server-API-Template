@@ -13,6 +13,7 @@ $standardInterpolator: cubic-bezier(.25, .8, .25, 1);
 @import './partials/ripple';
 @import './partials/elevate';
 @import './partials/navbar';
+@import './partials/loaders';
 @import './partials/navlink';
 @import './partials/status';
 @import './partials/brand';
@@ -53,6 +54,10 @@ body::-webkit-scrollbar {
 	overflow: visible;
 	width: 16px;
 	display: none;
+}
+
+.route {
+	display: block;
 }
 
 .loadable {

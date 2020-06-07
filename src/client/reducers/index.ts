@@ -1,5 +1,6 @@
 import { combineReducers } from 'redux';
 
+import routeLoaderReducer, { IRouteLoader } from './common/loader.reducer';
 import notifierReducer, { INavNotifier } from './common/notifier.reducer';
 import navigationReducer, { INavigationBar } from './common/navigation.reducer';
 import documentationReducer, { IDocumentationArea } from './documentation/section.reducer';
@@ -12,12 +13,13 @@ export interface IPresentation {
 
 export interface IGeneralData {
 	notifier: INavNotifier;
+	routeLoader: IRouteLoader;
 	appData: IApplicationData;
 }
 
 export interface IStateTree {
-	presentation: IPresentation | any;
-	generalData: IApplicationData | any;
+	presentation: IPresentation;
+	generalData: IGeneralData;
 }
 
 export default combineReducers({
@@ -27,6 +29,7 @@ export default combineReducers({
 	}),
 	generalData: combineReducers({
 		notifier: notifierReducer,
+		routeLoader: routeLoaderReducer,
 		appData: appdataReducer
 	})
 });
