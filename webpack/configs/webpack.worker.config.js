@@ -6,12 +6,14 @@ const path = require('path');
 const NodeExternals = require('webpack-node-externals');
 const optimization = require('../sections/optimization');
 const urlLoader = require('../loaders/url.loader');
+
 const enviroment = process.env.NODE_ENV;
-const isProduction = enviroment === 'production';
+const precompile = process.env.PRECOMPILE == 'true';
+
 const publicPath = '../../build/public/';
-const usePreCompiled = false;
-const sourceLocation = usePreCompiled ? 'pre' : 'src';
-const entryPoint = `./${sourceLocation}/workers/service-worker.${usePreCompiled ? 'js' : 'ts'}`;
+const isProduction = enviroment === 'production';
+const sourceLocation = precompile ? 'pre' : 'src';
+const entryPoint = `./${sourceLocation}/workers/service-worker.${precompile ? 'js' : 'ts'}`;
 
 module.exports = {
 	name: 'worker',

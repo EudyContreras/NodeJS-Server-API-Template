@@ -56,8 +56,12 @@ body::-webkit-scrollbar {
 	display: none;
 }
 
-.route {
-	display: block;
+::-moz-selection { /* Code for Firefox */
+	background: transparent;
+  }
+  
+::selection {
+	background: transparent;
 }
 
 .loadable {

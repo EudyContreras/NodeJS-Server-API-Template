@@ -50,13 +50,14 @@ class IndexViewRenderer extends ViewRenderer {
 	};
 
 	private renderRoutes = async (req: Request, res: Response): Promise<void> => {
-		const shell = req.query.shell !== undefined;
-
-		const cssInjector = (...styles: any[]): void => styles.forEach(style => this.styling.add(style._getCss()));
 
 		if (config.app.CSR) {
-			res.status(200).send('');
+			res.status(200);
 		} else {
+			const shell = req.query.shell !== undefined;
+
+			const cssInjector = (...styles: any[]): void => styles.forEach(style => this.styling.add(style._getCss()));
+
 			if (shell) {
 				return await this.renderShell(req, res, cssInjector);
 			} else {
@@ -74,8 +75,8 @@ class IndexViewRenderer extends ViewRenderer {
 
 		const props = {
 			css: this.styling,
+			html: config.html,
 			state: this.state,
-			title: config.app.TITLE,
 			favicon: favicon,
 			entryPoints: entryPoints,
 			touchIcon: touchIcon,
@@ -97,7 +98,7 @@ class IndexViewRenderer extends ViewRenderer {
 
 		const props = {
 			css: this.styling,
-			title: config.app.TITLE,
+			html: config.html,
 			enableSW: config.app.USE_SW,
 			content: content,
 			cache: true

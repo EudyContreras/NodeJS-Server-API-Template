@@ -42,7 +42,6 @@ export default class Application {
 		this.initializeViewRenderers(args.viewRenderer);
 		this.initializeErrorHandling(args.interceptor);
 		this.connectToTheDatabase(true);
-		this.initializeWebjobs();
 	}
 
 	public startlistening(): void {
@@ -56,10 +55,10 @@ export default class Application {
 				cert: fs.readFileSync('./ssl/localhost.crt')
 			};
 			http2.createServer(options, this.app).listen(port1, () => {
-				console.log(`Server listening on the port ${port1}`);
+				console.log(`HTTPS Server listening on the port ${port1}`);
 			});
 			http.createServer(this.app).listen(port2, () => {
-				console.log(`Server listening on the port ${port2}`);
+				console.log(`HTTP Server listening on the port ${port2}`);
 			});
 
 		} else {
@@ -120,11 +119,7 @@ export default class Application {
 	}
 
 	private initializeWebjobs(): void {
-		/*const dataCollector = new DataCollectionJob();
-
-		dataCollector.scheduleA(scheduler);
-		dataCollector.scheduleB(scheduler);
-		dataCollector.scheduleC(scheduler);*/
+		
 	}
 
 	private connectToTheDatabase(createInitialData = false): void {

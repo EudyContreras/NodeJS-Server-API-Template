@@ -80,7 +80,6 @@ interface CssExports {
   'ripple-effect': string;
   'rippleDrop': string;
   'rippleEffect': string;
-  'route': string;
   'route-page': string;
   'route-page-loaded ': string;
   'route-page-loading': string;

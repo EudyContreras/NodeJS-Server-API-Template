@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable @typescript-eslint/no-var-requires */
 
 require('dotenv').config();
@@ -10,6 +11,7 @@ const ManifestPlugin = require('webpack-manifest-plugin');
 const CompressPlugin = require('compression-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const LoadablePlugin = require('@loadable/webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const ExtractCssChunks = require('extract-css-chunks-webpack-plugin');
 const BrotliPlugin = require('brotli-webpack-plugin');
 const optimization = require('../sections/optimization');
@@ -21,13 +23,14 @@ const svgLoader = require('../loaders/svg.loader');
 const ImageminPlugin= require('imagemin-webp-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
+const precompile = process.env.PRECOMPILE == 'true';
 const useCSR = process.env.CSR == 'true';
 const enviroment = process.env.NODE_ENV;
+
 const isProduction = enviroment === 'production';
-const usePreCompiled = false;
-const sourceLocation = usePreCompiled ? 'pre' : 'src';
-const publicPath = '../../build/public/';
-const entryPoint = `./${sourceLocation}/client/client.${usePreCompiled ? 'js' : 'jsx'}`;
+const sourceLocation = precompile ? 'pre' : 'src';
+const publicPath = '../../build/public';
+const entryPoint = `./${sourceLocation}/client/client.${precompile ? 'js' : 'jsx'}`;
 
 const resources = [
 	{
@@ -39,15 +42,8 @@ const resources = [
 	}, {
 		from: `${sourceLocation}/client/resources/styles/material.css`,
 		to: 'styles/'
-	}];
-if (useCSR) {
-	resources.push(
-		{
-			from: `${sourceLocation}/client/resources/html/index.html`,
-			to: ''
-		}
-	);
-}
+	}
+];
 
 const fileName = useCSR ? 'scripts/[name].bundle.js' : 'scripts/[name].bundle.[chunkhash].js';
 
@@ -61,12 +57,12 @@ const manifestExclude = ['stats.json', '.DS_Store', '.js.br', '.js.gz', '.js', '
 const pluggins = [
 	new CleanWebpackPlugin(),
 	new CopyPlugin(resources),
+	new MiniCssExtractPlugin(),
 	new HtmlWebpackPlugin({
-		template: `${sourceLocation}/client/resources/html/offline.html`,
+		excludeChunks: [/main.bundle.*.js/, /vendors.bundle.*.js/],
+		template: `${sourceLocation}/client/resources/html/offline.hbs`,
 		filename: 'offline.html',
-		minify: {
-			collapseWhitespace: true
-		}
+		minify: true
 	}),
 	new ManifestPlugin({
 		fileName: 'manifest-assets.json',
@@ -96,6 +92,21 @@ const pluggins = [
 	})
 ];
 
+if (useCSR) {
+	const clientConfig = require('../../pre/client/config');
+
+	pluggins.push(
+		new HtmlWebpackPlugin({
+			template: `${sourceLocation}/client/resources/html/index.hbs`,
+			filename: 'index.html',
+			scriptLoading: 'defer',
+			favicon: `${sourceLocation}/client/resources/images/favicon.ico`,
+			title: 'Some title',
+			html: clientConfig.html,
+			minify: true
+		})
+	);
+}
 if (isProduction) {
 	pluggins.push(
 		new ExtractCssChunks(),
@@ -130,8 +141,8 @@ if (isProduction) {
 pluggins.push(
 	new LoadablePlugin(),
 	new WorkboxPlugin.InjectManifest({
-		swSrc: path.join(process.cwd(), `${sourceLocation}/workers/serviceWorker.${usePreCompiled ? 'js' : 'ts'}`),
-		swDest: `../../${sourceLocation}/workers/service-worker.${usePreCompiled ? 'js' : 'ts'}`,
+		swSrc: path.join(process.cwd(), `${sourceLocation}/workers/serviceWorker.${precompile ? 'js' : 'ts'}`),
+		swDest: `../../${sourceLocation}/workers/service-worker.${precompile ? 'js' : 'ts'}`,
 		exclude: [/\.(js.br|js.gz|DS_Store)$/, /manifest-assets.*\.json$/, /loadable-stats.*\.json$/],
 		precacheManifestFilename: 'manifest-precache.[manifestHash].js'
 	})
@@ -163,18 +174,14 @@ module.exports = {
 		...optimization({ splitChunk: splitChunk, production: isProduction })
 	},
 	module: {
-		rules: [{
-			test: /\.(jsx|tsx|ts|js)$/,
-			exclude: /(node_modules)/,
-			use: 'babel-loader'
-		}, {
-			test: /\.txt$/,
-			use: 'raw-loader'
-		},
-		...imageLoader('images'),
-		...styleLoader(path, isProduction),
-		urlLoader,
-		svgLoader
+		rules: [
+			{ test: /\.hbs$/, loader: 'handlebars-loader' },
+			{ test: /\.(jsx|tsx|ts|js)$/, exclude: /(node_modules)/, use: 'babel-loader' }, 
+			{ test: /\.txt$/, use: 'raw-loader' },
+			...imageLoader('images'),
+			...styleLoader(path, isProduction),
+			urlLoader,
+			svgLoader
 		]
 	},
 	resolve: {

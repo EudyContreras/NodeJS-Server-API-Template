@@ -4,7 +4,7 @@ export const MaterialIcons = {
 	icons: {
 		INFORMATION: 'information',
 		WARNING : 'warning',
-		ERROR: 'erro',
+		ERROR: 'error',
 		CLOSE: 'close',
 		CHEV_RIGHT: 'chevron_right',
 		CHEV_LEFT: 'chevron_left',

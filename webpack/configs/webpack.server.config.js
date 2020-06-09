@@ -11,13 +11,14 @@ const imageLoader = require('../loaders/image.loader');
 const styleLoader = require('../loaders/style.loader');
 const WriteFilePlugin = require('write-file-webpack-plugin');
 const LoadablePlugin = require('@loadable/webpack-plugin');
+
 const enviroment = process.env.NODE_ENV;
+const precompile = process.env.PRECOMPILE == 'true';
 
 const isProduction = enviroment === 'production';
-const usePreCompiled = false;
-const sourceLocation = usePreCompiled ? 'pre' : 'src';
+const sourceLocation = precompile ? 'pre' : 'src';
 const publicPath = '../../build';
-const entryPoint = `./${sourceLocation}/server/server.${usePreCompiled ? 'js' : 'ts'}`;
+const entryPoint = `./${sourceLocation}/server/server.${precompile ? 'js' : 'ts'}`;
 
 const manifestExclude = ['.DS_Store', '.js.br', '.js.gz', '.js'];
 
