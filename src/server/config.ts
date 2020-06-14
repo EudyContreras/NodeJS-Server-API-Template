@@ -7,6 +7,7 @@ const config = Object.freeze({
 	},
 	presentation: {
 		path: 'client',
+		IS_SSR: process.env.CSR == 'false',
 		viewEngine: {
 			type: 'jsx',
 			alias: 'views',

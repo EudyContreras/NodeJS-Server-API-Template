@@ -6,12 +6,16 @@ import { register } from './scriptsjs/serviceWorker';
 import { client } from './views';
 
 loadableReady(() => {
-	const renderMethod = !module.hot ? ReactDOM.render : ReactDOM.hydrate;
 
 	const initialState = window.__REDUX_STATE__ || {};
 	const renderOptions = window.__RENDER_OPTIONS__ || {};
-
+	
+	const useRender = (!module.hot || renderOptions.isCSR);
+	
 	delete window.__REDUX_STATE__;
+	delete window.__RENDER_OPTIONS__;
+
+	const renderMethod = useRender ? ReactDOM.render : ReactDOM.hydrate;
 
 	const insertCss = (...styles) => {
 		const removeCss = styles.map(style => style._insertCss());

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 
 import path from 'path';
-import config from '../config';
+import config from '../../configs/config.client.json';
 import configureStore from '../stores/store';
 import ViewRenderer from '../../server/middleware/renderer';
 import AppStyle from './../styles/app.scss';
@@ -51,8 +51,8 @@ class IndexViewRenderer extends ViewRenderer {
 
 	private renderRoutes = async (req: Request, res: Response): Promise<void> => {
 
-		if (config.app.CSR) {
-			res.status(200);
+		if (process.env.CSR == 'true') {
+			res.status(200).send();
 		} else {
 			const shell = req.query.shell !== undefined;
 
@@ -80,7 +80,8 @@ class IndexViewRenderer extends ViewRenderer {
 			favicon: favicon,
 			entryPoints: entryPoints,
 			touchIcon: touchIcon,
-			enableSW: config.app.USE_SW,
+			enableSW: process.env.USE_SW == 'true',
+			clientSideRendered: process.env.CSR == 'true',
 			watchConnection: true,
 			content: content,
 			cache: true
@@ -99,7 +100,7 @@ class IndexViewRenderer extends ViewRenderer {
 		const props = {
 			css: this.styling,
 			html: config.html,
-			enableSW: config.app.USE_SW,
+			enableSW: process.env.USE_SW == 'true',
 			content: content,
 			cache: true
 		};

@@ -4,11 +4,11 @@ import { delayBoundary } from './utililties/loadable.utils';
 import Docs from './sections/documentation/DocsPage';
 import Lost from './shared/states/LostState';
 
-const options = { ssr: true, fallback: <h2>Loading...</h2> };
+const options = { ssr: true, fallback: <h2>Loading...</h2>, timing: { delay: 250 } };
 
-const Apps = loadable(() => delayBoundary(import(/* webpackPrefetch: true */ './sections/applications/ApplicationsPage')), options);
-const About = loadable(() => delayBoundary(import(/* webpackPrefetch: true */ './sections/information/AboutPage')), options);
-const Admin = loadable(() => delayBoundary(import(/* webpackPrefetch: true */ './sections/administration/AdminPage')), options);
+const Apps = loadable(() => delayBoundary(import(/* webpackPrefetch: true */ './sections/applications/ApplicationsPage'), options.timing), options);
+const About = loadable(() => delayBoundary(import(/* webpackPrefetch: true */ './sections/information/AboutPage'), options.timing), options);
+const Admin = loadable(() => delayBoundary(import(/* webpackPrefetch: true */ './sections/administration/AdminPage'), options.timing), options);
 
 
 export const routes = [

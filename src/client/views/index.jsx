@@ -2,8 +2,7 @@ import React from 'react';
 import Application from '../components/App';
 import StyleContext from 'isomorphic-style-loader/StyleContext';
 import { Provider } from 'react-redux';
-import { StaticRouter } from 'react-router';
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter, StaticRouter } from 'react-router-dom';
 
 export const shell = (url, store, context, insertCss) => (
 	<Provider store={store}>

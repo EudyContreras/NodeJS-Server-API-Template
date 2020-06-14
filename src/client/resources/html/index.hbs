@@ -82,22 +82,25 @@
 <body>
 	<noscript>You need to enable JavaScript to fully be able to use this this web-app.</noscript>
 	<section id='content'></section>
-	<script async rel="preconnect" src="https://cdn.jsdelivr.net/npm/pwacompat@2.0.9/pwacompat.min.js"
-		integrity="sha384-VcI6S+HIsE80FVM1jgbd6WDFhzKYA0PecD/LcIyMQpT4fMJdijBh0I7Iblaacawc"
-		crossOrigin="anonymous"></script>
-	<script defer rel="preconnect" src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-	<script id="__LOADABLE_REQUIRED_CHUNKS__" type="application/json">[]</script>
-
 	<script type="text/javascript">
 
-		window.__RENDER_OPTIONS__ = JSON.stringify({}).replace(/</g, '\\u003c');
-		window.__REDUX_STATE__ = JSON.stringify({}).replace(/</g, '\\u003c');
+		window.__RENDER_OPTIONS__ = {
+			enableSW: {{htmlWebpackPlugin.options.enableSW}},
+			clientSideRendered: {{htmlWebpackPlugin.options.clientSideRendered}}
+		}
 
 		window.addEventListener("load", () => {
 			document.getElementById("robotoFont").removeAttribute("disabled");
 			document.getElementById("materialIcons").removeAttribute("disabled");
 		});
 
+		
 	</script>
+	<script async rel="preconnect" src="https://cdn.jsdelivr.net/npm/pwacompat@2.0.9/pwacompat.min.js"
+		integrity="sha384-VcI6S+HIsE80FVM1jgbd6WDFhzKYA0PecD/LcIyMQpT4fMJdijBh0I7Iblaacawc"
+		crossOrigin="anonymous"></script>
+	<script defer rel="preconnect" src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<script id="__LOADABLE_REQUIRED_CHUNKS__" type="application/json">[]</script>
+
 </body>
 </html>

@@ -8,8 +8,7 @@
    height: 100vh;
    position: absolute;
    min-width: 230px;
-   scroll-behavior: smooth;
-   overflow-y: visible;
+   overflow-y: hidden;
    will-change: transform;
    margin: 0;
    z-index: 1000;

@@ -45,7 +45,7 @@ const resources = [
 	}
 ];
 
-const fileName = useCSR ? 'scripts/[name].bundle.js' : 'scripts/[name].bundle.[chunkhash].js';
+const fileName = 'scripts/[name].bundle.[chunkhash].js';
 
 const splitChunk = {
 	splitChunks: {
@@ -93,7 +93,7 @@ const pluggins = [
 ];
 
 if (useCSR) {
-	const clientConfig = require('../../pre/client/config');
+	const clientConfig = require(`../../${sourceLocation}/configs/config.client.json`);
 
 	pluggins.push(
 		new HtmlWebpackPlugin({
@@ -102,6 +102,8 @@ if (useCSR) {
 			scriptLoading: 'defer',
 			favicon: `${sourceLocation}/client/resources/images/favicon.ico`,
 			title: 'Some title',
+			clientSideRendered: process.env.CSR == 'true',
+			enableSW: process.env.USE_SW == 'true',
 			html: clientConfig.html,
 			minify: true
 		})

@@ -39,7 +39,9 @@ export default class Application {
 		this.setupExpress();
 		this.initializeMiddleware(args.interceptor);
 		this.initializeControllers(args.controllers);
-		this.initializeViewRenderers(args.viewRenderer);
+		if (config.presentation.IS_SSR) {
+			this.initializeViewRenderers(args.viewRenderer);
+		}
 		this.initializeErrorHandling(args.interceptor);
 		this.connectToTheDatabase(true);
 	}

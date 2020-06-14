@@ -8,14 +8,19 @@ import { IStateTree } from '../../../reducers';
 import { shallowEqual } from '../../utililties/comparer.utils';
 import { appendWhen, join } from '../../../appliers/style.applier';
 import { getNavigationBar } from '../../../selectors/navbar.selector';
-import { showLoader } from '../../../actions/common/loader.action';
+import { showLoader, hideLoader } from '../../../actions/common/loader.action';
 import { DispatchProps, Dispatchers } from '../../../actions/common/navigation.action';
 import constants from '../../../../workers/constants';
 
 interface StateProps {
 	anchored: boolean;
+	routings: any;
+	styling: any;
+	location: string;
+	brandName: string;
 	mouseInside: boolean | null;
 	loadedRoutes: string[];
+	isLoaderActive: boolean;
 	activeTab: null | {
 		label: string;
 		index: string;
@@ -27,9 +32,13 @@ interface DispatchPropsLoader {
 	hideLoader: (loadedRoute?: string) => void;
 }
 
-type Props = StateProps & DispatchProps & DispatchPropsLoader & any;
+type Props = StateProps & DispatchProps & DispatchPropsLoader;
 
-class Navbar extends React.Component<Props, any> {
+type State = {
+	hovering: boolean;
+};
+
+class Navbar extends React.Component<Props, State> {
 
 	private navbar: React.RefObject<HTMLElement>;
 
@@ -108,6 +117,9 @@ class Navbar extends React.Component<Props, any> {
 	};
 
 	private manageLoader = (tab: any): void => {
+		if (this.props.isLoaderActive) {
+			this.props.hideLoader();
+		}
 		const empty = this.props.loadedRoutes.length <= 0;
 		if (empty || !this.props.loadedRoutes.includes(tab.link)) {
 			if (tab.lazyLoaded) {
@@ -126,7 +138,7 @@ class Navbar extends React.Component<Props, any> {
 			this.props.setActiveTab(tab);
 		} else {
 			if (this.props.activeTab.label !== tab.label) {
-				this.manageLoader(tab)
+				this.manageLoader(tab);
 				this.props.setActiveTab(tab);
 			}
 		}
@@ -192,7 +204,8 @@ class Navbar extends React.Component<Props, any> {
 
 const mapStateToProps = (state: IStateTree | any): any => ({
 	...getNavigationBar(state.presentation),
-	loadedRoutes: state.generalData.routeLoader.loadedRoutes
+	loadedRoutes: state.generalData.routeLoader.loadedRoutes,
+	isLoaderActive: state.generalData.routeLoader.isActive
 });
 
-export default connect<StateProps, DispatchProps | DispatchPropsLoader, any>(mapStateToProps, { ...Dispatchers, showLoader })(Navbar);
+export default connect<StateProps, DispatchProps | DispatchPropsLoader, any>(mapStateToProps, { ...Dispatchers, showLoader, hideLoader })(Navbar);
