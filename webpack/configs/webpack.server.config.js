@@ -13,12 +13,13 @@ const WriteFilePlugin = require('write-file-webpack-plugin');
 const LoadablePlugin = require('@loadable/webpack-plugin');
 
 const enviroment = process.env.NODE_ENV;
+const useCSR = process.env.CSR == 'true';
 const precompile = process.env.PRECOMPILE == 'true';
 
 const isProduction = enviroment === 'production';
 const sourceLocation = precompile ? 'pre' : 'src';
 const publicPath = '../../build';
-const entryPoint = `./${sourceLocation}/server/server.${precompile ? 'js' : 'ts'}`;
+const entryPoint = `./${sourceLocation}/server/server.${useCSR ? 'csr' : 'ssr' }.${precompile ? 'js' : 'ts'}`;
 
 const manifestExclude = ['.DS_Store', '.js.br', '.js.gz', '.js'];
 
@@ -82,9 +83,7 @@ module.exports = {
 	performance: {
 		hints: 'warning'
 	},
-	entry: [
-		'@babel/polyfill', entryPoint
-	],
+	entry: entryPoint,
 	output: {
 		path: path.join(__dirname, publicPath),
 		publicPath: '/',

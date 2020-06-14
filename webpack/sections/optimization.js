@@ -19,8 +19,9 @@ const productionOptimization = (splitChunk) => ({
 	minimizer: [
 		new TerserPlugin({
 			test: /\.(js|jsx|tsx|ts)$/i,
-			sourceMap: false,
+			cache: true,
 			parallel: true,
+			sourceMap: false,
 			extractComments: false,
 			chunkFilter: (chunk) => {
 				if (chunk.name != null) {
