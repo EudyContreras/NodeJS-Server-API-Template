@@ -5,7 +5,7 @@ import UserService from '../services/user.service';
 import RoleStore from '../localstore/accessrole.store';
 import Logger from '../handlers/logging.handler';
 import Handler from '../handlers/error.handler';
-import config from '../config';
+import config from '../server.config';
 
 export default class DatabaseIntializer {
 

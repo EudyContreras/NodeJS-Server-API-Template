@@ -90,7 +90,7 @@ class IndexViewRenderer extends ViewRenderer {
 		config.headers.forEach(header => {
 			res.setHeader(header.LABEL, header.VALUE);
 		});
-		res.render(config.app.APP_LAYOUT, props);
+		res.render(config.layout.FULL, props);
 	};
 
 	private renderShell = async (req: Request, res: Response, cssInjector: Function): Promise<void> => {
@@ -108,7 +108,7 @@ class IndexViewRenderer extends ViewRenderer {
 		config.headers.forEach(header => {
 			res.setHeader(header.LABEL, header.VALUE);
 		});
-		res.render(config.app.SHELL_LAYOUT, props);
+		res.render(config.layout.SHELL, props);
 	};
 }
 

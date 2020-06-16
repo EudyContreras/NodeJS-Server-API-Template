@@ -48,6 +48,8 @@ declare module '*.json' {
    export default value;
 }
 
+declare module 'hsts'
+
 declare module 'express-react-views';
 
 declare module 'express-no-favicons';

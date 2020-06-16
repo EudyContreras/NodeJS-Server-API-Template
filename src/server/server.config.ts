@@ -35,7 +35,13 @@ const config = Object.freeze({
 		PORT: process.env.PORT,
 		PORT_HTTP: process.env.PORT_HTTP,
 		PORT_HTTPS: process.env.PORT_HTTPS,
-		REDIRECT_TO_HTTPS: false
+		REDIRECT_TO_HTTPS: false,
+		SECURE_MAX_AGE: 31536000,
+		secureTransport: {
+			maxAge: 31536000,
+			includeSubDomains: true,
+			preload: true
+		}
 	},
 	redis: {
 		HOST: 'localhost',

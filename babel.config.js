@@ -1,5 +1,5 @@
 module.exports = function (api) {
-	api.cache(false);
+	api.cache(true);
 
 	const presets = [
 		['@babel/preset-env', {
@@ -38,6 +38,13 @@ module.exports = function (api) {
 		env: {
 			production: {
 				presets: []
+				/*plugins: [
+					'minify-constant-folding', 
+					'transform-react-remove-prop-types',
+					'@babel/plugin-transform-react-inline-elements',
+					['babel-plugin-transform-react-class-to-function', { memo: true }],
+					['minify-dead-code-elimination', { optimizeRawSize: true }]
+				]*/
 			},
 			development: {
 				presets: [ /* 'react-optimize' */ ]

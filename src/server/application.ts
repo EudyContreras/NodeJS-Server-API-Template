@@ -4,10 +4,11 @@ import fs from 'fs';
 import cors from 'cors';
 import http from 'http';
 import http2 from 'spdy';
+import hsts from 'hsts';
 import helmet from 'helmet';
 import express from 'express';
 import mongoose from 'mongoose';
-import config from './config';
+import config from './server.config';
 import Interceptor from './middleware/interceptor';
 import Controller from './controllers/controller';
 import ErrorHandler from './handlers/error.handler';
@@ -80,6 +81,7 @@ export default class Application {
 		this.app.use(shrinkRay());
 		this.app.use(express.json());
 		this.app.use(express.urlencoded({ extended: false }));
+		this.app.use(hsts(config.host.secureTransport));
 		this.app.use('/', expressStaticGzip(config.application.FILE_DIRECTORY, {
 			index: false,
 			enableBrotli: true,

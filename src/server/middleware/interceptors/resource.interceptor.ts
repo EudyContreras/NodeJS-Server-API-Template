@@ -1,5 +1,5 @@
 
-import config from '../../config';
+import config from '../../server.config';
 import httpMethod from '../../definitions/httpMethod';
 import httpCodes from '../../definitions/httpCode';
 import { MiddlewareMessages } from '../../messages/message.response';
