@@ -1,4 +1,5 @@
-module.exports = (path) => [{
+
+module.exports = (path, useResponsive) => [{
 	test: /\.(jpe?g|png|svg|ico)$/,
 	loader: 'image-webpack-loader',
 	enforce: 'pre',
@@ -22,7 +23,7 @@ module.exports = (path) => [{
 		}
 	}
 },
-{
+useResponsive ? {
 	test: /\.(jpe?g|png)$/i,
 	loader: 'responsive-loader',
 	options: {
@@ -33,7 +34,7 @@ module.exports = (path) => [{
 		placeholderSize: 50,
 		adapter: require('responsive-loader/sharp')
 	}
-},
+} : {},
 {
 	test: /\.(ico)$/i,
 	loader: 'file-loader',

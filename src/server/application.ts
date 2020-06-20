@@ -75,7 +75,7 @@ export default class Application {
 	private setupExpress(): void {
 		const render = config.presentation;
 		const clientRender = render.viewEngine.client;
-
+		
 		this.app.use(cors());
 		this.app.use(helmet());
 		this.app.use(shrinkRay());

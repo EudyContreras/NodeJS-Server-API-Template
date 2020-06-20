@@ -24,7 +24,7 @@ const ImageminPlugin= require('imagemin-webp-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const precompile = process.env.PRECOMPILE == 'true';
-const useCSR = process.env.CSR == 'true';
+const usesCSR = process.env.CSR == 'true';
 const enviroment = process.env.NODE_ENV;
 
 const isProduction = enviroment === 'production';
@@ -45,7 +45,7 @@ const resources = [
 	}
 ];
 
-const fileName = 'scripts/[name].bundle.[chunkhash].js';
+const fileName = isProduction ? './scripts/[name].bundle.[chunkhash].js' : './scripts/[name].js';
 
 const splitChunk = {
 	splitChunks: {
@@ -55,7 +55,7 @@ const splitChunk = {
 
 const manifestExclude = ['stats.json', '.DS_Store', '.js.br', '.js.gz', '.js', 'service-worker.ts', 'loadable-stats.json'];
 const pluggins = [
-	new CleanWebpackPlugin(),
+	new CleanWebpackPlugin({ cleanStaleWebpackAssets: isProduction }),
 	new CopyPlugin(resources),
 	new MiniCssExtractPlugin(),
 	new HtmlWebpackPlugin({
@@ -92,7 +92,7 @@ const pluggins = [
 	})
 ];
 
-if (useCSR) {
+if (usesCSR) {
 	const clientConfig = require(`../../${sourceLocation}/configs/config.client.json`);
 
 	pluggins.push(
@@ -100,8 +100,7 @@ if (useCSR) {
 			template: `${sourceLocation}/client/resources/html/index.hbs`,
 			filename: 'index.html',
 			scriptLoading: 'defer',
-			favicon: `${sourceLocation}/client/resources/images/favicon.ico`,
-			title: 'Some title',
+			title: 'Template Engine',
 			clientSideRendered: process.env.CSR == 'true',
 			enableSW: process.env.USE_SW == 'true',
 			html: clientConfig.html,
@@ -128,19 +127,19 @@ if (isProduction) {
 			test: /\.(js|css|html|json|svg)$/,
 			threshold: 10240,
 			minRatio: 0.8
-		}),
-		new ImageminPlugin({
-			config: [{
-				test: /\.(jpe?g|png|gif|svg)$/i,
-				options: {
-					quality: 75
-				}
-			}]
 		})
 	);
 }
 
 pluggins.push(
+	new ImageminPlugin({
+		config: [{
+			test: /\.(jpe?g|png|gif|svg)$/i,
+			options: {
+				quality: 75
+			}
+		}]
+	}),
 	new LoadablePlugin(),
 	new WorkboxPlugin.InjectManifest({
 		swSrc: path.join(process.cwd(), `${sourceLocation}/workers/serviceWorker.${precompile ? 'js' : 'ts'}`),
@@ -156,6 +155,10 @@ module.exports = {
 	mode: enviroment,
 	bail: isProduction,
 	devtool: isProduction ? 'source-map' : 'inline-source-map',
+	devServer: {
+		contentBase: path.join(__dirname, publicPath),
+		hot: true
+	},
 	entry: entryPoint,
 	performance: {
 		hints: 'warning'
@@ -163,7 +166,6 @@ module.exports = {
 	plugins: pluggins,
 	output: {
 		path: path.join(__dirname, publicPath),
-		futureEmitAssets: isProduction,
 		pathinfo: !isProduction,
 		filename: fileName,
 		publicPath: '/',
@@ -177,16 +179,17 @@ module.exports = {
 	},
 	module: {
 		rules: [
+			{ test: /\.(jsx|tsx|ts|js)$/, exclude: /(node_modules)/, use: ['react-hot-loader/webpack', 'babel-loader'] }, 
 			{ test: /\.hbs$/, loader: 'handlebars-loader' },
-			{ test: /\.(jsx|tsx|ts|js)$/, exclude: /(node_modules)/, use: 'babel-loader' }, 
 			{ test: /\.txt$/, use: 'raw-loader' },
-			...imageLoader('images'),
+			...imageLoader('images', true),
 			...styleLoader(path, isProduction),
 			urlLoader,
 			svgLoader
 		]
 	},
 	resolve: {
+		alias: { 'react-dom': '@hot-loader/react-dom' },
 		extensions: ['*', '.js', '.jsx', '.tsx', '.ts', '.scss', '.css']
 	}
 };

@@ -1,8 +1,8 @@
 import React from 'react';
 import loadable from '@loadable/component';
 import { delayBoundary } from './utililties/loadable.utils';
-import Docs from './sections/documentation/DocsPage';
 import Lost from './shared/states/LostState';
+import Docs from './sections/documentation/DocsPageAlt';
 
 const options = { ssr: true, fallback: <h2>Loading...</h2>, timing: { delay: 250 } };
 
@@ -10,9 +10,9 @@ const Apps = loadable(() => delayBoundary(import(/* webpackPrefetch: true */ './
 const About = loadable(() => delayBoundary(import(/* webpackPrefetch: true */ './sections/information/AboutPage'), options.timing), options);
 const Admin = loadable(() => delayBoundary(import(/* webpackPrefetch: true */ './sections/administration/AdminPage'), options.timing), options);
 
-
 export const routes = [
 	{
+		navLink: true,
 		lazyLoaded: false,
 		label: 'Home',
 		path: '/'

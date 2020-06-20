@@ -13,6 +13,7 @@ module.exports = function (api) {
 	];
 	const plugins = [
 		'@loadable/babel-plugin',
+		'react-hot-loader/babel',
 		'@babel/plugin-proposal-class-properties',
 		'@babel/plugin-proposal-object-rest-spread',
 		'@babel/plugin-proposal-function-sent',

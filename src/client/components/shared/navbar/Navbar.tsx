@@ -120,10 +120,12 @@ class Navbar extends React.Component<Props, State> {
 		if (this.props.isLoaderActive) {
 			this.props.hideLoader();
 		}
-		const empty = this.props.loadedRoutes.length <= 0;
-		if (empty || !this.props.loadedRoutes.includes(tab.link)) {
-			if (tab.lazyLoaded) {
-				this.props.showLoader();
+		if (tab != null) {
+			const empty = this.props.loadedRoutes.length <= 0;
+			if (empty || !this.props.loadedRoutes.includes(tab.link)) {
+				if (tab.lazyLoaded) {
+					this.props.showLoader();
+				}
 			}
 		}
 	};
@@ -131,16 +133,17 @@ class Navbar extends React.Component<Props, State> {
 	private handleLinkClick = (tab: any): void => {
 		const { events, messages } = constants;
 
+		this.manageLoader(tab);
+
+		if (tab == null) {
+			return this.props.setActiveTab(tab);
+		}
 		swMessager.emit(events.MESSAGE, { type: messages.ADD_TO_CACHE, payload: tab.link });
 
 		if (this.props.activeTab === null) {
-			this.manageLoader(tab);
 			this.props.setActiveTab(tab);
-		} else {
-			if (this.props.activeTab.label !== tab.label) {
-				this.manageLoader(tab);
-				this.props.setActiveTab(tab);
-			}
+		} else if (this.props.activeTab.label !== tab.label) {
+			this.props.setActiveTab(tab);		
 		}
 	};
 
@@ -183,12 +186,11 @@ class Navbar extends React.Component<Props, State> {
 
 		return (
 			<header {...properties}>
-				<div className={style.navLogo}>
-					<div className={style.status} />
-					<div className={style.navLogoText}>
-						<a aria-label='brand name' href='/'>{this.props.brandName}</a>
+				<Link to='/' onClick= {(): void => this.handleLinkClick(null)}>
+					<div className={style.navLogo}>
+						<div className={style.status} />
 					</div>
-				</div>
+				</Link>
 				<ul>
 					{routes.map((element: any, idx: number) =>
 						<li key={idx}>

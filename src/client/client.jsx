@@ -3,6 +3,8 @@ import ReactDOM from 'react-dom';
 import configureStore from './stores/store';
 import { loadableReady } from '@loadable/component';
 import { register } from './scriptsjs/serviceWorker';
+import './resources/images/favicon.ico';
+import './resources/images/icons/touch-icon.png';
 import { client } from './views';
 
 loadableReady(() => {
@@ -10,7 +12,7 @@ loadableReady(() => {
 	const initialState = window.__REDUX_STATE__ || {};
 	const renderOptions = window.__RENDER_OPTIONS__ || {};
 	
-	const useRender = (!module.hot || renderOptions.isCSR);
+	const useRender = (module.hot || renderOptions.isCSR);
 	
 	delete window.__REDUX_STATE__;
 	delete window.__RENDER_OPTIONS__;
@@ -31,12 +33,12 @@ loadableReady(() => {
 	);
 
 	document.getElementById('shellStyle').remove();
-
-	if (renderOptions.enableSW == true) {
-		register({ 
-			watchConnnectionState: false,
-			registerPushNotifications: false,
-			registerBackgroundSync: false
-		});
-	}
 });
+
+register({ 
+	watchConnnectionState: false,
+	registerPushNotifications: false,
+	registerBackgroundSync: false
+});
+
+if (module.hot) module.hot.accept();

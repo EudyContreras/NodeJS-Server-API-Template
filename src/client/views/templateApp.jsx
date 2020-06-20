@@ -110,7 +110,7 @@ const DefaultLayout = (props) => {
 			}} />
 			<script async rel="preconnect" src="https://cdn.jsdelivr.net/npm/pwacompat@2.0.9/pwacompat.min.js" integrity="sha384-VcI6S+HIsE80FVM1jgbd6WDFhzKYA0PecD/LcIyMQpT4fMJdijBh0I7Iblaacawc" crossOrigin="anonymous" />
 			<script defer rel="preconnect" src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js" />
-			<script id="__LOADABLE_REQUIRED_CHUNKS__" type="application/json">[]</script>
+			<script id="__LOADABLE_REQUIRED_CHUNKS__" type='text/javascript'>[]</script>
 			{props.entryPoints.map((x, i) => <script async data-chunk="main" type='text/javascript' key={i} src={x.url} />)}
 		</body>
 	</html>;

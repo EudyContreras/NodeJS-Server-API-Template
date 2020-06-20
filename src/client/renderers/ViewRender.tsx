@@ -9,8 +9,6 @@ import { routes } from '../components/Routes';
 import { Store } from 'redux';
 import { application } from '../views';
 import { Router, Request, Response } from 'express';
-import favicon from '../resources/images/favicon.ico';
-import touchIcon from '../resources/images/icons/touch-icon.png';
 import IAction from '../actions/action';
 import { ChunkExtractor } from '@loadable/server';
 
@@ -77,9 +75,7 @@ class IndexViewRenderer extends ViewRenderer {
 			css: this.styling,
 			html: config.html,
 			state: this.state,
-			favicon: favicon,
 			entryPoints: entryPoints,
-			touchIcon: touchIcon,
 			enableSW: process.env.USE_SW == 'true',
 			clientSideRendered: process.env.CSR == 'true',
 			watchConnection: true,

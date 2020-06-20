@@ -212,6 +212,7 @@ const checkValidServiceWorker = (swUrl, config) => {
 		});
 };
 
+
 const registerWorker = (config) => {
 	if (process.env.NODE_ENV === 'production') {
 		if ('serviceWorker' in navigator) {

@@ -39,6 +39,7 @@ Some information about the technologies used.
 * GZip and Brotli compression
 * Webjobs using AgendaJS
 * Authentication with Passport
+* Supports modular modular CSS
 * Suppors component styling using sass with isomorphic-style-loader
 * Easy setup for component based code-splitting using loadable/components
 * Supports rich push notifications

@@ -94,20 +94,15 @@ module.exports = {
 	optimization: optimization({ splitChunk: null, production: isProduction }),
 	externals: [NodeExternals()],
 	module: {
-		rules: [{
-			test: /\.txt$/,
-			use: 'raw-loader'
-		},
-		{
-			test: /\.(jsx|tsx|ts|js)$/,
-			exclude: /(node_modules)/,
-			use: 'babel-loader'
-		},
-		...imageLoader('public/images'),
-		...styleLoader(path, isProduction)
+		rules: [
+			{ test: /\.txt$/, use: 'raw-loader' },
+			{ test: /\.(jsx|tsx|ts|js)$/, exclude: /(node_modules)/, use: ['react-hot-loader/webpack', 'babel-loader'] }, 
+			...imageLoader('images', true),
+			...styleLoader(path, isProduction)
 		]
 	},
 	resolve: {
+		alias: { 'react-dom': '@hot-loader/react-dom' },
 		extensions: ['*', '.js', '.jsx', '.tsx', '.ts', '.scss', '.css']
 	}
 };

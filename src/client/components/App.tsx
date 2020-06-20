@@ -1,4 +1,4 @@
-
+import { hot } from 'react-hot-loader/root';
 import React, { Fragment } from 'react';
 import ErrorBoundary from './shared/ErrorBoundary';
 import NavbarMenu from './shared/navbar/Navbar';
@@ -62,4 +62,4 @@ class App extends React.PureComponent<any, State> {
 	};
 }
 
-export default withStyles(style)(App);
+export default hot(withStyles(style)(App));
