@@ -34,7 +34,13 @@ useResponsive ? {
 		placeholderSize: 50,
 		adapter: require('responsive-loader/sharp')
 	}
-} : {},
+} : {
+	test: /\.(jpe?g|png)$/,
+	loader: 'url-loader',
+	options: {
+		limit: 10 * 1024
+	}
+},
 {
 	test: /\.(ico)$/i,
 	loader: 'file-loader',
@@ -51,5 +57,4 @@ useResponsive ? {
 			return isIcon ? 'icons/[name].[ext]' : '[name].[ext]';
 		}
 	}
-}
-];
+}];

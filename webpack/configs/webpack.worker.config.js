@@ -3,9 +3,7 @@
 require('dotenv').config();
 
 const path = require('path');
-const NodeExternals = require('webpack-node-externals');
-const optimization = require('../sections/optimization');
-const urlLoader = require('../loaders/url.loader');
+const tsLoader = require('../loaders/tyscript.loader');
 
 const enviroment = process.env.NODE_ENV;
 const precompile = process.env.PRECOMPILE == 'true';
@@ -15,9 +13,11 @@ const isProduction = enviroment === 'production';
 const sourceLocation = precompile ? 'pre' : 'src';
 const entryPoint = `./${sourceLocation}/workers/service-worker.${precompile ? 'js' : 'ts'}`;
 
+const babelLoader = { test: /\.(jsx|tsx|ts|js)$/, exclude: /(node_modules)/, use: 'babel-loader' };
+
 module.exports = {
 	name: 'worker',
-	target: 'web',
+	target: 'webworker',
 	mode: enviroment,
 	bail: isProduction,
 	entry: entryPoint,
@@ -31,26 +31,15 @@ module.exports = {
 		pathinfo: !isProduction,
 		filename: 'service-worker.js',
 		publicPath: publicPath,
-		globalObject: 'this'
+		globalObject: 'self'
 	},
-	externals: [NodeExternals()],
-	optimization: optimization({
-		splitChunk: null,
-		production: isProduction
-	}),
 	module: {
-		rules: [{
-			test: /\.(ts|js)$/,
-			exclude: /(node_modules)/,
-			use: 'babel-loader'
-		}, {
+		rules: [ isProduction ? babelLoader : tsLoader, {
 			test: /\.txt$/,
 			use: 'raw-loader'
-		},
-		urlLoader
-		]
+		}]
 	},
 	resolve: {
-		extensions: ['*', '.js', '.ts']
+		extensions: ['.ts', '.js']
 	}
 };

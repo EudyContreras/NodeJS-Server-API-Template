@@ -1,7 +1,6 @@
 
 self.__WB_MANIFEST;
 
-import manifest from '../client/resources/manifest.json';
 import { contentTypes, cacheKeys, syncEvents, updateNotification, constants } from './constants';
 
 const TIMEOUT = 1000;
@@ -60,7 +59,8 @@ const throwOnError = (response: Response): Response => {
 	if (response.status >= 200 && response.status < 300 || response.status === 0) {
 		return response;
 	}
-	throw new Error(response.statusText);
+	worker.error(response.statusText);
+	return new Response(null);
 };
 
 const isRequestForStaticHtml = (request: Request): boolean => {
@@ -290,9 +290,8 @@ self.addEventListener(constants.events.INSTALL, (event: Event | any) => {
 	event.waitUntil(
 		caches.open(cacheKeys.STATIC_CACHE)
 			.then(cache => {
-				const touchIcons = manifest.icons.map((x: any) => x.src);
 				const cacheRes = (self.__WB_MANIFEST || self.__precacheManifest).map((x: any) => x.url);
-				return cache.addAll([...constants.urlsToCache, ...cacheRes, ...touchIcons]);
+				return cache.addAll([...constants.urlsToCache, ...cacheRes]);
 			})
 			.then(() => self.skipWaiting())
 			.catch(error => worker.log(error))

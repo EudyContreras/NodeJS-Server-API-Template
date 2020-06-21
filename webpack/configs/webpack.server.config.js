@@ -79,7 +79,7 @@ module.exports = {
 	name: 'server',
 	target: 'node',
 	mode: enviroment,
-	devtool: isProduction ? 'source-map' : 'inline-source-map',
+	devtool: isProduction ? 'none' : 'inline-source-map',
 	performance: {
 		hints: 'warning'
 	},
@@ -96,13 +96,12 @@ module.exports = {
 	module: {
 		rules: [
 			{ test: /\.txt$/, use: 'raw-loader' },
-			{ test: /\.(jsx|tsx|ts|js)$/, exclude: /(node_modules)/, use: ['react-hot-loader/webpack', 'babel-loader'] }, 
+			{ test: /\.(jsx|tsx|ts|js)$/, exclude: /(node_modules)/, use:  'babel-loader' }, 
 			...imageLoader('images', true),
 			...styleLoader(path, isProduction)
 		]
 	},
 	resolve: {
-		alias: { 'react-dom': '@hot-loader/react-dom' },
 		extensions: ['*', '.js', '.jsx', '.tsx', '.ts', '.scss', '.css']
 	}
 };

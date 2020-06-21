@@ -1,4 +1,4 @@
-import { hot } from 'react-hot-loader/root';
+
 import React, { Fragment } from 'react';
 import ErrorBoundary from './shared/ErrorBoundary';
 import NavbarMenu from './shared/navbar/Navbar';
@@ -38,13 +38,14 @@ class App extends React.PureComponent<any, State> {
 	};
 
 	public render = (): JSX.Element => {
+		const props = this.props;
 		const routes = router({ styling: Styling });
 
 		const elements = routes.filter((x) => x.mapping.navLink === true).map((x) => {
 			return { link: x.mapping.path, label: x.mapping.label, lazyLoaded: x.mapping.lazyLoaded };
 		});
 
-		const routings = routes.map((route, idx) => <Route exact key={idx} path={route.mapping.path} component={route.render} />);
+		const routings = routes.map((route, idx) => <Route exact history={props.history} key={idx} path={route.mapping.path} component={route.render} />);
 
 		return (
 			<Fragment>
@@ -62,4 +63,4 @@ class App extends React.PureComponent<any, State> {
 	};
 }
 
-export default hot(withStyles(style)(App));
+export default withStyles(style)(App);

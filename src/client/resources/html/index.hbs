@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang='en-US'>
 <head>
-	<title>"{{htmlWebpackPlugin.options.html.title}}"</title>
+	<title>{{htmlWebpackPlugin.options.html.title}}</title>
 
 	<meta charSet="utf-8" />
 	<meta name="author" content="{{htmlWebpackPlugin.options.html.author}}" />
@@ -89,10 +89,19 @@
 			clientSideRendered: {{htmlWebpackPlugin.options.clientSideRendered}}
 		}
 
-		window.addEventListener("load", () => {
+		if ('serviceWorker' in navigator) {
+			window.addEventListener('load', () => {
+				document.getElementById("robotoFont").removeAttribute("disabled");
+				document.getElementById("materialIcons").removeAttribute("disabled");
+				navigator.serviceWorker.register('service-worker.js').catch(error => console.log(error));
+			});
+		} else {
+			window.addEventListener("load", () => {
 				document.getElementById("robotoFont").removeAttribute("disabled");
 				document.getElementById("materialIcons").removeAttribute("disabled");
 			});
+			logger.warn('Service workers not supported on your current browser! Please use a modern browser to take advantage of offline capabitilies');
+		}
 		
 	</script>
 	<script async rel="preconnect" src="https://cdn.jsdelivr.net/npm/pwacompat@2.0.9/pwacompat.min.js"

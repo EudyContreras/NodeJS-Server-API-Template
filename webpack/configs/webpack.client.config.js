@@ -18,7 +18,6 @@ const optimization = require('../sections/optimization');
 const splitchunks = require('../sections/splitchunks');
 const imageLoader = require('../loaders/image.loader');
 const styleLoader = require('../loaders/style.loader');
-const urlLoader = require('../loaders/url.loader');
 const svgLoader = require('../loaders/svg.loader');
 const ImageminPlugin= require('imagemin-webp-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
@@ -45,7 +44,7 @@ const resources = [
 	}
 ];
 
-const fileName = isProduction ? './scripts/[name].bundle.[chunkhash].js' : './scripts/[name].js';
+const fileName = isProduction ? './scripts/[name].[chunkhash].js' : './scripts/[name].js';
 
 const splitChunk = {
 	splitChunks: {
@@ -154,14 +153,10 @@ module.exports = {
 	target: 'web',
 	mode: enviroment,
 	bail: isProduction,
-	devtool: isProduction ? 'source-map' : 'inline-source-map',
-	devServer: {
-		contentBase: path.join(__dirname, publicPath),
-		hot: true
-	},
+	devtool: isProduction ? 'none' : 'inline-source-map',
 	entry: entryPoint,
 	performance: {
-		hints: 'warning'
+		hints: false
 	},
 	plugins: pluggins,
 	output: {
@@ -179,17 +174,15 @@ module.exports = {
 	},
 	module: {
 		rules: [
-			{ test: /\.(jsx|tsx|ts|js)$/, exclude: /(node_modules)/, use: ['react-hot-loader/webpack', 'babel-loader'] }, 
+			{ test: /\.(jsx|tsx|ts|js)$/, exclude: /(node_modules)/, use: 'babel-loader' }, 
 			{ test: /\.hbs$/, loader: 'handlebars-loader' },
 			{ test: /\.txt$/, use: 'raw-loader' },
 			...imageLoader('images', true),
 			...styleLoader(path, isProduction),
-			urlLoader,
 			svgLoader
 		]
 	},
 	resolve: {
-		alias: { 'react-dom': '@hot-loader/react-dom' },
 		extensions: ['*', '.js', '.jsx', '.tsx', '.ts', '.scss', '.css']
 	}
 };

@@ -7,13 +7,12 @@ import './resources/images/favicon.ico';
 import './resources/images/icons/touch-icon.png';
 import { client } from './views';
 
-loadableReady(() => {
+const initialState = window.__REDUX_STATE__ || {};
+const renderOptions = window.__RENDER_OPTIONS__ || {};
 
-	const initialState = window.__REDUX_STATE__ || {};
-	const renderOptions = window.__RENDER_OPTIONS__ || {};
-	
-	const useRender = (module.hot || renderOptions.isCSR);
-	
+const useRender = renderOptions.clientSideRendered == true;
+
+loadableReady(() => {
 	delete window.__REDUX_STATE__;
 	delete window.__RENDER_OPTIONS__;
 
@@ -35,10 +34,10 @@ loadableReady(() => {
 	document.getElementById('shellStyle').remove();
 });
 
-register({ 
-	watchConnnectionState: false,
-	registerPushNotifications: false,
-	registerBackgroundSync: false
-});
-
-if (module.hot) module.hot.accept();
+if (renderOptions.enableSW == true) {
+	register({ 
+		watchConnnectionState: false,
+		registerPushNotifications: false,
+		registerBackgroundSync: false
+	});
+}

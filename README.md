@@ -22,7 +22,7 @@ Some information about the technologies used.
 * Mongoose
 * Webpack
 * Docker
-* Modular CSS
+* CSS Modules
 * Offline-first
 
 ## Supports out of the box
@@ -31,12 +31,13 @@ Some information about the technologies used.
 * Code Splitting
 * Environment Variables
 * Eslint AirBNB Template
+* React-Fast-Refresh Hot Module Reload
 * MVC Architecture
 * Supports Installation
 * Suports Notifications
 * Suports Background Sync
 * Suports Periodic Sync
-* GZip and Brotli compression
+* Gzip and Brotli compression
 * Webjobs using AgendaJS
 * Authentication with Passport
 * Supports modular modular CSS
