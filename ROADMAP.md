@@ -1,9 +1,10 @@
 TODO:
 
 * Make sure that all referenced resources are tracked by the SW
-* Add hot-reloding for development mode.
 * Keep the audit in check to achieve excellent scores.
-* 
+* Use Redial in an efficient way
+* Maybe setup tests and travis
+* Streamline NGINX and docker setup
 
 PWA Demo requirements:
 

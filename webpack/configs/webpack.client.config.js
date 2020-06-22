@@ -45,6 +45,7 @@ const resources = [
 ];
 
 const fileName = isProduction ? './scripts/[name].[chunkhash].js' : './scripts/[name].js';
+const chunkFileName = isProduction ? './scripts/[name].[chunkhash].chunk.js' : './scripts/[name].chunk.js';
 
 const splitChunk = {
 	splitChunks: {
@@ -163,6 +164,7 @@ module.exports = {
 		path: path.join(__dirname, publicPath),
 		pathinfo: !isProduction,
 		filename: fileName,
+		chunkFilename: chunkFileName,
 		publicPath: '/',
 		globalObject: 'this'
 	},

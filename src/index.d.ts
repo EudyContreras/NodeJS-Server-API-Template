@@ -14,9 +14,9 @@ declare module '*.webp' {
 }
 
 declare module '*.scss' {
-   const value: any;
-   export = value;
-}
+   const content: string;
+   export default content;
+ }
 
 declare module '*.module.css' {
    const classes: { [key: string]: string };

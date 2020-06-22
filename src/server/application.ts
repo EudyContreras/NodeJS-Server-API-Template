@@ -8,6 +8,7 @@ import hsts from 'hsts';
 import helmet from 'helmet';
 import express from 'express';
 import mongoose from 'mongoose';
+import cookieParser from 'cookie-parser';
 import config from './server.config';
 import Interceptor from './middleware/interceptor';
 import Controller from './controllers/controller';
@@ -78,6 +79,7 @@ export default class Application {
 		
 		this.app.use(cors());
 		this.app.use(helmet());
+		this.app.use(cookieParser());
 		this.app.use(shrinkRay());
 		this.app.use(express.json());
 		this.app.use(express.urlencoded({ extended: false }));

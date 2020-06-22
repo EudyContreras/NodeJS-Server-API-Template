@@ -1,5 +1,9 @@
 module.exports = function (api) {
 	api.cache.using(() => process.env.NODE_ENV);
+	
+	const isDevelopment = process.env.NODE_ENV == 'false';
+	const useFastRefresh = process.env.REACT_HMR == 'true';
+	
 	const presets = [
 		['@babel/preset-env', {
 			'targets': {
@@ -30,10 +34,14 @@ module.exports = function (api) {
 		'@babel/plugin-transform-async-to-generator',
 		'@babel/plugin-proposal-nullish-coalescing-operator',
 		'@babel/plugin-proposal-do-expressions',
-		'@babel/plugin-proposal-function-bind',
-		!api.env('production') && 'react-refresh/babel'
+		'@babel/plugin-proposal-function-bind'
 	].filter(Boolean);
 
+	const developmentPlugins = [];
+
+	if (isDevelopment && useFastRefresh) {
+		developmentPlugins.push('react-refresh/babel');
+	}
 	return {
 		env: {
 			production: {
@@ -52,7 +60,8 @@ module.exports = function (api) {
 				]*/
 			},
 			development: {
-				presets: [ /* 'react-optimize' */]
+				presets: [ /* 'react-optimize' */],
+				plugins: developmentPlugins
 			}
 		},
 		presets,

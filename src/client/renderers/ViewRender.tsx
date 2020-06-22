@@ -4,7 +4,7 @@ import path from 'path';
 import config from '../../configs/config.client.json';
 import configureStore from '../stores/store';
 import ViewRenderer from '../../server/middleware/renderer';
-import AppStyle from './../styles/app.scss';
+import AppStyle from '../styles/app.scss';
 import { routes } from '../components/Routes';
 import { Store } from 'redux';
 import { application } from '../views';
