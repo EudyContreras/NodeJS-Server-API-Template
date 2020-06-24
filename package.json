@@ -22,31 +22,33 @@
   "scripts": {
     "cleanup": "rimraf pre",
     "build": "npm run cleanup && tsc -b ./ && cpy --cwd=src --parents '**/*' '!**/*.(ts|js|tsx|jsx)' ../dist/ ",
+
     "build:server": "webpack --config webpack/configs/webpack.server.config.js",
     "build:client": "webpack --config webpack/configs/webpack.client.config.js",
     "build:workers": "webpack --config webpack/configs/webpack.worker.config.js",
+    
     "build:watch:server": "webpack --config webpack/configs/webpack.server.config.js --watch",
     "build:watch:client": "webpack --config webpack/configs/webpack.client.config.js --watch",
     "build:watch:workers": "webpack --config webpack/configs/webpack.worker.config.js --watch",
-    "build:watch:all": "npm run build:watch:client && npm run build:watch:server && npm run build:watch:workers",
+
     "build:all": "npm run build:client && npm run build:server && npm run build:workers",
+
     "build:prod": "cross-env NODE_ENV=production npm run compile-ts && npm run build:all",
     "build:dev": "cross-env NODE_ENV=development PRECOMPILE=false npm run build:all",
+
     "build:prod:start": "npm run build:prod && npm run start",
     "build:dev:start": "npm run build:dev && npm run start",
+
     "build:prod:csr:start": "cross-env CSR=true npm run build:prod:start",
     "build:prod:ssr:start": "cross-env CSR=false npm run build:prod:start",
+
     "build:dev:csr:start": "cross-env CSR=true npm run build:dev:start",
     "build:dev:ssr:start": "cross-env CSR=false npm run build:dev:start",
-    "start:csr": "cross-env CSR=true node build/server.js",
-    "start:ssr": "cross-env CSR=false node build/server.js",
+
     "start": "node build/server.js",
-    "start:dev": "nodemon build/server.js",
-    "start:watch": "nodemon src",
-    "build:watch:all:start": "cross-env NODE_ENV=development REACT_HMR=false PRECOMPILE=false CSR=false npm-run-all build:watch:client build:watch:server build:watch:workers start",
-    "build:watch:start": "cross-env NODE_ENV=development REACT_HMR=false PRECOMPILE=false CSR=false concurrently --kill-others \"npm run build:watch:server\" \"npm run build:watch:client\" \"sleep 7 && npm run build:watch:workers\" \"sleep 10 && node build/server.js\"",
-    "start:hot:dev": "cross-env NODE_ENV=development REACT_HMR=false PRECOMPILE=false CSR=false npm run build:all npm run start",
-    "start:hot:csr:dev": "cross-env NODE_ENV=development REACT_HMR=true PRECOMPILE=false CSR=true npm run build:client && npm run build:workers && webpack-dev-server --hot --config webpack.config.js"
+
+    "debug:server:hot": "cross-env NODE_ENV=development REACT_HMR=false PRECOMPILE=false nodemon src --config _nodemon/task1.json",
+    "debug:client:hot": "cross-env NODE_ENV=development REACT_HMR=true PRECOMPILE=false CSR=true npm-run-all build:client build:workers && webpack-dev-server --hot --config webpack.config.js"
   },
   "keywords": [
     "ssr",
@@ -61,19 +63,6 @@
     "node",
     "react"
   ],
-  "nodemonConfig": {
-    "ignore": [
-      "**/*.test.ts",
-      "**/*.spec.ts",
-      ".git",
-      "node_modules"
-    ],
-    "watch": [
-      "src"
-    ],
-    "exec": "node --inspect=8080 -r ts-node/register ./src/server/server.csr.ts",
-    "ext": "ts"
-  },
   "browserslist": {
     "production": [
       ">0.2%",

@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import loadable from '@loadable/component';
 import { delayBoundary } from './utililties/loadable.utils';
 import Lost from './shared/states/LostState';
 import Docs from './sections/documentation/DocsPage';
 
-const options = { ssr: true, fallback: <h2>Loading...</h2>, timing: { delay: 250 } };
+const options = { ssr: true, fallback: <Fragment/>, timing: { delay: 250 } };
 
 const Apps = loadable(() => delayBoundary(import(/* webpackPrefetch: true */ './sections/applications/ApplicationsPage'), options.timing), options);
 const About = loadable(() => delayBoundary(import(/* webpackPrefetch: true */ './sections/information/AboutPage'), options.timing), options);

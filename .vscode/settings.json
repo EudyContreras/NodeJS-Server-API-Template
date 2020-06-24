@@ -75,6 +75,6 @@
    "workbench.settings.editor": "json",
    "keyboard.dispatch": "keyCode",
    "editor.multiCursorModifier": "ctrlCmd",
-   "debug.node.autoAttach": "off",
+   "debug.node.autoAttach": "on",
 
 }

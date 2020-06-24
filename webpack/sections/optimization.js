@@ -10,8 +10,7 @@ const developmentOptimization = () => ({
 	mangleWasmImports: false,
 	concatenateModules: false,
 	removeAvailableModules: false,
-	removeEmptyChunks: false,
-	splitChunks: false
+	removeEmptyChunks: false
 });
 
 const productionOptimization = (splitChunk) => ({

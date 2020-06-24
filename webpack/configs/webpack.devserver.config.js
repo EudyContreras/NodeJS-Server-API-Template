@@ -10,7 +10,7 @@ const optimization = require('../sections/optimization');
 const splitchunks = require('../sections/splitchunks');
 const imageLoader = require('../loaders/image.loader');
 const styleLoader = require('../loaders/style.loader');
-const svgLoader = require('../loaders/svg.loader');
+const tsLoader = require('../loaders/ts.loader');
 
 const enviroment = process.env.NODE_ENV;
 
@@ -19,28 +19,29 @@ const entryPoint = './src/client/client.jsx';
 
 const fileName = './scripts/[name].js';
 
+const pluggins = [
+	new LoadablePlugin(),
+	new ReactRefreshWebpackPlugin()
+];
+
 const splitChunk = {
 	splitChunks: {
 		...splitchunks.singleShunk
 	}
 };
 
-const pluggins = [
-	new LoadablePlugin(),
-	new ReactRefreshWebpackPlugin()
-];
-
 module.exports = {
 	name: 'client',
 	target: 'web',
-	mode: enviroment,
-	bail: false,
-	devtool: 'eval-cheap-module-source-map',
+	mode: 'development',
+	bail: true,
+	cache: true,
+	devtool: false,
+	stats: 'minimal',
 	devServer: {
 		publicPath: publicPath,
 		contentBase: path.join(__dirname, publicPath),
 		historyApiFallback: true,
-		watchContentBase: true,
 		open: {
 			app: ['Google Chrome', '--incognito']
 		},
