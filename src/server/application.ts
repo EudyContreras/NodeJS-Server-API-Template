@@ -76,7 +76,15 @@ export default class Application {
 	private setupExpress(): void {
 		const render = config.presentation;
 		const clientRender = render.viewEngine.client;
-		
+		/*
+		if (process.env.NODE_ENV === 'development') {
+			const webpack = require('webpack');
+			const middleware = require('webpack-dev-middleware');
+			const config = require('../../webpack/configs/webpack.server.config');
+			const compiler = webpack(config);
+
+			this.app.use(middleware(compiler, { }));
+		}*/
 		this.app.use(cors());
 		this.app.use(helmet());
 		this.app.use(cookieParser());

@@ -27,7 +27,7 @@ const usesCSR = process.env.CSR == 'true';
 const enviroment = process.env.NODE_ENV;
 
 const isProduction = enviroment === 'production';
-const sourceLocation = precompile ? 'pre' : 'src';
+const sourceLocation = precompile ? 'dist' : 'src';
 const publicPath = '../../build/public';
 const entryPoint = `./${sourceLocation}/client/client.${precompile ? 'js' : 'jsx'}`;
 
@@ -154,7 +154,7 @@ module.exports = {
 	target: 'web',
 	mode: enviroment,
 	bail: isProduction,
-	devtool: isProduction ? 'none' : 'inline-source-map',
+	devtool: isProduction ? 'source-map' : 'eval-cheap-module-source-map',
 	entry: entryPoint,
 	performance: {
 		hints: false

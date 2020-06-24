@@ -36,6 +36,7 @@ loadableReady(() => {
 
 if (renderOptions.enableSW == true) {
 	register({ 
+		clientSideRendered: useRender,
 		watchConnnectionState: false,
 		registerPushNotifications: false,
 		registerBackgroundSync: false

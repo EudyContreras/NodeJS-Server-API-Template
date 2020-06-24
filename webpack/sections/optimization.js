@@ -68,5 +68,5 @@ const productionOptimization = (splitChunk) => ({
 });
 
 module.exports = ({ splitChunk, production = false }) => (
-	{ ...(production ? productionOptimization(splitChunk) : developmentOptimization(splitChunk)) }
+	{ ...(production ? productionOptimization(splitChunk) : developmentOptimization()) }
 );

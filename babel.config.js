@@ -42,25 +42,21 @@ module.exports = function (api) {
 	if (isDevelopment && useFastRefresh) {
 		developmentPlugins.push('react-refresh/babel');
 	}
+
+	const productionPlugins = [
+		'transform-react-remove-prop-types',
+		'@babel/plugin-transform-react-inline-elements',
+		['babel-plugin-transform-react-class-to-function', { memo: true }]
+	];
+
 	return {
 		env: {
 			production: {
 				presets: [],
-				plugins: [
-					'transform-react-remove-prop-types',
-					'@babel/plugin-transform-react-inline-elements',
-					['babel-plugin-transform-react-class-to-function', { memo: true }]
-				]
-				/*plugins: [
-					'minify-constant-folding', 
-					'transform-react-remove-prop-types',
-					'@babel/plugin-transform-react-inline-elements',
-					['babel-plugin-transform-react-class-to-function', { memo: true }],
-					['minify-dead-code-elimination', { optimizeRawSize: true }]
-				]*/
+				plugins: productionPlugins
 			},
 			development: {
-				presets: [ /* 'react-optimize' */],
+				presets: [],
 				plugins: developmentPlugins
 			}
 		},

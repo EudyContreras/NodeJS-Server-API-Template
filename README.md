@@ -3,9 +3,9 @@
 [Heroku Demo](https://node-react-api-template-engine.herokuapp.com/)
 
 A simple and production ready Node JS Teamplate Engine backed by express and mongoDB using the
-MERN stack architecuture. It features a fully installable Isomorphic/Universal rendering experience using react, as
+MERN stack architecture. It features a fully installable Isomorphic/Universal rendering experience using react, as
 a well as redux for state management. The boilerplate is highly customizable and it allows
-you to choose the render method of choice. (Isomorphic , SSR, CSR)
+you to choose the render method of choice. (SSR, CSR)
 
 ## Isomorphic react PWA backed by Express and MongoDB
 
@@ -50,7 +50,7 @@ Some information about the technologies used.
 * Easy setup for component based code-splitting using loadable/components
 * Supports rich push notifications
 * Supports background and periodic-sync envents
-* Docker containers
+* Docker containarised
 
 ## Requirements
 

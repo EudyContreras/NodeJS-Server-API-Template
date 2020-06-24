@@ -3,14 +3,14 @@
 require('dotenv').config();
 
 const path = require('path');
-const tsLoader = require('../loaders/tyscript.loader');
+const tsLoader = require('../loaders/ts.loader');
 
 const enviroment = process.env.NODE_ENV;
 const precompile = process.env.PRECOMPILE == 'true';
 
 const publicPath = '../../build/public/';
 const isProduction = enviroment === 'production';
-const sourceLocation = precompile ? 'pre' : 'src';
+const sourceLocation = precompile ? 'dist' : 'src';
 const entryPoint = `./${sourceLocation}/workers/service-worker.${precompile ? 'js' : 'ts'}`;
 
 const babelLoader = { test: /\.(jsx|tsx|ts|js)$/, exclude: /(node_modules)/, use: 'babel-loader' };
@@ -34,10 +34,12 @@ module.exports = {
 		globalObject: 'self'
 	},
 	module: {
-		rules: [ isProduction ? babelLoader : tsLoader, {
-			test: /\.txt$/,
-			use: 'raw-loader'
-		}]
+		rules: [ isProduction ? babelLoader : tsLoader, 
+			{
+				test: /\.txt$/,
+				use: 'raw-loader'
+			}
+		]
 	},
 	resolve: {
 		extensions: ['.ts', '.js']

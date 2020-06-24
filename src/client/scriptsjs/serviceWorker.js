@@ -214,7 +214,7 @@ const checkValidServiceWorker = (swUrl, config) => {
 
 
 const registerWorker = (config) => {
-	if (process.env.NODE_ENV === 'production') {
+	if (process.env.NODE_ENV === 'production' || config.clientSideRendered) {
 		if ('serviceWorker' in navigator) {
 			// The URL constructor is available in all browsers that support SW.
 			const publicUrl = new URL(process.env.PUBLIC_URL, window.location.href);

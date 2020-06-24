@@ -6,7 +6,6 @@ require('dotenv').config();
 const path = require('path');
 const LoadablePlugin = require('@loadable/webpack-plugin');
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const optimization = require('../sections/optimization');
 const splitchunks = require('../sections/splitchunks');
 const imageLoader = require('../loaders/image.loader');
@@ -27,7 +26,6 @@ const splitChunk = {
 };
 
 const pluggins = [
-	new MiniCssExtractPlugin(),
 	new LoadablePlugin(),
 	new ReactRefreshWebpackPlugin()
 ];
@@ -37,12 +35,15 @@ module.exports = {
 	target: 'web',
 	mode: enviroment,
 	bail: false,
-	devtool: 'inline-source-map',
+	devtool: 'eval-cheap-module-source-map',
 	devServer: {
 		publicPath: publicPath,
 		contentBase: path.join(__dirname, publicPath),
 		historyApiFallback: true,
 		watchContentBase: true,
+		open: {
+			app: ['Google Chrome', '--incognito']
+		},
 		hot: true
 	},
 	entry: entryPoint,
@@ -52,7 +53,7 @@ module.exports = {
 	plugins: pluggins,
 	output: {
 		path: path.join(__dirname, publicPath),
-		pathinfo: true,
+		pathinfo: false,
 		filename: fileName,
 		publicPath: '/',
 		globalObject: 'this'
@@ -65,15 +66,13 @@ module.exports = {
 	},
 	module: {
 		rules: [
-			{ test: /\.(jsx|tsx|ts|js)$/, exclude: /(node_modules)/, use: 'babel-loader' }, 
+			{ test: /\.(jsx|tsx|ts)$/, include: path.resolve(__dirname, '../../src/client'), exclude: /(node_modules)/, use: 'babel-loader' }, 
 			{ test: /\.hbs$/, loader: 'handlebars-loader' },
-			{ test: /\.txt$/, use: 'raw-loader' },
 			...imageLoader('images', false),
-			...styleLoader(path, false),
-			svgLoader
+			...styleLoader(path, false)
 		]
 	},
 	resolve: {
-		extensions: ['*', '.js', '.jsx', '.tsx', '.ts', '.scss', '.css']
+		extensions: ['*', '.js', '.jsx', '.tsx', '.ts', '.scss']
 	}
 };

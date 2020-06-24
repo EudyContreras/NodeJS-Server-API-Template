@@ -17,7 +17,7 @@ const useCSR = process.env.CSR == 'true';
 const precompile = process.env.PRECOMPILE == 'true';
 
 const isProduction = enviroment === 'production';
-const sourceLocation = precompile ? 'pre' : 'src';
+const sourceLocation = precompile ? 'dist' : 'src';
 const publicPath = '../../build';
 const entryPoint = `./${sourceLocation}/server/server.${useCSR ? 'csr' : 'ssr' }.${precompile ? 'js' : 'ts'}`;
 

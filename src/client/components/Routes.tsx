@@ -26,7 +26,7 @@ export const routes = [
 	{
 		navLink: true,
 		lazyLoaded: true,
-		label: 'ApplicationS',
+		label: 'Applications',
 		path: '/applications'
 	},
 	{
