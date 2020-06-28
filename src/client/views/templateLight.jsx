@@ -60,7 +60,7 @@ const DefaultLayout = (props) => {
 			<noscript>You need to enable JavaScript to fully be able to use this this web-app.</noscript>
 			{/* <section id="content">{renderToString(appLight(props.url))}</section>*/}
 			<section id="content">
-				<h1>Welcome to Reach Template Engine</h1>
+				<h1>{props.text}</h1>
 			</section>
 		</body>
 	</html>;
@@ -68,6 +68,7 @@ const DefaultLayout = (props) => {
 
 DefaultLayout.propTypes = {
 	favicon: PropType.any,
+	text: PropType.string,
 	html: PropType.any,
 	url: PropType.string
 };

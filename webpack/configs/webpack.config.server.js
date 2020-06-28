@@ -40,6 +40,7 @@ module.exports = {
 	name: 'server',
 	target: 'node',
 	mode: enviroment,
+	cache: true,
 	devtool: isProduction ? 'none' : 'inline-source-map',
 	performance: {
 		hints: 'warning'
@@ -49,6 +50,7 @@ module.exports = {
 	output: {
 		path: path.join(__dirname, publicPath),
 		publicPath: '/',
+		pathinfo: false,
 		filename: 'server.js',
 		globalObject: 'this'
 	},

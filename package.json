@@ -38,9 +38,9 @@
     "build:dev:csr:start": "cross-env CSR=true npm run build:dev:start",
     "build:dev:ssr:start": "cross-env CSR=false npm run build:dev:start",
     "start": "node build/server.js",
-    "debug:hot": "cross-env NODE_ENV=development REACT_HMR=true PRECOMPILE=false CSR=false concurrently --kill-others \"npm-run-all build:client build:workers build:watch:server\" \"sleep 8 && nodemon build --config .nodemon/task2.json\" \"sleep 10 && webpack-dev-server --hot --config webpack.config.js\"",
-    "debug:server:hot": "cross-env NODE_ENV=development REACT_HMR=false PRECOMPILE=false CSR=true nodemon src --config .nodemon/task1.json",
-    "debug:client:hot": "cross-env NODE_ENV=development REACT_HMR=true PRECOMPILE=false CSR=true npm-run-all build:client build:workers && cross-env NODE_ENV=development CSR=true webpack-dev-server --hot --config webpack.config.js"
+    "debug:hot": "cross-env NODE_ENV=development REACT_HMR=true PRECOMPILE=false CSR=false concurrently --kill-others \"npm-run-all build:client build:workers build:watch:server\" \"sleep 12 && nodemon build --config .nodemon/task2.json\" \"sleep 15 && webpack-dev-server --hot --config webpack.config.js\"",
+    "debug:hot:server": "cross-env NODE_ENV=development REACT_HMR=false PRECOMPILE=false CSR=true concurrently --kill-others \"npm run build:watch:server\" \"sleep 5 && nodemon build --config .nodemon/task2.json\"",
+    "debug:hot:client": "cross-env NODE_ENV=development REACT_HMR=true PRECOMPILE=false CSR=true npm-run-all build:client build:workers && cross-env NODE_ENV=development CSR=true webpack-dev-server --hot --config webpack.config.js"
   },
   "keywords": [
     "ssr",

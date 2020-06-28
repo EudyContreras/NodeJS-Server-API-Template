@@ -28,7 +28,7 @@ module.exports = {
 	output: {
 		path: path.join(__dirname, publicPath),
 		futureEmitAssets: isProduction,
-		pathinfo: !isProduction,
+		pathinfo: false,
 		filename: 'service-worker.js',
 		publicPath: publicPath,
 		globalObject: 'self'

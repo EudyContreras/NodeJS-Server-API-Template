@@ -162,7 +162,7 @@ module.exports = {
 	plugins: pluggins,
 	output: {
 		path: path.join(__dirname, publicPath),
-		pathinfo: !isProduction,
+		pathinfo: false,
 		filename: fileName,
 		chunkFilename: chunkFileName,
 		publicPath: '/',

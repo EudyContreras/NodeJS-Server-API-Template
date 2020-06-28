@@ -34,7 +34,11 @@ class IndexViewRenderer extends ViewRenderer {
 
 		const template: any = config.layout;
 		
-		res.render(template.LIGHT, { html: config.html, url: req.url });
+		res.render(template.LIGHT, { 
+			html: config.html,
+			text: 'Welcome to Reach Template Engine',
+			url: req.url 
+		});
 	};
 }
 

@@ -21,6 +21,18 @@ const entryPoint = './src/client/client.jsx';
 const fileName = './scripts/[name].js';
 const serverURL = `http://localhost:${serverPort}`;
 
+const proxyOptions = !usesCSR ? {
+	proxy: {
+		'/': {
+			target: serverURL,
+			secure: false
+		},
+		'/rest/api': {
+			target: serverURL,
+			secure: false
+		}
+	}
+} : { };
 const pluggins = [
 	new ReactRefreshWebpackPlugin(),
 	new LoadablePlugin()
@@ -43,23 +55,14 @@ module.exports = {
 	devServer: {
 		port: Number.parseInt(process.env.PORT_HTTP),
 		publicPath: publicPath,
-		contentBase: publicPath,
-		watchContentBase: true,
+		contentBase: usesCSR ? path.join(__dirname, publicPath) : publicPath,
+		watchContentBase: false,
 		writeToDisk: !usesCSR,
 		historyApiFallback: true,
 		open: {
 			app: ['Google Chrome', '--incognito']
 		},
-		proxy: {
-			'/': {
-				target: serverURL,
-				secure: false
-			},
-			'/rest/api': {
-				target: serverURL,
-				secure: false
-			}
-		},
+		...proxyOptions,
 		watchOptions: {
 			poll: true
 		},
@@ -75,9 +78,7 @@ module.exports = {
 		pathinfo: false,
 		filename: fileName,
 		publicPath: '/',
-		globalObject: 'this',
-		hotUpdateChunkFilename: '.hot/hot-update.js',
-		hotUpdateMainFilename: '.hot/hot-update.json'
+		globalObject: 'this'
 	},
 	externals: {
 		jquery: 'jQuery'
