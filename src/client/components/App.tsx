@@ -15,11 +15,10 @@ interface State {
 	navPadding: number;
 }
 
-const Styling: any = style;
-
 class App extends React.PureComponent<any, State> {
 
 	private padder: React.RefObject<HTMLDivElement>;
+	private styling: any = style;
 
 	constructor(props: any) {
 		super(props);
@@ -39,7 +38,7 @@ class App extends React.PureComponent<any, State> {
 
 	public render = (): JSX.Element => {
 		const props = this.props;
-		const routes = router({ styling: Styling });
+		const routes = router({ styling: this.styling });
 
 		const elements = routes.filter((x) => x.mapping.navLink === true).map((x) => {
 			return { link: x.mapping.path, label: x.mapping.label, lazyLoaded: x.mapping.lazyLoaded };
@@ -49,13 +48,13 @@ class App extends React.PureComponent<any, State> {
 
 		return (
 			<Fragment>
-				<NavbarPadder self={this.padder} styling={Styling} />
+				<NavbarPadder self={this.padder} styling={this.styling} />
 				<ErrorBoundary>
-					<Loader styling={Styling}/>
+					<Loader styling={this.styling}/>
 					<Switch> {routings} </Switch>
 				</ErrorBoundary>
 				<NavbarMenu
-					styling={Styling}
+					styling={this.styling}
 					location={this.props.location}
 					routings={elements} />
 			</Fragment>

@@ -1,4 +1,5 @@
 import React from 'react';
+import configureStore from '../stores/store';
 import Application from '../components/App';
 import StyleContext from 'isomorphic-style-loader/StyleContext';
 import { Provider } from 'react-redux';
@@ -14,6 +15,21 @@ export const shell = (url, store, context, insertCss) => (
 		</StaticRouter>
 	</Provider>
 );
+
+export const appLight = (url, css, context) => {
+	const styling = new Set([css]);
+	const cssInjector = (...styles) => styles.forEach(style => styling.add(style._getCss()));
+
+	return (
+		<Provider store={configureStore({})}>
+			<StaticRouter onUpdate={() => window.scrollTo(0, 0)} location={url} context={context}>
+				<StyleContext.Provider value={{ cssInjector }}>
+					<Application location={url} />
+				</StyleContext.Provider>
+			</StaticRouter>
+		</Provider>
+	);
+};
 
 export const application = (url, store, context, insertCss) => {
 	const history = createMemoryHistory();

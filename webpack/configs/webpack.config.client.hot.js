@@ -12,12 +12,14 @@ const imageLoader = require('../loaders/image.loader');
 const styleLoader = require('../loaders/style.loader');
 const tsLoader = require('../loaders/ts.loader');
 
+const serverPort = process.env.PORT;
+const usesCSR = process.env.CSR === 'true';
+
 const publicPath = '../../build/public';
 const entryPoint = './src/client/client.jsx';
 
 const fileName = './scripts/[name].js';
-
-const usesCSR = process.env.CSR === 'true';
+const serverURL = `http://localhost:${serverPort}`;
 
 const pluggins = [
 	new ReactRefreshWebpackPlugin(),
@@ -48,19 +50,13 @@ module.exports = {
 		open: {
 			app: ['Google Chrome', '--incognito']
 		},
-		//openPage: ['dev'],
 		proxy: {
 			'/': {
-				target: 'http://localhost:5000',
+				target: serverURL,
 				secure: false
 			},
-			//'/dev': {
-			//	target: 'http://localhost:8080',
-			//	pathRewrite: { '^/dev' : '' },
-			//	secure: false
-			//},
 			'/rest/api': {
-				target: 'http://localhost:5000',
+				target: serverURL,
 				secure: false
 			}
 		},

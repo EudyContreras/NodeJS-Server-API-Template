@@ -7,6 +7,7 @@ const config = Object.freeze({
 	},
 	presentation: {
 		path: 'client',
+		HAS_REACT_HMR: process.env.REACT_HMR === 'true',
 		IS_SSR: process.env.CSR == 'false',
 		viewEngine: {
 			type: 'jsx',
@@ -19,6 +20,18 @@ const config = Object.freeze({
 			}
 		}
 	},
+	resources: {
+		ignored: ['/favicon.ico']
+	},
+	compression: {
+		index: false,
+		enableBrotli: true,
+		customCompressions: [{
+			encodingName: 'deflate',
+			fileExtension: 'zz'
+		}],
+		orderPreference: ['br']
+	},
 	self: {
 		headers: {
 			AUTHORIZATION: 'authorization',
@@ -26,6 +39,8 @@ const config = Object.freeze({
 		}
 	},
 	ssl: {
+		key: './ssl/localhost.key',
+		cert: './ssl/localhost.crt',
 		ACTIVE: process.env.USE_SSL === 'true',
 		PASS_PHRASE: process.env.PASS_PHRASE
 	},

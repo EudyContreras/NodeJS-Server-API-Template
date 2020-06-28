@@ -38,14 +38,8 @@
     "build:dev:csr:start": "cross-env CSR=true npm run build:dev:start",
     "build:dev:ssr:start": "cross-env CSR=false npm run build:dev:start",
     "start": "node build/server.js",
-    
-    "debug:all:watch": "cross-env NODE_ENV=development REACT_HMR=false PRECOMPILE=false CSR=false concurrently --kill-others \"npm run build:watch:server\" \"npm run build:watch:client\" \"sleep 7 && npm run build:watch:workers\" \"sleep 10 && nodemon build --config .nodemon/task2.json\"",
-   
-    "debug:ssr:hot": "cross-env NODE_ENV=development REACT_HMR=false PRECOMPILE=false CSR=false concurrently --kill-others \"npm run build:watch:server\" \"npm run build:watch:client\" \"sleep 5 && nodemon build --config .nodemon/task2.json\" \"sleep 10 && npm run build:workers && webpack-dev-server --hot --config webpack.config.js\"",
-   
-    "debug:hot": "cross-env NODE_ENV=development REACT_HMR=false PRECOMPILE=false CSR=false concurrently --kill-others \"npm run build:watch:client\" \"sleep 5 && npm run build:server\" \"sleep 8 && npm run build:watch:workers\" \"sleep 12 && npm run start\"",
-   
-    "debug:server:hot": "cross-env NODE_ENV=development REACT_HMR=false PRECOMPILE=false CSR=false concurrently --kill-others  \"npm run build:watch:server\" \"sleep 7 && npm run build:client && npm run build:watch:workers\" \"sleep 10 && nodemon build --config .nodemon/task2.json\"",
+    "debug:hot": "cross-env NODE_ENV=development REACT_HMR=true PRECOMPILE=false CSR=false concurrently --kill-others \"npm-run-all build:client build:workers build:watch:server\" \"sleep 8 && nodemon build --config .nodemon/task2.json\" \"sleep 10 && webpack-dev-server --hot --config webpack.config.js\"",
+    "debug:server:hot": "cross-env NODE_ENV=development REACT_HMR=false PRECOMPILE=false CSR=true nodemon src --config .nodemon/task1.json",
     "debug:client:hot": "cross-env NODE_ENV=development REACT_HMR=true PRECOMPILE=false CSR=true npm-run-all build:client build:workers && cross-env NODE_ENV=development CSR=true webpack-dev-server --hot --config webpack.config.js"
   },
   "keywords": [
@@ -122,6 +116,7 @@
     "request": "^2.88.0",
     "reselect": "^4.0.0",
     "sass": "^1.23.6",
+    "serve-favicon": "^2.5.0",
     "shrink-ray-current": "^4.1.2",
     "spdy": "^4.0.1",
     "svg-loader": "0.0.2"

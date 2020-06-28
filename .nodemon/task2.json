@@ -6,7 +6,7 @@
       "node_modules"
     ],
     "watch": [
-      "build"
+      "build/server.js"
     ],
     "exec": "node build/server.js",
     "ext": "js"

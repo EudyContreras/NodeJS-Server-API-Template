@@ -34,6 +34,7 @@
 	],
 	"layout": {
 		"FULL": "templateApp",
+		"LIGHT": "templateLight",
 		"SHELL": "templateShell",
 		"CONTENT_TYPE": "html",
 		"TEMPLATE": "template"
