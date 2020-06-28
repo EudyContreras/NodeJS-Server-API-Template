@@ -1,6 +1,5 @@
 const singleShunk = {
 	cacheGroups: {
-		default: false,
 		commons: {
 			reuseExistingChunk: true,
 			enforce: true,

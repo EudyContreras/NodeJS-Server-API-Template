@@ -13,8 +13,8 @@ const WriteFilePlugin = require('write-file-webpack-plugin');
 const LoadablePlugin = require('@loadable/webpack-plugin');
 
 const enviroment = process.env.NODE_ENV;
-const useCSR = process.env.CSR == 'true';
 const precompile = process.env.PRECOMPILE == 'true';
+const useCSR = process.env.CSR == 'true';
 
 const isProduction = enviroment === 'production';
 const sourceLocation = precompile ? 'dist' : 'src';
@@ -29,10 +29,6 @@ if (isProduction) {
 	plugins.push(
 		new webpack.optimize.ModuleConcatenationPlugin(),
 		new webpack.optimize.OccurrenceOrderPlugin()
-	);
-} else {
-	plugins.push(
-		new WriteFilePlugin()
 	);
 }
 plugins.push(

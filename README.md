@@ -59,7 +59,6 @@ Some information about the technologies used.
 ## Install project.
 
 * `git clone `
-* `cd NodeJS-Server-API-Template`
 * `npm install`
 
 ## Build project.
@@ -71,4 +70,12 @@ Some information about the technologies used.
 
 * `npm run start:dev` Runs the development unminified version of the applicatipn.
 * `npm run start:prod` Runs the distribution minified version of the applicatipn.
+
+## Debug project
+
+The scripts specified here are used for debugging purpose. Running this scripsts
+will run the code in with hot-reload modes. For the server nodemon is used and for
+the client dev-sever is used using HMR and react-fast-refresh 
+
+* `npm run debug:server:hot` Runs the server using nodemon. In order for this to work module must be set to commonjs inside tsconfig.json
 

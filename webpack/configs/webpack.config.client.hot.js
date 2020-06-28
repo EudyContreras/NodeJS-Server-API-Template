@@ -12,16 +12,16 @@ const imageLoader = require('../loaders/image.loader');
 const styleLoader = require('../loaders/style.loader');
 const tsLoader = require('../loaders/ts.loader');
 
-const enviroment = process.env.NODE_ENV;
-
 const publicPath = '../../build/public';
 const entryPoint = './src/client/client.jsx';
 
 const fileName = './scripts/[name].js';
 
+const usesCSR = process.env.CSR === 'true';
+
 const pluggins = [
-	new LoadablePlugin(),
-	new ReactRefreshWebpackPlugin()
+	new ReactRefreshWebpackPlugin(),
+	new LoadablePlugin()
 ];
 
 const splitChunk = {
@@ -36,16 +36,38 @@ module.exports = {
 	mode: 'development',
 	bail: true,
 	cache: true,
-	devtool: false,
+	devtool: 'eval-cheap-source-map',
 	stats: 'minimal',
 	devServer: {
+		port: Number.parseInt(process.env.PORT_HTTP),
 		publicPath: publicPath,
-		contentBase: path.join(__dirname, publicPath),
+		contentBase: publicPath,
+		watchContentBase: true,
+		writeToDisk: !usesCSR,
 		historyApiFallback: true,
 		open: {
 			app: ['Google Chrome', '--incognito']
 		},
-		hot: true
+		//openPage: ['dev'],
+		proxy: {
+			'/': {
+				target: 'http://localhost:5000',
+				secure: false
+			},
+			//'/dev': {
+			//	target: 'http://localhost:8080',
+			//	pathRewrite: { '^/dev' : '' },
+			//	secure: false
+			//},
+			'/rest/api': {
+				target: 'http://localhost:5000',
+				secure: false
+			}
+		},
+		watchOptions: {
+			poll: true
+		},
+		hotOnly: true
 	},
 	entry: entryPoint,
 	performance: {
@@ -57,7 +79,9 @@ module.exports = {
 		pathinfo: false,
 		filename: fileName,
 		publicPath: '/',
-		globalObject: 'this'
+		globalObject: 'this',
+		hotUpdateChunkFilename: '.hot/hot-update.js',
+		hotUpdateMainFilename: '.hot/hot-update.json'
 	},
 	externals: {
 		jquery: 'jQuery'
@@ -67,6 +91,7 @@ module.exports = {
 	},
 	module: {
 		rules: [
+			tsLoader,
 			{ test: /\.(jsx|tsx|ts)$/, include: path.resolve(__dirname, '../../src/client'), exclude: /(node_modules)/, use: 'babel-loader' }, 
 			{ test: /\.hbs$/, loader: 'handlebars-loader' },
 			...imageLoader('images', false),
@@ -74,6 +99,6 @@ module.exports = {
 		]
 	},
 	resolve: {
-		extensions: ['*', '.js', '.jsx', '.tsx', '.ts', '.scss']
+		extensions: ['.js', '.jsx', '.tsx', '.ts', '.scss']
 	}
 };

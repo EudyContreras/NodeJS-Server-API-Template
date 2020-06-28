@@ -1,6 +1,9 @@
 module.exports = function (api) {
 	api.cache.using(() => process.env.NODE_ENV);
 	
+	const isDevelopment = process.env.NODE_ENV == 'false';
+	const useFastRefresh = process.env.REACT_HMR == 'true';
+	
 	const presets = [
 		['@babel/preset-env', {
 			'targets': {
@@ -19,7 +22,6 @@ module.exports = function (api) {
 		'@babel/plugin-proposal-export-namespace-from',
 		'@babel/plugin-proposal-numeric-separator',
 		'@babel/plugin-proposal-throw-expressions',
-		['@babel/plugin-proposal-decorators', { 'legacy': true }],
 		[
 			'@babel/plugin-proposal-pipeline-operator',
 			{
@@ -36,6 +38,10 @@ module.exports = function (api) {
 	].filter(Boolean);
 
 	const developmentPlugins = [];
+
+	if (isDevelopment && useFastRefresh) {
+		developmentPlugins.push('react-refresh/babel');
+	}
 
 	const productionPlugins = [
 		'transform-react-remove-prop-types',

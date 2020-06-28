@@ -1,7 +1,6 @@
 {
     "ignore": [
       "**/*.test.ts",
-      "**/*.map.js",
       "**/*.spec.ts",
       ".git",
       "node_modules"
@@ -9,6 +8,6 @@
     "watch": [
       "src"
     ],
-    "exec": "node build/server.js",
-    "ext": "js"
+    "exec": "ts-node ./src/server/server.csr.ts",
+    "ext": "ts"
   }

@@ -21,34 +21,32 @@
   "main": "build/server.js",
   "scripts": {
     "cleanup": "rimraf pre",
-    "build": "npm run cleanup && tsc -b ./ && cpy --cwd=src --parents '**/*' '!**/*.(ts|js|tsx|jsx)' ../dist/ ",
-
-    "build:server": "webpack --config webpack/configs/webpack.server.config.js",
-    "build:client": "webpack --config webpack/configs/webpack.client.config.js",
-    "build:workers": "webpack --config webpack/configs/webpack.worker.config.js",
-    
-    "build:watch:server": "webpack --config webpack/configs/webpack.server.config.js --watch",
-    "build:watch:client": "webpack --config webpack/configs/webpack.client.config.js --watch",
-    "build:watch:workers": "webpack --config webpack/configs/webpack.worker.config.js --watch",
-
+    "compile-ts": "npm run cleanup && tsc -b ./ && cpy --cwd=src --parents '**/*' '!**/*.(ts|js|tsx|jsx)' ../dist/ ",
+    "build:server": "webpack --config webpack/configs/webpack.config.server.js",
+    "build:client": "webpack --config webpack/configs/webpack.config.client.js",
+    "build:workers": "webpack --config webpack/configs/webpack.config.worker.js",
+    "build:watch:server": "webpack --config webpack/configs/webpack.config.server.js --watch",
+    "build:watch:client": "webpack --config webpack/configs/webpack.config.client.js --watch",
+    "build:watch:workers": "webpack --config webpack/configs/webpack.config.worker.js --watch",
     "build:all": "npm run build:client && npm run build:server && npm run build:workers",
-
     "build:prod": "cross-env NODE_ENV=production npm run compile-ts && npm run build:all",
     "build:dev": "cross-env NODE_ENV=development PRECOMPILE=false npm run build:all",
-
     "build:prod:start": "npm run build:prod && npm run start",
     "build:dev:start": "npm run build:dev && npm run start",
-
     "build:prod:csr:start": "cross-env CSR=true npm run build:prod:start",
     "build:prod:ssr:start": "cross-env CSR=false npm run build:prod:start",
-
     "build:dev:csr:start": "cross-env CSR=true npm run build:dev:start",
     "build:dev:ssr:start": "cross-env CSR=false npm run build:dev:start",
-
     "start": "node build/server.js",
-
-    "debug:server:hot": "cross-env NODE_ENV=development REACT_HMR=false PRECOMPILE=false nodemon src --config _nodemon/task1.json",
-    "debug:client:hot": "cross-env NODE_ENV=development REACT_HMR=true PRECOMPILE=false CSR=true npm-run-all build:client build:workers && webpack-dev-server --hot --config webpack.config.js"
+    
+    "debug:all:watch": "cross-env NODE_ENV=development REACT_HMR=false PRECOMPILE=false CSR=false concurrently --kill-others \"npm run build:watch:server\" \"npm run build:watch:client\" \"sleep 7 && npm run build:watch:workers\" \"sleep 10 && nodemon build --config .nodemon/task2.json\"",
+   
+    "debug:ssr:hot": "cross-env NODE_ENV=development REACT_HMR=false PRECOMPILE=false CSR=false concurrently --kill-others \"npm run build:watch:server\" \"npm run build:watch:client\" \"sleep 5 && nodemon build --config .nodemon/task2.json\" \"sleep 10 && npm run build:workers && webpack-dev-server --hot --config webpack.config.js\"",
+   
+    "debug:hot": "cross-env NODE_ENV=development REACT_HMR=false PRECOMPILE=false CSR=false concurrently --kill-others \"npm run build:watch:client\" \"sleep 5 && npm run build:server\" \"sleep 8 && npm run build:watch:workers\" \"sleep 12 && npm run start\"",
+   
+    "debug:server:hot": "cross-env NODE_ENV=development REACT_HMR=false PRECOMPILE=false CSR=false concurrently --kill-others  \"npm run build:watch:server\" \"sleep 7 && npm run build:client && npm run build:watch:workers\" \"sleep 10 && nodemon build --config .nodemon/task2.json\"",
+    "debug:client:hot": "cross-env NODE_ENV=development REACT_HMR=true PRECOMPILE=false CSR=true npm-run-all build:client build:workers && cross-env NODE_ENV=development CSR=true webpack-dev-server --hot --config webpack.config.js"
   },
   "keywords": [
     "ssr",
@@ -101,6 +99,7 @@
     "handlebars-loader": "^1.7.1",
     "helmet": "^3.21.2",
     "hsts": "^2.2.0",
+    "is-object": "^1.0.1",
     "isomorphic-loader": "^3.0.0",
     "isomorphic-style-loader": "^5.1.0",
     "jquery": "^3.5.1",
@@ -131,7 +130,7 @@
     "@babel/cli": "^7.7.0",
     "@babel/core": "^7.10.2",
     "@babel/plugin-proposal-class-properties": "^7.7.0",
-    "@babel/plugin-proposal-decorators": "^7.7.0",
+    "@babel/plugin-proposal-decorators": "^7.10.3",
     "@babel/plugin-proposal-do-expressions": "^7.10.1",
     "@babel/plugin-proposal-export-namespace-from": "^7.5.2",
     "@babel/plugin-proposal-function-bind": "^7.10.1",
@@ -239,6 +238,7 @@
     "webpack-dev-middleware": "^3.7.2",
     "webpack-dev-server": "^3.11.0",
     "webpack-hot-middleware": "^2.25.0",
+    "webpack-hot-server-middleware": "^0.6.1",
     "webpack-manifest-plugin": "^2.2.0",
     "webpack-merge-and-include-globally": "^2.1.24",
     "webpack-node-externals": "^1.7.2",

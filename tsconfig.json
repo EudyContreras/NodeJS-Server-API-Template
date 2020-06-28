@@ -88,7 +88,7 @@
     ]
   },
   "include": [
-    "src/**/*", "*.ts", "*.jsx",".js", ".css", ".scss", ".ico", ".png", ".html"
+    "src/**/*", "*.ts", "*.jsx",".js", ".css", ".scss", ".ico", ".png", ".html", "src/client/.babelrc.js"
   ],
   "exclude": [
     "node_modules",
