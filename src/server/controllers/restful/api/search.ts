@@ -32,10 +32,9 @@ export default class Search extends Controller {
 
 	private getAll = async (request: Request, response: Response): Promise<Response> => {
 		const result = {
-			query: request.query
+			prefix: request.query.searchText,
+			results: ['result 1', 'result 2', 'result 3', 'result 4', 'result 5']
 		};
-
-		console.log(result);
 		return this.buildResult(result, undefined, response, RequestAction.GET_ALL);
 	};
 }

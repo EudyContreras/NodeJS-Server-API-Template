@@ -6,6 +6,7 @@ import http from 'http';
 import http2 from 'spdy';
 import hsts from 'hsts';
 import helmet from 'helmet';
+import logger from 'morgan';
 import express, { NextFunction } from 'express';
 import mongoose from 'mongoose';
 import cookieParser from 'cookie-parser';
@@ -48,7 +49,7 @@ export default class Application {
 
 	public startlistening(): void {
 		const secure = config.ssl.ACTIVE;
-		
+
 		const port = config.presentation.HAS_REACT_HMR ? config.host.PORT : config.host.PORT_HTTP;
 
 		if (secure) {
@@ -61,17 +62,23 @@ export default class Application {
 				console.log(`HTTPS Server listening on the port ${port}`);
 			});
 		}
-		http.createServer(this.app).listen(port, () => {
-			console.log(`Server listening on the port ${port}`);
+
+		const server = http.createServer(this.app);
+
+		server.listen(port, () => {
+			console.log(`Web Server listening on the port ${port}`);
 		});
 	}
 
 	private setupExpress(): void {
 		const render = config.presentation;
 		const clientRender = render.viewEngine.client;
-	
+
 		if (!config.presentation.IS_SSR) {
 			this.app.use(this.ignoreFavicon);
+		}
+		if (!config.enviroment.PRODUCTION) {
+			this.app.use(logger('dev'));
 		}
 		this.app.use(cors());
 		this.app.use(helmet());
@@ -121,7 +128,7 @@ export default class Application {
 	}
 
 	private initializeWebjobs(): void {
-		
+
 	}
 
 	private connectToTheDatabase(createInitialData = false): void {

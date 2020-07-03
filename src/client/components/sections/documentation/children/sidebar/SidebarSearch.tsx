@@ -1,11 +1,22 @@
 import React, { createRef, RefObject } from 'react';
-import axios from 'axios';
 import rippleEffect from '../../../../../appliers/ripple.applier';
 import FontFaceObserver from 'fontfaceobserver';
+import { connect } from 'react-redux';
+import { IStateTree } from '../../../../../reducers';
 import { join } from '../../../../utililties/react.utils';
 import { MaterialIcons } from '../../../../../stores/icon.library';
+import { DispatchProps, Dispatchers } from '../../../../../actions/documentation/search.action';
 
-class SidebarSearch extends React.PureComponent<any, any> {
+interface StateProps {
+	searchError?: any | undefined | null;
+	searchResults: any[];
+	isSearching: boolean;
+	iconLoaded: boolean;
+}
+
+type Props = StateProps & DispatchProps & any;
+
+class SidebarSearch extends React.PureComponent<Props, any> {
 
 	private _isMounted: boolean;
 	private inputRef: RefObject<HTMLInputElement>;
@@ -15,6 +26,7 @@ class SidebarSearch extends React.PureComponent<any, any> {
 		this._isMounted = false;
 		this.inputRef = createRef();
 		this.state = {
+			isSearching: false,
 			iconLoaded: false
 		};
 	}
@@ -24,16 +36,9 @@ class SidebarSearch extends React.PureComponent<any, any> {
 
 		rippleEffect(event, this.props.styling);
 
-		const data = {
-			data: { searchText: this.inputRef.current!.value },
-			params: { searchText: this.inputRef.current!.value }
-		};
-		console.log(data);
-		try {
-			await axios.get('http://localhost:5000/rest/api/search', data);
-		} catch(error) {
-			console.log(error);
-		}
+		const searchText = this.inputRef.current!.value;
+		
+		this.props.performSearch(searchText);
 	};
 
 	public componentWillUnmount = (): void => {
@@ -77,4 +82,10 @@ class SidebarSearch extends React.PureComponent<any, any> {
 	};
 }
 
-export default SidebarSearch;
+const mapStateToProps = (state: IStateTree & any): any => ({
+	isSearching: state.presentation.documentation.sidebar.searchbar.isLoading,
+	searchResults: state.presentation.documentation.sidebar.searchbar.searchResults,
+	searchError: state.presentation.documentation.sidebar.searchbar.error
+});
+
+export default connect<StateProps, DispatchProps, any>(mapStateToProps, Dispatchers)(SidebarSearch);

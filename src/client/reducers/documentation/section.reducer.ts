@@ -17,6 +17,12 @@ import * as Sandbox from '../documentation/sandbox.reducer';
 
 import IAction from '../../actions/action';
 
+export const children = [
+	Navbar.SOURCE,
+	Sidebar.SOURCE,
+	Sandbox.SOURCE
+];
+
 export interface IDocumentationArea {
 	siblingA: boolean;
 	siblingB: boolean;
@@ -100,17 +106,16 @@ export default (state = InitialState, action: IAction): IDocumentationArea => {
 				}
 			};
 		}
-		default:
-			return state;
+		default: return state;
 	}
 };
 
 const handleSubReducers = (state = InitialState, action: IAction): IDocumentationArea => {
-	switch(action.from) {
+	switch (action.from) {
 		case Navbar.SOURCE: {
 			return handleNavbarActions(state, action);
 		}
-		case Sidebar.SOURCE: {
+		case Sidebar.SOURCE, Sidebar.children[0]: {
 			return {
 				...state,
 				sidebar: Sidebar.default(state.sidebar, action)
@@ -122,13 +127,13 @@ const handleSubReducers = (state = InitialState, action: IAction): IDocumentatio
 				sandbox: Sandbox.default(state.sandbox, action)
 			};
 		}
-		default:
-			return state; 
+
+		default: return state;
 	};
 };
 
 const handleNavbarActions = (state = InitialState, action: IAction): IDocumentationArea => {
-	switch(action.type) {
+	switch (action.type) {
 		case NAV_BAR_MENU_ANCHORED: {
 			return {
 				...state,
@@ -138,11 +143,10 @@ const handleNavbarActions = (state = InitialState, action: IAction): IDocumentat
 				},
 				sandbox: {
 					...state.sandbox,
-					fixedTop:  !state.sandbox.fixedBottom ? action.payload : false
+					fixedTop: !state.sandbox.fixedBottom ? action.payload : false
 				}
 			};
 		}
-		default:
-			return state;
+		default: return state;
 	}
 };

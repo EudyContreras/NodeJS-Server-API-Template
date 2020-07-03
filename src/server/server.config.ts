@@ -5,6 +5,9 @@ const config = Object.freeze({
 	application: {
 		FILE_DIRECTORY: '../node-template-server/build'
 	},
+	enviroment: {
+		PRODUCTION: process.env.NODE_ENV === 'true'
+	},
 	presentation: {
 		path: 'client',
 		HAS_REACT_HMR: process.env.REACT_HMR === 'true',
@@ -39,8 +42,8 @@ const config = Object.freeze({
 		}
 	},
 	ssl: {
-		key: './ssl/localhost.key',
-		cert: './ssl/localhost.crt',
+		key: process.env.SSL_KEY_FILE || './ssl/localhost.key',
+		cert: process.env.SSL_CERT_FILE || './ssl/localhost.crt',
 		ACTIVE: process.env.USE_SSL === 'true',
 		PASS_PHRASE: process.env.PASS_PHRASE
 	},

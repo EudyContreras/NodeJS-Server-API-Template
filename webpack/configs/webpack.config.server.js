@@ -5,9 +5,10 @@ const path = require('path');
 const webpack = require('webpack');
 const NodeExternals = require('webpack-node-externals');
 const optimization = require('../sections/optimization');
-const imageLoader = require('../loaders/image.loader');
-const styleLoader = require('../loaders/style.loader');
+const imageLoader = require('../loaders/loader.image');
+const styleLoader = require('../loaders/loader.stylings');
 const LoadablePlugin = require('@loadable/webpack-plugin');
+const NodemonPlugin = require('nodemon-webpack-plugin');
 
 const enviroment = process.env.NODE_ENV;
 const precompile = process.env.PRECOMPILE == 'true';
@@ -28,6 +29,10 @@ if (isProduction) {
 		new webpack.optimize.ModuleConcatenationPlugin(),
 		new webpack.optimize.OccurrenceOrderPlugin()
 	);
+} else {
+	plugins.push(
+		new NodemonPlugin()
+	);
 }
 plugins.push(
 	new webpack.optimize.LimitChunkCountPlugin({
@@ -40,7 +45,7 @@ module.exports = {
 	name: 'server',
 	target: 'node',
 	mode: enviroment,
-	cache: true,
+	cache: !isProduction,
 	devtool: isProduction ? 'none' : 'inline-source-map',
 	performance: {
 		hints: 'warning'

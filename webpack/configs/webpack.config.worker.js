@@ -3,7 +3,7 @@
 require('dotenv').config();
 
 const path = require('path');
-const tsLoader = require('../loaders/ts.loader');
+const tsLoader = require('../loaders/loader.ts');
 
 const enviroment = process.env.NODE_ENV;
 const precompile = process.env.PRECOMPILE == 'true';

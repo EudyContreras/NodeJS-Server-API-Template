@@ -22,16 +22,14 @@ class IndexViewRenderer extends ViewRenderer {
 	private context = {};
 	private store: Store<any, IAction>;
 	private state: any;
-	private styling: Set<any>;
-	private appStyle: any;
+	private css: any;
 
 	constructor() {
 		super();
 		this.router = Router();
 		this.store = configureStore({});
 		this.state = this.store.getState();
-		this.appStyle = appStyle._getCss();
-		this.styling = new Set([this.appStyle]);
+		this.css = { cssText: appStyle._getCss() };
 		this.setupRoutes(this.router);
 	}
 
@@ -54,8 +52,9 @@ class IndexViewRenderer extends ViewRenderer {
 		} else {
 			const shell = req.query.shell !== undefined;
 
-			const cssInjector = (...styles: any[]): void => styles.forEach(style => this.styling.add(style._getCss()));
-
+			const css = new Set();
+			const cssInjector = (...styles): void => { styles.forEach(style => css.add(style._getCss())); };
+	
 			if (shell) {
 				return await this.renderShell(req, res, cssInjector);
 			} else {
@@ -71,11 +70,15 @@ class IndexViewRenderer extends ViewRenderer {
 
 		const entryPoints = extractor.getMainAssets();
 
+		const styles = entryPoints.filter(x => x.url.endsWith('.css'));
+		const scripts = entryPoints.filter(x => x.url.endsWith('.js'));
+
 		const props = {
-			css: this.styling,
+			css: this.css,
 			html: config.html,
 			state: this.state,
-			entryPoints: entryPoints,
+			styles: styles,
+			scripts: scripts,
 			enableSW: process.env.USE_SW == 'true',
 			clientSideRendered: process.env.CSR == 'true',
 			watchConnection: true,
@@ -94,7 +97,7 @@ class IndexViewRenderer extends ViewRenderer {
 		const content = application(req.url, this.store, this.context, cssInjector);
 
 		const props = {
-			css: this.styling,
+			css: this.css,
 			html: config.html,
 			enableSW: process.env.USE_SW == 'true',
 			content: content,

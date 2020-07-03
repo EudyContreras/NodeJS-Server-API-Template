@@ -74,8 +74,13 @@ Some information about the technologies used.
 ## Debug project
 
 The scripts specified here are used for debugging purpose. Running this scripsts
-will run the code in with hot-reload modes. For the server nodemon is used and for
-the client dev-sever is used using HMR and react-fast-refresh 
+will run the code in with hot-reload modes. Nodemon is used for the server and webpacks dev-sever HMR is used for
+the client together with the react-fast-refresh plugin.
 
-* `npm run debug:server:hot` Runs the server using nodemon. In order for this to work module must be set to commonjs inside tsconfig.json
+* `npm run debug:hot:server` Runs the server using nodemon.
+* `npm run debug:hot:client` Runs the client using webpack-dev-server and HMR. Note that this will run only the client on CSR
+* `npm run debug:hot` Runs the the full configuration by running both the server and client in hot-mode for a full experience
+
+Due to the nature of watch scripts running `debug:hot` can lead to sync problems. If you run into issues during the build try increasing
+the sleep delay for running the `webpack-dev-server` in order to allow the first scripts to finish.
 

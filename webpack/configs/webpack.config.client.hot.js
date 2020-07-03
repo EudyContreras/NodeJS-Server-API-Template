@@ -4,13 +4,11 @@
 require('dotenv').config();
 
 const path = require('path');
+const loaders = require('../loaders');
 const LoadablePlugin = require('@loadable/webpack-plugin');
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
 const optimization = require('../sections/optimization');
 const splitchunks = require('../sections/splitchunks');
-const imageLoader = require('../loaders/image.loader');
-const styleLoader = require('../loaders/style.loader');
-const tsLoader = require('../loaders/ts.loader');
 
 const serverPort = process.env.PORT;
 const usesCSR = process.env.CSR === 'true';
@@ -87,13 +85,7 @@ module.exports = {
 		...optimization({ splitChunk: splitChunk, production: false })
 	},
 	module: {
-		rules: [
-			tsLoader,
-			{ test: /\.(jsx|tsx|ts)$/, include: path.resolve(__dirname, '../../src/client'), exclude: /(node_modules)/, use: 'babel-loader' }, 
-			{ test: /\.hbs$/, loader: 'handlebars-loader' },
-			...imageLoader('images', false),
-			...styleLoader(path, false)
-		]
+		rules: loaders(path, false)
 	},
 	resolve: {
 		extensions: ['.js', '.jsx', '.tsx', '.ts', '.scss']

@@ -37,7 +37,7 @@ export const application = (url, store, context, insertCss) => {
 		<Provider store={store} suppressHydrationWarning={true}>
 			<StaticRouter onUpdate={() => window.scrollTo(0, 0)} location={url} context={context}>
 				<StyleContext.Provider value={{ insertCss }}>
-					<Application location={url} history={history}/>
+					<Application location={url} history={history} insertCss={insertCss}/>
 				</StyleContext.Provider>
 			</StaticRouter>
 		</Provider>

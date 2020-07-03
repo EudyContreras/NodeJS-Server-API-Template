@@ -31,7 +31,7 @@ loadableReady(() => {
 		content
 	);
 
-	document.getElementById('shellStyle').remove();
+	//document.getElementById('serverCSS').remove();
 });
 
 if (renderOptions.enableSW == true) {
@@ -41,4 +41,8 @@ if (renderOptions.enableSW == true) {
 		registerPushNotifications: false,
 		registerBackgroundSync: false
 	});
+}
+
+if (module.hot) {
+	module.hot.accept();
 }

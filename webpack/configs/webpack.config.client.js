@@ -5,20 +5,19 @@ require('dotenv').config();
 
 const path = require('path');
 const webpack = require('webpack');
+const loaders = require('../loaders');
 const CopyPlugin = require('copy-webpack-plugin');
 const WorkboxPlugin = require('workbox-webpack-plugin');
 const ManifestPlugin = require('webpack-manifest-plugin');
 const CompressPlugin = require('compression-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const styleLoader = require('../loaders/loader.stylings');
 const LoadablePlugin = require('@loadable/webpack-plugin');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const ExtractCssChunks = require('extract-css-chunks-webpack-plugin');
+const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const DuplicatePackageCheckerPlugin = require('duplicate-package-checker-webpack-plugin');
 const BrotliPlugin = require('brotli-webpack-plugin');
 const optimization = require('../sections/optimization');
 const splitchunks = require('../sections/splitchunks');
-const imageLoader = require('../loaders/image.loader');
-const styleLoader = require('../loaders/style.loader');
-const svgLoader = require('../loaders/svg.loader');
 const ImageminPlugin= require('imagemin-webp-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
@@ -44,8 +43,8 @@ const resources = [
 	}
 ];
 
-const fileName = isProduction ? './scripts/[name].[chunkhash].js' : './scripts/[name].js';
-const chunkFileName = isProduction ? './scripts/[name].[chunkhash].chunk.js' : './scripts/[name].chunk.js';
+const fileName = isProduction ? 'scripts/[name].[chunkhash].js' : './scripts/[name].js';
+const chunkFileName = isProduction ? 'scripts/[name].[chunkhash].chunk.js' : './scripts/[name].chunk.js';
 
 const splitChunk = {
 	splitChunks: {
@@ -54,10 +53,10 @@ const splitChunk = {
 };
 
 const manifestExclude = ['stats.json', '.DS_Store', '.js.br', '.js.gz', '.js', 'service-worker.ts', 'loadable-stats.json'];
-const pluggins = [
+const plugins = [
+	new DuplicatePackageCheckerPlugin(),
 	new CleanWebpackPlugin({ cleanStaleWebpackAssets: isProduction }),
 	new CopyPlugin(resources),
-	new MiniCssExtractPlugin(),
 	new HtmlWebpackPlugin({
 		excludeChunks: [/main.bundle.*.js/, /vendors.bundle.*.js/],
 		template: `${sourceLocation}/client/resources/html/offline.hbs`,
@@ -83,10 +82,14 @@ const pluggins = [
 				}
 				return manifest;
 			}, seed);
+
+			const scripts = entrypoints.main.filter(x => x.endsWith('.js'));
+			const styles = entrypoints.main.filter(x => x.endsWith('.css'));
 	
 			return {
 				files: manifestFiles,
-				entryPoints: entrypoints
+				styles:  styles,
+				scripts: scripts
 			};
 		}
 	})
@@ -95,7 +98,7 @@ const pluggins = [
 if (usesCSR) {
 	const clientConfig = require(`../../${sourceLocation}/configs/config.client.json`);
 
-	pluggins.push(
+	plugins.push(
 		new HtmlWebpackPlugin({
 			template: `${sourceLocation}/client/resources/html/index.hbs`,
 			filename: 'index.html',
@@ -109,10 +112,10 @@ if (usesCSR) {
 	);
 }
 if (isProduction) {
-	pluggins.push(
-		new ExtractCssChunks(),
+	plugins.push(
 		new webpack.optimize.ModuleConcatenationPlugin(),
 		new webpack.optimize.OccurrenceOrderPlugin(),
+		new OptimizeCssAssetsPlugin(),
 		new CompressPlugin({
 			filename: '[path].gz[query]',
 			algorithm: 'gzip',
@@ -131,10 +134,11 @@ if (isProduction) {
 	);
 }
 
-pluggins.push(
+plugins.push(
 	new ImageminPlugin({
 		config: [{
 			test: /\.(jpe?g|png|gif|svg)$/i,
+			disable: !isProduction,
 			options: {
 				quality: 75
 			}
@@ -156,10 +160,13 @@ module.exports = {
 	bail: isProduction,
 	devtool: isProduction ? 'source-map' : 'eval-cheap-module-source-map',
 	entry: entryPoint,
+	cache: !isProduction,
 	performance: {
-		hints: false
+		hints: isProduction ? 'warning' : false,
+		maxAssetSize: 200 * 1024, 
+		maxEntrypointSize: 200 * 1024
 	},
-	plugins: pluggins,
+	plugins: plugins,
 	output: {
 		path: path.join(__dirname, publicPath),
 		pathinfo: false,
@@ -175,14 +182,7 @@ module.exports = {
 		...optimization({ splitChunk: splitChunk, production: isProduction })
 	},
 	module: {
-		rules: [
-			{ test: /\.(jsx|tsx|ts|js)$/, exclude: /(node_modules)/, use: 'babel-loader' }, 
-			{ test: /\.hbs$/, loader: 'handlebars-loader' },
-			{ test: /\.txt$/, use: 'raw-loader' },
-			...imageLoader('images', true),
-			...styleLoader(path, isProduction),
-			svgLoader
-		]
+		rules: loaders(path, isProduction)
 	},
 	resolve: {
 		extensions: ['*', '.js', '.jsx', '.tsx', '.ts', '.scss', '.css']
