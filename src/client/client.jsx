@@ -1,37 +1,48 @@
 
-import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter } from 'react-router-dom';
-import { Provider } from 'react-redux';
-import { register } from './scriptsjs/serviceWorker';
-import StyleContext from 'isomorphic-style-loader/StyleContext';
-import Application from './components/App';
 import configureStore from './stores/store';
+import { loadableReady } from '@loadable/component';
+import { register } from './scriptsjs/serviceWorker';
+import './resources/images/favicon.ico';
+import './resources/images/icons/touch-icon.png';
+import { client } from './views';
 
 const initialState = window.__REDUX_STATE__ || {};
+const renderOptions = window.__RENDER_OPTIONS__ || {};
 
-delete window.__REDUX_STATE__;
+const useRender = renderOptions.clientSideRendered == true;
 
-require('../../workers/constants');
+loadableReady(() => {
+	delete window.__REDUX_STATE__;
+	delete window.__RENDER_OPTIONS__;
 
-const insertCss = (...styles) => {
-	const removeCss = styles.map(style => style._insertCss());
-	return () => removeCss.forEach(dispose => dispose());
-};
+	const renderMethod = useRender ? ReactDOM.render : ReactDOM.hydrate;
 
-const store = configureStore(initialState);
+	const insertCss = (...styles) => {
+		const removeCss = styles.map(style => style._insertCss());
+		return () => removeCss.forEach(dispose => dispose());
+	};
 
-ReactDOM.hydrate(
-	<Provider store={store} suppressHydrationWarning={true}>
-		<BrowserRouter onUpdate={() => window.scrollTo(0, 0)}>
-			<StyleContext.Provider value={{ insertCss }}>
-				<Application location={window.location.pathname} />
-			</StyleContext.Provider>
-		</BrowserRouter>
-	</Provider>,
-	document.getElementById('content')
-);
+	const store = configureStore(initialState);
+	const content = document.getElementById('content');
 
-document.getElementById('shellStyle').remove();
+	renderMethod(
+		client(window.location.pathname, store, insertCss),
+		content
+	);
 
-register();
+	//document.getElementById('serverCSS').remove();
+});
+
+if (renderOptions.enableSW == true) {
+	register({ 
+		clientSideRendered: useRender,
+		watchConnnectionState: false,
+		registerPushNotifications: false,
+		registerBackgroundSync: false
+	});
+}
+
+if (module.hot) {
+	module.hot.accept();
+}

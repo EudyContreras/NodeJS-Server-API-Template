@@ -35,7 +35,7 @@ class Roles extends Controller {
 	}
 
 	private get = async (request: Request, response: Response): Promise<Response> => {
-		const roleId = request.query.roleId;
+		const roleId: any = request.query.roleId;
 		
 		if (roleId) {
 			return this.getOne(roleId, request, response);

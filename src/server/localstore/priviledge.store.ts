@@ -1,4 +1,4 @@
-import config from '../config';
+import config from '../server.config';
 
 class PriviledgeData {
 	public type: string;
@@ -20,7 +20,7 @@ const PRIVILEDGES = [
 	new PriviledgeData(READ, CODES[0]),
 	new PriviledgeData(CREATE, CODES[1]),
 	new PriviledgeData(UPDATE, CODES[2]),
-	new PriviledgeData(DELETE, CODES[3]),
+	new PriviledgeData(DELETE, CODES[3])
 ];
 
 const ALL = [

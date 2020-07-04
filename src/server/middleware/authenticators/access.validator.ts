@@ -26,7 +26,7 @@ function allow(...allowed: string[]): (request: any, response: Response, next: N
 
 		const { error, result } = await service.getUserRole(userId);
 
-		if (error)  return { error: AccessRoleValidation.NONE_FOUND };
+		if (error) return { error: AccessRoleValidation.NONE_FOUND };
 
 		return { match: result.code === roleCode };
 	};

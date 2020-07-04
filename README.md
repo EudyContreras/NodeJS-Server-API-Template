@@ -1,29 +1,56 @@
 # NodeJS-API-Template
 
-A simple Node JS API backed backed by express and mongoDB.
-It features and Isomorphic/Universal rendering using react as
-a well as redux for state management.
+[Heroku Demo](https://node-react-api-template-engine.herokuapp.com/)
+
+A simple and production ready Node JS Teamplate Engine backed by express and mongoDB using the
+MERN stack architecture. It features a fully installable Isomorphic/Universal rendering experience using react, as
+a well as redux for state management. The boilerplate is highly customizable and it allows
+you to choose the render method of choice. (SSR, CSR)
 
 ## Isomorphic react PWA backed by Express and MongoDB
 
-Some information about the technologies used and what the application does. Its purpose
+Some information about the technologies used.
 
 ## Technologies
 
 * Node
+* Babel
+* JSX TSX
 * React
-* Redux
+* React Router
 * Typescript
-* Javascript
-* Environment Variables
-* Express
+* Redux State Management
+* Express with HTTP/2
 * MongoDB
 * Mongoose
-* Webpack
+* Webpack 4
 * Docker
-* Express
+* SASS (SCSS)
+* CSS Modules
+* ESList TSLint
+* Offline-first
+
+## Supports out of the box
+
+* Universal rendering
+* Code Splitting
+* Environment Variables
 * Eslint AirBNB Template
-* MVC
+* React-Fast-Refresh Hot Module Reload
+* MVC Architecture
+* Supports Installation
+* Suports Notifications
+* Suports Background Sync
+* Suports Periodic Sync
+* Gzip and Brotli compression
+* Webjobs using AgendaJS
+* Authentication with Passport
+* Supports modular modular CSS
+* Suppors component styling using sass with isomorphic-style-loader
+* Easy setup for component based code-splitting using loadable/components
+* Supports rich push notifications
+* Supports background and periodic-sync envents
+* Docker containarised
 
 ## Requirements
 
@@ -32,16 +59,53 @@ Some information about the technologies used and what the application does. Its 
 ## Install project.
 
 * `git clone `
-* `cd NodeJS-Server-API-Template`
 * `npm install`
+
+
+## All scripts
+
+* `cleanup`: Cleans up the dist and build folders
+* `compile-ts`: Compiles the ts code into js and copies necessary files to dist folder
+* `build:server`: Builds and packs the server using webpack
+* `build:client`:  Builds and packs the client using webpack
+* `build:workers`: Builds and packs the service workers using webpack
+* `build:watch:server`: Builds, packs and watches the server using webpack
+* `build:watch:client`: Builds, packs and watches the client using webpack
+* `build:watch:workers`: Builds, packs and watches the service workers using webpack
+* `build:all`: Builds, packs all the entries
+* `build:prod`: Builds, packs all the entries in production mode
+* `build:dev`: Builds, packs all the entries in development mode
+* `build:prod:start`: Builds, packs all the entries in production mode and runs the server
+* `build:dev:start`: Builds, packs all the entries in devlopment mode and runs the server 
+* `build:prod:csr:start`: Builds, packs all the entries in production mode and runs the server in CSR
+* `build:prod:ssr:start`: Builds, packs all the entries in production mode and runs the server with Universal Rendering
+* `build:dev:csr:start`: Builds, packs all the entries in devlopment mode and runs the server in CSR
+* `build:dev:ssr:start`: Builds, packs all the entries in devlopment mode and runs the server with Universal Rendering
+* `start`: Starts the server for the current build
+* `debug:hot`: Starts the server in hot mode with Universal Rendering
+* `debug:hot:server`: Runs the server using nodemon.
+* `debug:hot:client`: Runs the client using webpack-dev-server and HMR. Note that this will run only the client on CSR
 
 ## Build project.
 
 * `npm run build:dev` Builds the code into a bundle and places the code in the build folder.
 * `npm run build:prod` Builds and minifies the code into a bundle and plcaes the code in the dist folder.
 
-## Run project.
+## Build and Run project.
 
-* `npm run start:dev` Runs the development unminified version of the applicatipn.
-* `npm run start:prod` Runs the distribution minified version of the applicatipn.
+* `npm run build:dev:start` Runs the development version of the applicatipn.
+* `npm run build:prod:start` Runs the production version of the applicatipn.
+
+## Debug project
+
+The scripts specified here are used for debugging purpose. Running this scripsts
+will run the code in with hot-reload modes. Nodemon is used for the server and webpacks dev-sever HMR is used for
+the client together with the react-fast-refresh plugin.
+
+* `npm run debug:hot:server` Runs the server using nodemon.
+* `npm run debug:hot:client` Runs the client using webpack-dev-server and HMR. Note that this will run only the client on CSR
+* `npm run debug:hot` Runs the the full configuration by running both the server and client in hot-mode for a full experience
+
+Due to the nature of watch scripts running **debug:hot** can lead to sync problems. If you run into issues during the build try increasing
+the sleep delay for running the **webpack-dev-server** in order to allow the first scripts to finish.
 

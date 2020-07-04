@@ -2,18 +2,31 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const TerserPlugin = require('terser-webpack-plugin');
 
-const minimizeVendors = true;
+const developmentOptimization = () => ({
+	minimize: false,
+	namedModules: true,
+	namedChunks: true,
+	nodeEnv: 'development',
+	mangleWasmImports: false,
+	concatenateModules: false,
+	removeAvailableModules: false,
+	removeEmptyChunks: false
+});
 
-module.exports = ({ enviroment, splitChunk, useSourceMap, production = false }) => ({
-	minimize: production,
+const productionOptimization = (splitChunk) => ({
+	minimize: true,
 	minimizer: [
 		new TerserPlugin({
 			test: /\.(js|jsx|tsx|ts)$/i,
-			sourceMap: useSourceMap,
+			cache: true,
+			parallel: true,
+			sourceMap: false,
 			extractComments: false,
 			chunkFilter: (chunk) => {
-				if (chunk.name.startsWith('vendor')) {
-					return minimizeVendors && production;
+				if (chunk.name != null) {
+					if (chunk.name.startsWith('vendor')) {
+						return true;
+					}
 				}
 				return true;
 			},
@@ -41,11 +54,18 @@ module.exports = ({ enviroment, splitChunk, useSourceMap, production = false }) 
 			}
 		})
 	],
-	nodeEnv: enviroment,
+	nodeEnv: 'production',
+	chunkIds: false,
+	moduleIds: false,
 	providedExports: true,
 	concatenateModules: true,
+	mergeDuplicateChunks: true,
 	removeAvailableModules: true,
-	mangleWasmImports: true,
 	removeEmptyChunks: true,
+	mangleWasmImports: true,
 	...splitChunk
 });
+
+module.exports = ({ splitChunk, production = false }) => (
+	{ ...(production ? productionOptimization(splitChunk) : developmentOptimization()) }
+);

@@ -1,18 +1,32 @@
 import React, { createRef, RefObject } from 'react';
-import axios from 'axios';
 import rippleEffect from '../../../../../appliers/ripple.applier';
 import FontFaceObserver from 'fontfaceobserver';
+import { connect } from 'react-redux';
+import { IStateTree } from '../../../../../reducers';
 import { join } from '../../../../utililties/react.utils';
 import { MaterialIcons } from '../../../../../stores/icon.library';
+import { DispatchProps, Dispatchers } from '../../../../../actions/documentation/search.action';
 
-class SidebarSearch extends React.PureComponent<any, any> {
+interface StateProps {
+	searchError?: any | undefined | null;
+	searchResults: any[];
+	isSearching: boolean;
+	iconLoaded: boolean;
+}
 
+type Props = StateProps & DispatchProps & any;
+
+class SidebarSearch extends React.PureComponent<Props, any> {
+
+	private _isMounted: boolean;
 	private inputRef: RefObject<HTMLInputElement>;
 
 	constructor(props: any) {
 		super(props);
+		this._isMounted = false;
 		this.inputRef = createRef();
 		this.state = {
+			isSearching: false,
 			iconLoaded: false
 		};
 	}
@@ -22,23 +36,25 @@ class SidebarSearch extends React.PureComponent<any, any> {
 
 		rippleEffect(event, this.props.styling);
 
-		try {
-			await axios.get('http://localhost:5000/rest/api/search', {
-				data: { searchText: this.inputRef.current!.value },
-				params: { searchText: this.inputRef.current!.value }
-			});
-		} catch(error) {
-			console.log(error);
-		}
+		const searchText = this.inputRef.current!.value;
+		
+		this.props.performSearch(searchText);
 	};
 
+	public componentWillUnmount = (): void => {
+		this._isMounted = false;
+	};
+	
 	public componentDidMount = (): void => {
+		this._isMounted = true;
 		const font = new FontFaceObserver('Material Icons');
 
 		font.load().then( () => {
-			this.setState({
-				iconLoaded: true
-			});
+			if (this._isMounted) {
+				this.setState({
+					iconLoaded: true
+				});
+			}
 		});
 	};
 
@@ -46,7 +62,7 @@ class SidebarSearch extends React.PureComponent<any, any> {
 		const style = this.props.styling;
 
 		const classes = [style.search, style.shadowElevate];
-		const iconsClasses = [MaterialIcons.CLASS, style.searchButtonIcon];
+		const iconsClasses = [MaterialIcons.class, style.searchButtonIcon];
 
 		if (!this.state.iconLoaded) {
 			iconsClasses.push(style.loadable);
@@ -57,7 +73,7 @@ class SidebarSearch extends React.PureComponent<any, any> {
 		return (
 			<form className={join(...classes)} method='post'>
 				<label htmlFor='search'></label>
-				<input ref={this.inputRef} type='text' name='search' aria-label='search' className={style.searchTextbox} placeholder='Search' />
+				<input key='search-input' ref={this.inputRef} type='text' name='search' aria-label='search' className={style.searchTextbox} placeholder='Search' />
 				<button id='search' title='Search' value='' className={style.searchButton} onClick={this.performSearch}>
 					<i className={join(...iconsClasses)}>search</i>
 				</button>
@@ -66,4 +82,10 @@ class SidebarSearch extends React.PureComponent<any, any> {
 	};
 }
 
-export default SidebarSearch;
+const mapStateToProps = (state: IStateTree & any): any => ({
+	isSearching: state.presentation.documentation.sidebar.searchbar.isLoading,
+	searchResults: state.presentation.documentation.sidebar.searchbar.searchResults,
+	searchError: state.presentation.documentation.sidebar.searchbar.error
+});
+
+export default connect<StateProps, DispatchProps, any>(mapStateToProps, Dispatchers)(SidebarSearch);

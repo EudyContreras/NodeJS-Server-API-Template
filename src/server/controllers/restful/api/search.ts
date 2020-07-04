@@ -3,7 +3,7 @@ import express from 'express';
 import Controller from '../../controller';
 import RequestAction from '../../../definitions/requestAction';
 
-import { Router, Response } from 'express';
+import { Router, Response, Request } from 'express';
 
 export default class Search extends Controller {
 
@@ -30,12 +30,11 @@ export default class Search extends Controller {
 		router.get('/', this.getAll);
 	}
 
-	private getAll = async (request: any, response: Response): Promise<Response> => {
+	private getAll = async (request: Request, response: Response): Promise<Response> => {
 		const result = {
-			query: request.query,
-			result: 'Some search result'
+			prefix: request.query.searchText,
+			results: ['result 1', 'result 2', 'result 3', 'result 4', 'result 5']
 		};
-
 		return this.buildResult(result, undefined, response, RequestAction.GET_ALL);
 	};
 }

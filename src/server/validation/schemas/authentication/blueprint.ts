@@ -1,6 +1,6 @@
 import Joi from '@hapi/joi';
 
-import config from '../../../config';
+import config from '../../../server.config';
 
 import { SchemaValidation  } from '../../../messages/message.validation';
 

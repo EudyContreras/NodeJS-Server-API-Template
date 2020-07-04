@@ -7,73 +7,52 @@ export default (props) => {
 	return <DefaultLayout {...props} />;
 };
 
-// export const template = (props) => {
-// 	const layout = ReactDOMServer.renderToString(<DefaultLayout {...props} />);
-// 	return `<!doctype html>${layout}`;
-// };
-
-// const genAppleTouch = (icon) => {
-// 	const element = icon.images.map((x, idx) => {
-// 		const size = `${x.width}x${x.height}`;
-// 		const path = x.path.replace(".png",".webp").replace("public/","");
-// 		return(<Fragment key={idx}>
-// 			<link rel="icon" sizes={size} href={path} />
-// 			<link rel="apple-touch-icon" sizes={size} href={path} />
-// 		</Fragment>);
-// 	});
-// 	return element;
-// };
-
 const DefaultLayout = (props) => {
+	const options = {
+		enableSW: props.enableSW,
+		watchConnection: props.watchConnection,
+		clientSideRendered: props.clientSideRendered
+	};
 	return <html lang="en-US">
 		<head>
-			<title>{props.title}</title>
-	
+			<title>{props.html.title}</title>
+
 			<meta charSet="utf-8" />
-			<meta name="author" content="Eudy Contreras" />
-			<meta name="copyright" content="Eudy Contreras" />
+			<meta name="author" content={props.html.author} />
+			<meta name="copyright" content={props.html.copyright} />
 			<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-			<meta name="keywords" content="template engine, react-engine, pwa-isomorphic-react, pwa, isomorphic-react, universal-react" />
-			<meta name="description" content="Template Web site generated the server api routing" />
-			<meta name="application-name" content={props.title} />
-		
+			<meta name="keywords" content={props.html.keywords} />
+			<meta name="description" content={props.html.description} />
+			<meta name="application-name" content={props.html.title} />
+
 			{/*!-- Android  --> */}
-			<meta name="theme-color" content="#23282d" />
+			<meta name="theme-color" content={props.html.themeColor} />
 
-			{/* <!-- IOS --> */}
-			<meta name="apple-mobile-web-app-title" content={props.title} />
+			{/* <!-- Apple IOS --> */}
+			<meta name="apple-mobile-web-app-title" content={props.html.title} />
 			<meta name="apple-mobile-web-app-capable" content="yes" />
-			<meta name="apple-mobile-web-app-status-bar-style" content="default" />
-			
+			<meta name="apple-mobile-web-app-status-bar-style" content={props.html.apple.statusBarStyle} />
+
 			{/* <!-- Windows  --> */}
-			<meta name="msapplication-navbutton-color" content="#23282d" />
-			<meta name="msapplication-TileColor" content="#23282d" />
-			<meta name="msapplication-TileImage" content="images/icons/touch-icon-144x144.png" defer />
-			<meta name="msapplication-config" content="none" />
-
-			{/* <!-- Pinned Sites  --> */}
-			<meta name="application-name" content="Application Name" />
-			<meta name="msapplication-tooltip" content="Tooltip Text" />
-			<meta name="msapplication-starturl" content="/" />
-			<meta name="msapplication-navbutton-color" content="#2f3439" />
-
-			{/* <!-- Tap highlighting  --> */}
+			<meta name="msapplication-navbutton-color" content={props.html.windows.navButtonColor} />
+			<meta name="msapplication-TileColor" content={props.html.windows.tileColor} />
+			<meta name="msapplication-TileImage" content={props.html.windows.tileImage} defer />
+			<meta name="msapplication-config" content={props.html.windows.confi} />
+			<meta name="msapplication-tooltip" content={props.html.windows.tooltip} />
+			<meta name="msapplication-starturl" content={props.html.startupUrl} />
 			<meta name="msapplication-tap-highlight" content="no" />
 
 			{/* <!-- UC Mobile Browser  --> */}
-			<meta name="full-screen" content="yes" />
+			<meta name="full-screen" content={props.html.fullscreen} />
 
 			{/* <!-- Disable night mode for this page  --> */}
-			<meta name="nightmode" content="enable/disable" />
+			<meta name="nightmode" content={props.html.nightMode} />
 
 			{/* <!-- Layout mode --> */}
-			<meta name="layoutmode" content="fitscreen/standard" />
-
-			{/* <!-- imagemode - show image even in text only mode  --> */}
-			<meta name="imagemode" content="force" />
+			<meta name="layoutmode" content={props.html.layoutMode} />
 
 			{/* <!-- Orientation  --> */}
-			<meta name="screen-orientation" content="portrait" />
+			<meta name="screen-orientation" content={props.html.screenOrientaion} />
 
 			{/* <!-- Twitter social card  --> */}
 			<meta name="twitter:card" content="summary" />
@@ -81,19 +60,13 @@ const DefaultLayout = (props) => {
 
 			<meta httpEquiv="Content-Type" content="text/html; charset=utf-8" />
 			<meta httpEquiv="X-UA-Compatible" content="IE=edge" />
-				
-			{/* <!-- Startup Image  --> */}
-			<link href="images/icons/touch-icon-348x348.png" rel="apple-touch-startup-image" defer />
 
 			{/* <!-- Pinned Tab  --> */}
-			<link href={props.favicon} rel="mask-icon" size="any" color="#23282d" defer />
+			<link rel="mask-icon" href={props.favicon} size="any" color="#23282d" defer />
 
 			{/* <!-- Others --> */}
 			<link rel="shortcut icon" type="image/x-icon" href="images/icons/touch-icon-120x120.png" defer />
 			<link rel="shortcut icon" type="image/png" href="images/icons/touch-icon-120x120.png" defer />
-
-			{/* <!-- UC Browser  --> */}
-			<link rel="apple-touch-icon-precomposed" sizes="57x57" href="images/icon-57x57.png" defer />
 
 			{/* <!-- Apple touch icons  --> */}
 			<link rel="apple-touch-icon" type="image/png" href={props.favicon} defer />
@@ -108,24 +81,25 @@ const DefaultLayout = (props) => {
 			<link rel="apple-touch-icon" type="image/png" sizes="256x256" href="images/icons/touch-icon-256x256.png" defer />
 			<link rel="apple-touch-icon" type="image/png" sizes="348x348" href="images/icons/touch-icon-348x348.png" defer />
 			<link rel="apple-touch-icon" type="image/png" sizes="512x512" href="images/icons/touch-icon-512x512.png" defer />
-			
-			<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons&display=swap" media="all" id="materialIcons" async disabled />
+
+			<link rel="apple-touch-icon-precomposed" type="image/png" sizes="57x57" href="images/icon-57x57.png" defer />
+			<link rel="apple-touch-startup-image" type="image/png" href="images/icons/touch-icon-348x348.png" defer />
+
+			<link rel="stylesheet" href="styles/material.css" media="all" id="materialIcons" async disabled />
 			<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto&display=optional" media="all" id="robotoFont" defer disabled />
-			
+
 			{/* <!-- Manifest.json  --> */}
 			<link rel="manifest" href="/manifest.json" />
 
-			<style async id="shellStyle">{props.css}</style>
+			<style id="serverCSS" dangerouslySetInnerHTML={{ __html: props.css.cssText }}/>
 		</head>
 		<body >
 			<noscript>You need to enable JavaScript to fully be able to use this this web-app.</noscript>
 			<section id="content">{props.content}</section>
-			<script async rel="preconnect" src="https://cdn.jsdelivr.net/npm/pwacompat@2.0.9/pwacompat.min.js" integrity="sha384-VcI6S+HIsE80FVM1jgbd6WDFhzKYA0PecD/LcIyMQpT4fMJdijBh0I7Iblaacawc" crossOrigin="anonymous" />
-			<script defer rel="preconnect" src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js" />
-			{props.entryPoints.map((x, i) => <script key={i} async src={x} />)}
 			<script dangerouslySetInnerHTML={{
 				__html:
 					`
+			window.__RENDER_OPTIONS__=${JSON.stringify(options).replace(/</g, '\\u003c')};
 			window.__REDUX_STATE__= ${JSON.stringify(props.state).replace(/</g, '\\u003c')};
 
 			window.addEventListener("load", () => {
@@ -134,6 +108,10 @@ const DefaultLayout = (props) => {
 			});			
 			`
 			}} />
+			<script async rel="preconnect" src="https://cdn.jsdelivr.net/npm/pwacompat@2.0.9/pwacompat.min.js" integrity="sha384-VcI6S+HIsE80FVM1jgbd6WDFhzKYA0PecD/LcIyMQpT4fMJdijBh0I7Iblaacawc" crossOrigin="anonymous" />
+			<script defer rel="preconnect" src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js" />
+			<script id="__LOADABLE_REQUIRED_CHUNKS__" type='text/javascript'>[]</script>
+			{props.scripts.map((x, i) => <script async data-chunk="main" type='text/javascript' key={i} src={x.url} />)}
 		</body>
 	</html>;
 };
@@ -141,10 +119,13 @@ const DefaultLayout = (props) => {
 DefaultLayout.propTypes = {
 	cache: PropType.any,
 	favicon: PropType.any,
-	entryPoints: PropType.arrayOf(PropType.string),
+	clientSideRendered: PropType.bool,
+	watchConnection: PropType.bool,
+	scripts: PropType.arrayOf(PropType.any),
+	styles: PropType.arrayOf(PropType.any),
 	enableSW: PropType.bool,
 	content: PropType.any,
-	title: PropType.string,
 	state: PropType.any,
+	html: PropType.any,
 	css: PropType.any
 };

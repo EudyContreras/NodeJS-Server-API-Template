@@ -45,7 +45,7 @@ class SidebarToggle extends React.PureComponent<Props, State> {
 		};
 
 		const toggleClasses = [style.expand];
-		const toggleIconClasses = [MaterialIcons.CLASS, style.expandIcon];
+		const toggleIconClasses = [MaterialIcons.class, style.expandIcon];
 
 		if (this.props.hidden) {
 			toggleClasses.push(style.expandHidden);

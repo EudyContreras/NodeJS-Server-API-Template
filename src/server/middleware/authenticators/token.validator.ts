@@ -1,5 +1,5 @@
 
-import config from '../../config';
+import config from '../../server.config';
 import webtoken from 'jsonwebtoken';
 import httpCode from '../../definitions/httpCode';
 import AuthenticationService from '../../services/authentication.service';
@@ -37,7 +37,7 @@ function getToken(req: Request): string | null {
 async function authenticate(req: any, res: Response, next: NextFunction): Promise<void | Response> {
 	const token = getToken(req);
 
-	const response = new  AuthenticationResponse();
+	const response = new AuthenticationResponse();
 
 	if (!token) {
 		response.authorized = false;
