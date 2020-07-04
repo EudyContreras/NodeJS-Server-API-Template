@@ -61,15 +61,40 @@ Some information about the technologies used.
 * `git clone `
 * `npm install`
 
+
+## All scripts
+
+`cleanup`: Cleans up the dist and build folders
+`compile-ts`: Compiles the ts code into js and copies necessary files to dist folder
+`build:server`: Builds and packs the server using webpack
+`build:client`:  Builds and packs the client using webpack
+`build:workers`: Builds and packs the service workers using webpack
+`build:watch:server`: Builds, packs and watches the server using webpack
+`build:watch:client`: Builds, packs and watches the client using webpack
+`build:watch:workers`: Builds, packs and watches the service workers using webpack
+`build:all`: Builds, packs all the entries
+`build:prod`: Builds, packs all the entries in production mode
+`build:dev`: Builds, packs all the entries in development mode
+`build:prod:start`: Builds, packs all the entries in production mode and runs the server
+`build:dev:start`: Builds, packs all the entries in devlopment mode and runs the server 
+`build:prod:csr:start`: Builds, packs all the entries in production mode and runs the server in CSR
+`build:prod:ssr:start`: Builds, packs all the entries in production mode and runs the server with Universal Rendering
+`build:dev:csr:start`: Builds, packs all the entries in devlopment mode and runs the server in CSR
+`build:dev:ssr:start`: Builds, packs all the entries in devlopment mode and runs the server with Universal Rendering
+`start`: Starts the server for the current build
+`debug:hot`: Starts the server in hot mode with Universal Rendering
+`debug:hot:server`: Runs the server using nodemon.
+`debug:hot:client`: Runs the client using webpack-dev-server and HMR. Note that this will run only the client on CSR
+
 ## Build project.
 
 * `npm run build:dev` Builds the code into a bundle and places the code in the build folder.
 * `npm run build:prod` Builds and minifies the code into a bundle and plcaes the code in the dist folder.
 
-## Run project.
+## Build and Run project.
 
-* `npm run start:dev` Runs the development unminified version of the applicatipn.
-* `npm run start:prod` Runs the distribution minified version of the applicatipn.
+* `npm run build:dev:start` Runs the development version of the applicatipn.
+* `npm run build:prod:start` Runs the production version of the applicatipn.
 
 ## Debug project
 
