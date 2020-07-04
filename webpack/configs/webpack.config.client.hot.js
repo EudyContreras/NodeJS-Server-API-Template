@@ -5,6 +5,7 @@ require('dotenv').config();
 
 const path = require('path');
 const loaders = require('../loaders');
+const WaitPlugin = require('../plugins/WaitPlugin');
 const LoadablePlugin = require('@loadable/webpack-plugin');
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
 const optimization = require('../sections/optimization');
@@ -32,6 +33,7 @@ const proxyOptions = !usesCSR ? {
 	}
 } : { };
 const pluggins = [
+	new WaitPlugin({ filename: 'build/loadable-stats.json', timeout: 15000 }),
 	new ReactRefreshWebpackPlugin(),
 	new LoadablePlugin()
 ];

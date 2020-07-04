@@ -3,6 +3,7 @@
 require('dotenv').config();
 
 const path = require('path');
+const WaitPlugin = require('../plugins/WaitPlugin');
 const tsLoader = require('../loaders/loader.ts');
 
 const enviroment = process.env.NODE_ENV;
@@ -24,7 +25,7 @@ module.exports = {
 	performance: {
 		hints: false
 	},
-	plugins: [],
+	plugins: [new WaitPlugin({ filename: precompile ? 'dist/workers/service-worker.js' : 'src/workers/service-worker.ts' })],
 	output: {
 		path: path.join(__dirname, publicPath),
 		futureEmitAssets: isProduction,

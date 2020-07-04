@@ -3,6 +3,7 @@ require('dotenv').config();
 
 const path = require('path');
 const webpack = require('webpack');
+const WaitPlugin = require('../plugins/WaitPlugin');
 const NodeExternals = require('webpack-node-externals');
 const optimization = require('../sections/optimization');
 const imageLoader = require('../loaders/loader.image');
@@ -20,7 +21,7 @@ const sourceLocation = precompile ? 'dist' : 'src';
 const publicPath = '../../build';
 const entryPoint = `./${sourceLocation}/server/server.${usesCSR ? 'csr' : 'ssr' }.${precompile ? 'js' : 'ts'}`;
 
-const plugins = [];
+const plugins = [new WaitPlugin({ filename: 'build/public/loadable-stats.json' })];
 
 const stats = usesHMR ? { stats: 'minimal' } : { };
 
