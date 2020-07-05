@@ -90,8 +90,8 @@ will run the code in with hot-reload modes. Nodemon is used for the server and w
 the client together with the react-fast-refresh plugin.
 
 * `npm run debug:hot:server` Runs the server using nodemon.
-* `npm run debug:hot:client` Runs the client using webpack-dev-server and HMR. Note that this will run only the client on CSR
-* `npm run debug:hot` Runs the the full configuration by running both the server and client in hot-mode for a full experience
+* `npm run debug:hot:client` Runs the client using webpack-dev-server and HMR.´
+* `npm run debug:hot` Runs the the full configuration by executing both the hot server and hot client
 
 
 ### License

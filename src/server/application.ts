@@ -18,6 +18,7 @@ import LoggingHandler from './handlers/logging.handler';
 import ViewRenderer from './middleware/renderer';
 import shrinkRay from 'shrink-ray-current';
 import expressStaticGzip from 'express-static-gzip';
+import expressEnforceSSL from 'express-enforces-ssl';
 import DataInitializer from './initializers/database.initializer';
 import reactRender from 'express-react-views';
 
@@ -79,6 +80,10 @@ export default class Application {
 		}
 		if (!config.enviroment.PRODUCTION) {
 			this.app.use(logger('dev'));
+		}
+		if (config.ssl.ACTIVE) {
+			this.app.enable('trust proxy');
+			this.app.use(expressEnforceSSL());
 		}
 		this.app.use(cors());
 		this.app.use(helmet());
