@@ -1,6 +1,4 @@
 
-import $ from 'jquery';
-
 interface IScrollListener {
 	onScroll(style: any, scroll: number): void;
 }

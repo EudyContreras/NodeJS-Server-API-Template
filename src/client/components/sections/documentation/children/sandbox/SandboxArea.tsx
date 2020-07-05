@@ -50,7 +50,6 @@ class SandboxArea extends React.PureComponent<Props, any> {
 		return (
 			<aside {...common}>
 				<SandboxSection styling={style}/>
-				<SandboxSection styling={style}/>
 			</aside>
 		);
 	};

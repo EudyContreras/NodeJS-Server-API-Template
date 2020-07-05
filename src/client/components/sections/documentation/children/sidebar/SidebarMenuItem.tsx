@@ -11,10 +11,11 @@ interface State {
 }
 
 class SidebarMenuItem extends React.PureComponent<any, State>{
+	private _isMounted: boolean;
 
 	constructor(props: any) {
 		super(props);
-		
+		this._isMounted = false;
 		this.state = {
 			expanded: false,
 			iconLoaded: false
@@ -22,18 +23,27 @@ class SidebarMenuItem extends React.PureComponent<any, State>{
 	}
 
 	private openSubMenu = (): void => {
-		this.setState((state: State) => ({
-			expanded: !state.expanded
-		}));
+		if (this._isMounted) {
+			this.setState((state: State) => ({
+				expanded: !state.expanded
+			}));
+		}
 	};
 
+	public componentWillUnmount = (): void => {
+		this._isMounted = false;
+	};
+	
 	public componentDidMount = (): void => {
+		this._isMounted = true;
 		const font = new FontFaceObserver('Material Icons');
 
 		font.load().then( () => {
-			this.setState({
-				iconLoaded: true
-			});
+			if(this._isMounted) {
+				this.setState({
+					iconLoaded: true
+				});
+			}
 		});
 	};
 
@@ -43,7 +53,7 @@ class SidebarMenuItem extends React.PureComponent<any, State>{
 		const style = this.props.styling;
 
 		const classes = [style.menuItem];
-		const iconClasses = [MaterialIcons.CLASS];
+		const iconClasses = [MaterialIcons.class];
 
 		if (this.state.expanded) {
 			classes.push(style.active);

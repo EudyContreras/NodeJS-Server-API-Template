@@ -11,7 +11,7 @@ function intercept(error: HttpException, request: Request, response: Response, n
 	const apiResponse = {
 		error: {
 			status: status,
-			message: message,
+			message: message
 		}
 	};
 

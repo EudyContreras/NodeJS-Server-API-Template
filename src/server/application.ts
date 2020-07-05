@@ -1,17 +1,24 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 
 import fs from 'fs';
 import cors from 'cors';
-import https from 'https';
+import http from 'http';
+import http2 from 'spdy';
+import hsts from 'hsts';
 import helmet from 'helmet';
-import express from 'express';
+import logger from 'morgan';
+import express, { NextFunction } from 'express';
 import mongoose from 'mongoose';
-import config from './config';
-import compression from 'compression';
+import cookieParser from 'cookie-parser';
+import config from './server.config';
 import Interceptor from './middleware/interceptor';
 import Controller from './controllers/controller';
 import ErrorHandler from './handlers/error.handler';
 import LoggingHandler from './handlers/logging.handler';
 import ViewRenderer from './middleware/renderer';
+import shrinkRay from 'shrink-ray-current';
+import expressStaticGzip from 'express-static-gzip';
+import expressEnforceSSL from 'express-enforces-ssl';
 import DataInitializer from './initializers/database.initializer';
 import reactRender from 'express-react-views';
 
@@ -39,48 +46,65 @@ export default class Application {
 		this.initializeViewRenderers(args.viewRenderer);
 		this.initializeErrorHandling(args.interceptor);
 		this.connectToTheDatabase(true);
-		this.initializeWebjobs();
 	}
 
 	public startlistening(): void {
-		const port = config.host.PORT;
 		const secure = config.ssl.ACTIVE;
 
-		const listener = (): void => {
-			console.log(`Server listening on the port ${port}`);
-		};
+		const port = config.presentation.HAS_REACT_HMR ? config.host.PORT : config.host.PORT_HTTP;
 
 		if (secure) {
-			https.createServer({
-				key: fs.readFileSync('./ssl/sslkey.pem'),
-				cert: fs.readFileSync('./ssl/sslcert.pem'),
-				passphrase: config.ssl.PASS_PHRASE,
-			}, this.app).listen(port, listener);
-		} else {
-			this.app.listen(port, listener);
+			const port = config.host.PORT_HTTPS;
+			const options = {
+				key: fs.readFileSync(config.ssl.key),
+				cert: fs.readFileSync(config.ssl.cert)
+			};
+			http2.createServer(options, this.app).listen(port, () => {
+				console.log(`HTTPS Server listening on the port ${port}`);
+			});
 		}
+
+		const server = http.createServer(this.app);
+
+		server.listen(port, () => {
+			console.log(`Web Server listening on the port ${port}`);
+		});
 	}
 
 	private setupExpress(): void {
 		const render = config.presentation;
 		const clientRender = render.viewEngine.client;
-		const stylesRender = render.viewEngine.styles;
-		const scriptRender = render.viewEngine.scripts;
-		const imageRender = render.viewEngine.images;
 
+		if (!config.presentation.IS_SSR) {
+			this.app.use(this.ignoreFavicon);
+		}
+		if (!config.enviroment.PRODUCTION) {
+			this.app.use(logger('dev'));
+		}
+		if (config.ssl.ACTIVE) {
+			this.app.enable('trust proxy');
+			this.app.use(expressEnforceSSL());
+		}
 		this.app.use(cors());
 		this.app.use(helmet());
-		this.app.use(compression());
+		this.app.use(cookieParser());
+		this.app.use(shrinkRay());
 		this.app.use(express.json());
 		this.app.use(express.urlencoded({ extended: false }));
-		this.app.use(express.static(config.application.FILE_DIRECTORY));
+		this.app.use(hsts(config.host.secureTransport));
+		this.app.use(expressStaticGzip(config.application.FILE_DIRECTORY, config.compression));
 		this.app.use(clientRender.alias, express.static(clientRender.path));
-		this.app.use(stylesRender.alias, express.static(stylesRender.path));
-		this.app.use(scriptRender.alias, express.static(scriptRender.path));
-		this.app.use(imageRender.alias, express.static(imageRender.path));
 		this.app.set(render.viewEngine.alias, render.viewEngine.path);
 		this.app.set(render.viewEngine.label, render.viewEngine.type);
 		this.app.engine(render.viewEngine.type, reactRender.createEngine());
+	}
+
+	private ignoreFavicon(request: any, response: any, next: NextFunction): void {
+		if (config.resources.ignored.indexOf(request.originalUrl) !== -1) {
+			response.status(204).json({});
+		} else {
+			next();
+		}
 	}
 
 	private initializeMiddleware(middleware: Interceptor): void {
@@ -109,11 +133,7 @@ export default class Application {
 	}
 
 	private initializeWebjobs(): void {
-		/*const dataCollector = new DataCollectionJob();
 
-		dataCollector.scheduleA(scheduler);
-		dataCollector.scheduleB(scheduler);
-		dataCollector.scheduleC(scheduler);*/
 	}
 
 	private connectToTheDatabase(createInitialData = false): void {
@@ -124,7 +144,7 @@ export default class Application {
 		const password = config.database.DB_PASSWORD;
 		const dbURIPath = config.database.DB_URI_PATH;
 
-		const connectionString = `${prepend}${userName}:${password}${dbURIPath}`; 
+		const connectionString = `${prepend}${userName}:${password}${dbURIPath}`;
 
 		mongoose.connect(connectionString, this.dbOptions);
 
@@ -133,7 +153,7 @@ export default class Application {
 			if (createInitialData) {
 				await dataInitializer.createInitialRoles();
 				await dataInitializer.createInitialAdministrators();
-			}     
+			}
 		});
 	}
 }

@@ -1,4 +1,4 @@
-import config from '../config';
+import config from '../server.config';
 
 class RoleData {
 	public type: string;

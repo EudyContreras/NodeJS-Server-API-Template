@@ -51,9 +51,10 @@
             "unix"
         ],
         "quotes": [
-            "error",
+            "warn",
             "single"
         ],
+        "comma-dangle": ["error", "never"],
         "semi": "off",
         "no-extra-semi": "off",
         "object-curly-spacing": ["warn", "always"],

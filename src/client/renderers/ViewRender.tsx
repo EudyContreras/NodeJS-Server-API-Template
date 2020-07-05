@@ -1,24 +1,35 @@
-import config from '../config';
+/* eslint-disable @typescript-eslint/no-var-requires */
+
+import path from 'path';
+import config from '../../configs/config.client.json';
 import configureStore from '../stores/store';
 import ViewRenderer from '../../server/middleware/renderer';
-import appStyle from './../styles/app.scss';
-
-import { Store } from 'redux';
-import { application, shell } from '../views';
+import AppStyle from '../styles/app.scss';
 import { routes } from '../components/Routes';
+import { Store } from 'redux';
+import { application } from '../views';
 import { Router, Request, Response } from 'express';
+import IAction from '../actions/action';
+import { ChunkExtractor } from '@loadable/server';
+
+const statsFile = path.resolve('build/public/loadable-stats.json');
+const appStyle: any = AppStyle;
 
 class IndexViewRenderer extends ViewRenderer {
 
 	private routing = '/';
 	private router: Router;
 	private context = {};
-	private store: Store;
+	private store: Store<any, IAction>;
+	private state: any;
+	private css: any;
 
 	constructor() {
 		super();
 		this.router = Router();
 		this.store = configureStore({});
+		this.state = this.store.getState();
+		this.css = { cssText: appStyle._getCss() };
 		this.setupRoutes(this.router);
 	}
 
@@ -35,57 +46,68 @@ class IndexViewRenderer extends ViewRenderer {
 	};
 
 	private renderRoutes = async (req: Request, res: Response): Promise<void> => {
-		const shell = req.query.shell !== undefined;
 
-		if (config.app.CSR) {
-			res.status(200).send('');
+		if (process.env.CSR == 'true') {
+			res.status(200).send();
 		} else {
+			const shell = req.query.shell !== undefined;
+
+			const css = new Set();
+			const cssInjector = (...styles): void => { styles.forEach(style => css.add(style._getCss())); };
+	
 			if (shell) {
-				return await this.renderShell(req, res);
+				return await this.renderShell(req, res, cssInjector);
 			} else {
-				return await this.renderApplication(req, res);
+				return await this.renderApplication(req, res, cssInjector);
 			}
 		}
 	};
 
-	private renderApplication = async (req: Request, res: Response): Promise<void> => {
-		const state = this.store.getState();
-		const styling = new Set([appStyle._getCss()]);
+	private renderApplication = async (req: Request, res: Response, cssInjector: Function): Promise<void> => {
+		const extractor = new ChunkExtractor({ statsFile });
 
-		const insertCss = (...styles: any[]): void => styles.forEach(style => styling.add(style._getCss()));
+		const content = extractor.collectChunks(application(req.url, this.store, this.context, cssInjector));
 
-		const content = application(req.url, this.store, this.context, insertCss);
-		
+		const entryPoints = extractor.getMainAssets();
+
+		const styles = entryPoints.filter(x => x.url.endsWith('.css'));
+		const scripts = entryPoints.filter(x => x.url.endsWith('.js'));
+
 		const props = {
-			css: styling,
-			state: state,
-			title: config.app.TITLE,
-			enableSW: config.app.USE_SW,
+			css: this.css,
+			html: config.html,
+			state: this.state,
+			styles: styles,
+			scripts: scripts,
+			enableSW: process.env.USE_SW == 'true',
+			clientSideRendered: process.env.CSR == 'true',
+			watchConnection: true,
 			content: content,
 			cache: true
 		};
 
-		res.setHeader(config.header.LABEL, config.header.VALUE);
-		res.render(config.app.APP_LAYOUT, props);
+		config.headers.forEach(header => {
+			res.setHeader(header.LABEL, header.VALUE);
+		});
+		res.render(config.layout.FULL, props);
 	};
 
-	private renderShell = async (req: Request, res: Response): Promise<void> => {
-		const styling = new Set([appStyle._getCss()]);
-
-		const insertCss = (...styles: any[]): void => styles.forEach(style => styling.add(style._getCss()));
-
-		const content = shell(req.url, this.store, this.context, insertCss);
+	private renderShell = async (req: Request, res: Response, cssInjector: Function): Promise<void> => {
+	
+		const content = application(req.url, this.store, this.context, cssInjector);
 
 		const props = {
-			css: styling,
-			title: config.app.TITLE,
-			enableSW: config.app.USE_SW,
+			css: this.css,
+			html: config.html,
+			enableSW: process.env.USE_SW == 'true',
 			content: content,
 			cache: true
 		};
 
-		res.setHeader(config.header.LABEL, config.header.VALUE);
-		res.render(config.app.SHELL_LAYOUT, props);
+		config.headers.forEach(header => {
+			res.setHeader(header.LABEL, header.VALUE);
+		});
+		res.render(config.layout.SHELL, props);
 	};
 }
 

@@ -7,7 +7,7 @@ export default class VersionInfo extends React.PureComponent<any, any> {
 		super(props);
 		this.state = {
 			version: '1.3.5'
-		}
+		};
 	}
 
 	public render = (): JSX.Element => {

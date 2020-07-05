@@ -6,7 +6,7 @@ const tabs = {
 	cleanup_passwords: {
 		JOB: 'remove old teporary passwords',
 		TAB: '30 3 * * *'
-	},
+	}
 };
 
 export default tabs;

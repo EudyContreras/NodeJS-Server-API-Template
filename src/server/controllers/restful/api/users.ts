@@ -81,7 +81,7 @@ class Users extends Controller {
 	};
 
 	private delete = async (request: Request, response: Response): Promise<Response> => {
-		const userId = request.query.userId;
+		const userId: any = request.query.userId;
 
 		const { result, error } = await this.userService.deleteUser(userId);
 

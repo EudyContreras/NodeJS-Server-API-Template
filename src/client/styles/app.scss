@@ -13,6 +13,7 @@ $standardInterpolator: cubic-bezier(.25, .8, .25, 1);
 @import './partials/ripple';
 @import './partials/elevate';
 @import './partials/navbar';
+@import './partials/loaders';
 @import './partials/navlink';
 @import './partials/status';
 @import './partials/brand';
@@ -31,6 +32,9 @@ a {
 	color: #eee;
 }
 
+html {
+	scroll-behavior: smooth;
+}
 body {
 	margin: 0;
 	color: #eee;
@@ -53,6 +57,14 @@ body::-webkit-scrollbar {
 	overflow: visible;
 	width: 16px;
 	display: none;
+}
+
+::-moz-selection { /* Code for Firefox */
+	background: transparent;
+  }
+  
+::selection {
+	background: transparent;
 }
 
 .loadable {
@@ -102,6 +114,10 @@ body::-webkit-scrollbar {
 }
 
 .invisible {
+	display: none;
+}
+
+.hidden {
 	display: none;
 }
 

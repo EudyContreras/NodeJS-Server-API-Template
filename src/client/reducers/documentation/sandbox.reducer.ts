@@ -29,25 +29,25 @@ export default function (state = InitialState, action: IAction): ISandboxArea {
 		case SANDBOX_AREA_HOVERED: {
 			return {
 				...state,
-				hovered: action.payload,
+				hovered: action.payload
 			};
 		}
 		case SANDBOX_AREA_FIXED_TOP: {
 			return {
 				...state,
-				fixedTop: action.payload,
+				fixedTop: action.payload
 			};
 		}
 		case SANDBOX_AREA_FIXED_BOTTOM: {
 			return {
 				...state,
-				fixedBottom: action.payload,
+				fixedBottom: action.payload
 			};
 		}
 		case SANDBOX_AREA_OFFSET_BOTTOM: {
 			return {
 				...state,
-				offsetBottom: action.payload,
+				offsetBottom: action.payload
 			};
 		}
 		default:

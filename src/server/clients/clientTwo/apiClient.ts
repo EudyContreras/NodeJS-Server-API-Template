@@ -1,6 +1,6 @@
 
 import Client from '../client';
-import config from '../../config';
+import config from '../../server.config';
 import Endpoints from './endpoints';
 import ContentTypes from '../../definitions/httpContent';
 import HttpMethod from '../../definitions/httpMethod';
@@ -18,7 +18,7 @@ class ApiClient extends Client {
 			url: endPoint,
 			parse: true,
 			headers: {
-				accept: ContentTypes.JSON,
+				accept: ContentTypes.JSON
 			},
 			auth: {
 				username: this.userName,
@@ -41,7 +41,7 @@ class ApiClient extends Client {
 			url: endPoint,
 			parse: true,
 			headers: {
-				accept: ContentTypes.JSON,
+				accept: ContentTypes.JSON
 			},
 			auth: {
 				username: this.userName,
@@ -59,7 +59,7 @@ class ApiClient extends Client {
 			url: endPoint,
 			parse: true,
 			headers: {
-				accept: ContentTypes.JSON,
+				accept: ContentTypes.JSON
 			},
 			auth: {
 				username: this.userName,

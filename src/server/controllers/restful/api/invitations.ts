@@ -76,7 +76,7 @@ class Invitations extends Controller {
 	};
 
 	private delete = async (request: Request, response: Response): Promise<Response> => {
-		const inviteId = request.query.inviteId;
+		const inviteId: any = request.query.inviteId;
 
 		const { result, error } = await this.invitationService.deleteInvitation(inviteId);
 

@@ -1,5 +1,5 @@
 import becrypt from 'bcryptjs';
-import config from '../config';
+import config from '../server.config';
 
 export default class EncryptionService {
 	/**

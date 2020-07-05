@@ -1,24 +1,44 @@
 import React from 'react';
 import memoize from 'fast-memoize';
+import Action from './children/NavabarAction';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+import swMessager from '../../../utilities/messageBus';
+import { IStateTree } from '../../../reducers';
 import { shallowEqual } from '../../utililties/comparer.utils';
 import { appendWhen, join } from '../../../appliers/style.applier';
 import { getNavigationBar } from '../../../selectors/navbar.selector';
+import { showLoader, hideLoader } from '../../../actions/common/loader.action';
 import { DispatchProps, Dispatchers } from '../../../actions/common/navigation.action';
+import constants from '../../../../workers/constants';
 
 interface StateProps {
 	anchored: boolean;
+	routings: any;
+	styling: any;
+	location: string;
+	brandName: string;
 	mouseInside: boolean | null;
+	loadedRoutes: string[];
+	isLoaderActive: boolean;
 	activeTab: null | {
 		label: string;
 		index: string;
 	};
 }
 
-type Props = StateProps & DispatchProps & any;
+interface DispatchPropsLoader {
+	showLoader: () => void;
+	hideLoader: (loadedRoute?: string) => void;
+}
 
-class Navbar extends React.Component<Props, any> {
+type Props = StateProps & DispatchProps & DispatchPropsLoader;
+
+type State = {
+	hovering: boolean;
+};
+
+class Navbar extends React.Component<Props, State> {
 
 	private navbar: React.RefObject<HTMLElement>;
 
@@ -30,7 +50,7 @@ class Navbar extends React.Component<Props, any> {
 		};
 	}
 
-	public shouldComponentUpdate = (nextProps: any, nextState: any): boolean => {
+	public shouldComponentUpdate = (nextProps: any): boolean => {
 		return !shallowEqual(this.props.anchored, nextProps.anchored) 
 			|| !shallowEqual(this.props.mouseInside, nextProps.mouseInside)
 			|| !shallowEqual(this.props.activeTab, nextProps.activeTab);
@@ -96,13 +116,34 @@ class Navbar extends React.Component<Props, any> {
 		}
 	};
 
+	private manageLoader = (tab: any): void => {
+		if (this.props.isLoaderActive) {
+			this.props.hideLoader();
+		}
+		if (tab != null) {
+			const empty = this.props.loadedRoutes.length <= 0;
+			if (empty || !this.props.loadedRoutes.includes(tab.link)) {
+				if (tab.lazyLoaded) {
+					this.props.showLoader();
+				}
+			}
+		}
+	};
+
 	private handleLinkClick = (tab: any): void => {
+		const { events, messages } = constants;
+
+		this.manageLoader(tab);
+
+		if (tab == null) {
+			return this.props.setActiveTab(tab);
+		}
+		swMessager.emit(events.MESSAGE, { type: messages.ADD_TO_CACHE, payload: tab.link });
+
 		if (this.props.activeTab === null) {
 			this.props.setActiveTab(tab);
-		} else {
-			if (this.props.activeTab.label !== tab.label) {
-				this.props.setActiveTab(tab);
-			}
+		} else if (this.props.activeTab.label !== tab.label) {
+			this.props.setActiveTab(tab);		
 		}
 	};
 
@@ -117,8 +158,8 @@ class Navbar extends React.Component<Props, any> {
 
 		const properties = {
 			className: join(...classes),
-			onClick: ((): void => this.handleLinkClick({ label: element.label, index: idx })),
-			to: element.link,
+			onClick: ((): void => this.handleLinkClick({ ...element, index: idx })),
+			to: element.link
 		};
 
 		return properties;
@@ -145,12 +186,11 @@ class Navbar extends React.Component<Props, any> {
 
 		return (
 			<header {...properties}>
-				<div className={style.navLogo}>
-					<div className={style.status} />
-					<div className={style.navLogoText}>
-						<a aria-label='brand name' href='/'>{this.props.brandName}</a>
+				<Link to='/' onClick= {(): void => this.handleLinkClick(null)}>
+					<div className={style.navLogo}>
+						<div className={style.status} />
 					</div>
-				</div>
+				</Link>
 				<ul>
 					{routes.map((element: any, idx: number) =>
 						<li key={idx}>
@@ -158,11 +198,16 @@ class Navbar extends React.Component<Props, any> {
 						</li>
 					)}
 				</ul>
+				<Action styling={style}/>
 			</header>
 		);
 	};
 }
 
-const mapStateToProps = (state: any): any => getNavigationBar(state.presentation);
+const mapStateToProps = (state: IStateTree | any): any => ({
+	...getNavigationBar(state.presentation),
+	loadedRoutes: state.generalData.routeLoader.loadedRoutes,
+	isLoaderActive: state.generalData.routeLoader.isActive
+});
 
-export default connect<StateProps, DispatchProps, any>(mapStateToProps, Dispatchers)(Navbar);
+export default connect<StateProps, DispatchProps | DispatchPropsLoader, any>(mapStateToProps, { ...Dispatchers, showLoader, hideLoader })(Navbar);

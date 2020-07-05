@@ -1,34 +1,29 @@
-// import { NAV_MENU } from '../../actions/common/navigation.action';
-// import { SIDE_MENU } from '../../actions/common/sidemenu.action';
+import {
+	APPLICATION,
+	APPLICATION_INSTALLED
+} from '../../actions/common/application/appdata.action';
 
-// import * as NavbarReducer from './navigation.reducer';
-// import * as SideMenuReducer from './sidemenu.reducer';
+export const SOURCE = APPLICATION;
 
-// import IAction from '../../actions/action';
+import IAction from '../../actions/action';
 
-// export interface IApplicationState {
-// 	navbar: NavbarReducer.INavigationBar;
-// 	sidemenu: SideMenuReducer.ISideMenu;
-// }
+export interface IApplicationData {
+	installed: boolean;
+}
 
-// export const InitialState: IApplicationState = {
-// 	navbar: NavbarReducer.InitialState,
-// 	sidemenu: SideMenuReducer.InitialState
-// };
+const InitialState: IApplicationData = {
+	installed: false
+};
 
-// export default function (state = InitialState, action: IAction): IApplicationState {
-// 	switch (action.from) {
-// 		case NAV_MENU:
-// 			return {
-// 				...state,
-// 				navbar:  NavbarReducer.default(state.navbar, action)
-// 			};
-// 		case SIDE_MENU:
-// 			return {
-// 				...state,
-// 				sidemenu: SideMenuReducer.default(state.sidemenu, action)
-// 			};
-// 		default:
-// 			return state;
-// 	}
-// }
+export default function (state = InitialState, action: IAction): IApplicationData {
+	switch (action.type) {
+		case APPLICATION_INSTALLED: {
+			return {
+				...state,
+				installed: action.payload
+			};
+		}
+		default:
+			return state;
+	}
+}

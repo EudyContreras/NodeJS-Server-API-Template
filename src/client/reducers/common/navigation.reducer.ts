@@ -52,7 +52,7 @@ export default function (state = InitialState, action: IAction): INavigationBar 
 		case NAV_BAR_MENU_MOUSE_INSIDE: {
 			return {
 				...state,
-				mouseInside: action.payload,
+				mouseInside: action.payload
 			};
 		}
 		case NAV_BAR_MENU_OFFSET_TOP: {

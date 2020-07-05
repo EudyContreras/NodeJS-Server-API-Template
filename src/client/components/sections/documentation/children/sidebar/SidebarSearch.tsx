@@ -1,30 +1,60 @@
-import React from 'react';
+import React, { createRef, RefObject } from 'react';
 import rippleEffect from '../../../../../appliers/ripple.applier';
 import FontFaceObserver from 'fontfaceobserver';
+import { connect } from 'react-redux';
+import { IStateTree } from '../../../../../reducers';
 import { join } from '../../../../utililties/react.utils';
 import { MaterialIcons } from '../../../../../stores/icon.library';
+import { DispatchProps, Dispatchers } from '../../../../../actions/documentation/search.action';
 
-class SidebarSearch extends React.PureComponent<any, any> {
+interface StateProps {
+	searchError?: any | undefined | null;
+	searchResults: any[];
+	isSearching: boolean;
+	iconLoaded: boolean;
+}
+
+type Props = StateProps & DispatchProps & any;
+
+class SidebarSearch extends React.PureComponent<Props, any> {
+
+	private _isMounted: boolean;
+	private inputRef: RefObject<HTMLInputElement>;
 
 	constructor(props: any) {
 		super(props);
+		this._isMounted = false;
+		this.inputRef = createRef();
 		this.state = {
+			isSearching: false,
 			iconLoaded: false
 		};
 	}
 	
-	private performSearch = (event: React.MouseEvent<HTMLElement, MouseEvent>): void => {
+	private performSearch = async (event: React.MouseEvent<HTMLElement, MouseEvent>): Promise<void> => {
 		event.preventDefault();
+
 		rippleEffect(event, this.props.styling);
+
+		const searchText = this.inputRef.current!.value;
+		
+		this.props.performSearch(searchText);
 	};
 
+	public componentWillUnmount = (): void => {
+		this._isMounted = false;
+	};
+	
 	public componentDidMount = (): void => {
+		this._isMounted = true;
 		const font = new FontFaceObserver('Material Icons');
 
 		font.load().then( () => {
-			this.setState({
-				iconLoaded: true
-			});
+			if (this._isMounted) {
+				this.setState({
+					iconLoaded: true
+				});
+			}
 		});
 	};
 
@@ -32,24 +62,30 @@ class SidebarSearch extends React.PureComponent<any, any> {
 		const style = this.props.styling;
 
 		const classes = [style.search, style.shadowElevate];
-		const buttonClasses = [MaterialIcons.CLASS, style.searchButtonIcon];
+		const iconsClasses = [MaterialIcons.class, style.searchButtonIcon];
 
 		if (!this.state.iconLoaded) {
-			buttonClasses.push(style.loadable);
+			iconsClasses.push(style.loadable);
 		} else {
-			buttonClasses.push(style.loaded);
+			iconsClasses.push(style.loaded);
 		}
 
 		return (
 			<form className={join(...classes)} method='post'>
 				<label htmlFor='search'></label>
-				<input type='text' name='search' id='search' aria-label='search' className={style.searchTextbox} placeholder='Search' />
+				<input key='search-input' ref={this.inputRef} type='text' name='search' aria-label='search' className={style.searchTextbox} placeholder='Search' />
 				<button id='search' title='Search' value='' className={style.searchButton} onClick={this.performSearch}>
-					<i className={join(...buttonClasses)}>search</i>
+					<i className={join(...iconsClasses)}>search</i>
 				</button>
 			</form>
 		);
 	};
 }
 
-export default SidebarSearch;
+const mapStateToProps = (state: IStateTree & any): any => ({
+	isSearching: state.presentation.documentation.sidebar.searchbar.isLoading,
+	searchResults: state.presentation.documentation.sidebar.searchbar.searchResults,
+	searchError: state.presentation.documentation.sidebar.searchbar.error
+});
+
+export default connect<StateProps, DispatchProps, any>(mapStateToProps, Dispatchers)(SidebarSearch);

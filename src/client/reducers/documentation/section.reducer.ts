@@ -17,6 +17,12 @@ import * as Sandbox from '../documentation/sandbox.reducer';
 
 import IAction from '../../actions/action';
 
+export const children = [
+	Navbar.SOURCE,
+	Sidebar.SOURCE,
+	Sandbox.SOURCE
+];
+
 export interface IDocumentationArea {
 	siblingA: boolean;
 	siblingB: boolean;
@@ -32,6 +38,7 @@ export const InitialState: IDocumentationArea = {
 };
 
 export default (state = InitialState, action: IAction): IDocumentationArea => {
+
 	if (action.from) return handleSubReducers(state, action);
 	switch (action.type) {
 		case DOCUMENTATION_SECTION_ALL: {
@@ -39,7 +46,7 @@ export default (state = InitialState, action: IAction): IDocumentationArea => {
 				...state,
 				sidebar: {
 					...state.sidebar,
-					fixed: action.payload.sidebarFixed,
+					fixed: action.payload.sidebarFixed
 				},
 				sandbox: {
 					...state.sandbox,
@@ -54,7 +61,7 @@ export default (state = InitialState, action: IAction): IDocumentationArea => {
 				...state,
 				sidebar: {
 					...state.sidebar,
-					fixed: action.payload.sidebarFixed,
+					fixed: action.payload.sidebarFixed
 				},
 				sandbox: {
 					...state.sandbox,
@@ -68,7 +75,7 @@ export default (state = InitialState, action: IAction): IDocumentationArea => {
 				...state,
 				sidebar: {
 					...state.sidebar,
-					fixed: action.payload,
+					fixed: action.payload
 				}
 			};
 		}
@@ -100,17 +107,16 @@ export default (state = InitialState, action: IAction): IDocumentationArea => {
 				}
 			};
 		}
-		default:
-			return state;
+		default: return state;
 	}
 };
 
 const handleSubReducers = (state = InitialState, action: IAction): IDocumentationArea => {
-	switch(action.from) {
+	switch (action.from) {
 		case Navbar.SOURCE: {
 			return handleNavbarActions(state, action);
 		}
-		case Sidebar.SOURCE: {
+		case Sidebar.children.find(x => x === action.from): {
 			return {
 				...state,
 				sidebar: Sidebar.default(state.sidebar, action)
@@ -122,27 +128,26 @@ const handleSubReducers = (state = InitialState, action: IAction): IDocumentatio
 				sandbox: Sandbox.default(state.sandbox, action)
 			};
 		}
-		default:
-			return state; 
+
+		default: return state;
 	};
 };
 
 const handleNavbarActions = (state = InitialState, action: IAction): IDocumentationArea => {
-	switch(action.type) {
+	switch (action.type) {
 		case NAV_BAR_MENU_ANCHORED: {
 			return {
 				...state,
 				sidebar: {
 					...state.sidebar,
-					fixed: action.payload,
+					fixed: action.payload
 				},
 				sandbox: {
 					...state.sandbox,
-					fixedTop:  !state.sandbox.fixedBottom ? action.payload : false,
+					fixedTop: !state.sandbox.fixedBottom ? action.payload : false
 				}
 			};
 		}
-		default:
-			return state;
+		default: return state;
 	}
 };
