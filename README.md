@@ -1,4 +1,4 @@
-# React Isomorphic PWA
+<h1>React Isomorphic PWA</h1>
 
 ### Isomorphic react PWA backed by Express and MongoDB
 
@@ -9,14 +9,18 @@ you to choose the render method of choice. (SSR, CSR)
 
 <img src="./media/audits.png">.
 
+
+<div align="center">
+  <sub>Created and maintained with love ❤️ by your friendly neighborhood coder <a href="https://github.com/EudyContreras">Eudy Contreras</a> </a>.</sub>
+</div>
+
+
 ### Technologies
 
-* Node
+* TS Node
 * Babel
-* JSX TSX
-* React
+* React JSX/TSX
 * React Router
-* Typescript
 * Redux State Management
 * Express with HTTP/2
 * MongoDB
@@ -24,30 +28,24 @@ you to choose the render method of choice. (SSR, CSR)
 * Webpack 4
 * Docker
 * SASS (SCSS)
-* CSS Modules
 * ESList TSLint
-* Offline-first
 
 ### Supports out of the box
 
-* Universal rendering
-* Code Splitting
+* Universal rendering using Node and React
 * Environment Variables
-* Eslint AirBNB Template
 * React-Fast-Refresh Hot Module Reload
-* MVC Architecture
+* MVC Architecture with SSR
 * Supports Installation
-* Suports Notifications
-* Suports Background Sync
-* Suports Periodic Sync
+* Supports Notifications
+* Supports Background Sync
+* Supports Periodic Sync
+* Supports background and periodic-sync envents
 * Gzip and Brotli compression
 * Webjobs using AgendaJS
-* Authentication with Passport
-* Supports modular modular CSS
+* Supports CSS Modules and critical CSS
 * Suppors component styling using sass with isomorphic-style-loader
 * Easy setup for component based code-splitting using loadable/components
-* Supports rich push notifications
-* Supports background and periodic-sync envents
 * Docker containarised
 
 ### Requirements
@@ -95,3 +93,7 @@ the client together with the react-fast-refresh plugin.
 * `npm run debug:hot:client` Runs the client using webpack-dev-server and HMR. Note that this will run only the client on CSR
 * `npm run debug:hot` Runs the the full configuration by running both the server and client in hot-mode for a full experience
 
+
+### License
+
+This project is licensed under the MIT License - see the [**Licence**](./LICENSE) file for details
