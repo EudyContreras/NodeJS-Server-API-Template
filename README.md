@@ -1,15 +1,15 @@
-# NodeJS-API-Template
+# React Isomorphic PWA
 
-## Isomorphic react PWA backed by Express and MongoDB
+### Isomorphic react PWA backed by Express and MongoDB
 
-A simple and production ready Node JS Teamplate Engine backed by express and mongoDB using the
+A simple and production ready boilerplate backed by express and mongoDB using the
 MERN stack architecture. It features a fully installable Isomorphic/Universal rendering experience using react, as
 a well as redux for state management. The boilerplate is highly customizable and it allows
 you to choose the render method of choice. (SSR, CSR)
 
 <img src="./media/audits.png">.
 
-## Technologies
+### Technologies
 
 * Node
 * Babel
@@ -28,7 +28,7 @@ you to choose the render method of choice. (SSR, CSR)
 * ESList TSLint
 * Offline-first
 
-## Supports out of the box
+### Supports out of the box
 
 * Universal rendering
 * Code Splitting
@@ -50,17 +50,17 @@ you to choose the render method of choice. (SSR, CSR)
 * Supports background and periodic-sync envents
 * Docker containarised
 
-## Requirements
+### Requirements
 
 * [node & npm](https://nodejs.org/en/)
 
-## Install project.
+### Install project.
 
 * `git clone `
 * `npm install`
 
 
-## All scripts
+### All scripts
 
 * `start`: Starts the server for the current build
 * `cleanup`: Cleans up the dist and build folders
@@ -75,17 +75,17 @@ you to choose the render method of choice. (SSR, CSR)
 * `debug:hot:server`: Runs the server using nodemon.
 * `debug:hot:client`: Runs the client using webpack-dev-server and HMR. Note that this will run only the client on CSR
 
-## Build project.
+### Build project.
 
 * `npm run build:dev` Builds the code into a bundle and places the code in the build folder.
 * `npm run build:prod` Builds and minifies the code into a bundle and plcaes the code in the dist folder.
 
-## Build and Run project.
+### Build and Run project.
 
 * `npm run build:dev:start` Runs the development version of the applicatipn.
 * `npm run build:prod:start` Runs the production version of the applicatipn.
 
-## Debug project
+### Debug project
 
 The scripts specified here are used for debugging purpose. Running this scripsts
 will run the code in with hot-reload modes. Nodemon is used for the server and webpacks dev-sever HMR is used for
