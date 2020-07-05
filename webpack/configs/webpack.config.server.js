@@ -21,10 +21,13 @@ const sourceLocation = precompile ? 'dist' : 'src';
 const publicPath = '../../build';
 const entryPoint = `./${sourceLocation}/server/server.${usesCSR ? 'csr' : 'ssr' }.${precompile ? 'js' : 'ts'}`;
 
-const plugins = [new WaitPlugin({ filename: 'build/public/loadable-stats.json' })];
+const plugins = [];
 
 const stats = usesHMR ? { stats: 'minimal' } : { };
 
+if (process.env.CSR != 'true') {
+	plugins.push(new WaitPlugin({ filename: 'build/public/loadable-stats.json' }));
+}
 if (isProduction) {
 	plugins.push(
 		new webpack.optimize.ModuleConcatenationPlugin(),

@@ -33,7 +33,7 @@ const proxyOptions = !usesCSR ? {
 	}
 } : { };
 const pluggins = [
-	new WaitPlugin({ filename: 'build/loadable-stats.json', timeout: 15000 }),
+	new WaitPlugin({ filename: 'build/public/loadable-stats.json', timeout: 15000 }),
 	new ReactRefreshWebpackPlugin(),
 	new LoadablePlugin()
 ];

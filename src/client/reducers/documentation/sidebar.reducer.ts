@@ -12,6 +12,7 @@ import IAction from '../../actions/action';
 export const SOURCE = SIDE_MENU;
 
 export const children = [
+	SOURCE,
 	SearchBar.SOURCE
 ];
 

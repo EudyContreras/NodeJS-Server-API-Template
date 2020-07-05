@@ -25,7 +25,7 @@ module.exports = {
 	performance: {
 		hints: false
 	},
-	plugins: [new WaitPlugin({ filename: precompile ? 'dist/workers/service-worker.js' : 'src/workers/service-worker.ts' })],
+	plugins: [new WaitPlugin({ filename: 'build/public/manifest-assets.json' })],
 	output: {
 		path: path.join(__dirname, publicPath),
 		futureEmitAssets: isProduction,
