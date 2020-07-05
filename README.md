@@ -2,14 +2,14 @@
 
 [Heroku Demo](https://node-react-api-template-engine.herokuapp.com/)
 
+## Isomorphic react PWA backed by Express and MongoDB
+
 A simple and production ready Node JS Teamplate Engine backed by express and mongoDB using the
 MERN stack architecture. It features a fully installable Isomorphic/Universal rendering experience using react, as
 a well as redux for state management. The boilerplate is highly customizable and it allows
 you to choose the render method of choice. (SSR, CSR)
 
-## Isomorphic react PWA backed by Express and MongoDB
-
-Some information about the technologies used.
+<img src="./media/audits.png">.
 
 ## Technologies
 
