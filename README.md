@@ -1,7 +1,5 @@
 # NodeJS-API-Template
 
-[Heroku Demo](https://node-react-api-template-engine.herokuapp.com/)
-
 ## Isomorphic react PWA backed by Express and MongoDB
 
 A simple and production ready Node JS Teamplate Engine backed by express and mongoDB using the
