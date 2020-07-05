@@ -64,15 +64,15 @@ Some information about the technologies used.
 
 ## All scripts
 
+* `start`: Starts the server for the current build
 * `cleanup`: Cleans up the dist and build folders
 * `compile-ts`: Compiles the ts code into js and copies necessary files to dist folder
-* `build:watch:server`: Builds, packs and watches the server using webpack
-* `build:watch:client`: Builds, packs and watches the client using webpack
+* `build:server:watch`: Builds, packs and watches the server using webpack
+* `build:client:watch:`: Builds, packs and watches the client using webpack
 * `build:prod`: Builds, packs all the entries in production mode
 * `build:dev`: Builds, packs all the entries in development mode
 * `build:prod:start`: Builds, packs all the entries in production mode and runs the server
 * `build:dev:start`: Builds, packs all the entries in devlopment mode and runs the server 
-* `start`: Starts the server for the current build
 * `debug:hot`: Starts the server in hot mode with Universal Rendering
 * `debug:hot:server`: Runs the server using nodemon.
 * `debug:hot:client`: Runs the client using webpack-dev-server and HMR. Note that this will run only the client on CSR

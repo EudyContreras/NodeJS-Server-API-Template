@@ -25,6 +25,7 @@
     "compile-ts": "npm run cleanup && tsc -b ./ && cpy --cwd=src --parents '**/*' '!**/*.(ts|js|tsx|jsx)' ../dist/ ",
     "build:client": "webpack --config webpack/configs/webpack.config.client.js",
     "build:workers": "webpack --config webpack/configs/webpack.config.workers.js",
+    "build:client:watch": "webpack --config webpack/configs/webpack.config.client.js --watch",
     "build:server:watch": "webpack --config webpack/configs/webpack.config.server.js --watch",
     "build:prod": "npm run cleanup && cross-env NODE_ENV=production PRECOMPILE=true REACT_HMR=false && npm run compile-ts && webpack",
     "build:dev": "npm run cleanup && cross-env NODE_ENV=development PRECOMPILE=false REACT_HMR=false webpack",
