@@ -5,7 +5,7 @@ const singleShunk = {
 			enforce: true,
 			chunks: 'all',
 			test: /[\\/]node_modules[\\/]/,
-			name: 'vendor/vendors'
+			name: 'vendors'
 		}
 	}
 };

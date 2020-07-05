@@ -66,21 +66,12 @@ Some information about the technologies used.
 
 * `cleanup`: Cleans up the dist and build folders
 * `compile-ts`: Compiles the ts code into js and copies necessary files to dist folder
-* `build:server`: Builds and packs the server using webpack
-* `build:client`:  Builds and packs the client using webpack
-* `build:workers`: Builds and packs the service workers using webpack
 * `build:watch:server`: Builds, packs and watches the server using webpack
 * `build:watch:client`: Builds, packs and watches the client using webpack
-* `build:watch:workers`: Builds, packs and watches the service workers using webpack
-* `build:all`: Builds, packs all the entries
 * `build:prod`: Builds, packs all the entries in production mode
 * `build:dev`: Builds, packs all the entries in development mode
 * `build:prod:start`: Builds, packs all the entries in production mode and runs the server
 * `build:dev:start`: Builds, packs all the entries in devlopment mode and runs the server 
-* `build:prod:csr:start`: Builds, packs all the entries in production mode and runs the server in CSR
-* `build:prod:ssr:start`: Builds, packs all the entries in production mode and runs the server with Universal Rendering
-* `build:dev:csr:start`: Builds, packs all the entries in devlopment mode and runs the server in CSR
-* `build:dev:ssr:start`: Builds, packs all the entries in devlopment mode and runs the server with Universal Rendering
 * `start`: Starts the server for the current build
 * `debug:hot`: Starts the server in hot mode with Universal Rendering
 * `debug:hot:server`: Runs the server using nodemon.
@@ -105,7 +96,4 @@ the client together with the react-fast-refresh plugin.
 * `npm run debug:hot:server` Runs the server using nodemon.
 * `npm run debug:hot:client` Runs the client using webpack-dev-server and HMR. Note that this will run only the client on CSR
 * `npm run debug:hot` Runs the the full configuration by running both the server and client in hot-mode for a full experience
-
-Due to the nature of watch scripts running **debug:hot** can lead to sync problems. If you run into issues during the build try increasing
-the sleep delay for running the **webpack-dev-server** in order to allow the first scripts to finish.
 

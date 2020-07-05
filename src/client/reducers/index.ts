@@ -22,7 +22,7 @@ export interface IStateTree {
 	generalData: IGeneralData;
 }
 
-export default combineReducers({
+const rootReducer = combineReducers({
 	presentation: combineReducers({
 		navigation: navigationReducer,
 		documentation: documentationReducer
@@ -33,3 +33,5 @@ export default combineReducers({
 		appData: appdataReducer
 	})
 });
+
+export default rootReducer;

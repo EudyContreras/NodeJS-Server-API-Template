@@ -3,6 +3,7 @@ require('dotenv').config();
 
 const path = require('path');
 const webpack = require('webpack');
+const WaitPlugin = require('../plugins/WaitPlugin');
 const NodeExternals = require('webpack-node-externals');
 const optimization = require('../sections/optimization');
 const imageLoader = require('../loaders/loader.image');
@@ -24,6 +25,9 @@ const plugins = [];
 
 const stats = usesHMR ? { stats: 'minimal' } : { };
 
+if (process.env.CSR != 'true') {
+	plugins.push(new WaitPlugin({ filename: 'build/public/loadable-stats.json' }));
+}
 if (isProduction) {
 	plugins.push(
 		new webpack.optimize.ModuleConcatenationPlugin(),

@@ -38,6 +38,7 @@ export const InitialState: IDocumentationArea = {
 };
 
 export default (state = InitialState, action: IAction): IDocumentationArea => {
+
 	if (action.from) return handleSubReducers(state, action);
 	switch (action.type) {
 		case DOCUMENTATION_SECTION_ALL: {
@@ -115,7 +116,7 @@ const handleSubReducers = (state = InitialState, action: IAction): IDocumentatio
 		case Navbar.SOURCE: {
 			return handleNavbarActions(state, action);
 		}
-		case Sidebar.SOURCE, Sidebar.children[0]: {
+		case Sidebar.children.find(x => x === action.from): {
 			return {
 				...state,
 				sidebar: Sidebar.default(state.sidebar, action)
