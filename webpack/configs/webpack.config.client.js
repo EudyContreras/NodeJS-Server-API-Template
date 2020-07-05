@@ -11,7 +11,7 @@ const WorkboxPlugin = require('workbox-webpack-plugin');
 const ManifestPlugin = require('webpack-manifest-plugin');
 const CompressPlugin = require('compression-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const styleLoader = require('../loaders/loader.stylings');
+const CircularDependencyPlugin = require('circular-dependency-plugin');
 const LoadablePlugin = require('@loadable/webpack-plugin');
 const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const DuplicatePackageCheckerPlugin = require('duplicate-package-checker-webpack-plugin');
@@ -54,6 +54,13 @@ const splitChunk = {
 
 const manifestExclude = ['stats.json', '.DS_Store', '.js.br', '.js.gz', '.js', 'service-worker.ts', 'loadable-stats.json'];
 const plugins = [
+	new CircularDependencyPlugin({
+		exclude: /a\.js|node_modules/,
+		include: /src/,
+		failOnError: true,
+		allowAsyncCycles: false,
+		cwd: process.cwd()
+	}),
 	new DuplicatePackageCheckerPlugin(),
 	new CleanWebpackPlugin({ cleanStaleWebpackAssets: isProduction }),
 	new CopyPlugin(resources),
