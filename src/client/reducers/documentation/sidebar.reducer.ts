@@ -5,9 +5,16 @@ import {
 	SIDE_MENU_HOVERED
 } from '../../actions/documentation/sidebar.action';
 
+import * as SearchBar from '../documentation/search.reducer';
+
 import IAction from '../../actions/action';
 
 export const SOURCE = SIDE_MENU;
+
+export const children = [
+	SOURCE,
+	SearchBar.SOURCE
+];
 
 export interface IRoute {
 	hovered: boolean;
@@ -25,16 +32,12 @@ export interface IToggle {
 	locked: boolean;
 }
 
-export interface ISearchBar {
-	searching: boolean;
-}
-
 export interface ISideMenu{
 	expanded: boolean;
 	hovered: boolean;
 	fixed: boolean;
 	toggle: IToggle;
-	searchbar: ISearchBar;
+	searchbar: SearchBar.ISearchEvent;
 	endpoints: IEndpoint[];
 }
 
@@ -46,13 +49,12 @@ export const InitialState: ISideMenu = {
 		hidden: true,
 		locked: true
 	},
-	searchbar: {
-		searching: false
-	},
+	searchbar: SearchBar.InitialState,
 	endpoints: []
 };
 
 export default function (state = InitialState, action: IAction): ISideMenu {
+	if (action.from != SOURCE) return handleSubReducers(state, action);
 	switch (action.type) {
 		case SIDE_MENU_TOGGLE: {
 			return {
@@ -93,3 +95,16 @@ export default function (state = InitialState, action: IAction): ISideMenu {
 			return state;
 	}
 }
+
+const handleSubReducers = (state = InitialState, action: IAction): ISideMenu => {
+	switch(action.from) {
+		case SearchBar.SOURCE: {
+			return {
+				...state,
+				searchbar: SearchBar.default(state.searchbar, action)
+			};
+		}
+		default:
+			return state; 
+	};
+};

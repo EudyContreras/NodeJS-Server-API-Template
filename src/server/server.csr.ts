@@ -3,7 +3,7 @@ import Application from './application';
 import Interceptor from './middleware/interceptor';
 import RoleController from './controllers/restful/api/roles';
 import UserController from './controllers/restful/api/users';
-import IndexViewRender from '../client/renderers/ViewRender';
+import IndexViewRender from '../client/renderers/ViewRenderLight';
 import SchemaController from './controllers/restful/api/schema';
 import SearchController from './controllers/restful/api/Search';
 import InviteController from './controllers/restful/api/invitations';

@@ -23,7 +23,7 @@ class SidebarSubItem extends React.PureComponent<any, any> {
 					<h3 className={join(...classes)}>{method}</h3>
 					<a className={style.truncate} href={hash}>{label}</a>
 				</div>
-				<i className={MaterialIcons.CLASS}>{MaterialIcons.icons.CHEV_RIGHT}</i>
+				<i className={MaterialIcons.class}>{MaterialIcons.icons.CHEV_RIGHT}</i>
 			</li>
 		);
 	};

@@ -98,6 +98,9 @@ typings/
 
 /dist
 /ssl
+/.media
+/media
+/assets
 dist/
 pre/
 ssl/

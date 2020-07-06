@@ -1,28 +1,24 @@
-import React from 'react';
-import Loadable from 'react-loadable';
-import LoadingState from '../shared/states/LoadingState';
 
-const DEFAULT_DELAY = 300;
+import minDelay from 'p-min-delay';
+import { timeout } from 'promise-timeout';
+import { DefaultComponent } from '@loadable/component';
 
-export function Loading(props?: any): JSX.Element | null {
-	if (props.error) {
-		return <div>Error! <button onClick={props.retry}>Retry</button></div>;
-	} else if (props.timedOut) {
-		return <div>Taking a long time... <button onClick={props.retry}>Retry</button></div>;
-	} else if (props.pastDelay) {
-		return <LoadingState/>;
-	} else {
-		return null;
+const DEFAULT_DELAY = 1250;
+const DEFAULT_TIMEOUT = 5000;
+
+type DelayOptions = {
+	delay: number;
+	timeout?: number ;
+};
+
+export function delayBoundary<T>(
+	call: Promise<DefaultComponent<T>>,
+	options: DelayOptions = { 
+		delay: DEFAULT_DELAY, 
+		timeout: DEFAULT_TIMEOUT
 	}
-}
-
-export function lazyLoad(func: (props?: any) => Promise<React.Component>, options?: any): (React.ComponentClass<unknown, any> & Loadable.LoadableComponent) | (React.FunctionComponent<unknown> & Loadable.LoadableComponent) {
-	return Loadable({
-		loader: func,
-		...options,
-		delay: DEFAULT_DELAY,
-		loading: Loading
-	});
-}
-
-
+): Promise<DefaultComponent<T>> {
+	const delay = options.delay;
+	const timeoutTime = options.timeout || DEFAULT_TIMEOUT;
+	return timeout(minDelay(call, delay), timeoutTime);
+};

@@ -1,11 +1,10 @@
 TODO:
 
 * Make sure that all referenced resources are tracked by the SW
-* Add hot-reloding for development mode.
-* Use loadable components or something similar for react code splitting.
-* Use react isomorphic code splitting with React Universal Component
 * Keep the audit in check to achieve excellent scores.
-* Port class components to functional components using react hooks.
+* Use Redial in an efficient way
+* Maybe setup tests and travis
+* Streamline NGINX and docker setup
 
 PWA Demo requirements:
 

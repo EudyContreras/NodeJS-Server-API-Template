@@ -5,8 +5,13 @@ const config = Object.freeze({
 	application: {
 		FILE_DIRECTORY: '../node-template-server/build'
 	},
+	enviroment: {
+		PRODUCTION: process.env.NODE_ENV === 'true'
+	},
 	presentation: {
 		path: 'client',
+		HAS_REACT_HMR: process.env.REACT_HMR === 'true',
+		IS_SSR: process.env.CSR == 'false',
 		viewEngine: {
 			type: 'jsx',
 			alias: 'views',
@@ -18,6 +23,18 @@ const config = Object.freeze({
 			}
 		}
 	},
+	resources: {
+		ignored: ['/favicon.ico']
+	},
+	compression: {
+		index: false,
+		enableBrotli: true,
+		customCompressions: [{
+			encodingName: 'deflate',
+			fileExtension: 'zz'
+		}],
+		orderPreference: ['br']
+	},
 	self: {
 		headers: {
 			AUTHORIZATION: 'authorization',
@@ -25,6 +42,8 @@ const config = Object.freeze({
 		}
 	},
 	ssl: {
+		key: process.env.SSL_KEY_FILE || './ssl/localhost.key',
+		cert: process.env.SSL_CERT_FILE || './ssl/localhost.crt',
 		ACTIVE: process.env.USE_SSL === 'true',
 		PASS_PHRASE: process.env.PASS_PHRASE
 	},
@@ -34,7 +53,13 @@ const config = Object.freeze({
 		PORT: process.env.PORT,
 		PORT_HTTP: process.env.PORT_HTTP,
 		PORT_HTTPS: process.env.PORT_HTTPS,
-		REDIRECT_TO_HTTPS: false
+		REDIRECT_TO_HTTPS: false,
+		SECURE_MAX_AGE: 31536000,
+		secureTransport: {
+			maxAge: 31536000,
+			includeSubDomains: true,
+			preload: true
+		}
 	},
 	redis: {
 		HOST: 'localhost',

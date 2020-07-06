@@ -1,9 +1,10 @@
 import React from 'react';
+import { MaterialIcons } from '../../../../stores/icon.library';
 import rippleEffect from '../../../../appliers/ripple.applier';
 import FontFaceObserver from 'fontfaceobserver';
 import { connect } from 'react-redux';
 import { join } from '../../../../appliers/style.applier';
-import * as installHelper from '../../../../scriptsjs/helpers/intallation.helper';
+import * as InstallHelper from '../../../../scriptsjs/helpers/intallation.helper';
 import { DispatchProps, Dispatchers } from '../../../../actions/common/application/appdata.action';
 
 interface StateProps {
@@ -29,12 +30,12 @@ class Action extends React.PureComponent<Props, any> {
 				iconLoaded: true
 			});
 		});
-		if (!installHelper.hasInstallInfo()) {
+		if (!InstallHelper.hasInstallInfo()) {
 			this.props.setInstalled(true);
 		} else {
-			this.props.setInstalled(installHelper.isInstalled());
+			this.props.setInstalled(InstallHelper.isInstalled());
 		}
-		installHelper.register((state: boolean) => {
+		InstallHelper.register((state: boolean) => {
 			this.props.setInstalled(state);
 		});
 	};
@@ -44,14 +45,14 @@ class Action extends React.PureComponent<Props, any> {
 
 		rippleEffect(event, style);
 
-		installHelper.showPrompt();
+		InstallHelper.showPrompt();
 	};
 
 	public render = (): JSX.Element => {
 		const style = this.props.styling;
 
 		const classes = [style.installButton];
-		const iconsClasses = ['material-icons', style.installButtonIcon];
+		const iconsClasses = [MaterialIcons.class, style.installButtonIcon];
 
 		if (!this.state.iconLoaded) {
 			iconsClasses.push(style.loadable);

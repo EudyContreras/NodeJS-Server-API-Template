@@ -1,20 +1,19 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 
 import path from 'path';
-import config from '../config';
+import config from '../../configs/config.client.json';
 import configureStore from '../stores/store';
 import ViewRenderer from '../../server/middleware/renderer';
-import appStyle from './../styles/app.scss';
+import AppStyle from '../styles/app.scss';
 import { routes } from '../components/Routes';
 import { Store } from 'redux';
 import { application } from '../views';
 import { Router, Request, Response } from 'express';
-import favicon from '../resources/images/favicon.ico';
-import touchIcon from '../resources/images/icons/touch-icon.png';
 import IAction from '../actions/action';
 import { ChunkExtractor } from '@loadable/server';
 
 const statsFile = path.resolve('build/public/loadable-stats.json');
+const appStyle: any = AppStyle;
 
 class IndexViewRenderer extends ViewRenderer {
 
@@ -23,16 +22,14 @@ class IndexViewRenderer extends ViewRenderer {
 	private context = {};
 	private store: Store<any, IAction>;
 	private state: any;
-	private styling: Set<any>;
-	private appStyle: any;
+	private css: any;
 
 	constructor() {
 		super();
 		this.router = Router();
 		this.store = configureStore({});
 		this.state = this.store.getState();
-		this.appStyle = appStyle._getCss();
-		this.styling = new Set([this.appStyle]);
+		this.css = { cssText: appStyle._getCss() };
 		this.setupRoutes(this.router);
 	}
 
@@ -49,13 +46,15 @@ class IndexViewRenderer extends ViewRenderer {
 	};
 
 	private renderRoutes = async (req: Request, res: Response): Promise<void> => {
-		const shell = req.query.shell !== undefined;
 
-		const cssInjector = (...styles: any[]): void => styles.forEach(style => this.styling.add(style._getCss()));
-
-		if (config.app.CSR) {
-			res.status(200).send('');
+		if (process.env.CSR == 'true') {
+			res.status(200).send();
 		} else {
+			const shell = req.query.shell !== undefined;
+
+			const css = new Set();
+			const cssInjector = (...styles): void => { styles.forEach(style => css.add(style._getCss())); };
+	
 			if (shell) {
 				return await this.renderShell(req, res, cssInjector);
 			} else {
@@ -71,14 +70,18 @@ class IndexViewRenderer extends ViewRenderer {
 
 		const entryPoints = extractor.getMainAssets();
 
+		const styles = entryPoints.filter(x => x.url.endsWith('.css'));
+		const scripts = entryPoints.filter(x => x.url.endsWith('.js'));
+
 		const props = {
-			css: this.styling,
+			css: this.css,
+			html: config.html,
 			state: this.state,
-			title: config.app.TITLE,
-			favicon: favicon,
-			entryPoints: entryPoints,
-			touchIcon: touchIcon,
-			enableSW: config.app.USE_SW,
+			styles: styles,
+			scripts: scripts,
+			enableSW: process.env.USE_SW == 'true',
+			clientSideRendered: process.env.CSR == 'true',
+			watchConnection: true,
 			content: content,
 			cache: true
 		};
@@ -86,7 +89,7 @@ class IndexViewRenderer extends ViewRenderer {
 		config.headers.forEach(header => {
 			res.setHeader(header.LABEL, header.VALUE);
 		});
-		res.render(config.app.APP_LAYOUT, props);
+		res.render(config.layout.FULL, props);
 	};
 
 	private renderShell = async (req: Request, res: Response, cssInjector: Function): Promise<void> => {
@@ -94,9 +97,9 @@ class IndexViewRenderer extends ViewRenderer {
 		const content = application(req.url, this.store, this.context, cssInjector);
 
 		const props = {
-			css: this.styling,
-			title: config.app.TITLE,
-			enableSW: config.app.USE_SW,
+			css: this.css,
+			html: config.html,
+			enableSW: process.env.USE_SW == 'true',
 			content: content,
 			cache: true
 		};
@@ -104,7 +107,7 @@ class IndexViewRenderer extends ViewRenderer {
 		config.headers.forEach(header => {
 			res.setHeader(header.LABEL, header.VALUE);
 		});
-		res.render(config.app.SHELL_LAYOUT, props);
+		res.render(config.layout.SHELL, props);
 	};
 }
 

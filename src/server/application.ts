@@ -4,10 +4,13 @@ import fs from 'fs';
 import cors from 'cors';
 import http from 'http';
 import http2 from 'spdy';
+import hsts from 'hsts';
 import helmet from 'helmet';
-import express from 'express';
+import logger from 'morgan';
+import express, { NextFunction } from 'express';
 import mongoose from 'mongoose';
-import config from './config';
+import cookieParser from 'cookie-parser';
+import config from './server.config';
 import Interceptor from './middleware/interceptor';
 import Controller from './controllers/controller';
 import ErrorHandler from './handlers/error.handler';
@@ -15,6 +18,7 @@ import LoggingHandler from './handlers/logging.handler';
 import ViewRenderer from './middleware/renderer';
 import shrinkRay from 'shrink-ray-current';
 import expressStaticGzip from 'express-static-gzip';
+import expressEnforceSSL from 'express-enforces-ssl';
 import DataInitializer from './initializers/database.initializer';
 import reactRender from 'express-react-views';
 
@@ -42,56 +46,65 @@ export default class Application {
 		this.initializeViewRenderers(args.viewRenderer);
 		this.initializeErrorHandling(args.interceptor);
 		this.connectToTheDatabase(true);
-		this.initializeWebjobs();
 	}
 
 	public startlistening(): void {
 		const secure = config.ssl.ACTIVE;
+
+		const port = config.presentation.HAS_REACT_HMR ? config.host.PORT : config.host.PORT_HTTP;
+
 		if (secure) {
-			const port1 = config.host.PORT_HTTPS;
-			const port2 = config.host.PORT_HTTP;
-
+			const port = config.host.PORT_HTTPS;
 			const options = {
-				key: fs.readFileSync('./ssl/localhost.key'),
-				cert: fs.readFileSync('./ssl/localhost.crt')
+				key: fs.readFileSync(config.ssl.key),
+				cert: fs.readFileSync(config.ssl.cert)
 			};
-			http2.createServer(options, this.app).listen(port1, () => {
-				console.log(`Server listening on the port ${port1}`);
-			});
-			http.createServer(this.app).listen(port2, () => {
-				console.log(`Server listening on the port ${port2}`);
-			});
-
-		} else {
-			const port = config.host.PORT;
-			http.createServer(this.app).listen(port, () => {
-				console.log(`Server listening on the port ${port}`);
+			http2.createServer(options, this.app).listen(port, () => {
+				console.log(`HTTPS Server listening on the port ${port}`);
 			});
 		}
+
+		const server = http.createServer(this.app);
+
+		server.listen(port, () => {
+			console.log(`Web Server listening on the port ${port}`);
+		});
 	}
 
 	private setupExpress(): void {
 		const render = config.presentation;
 		const clientRender = render.viewEngine.client;
 
+		if (!config.presentation.IS_SSR) {
+			this.app.use(this.ignoreFavicon);
+		}
+		if (!config.enviroment.PRODUCTION) {
+			this.app.use(logger('dev'));
+		}
+		if (config.ssl.ACTIVE) {
+			this.app.enable('trust proxy');
+			this.app.use(expressEnforceSSL());
+		}
 		this.app.use(cors());
 		this.app.use(helmet());
+		this.app.use(cookieParser());
 		this.app.use(shrinkRay());
 		this.app.use(express.json());
 		this.app.use(express.urlencoded({ extended: false }));
-		this.app.use('/', expressStaticGzip(config.application.FILE_DIRECTORY, {
-			index: false,
-			enableBrotli: true,
-			customCompressions: [{
-				encodingName: 'deflate',
-				fileExtension: 'zz'
-			}],
-			orderPreference: ['br']
-		}));
+		this.app.use(hsts(config.host.secureTransport));
+		this.app.use(expressStaticGzip(config.application.FILE_DIRECTORY, config.compression));
 		this.app.use(clientRender.alias, express.static(clientRender.path));
 		this.app.set(render.viewEngine.alias, render.viewEngine.path);
 		this.app.set(render.viewEngine.label, render.viewEngine.type);
 		this.app.engine(render.viewEngine.type, reactRender.createEngine());
+	}
+
+	private ignoreFavicon(request: any, response: any, next: NextFunction): void {
+		if (config.resources.ignored.indexOf(request.originalUrl) !== -1) {
+			response.status(204).json({});
+		} else {
+			next();
+		}
 	}
 
 	private initializeMiddleware(middleware: Interceptor): void {
@@ -120,11 +133,7 @@ export default class Application {
 	}
 
 	private initializeWebjobs(): void {
-		/*const dataCollector = new DataCollectionJob();
 
-		dataCollector.scheduleA(scheduler);
-		dataCollector.scheduleB(scheduler);
-		dataCollector.scheduleC(scheduler);*/
 	}
 
 	private connectToTheDatabase(createInitialData = false): void {

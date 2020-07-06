@@ -1,16 +1,16 @@
-const lazyPictures = document.querySelectorAll('.lazy-picture');
+const lazyImages = document.querySelectorAll('.lazy-image');
 
 const options = {
 	rootMargin: '0px',
 	threshold: 0.1
 };
 
-const loadPicture = (picture: any): void => {
-	lazyPictures.forEach(pic => {
+const loadPicture = (image: any): void => {
+	lazyImages.forEach(img => {
 		Array
-			.from(pic.getElementsByTagName('source'))
+			.from(img.getElementsByTagName('source'))
 			.forEach((source: any) => {
-				source.setAttribute('srcset', picture.getAttribute('data-srcset'));
+				source.setAttribute('srcset', image.getAttribute('data-srcset'));
 			});
 	});
 };
@@ -26,12 +26,12 @@ if ('IntersectionObserver' in window) {
 		});
 	}, options);
 
-	lazyPictures.forEach(picture =>{
-		observer.observe(picture);
+	lazyImages.forEach(image =>{
+		observer.observe(image);
 	});
 
 } else {
-	lazyPictures.forEach(picture => {
-		loadPicture(picture);
+	lazyImages.forEach(image => {
+		loadPicture(image);
 	});
 }

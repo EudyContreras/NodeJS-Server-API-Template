@@ -40,12 +40,12 @@ export const navInsideAction = {
 
 export const navAnchorAction = {
 	from: NAV_BAR_MENU,
-	type: NAV_BAR_MENU_ANCHORED,
+	type: NAV_BAR_MENU_ANCHORED
 };
 
 export const offsetTopAction = {
 	from: NAV_BAR_MENU,
-	type: NAV_BAR_MENU_OFFSET_TOP,
+	type: NAV_BAR_MENU_OFFSET_TOP
 };
 
 export const Dispatchers = { 
