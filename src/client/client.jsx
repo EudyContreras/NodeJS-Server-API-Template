@@ -31,7 +31,7 @@ loadableReady(() => {
 		content
 	);
 
-	document.getElementById('serverCSS').remove();
+	document.getElementById('serverCSS')?.remove();
 });
 
 if (renderOptions.enableSW == true) {

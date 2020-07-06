@@ -7,7 +7,7 @@ import http2 from 'spdy';
 import hsts from 'hsts';
 import helmet from 'helmet';
 import logger from 'morgan';
-import express, { NextFunction } from 'express';
+import express, { NextFunction, Request, Response } from 'express';
 import mongoose from 'mongoose';
 import cookieParser from 'cookie-parser';
 import config from './server.config';
@@ -17,10 +17,38 @@ import ErrorHandler from './handlers/error.handler';
 import LoggingHandler from './handlers/logging.handler';
 import ViewRenderer from './middleware/renderer';
 import shrinkRay from 'shrink-ray-current';
-import expressStaticGzip from 'express-static-gzip';
+import expressStatic from 'express-static-gzip';
 import expressEnforceSSL from 'express-enforces-ssl';
 import DataInitializer from './initializers/database.initializer';
 import reactRender from 'express-react-views';
+
+const cachePolicy = (): (Response, Request, NextFunction) => void =>{
+	const policy = config.resources.cachePolicy;
+	return (request: Request, response: Response, next: NextFunction): void => {
+		response.set(policy.LABEL, policy.VALUE); 
+		next();
+	};
+};
+
+const ignoreFavicon = (): (Response, Request, NextFunction) => void => {
+	return (request: Request, response: Response, next: NextFunction): void => {
+		if (config.resources.ignored.indexOf(request.originalUrl) !== -1) {
+			response.status(204).json({});
+		} else {
+			next();
+		}
+	};
+};
+
+const serveCompressed = (app: express.Application): (Response, Request, NextFunction) => void => {
+	return (request: Request, response: Response, next: NextFunction): void => {
+		app.get('*.js', (req, res, next) => {
+			req.url = req.url + '.br';
+			res.set('Content-Encoding', 'br');
+			next();
+		});
+	};
+};
 
 export default class Application {
 
@@ -76,7 +104,7 @@ export default class Application {
 		const clientRender = render.viewEngine.client;
 
 		if (!config.presentation.IS_SSR) {
-			this.app.use(this.ignoreFavicon);
+			this.app.use(ignoreFavicon());
 		}
 		if (!config.enviroment.PRODUCTION) {
 			this.app.use(logger('dev'));
@@ -85,26 +113,20 @@ export default class Application {
 			this.app.enable('trust proxy');
 			this.app.use(expressEnforceSSL());
 		}
+
 		this.app.use(cors());
 		this.app.use(helmet());
+		this.app.use(cachePolicy());
 		this.app.use(cookieParser());
 		this.app.use(shrinkRay());
+		this.app.use(hsts(config.host.secureTransport));
+		this.app.use(expressStatic(config.application.FILE_DIRECTORY, config.compression));
 		this.app.use(express.json());
 		this.app.use(express.urlencoded({ extended: false }));
-		this.app.use(hsts(config.host.secureTransport));
-		this.app.use(expressStaticGzip(config.application.FILE_DIRECTORY, config.compression));
 		this.app.use(clientRender.alias, express.static(clientRender.path));
 		this.app.set(render.viewEngine.alias, render.viewEngine.path);
 		this.app.set(render.viewEngine.label, render.viewEngine.type);
 		this.app.engine(render.viewEngine.type, reactRender.createEngine());
-	}
-
-	private ignoreFavicon(request: any, response: any, next: NextFunction): void {
-		if (config.resources.ignored.indexOf(request.originalUrl) !== -1) {
-			response.status(204).json({});
-		} else {
-			next();
-		}
 	}
 
 	private initializeMiddleware(middleware: Interceptor): void {

@@ -2,222 +2,22 @@
   "errors": [],
   "warnings": [],
   "version": "4.43.0",
-  "hash": "4f74f94470c60a1f9056",
+  "hash": "edd83c55fd9b0558dcf8",
   "publicPath": "/",
-  "outputPath": "/Users/personal/Documents/Repositories/NodeJS-Server-API-Template/build/public",
+  "outputPath": "/Users/personal/Documents/Repositories/NodeJS-Server-API-Template/build",
   "assetsByChunkName": {
-    "main": "../server.js"
+    "main": "server.js"
   },
   "assets": [
     {
-      "name": "../server.js",
-      "size": 133512,
+      "name": "server.js",
+      "size": 121498,
       "chunks": [
         0
       ],
       "chunkNames": [
         "main"
       ],
-      "info": {},
-      "emitted": false
-    },
-    {
-      "name": "images/favicon.ico",
-      "size": 16958,
-      "chunks": [],
-      "chunkNames": [],
-      "info": {},
-      "emitted": false
-    },
-    {
-      "name": "images/icons/touch-icon-120x120.png",
-      "size": 7664,
-      "chunks": [],
-      "chunkNames": [],
-      "info": {},
-      "emitted": false
-    },
-    {
-      "name": "images/icons/touch-icon-120x120.webp",
-      "size": 2682,
-      "chunks": [],
-      "chunkNames": [],
-      "info": {},
-      "emitted": false
-    },
-    {
-      "name": "images/icons/touch-icon-128x128.png",
-      "size": 8602,
-      "chunks": [],
-      "chunkNames": [],
-      "info": {},
-      "emitted": false
-    },
-    {
-      "name": "images/icons/touch-icon-128x128.webp",
-      "size": 2894,
-      "chunks": [],
-      "chunkNames": [],
-      "info": {},
-      "emitted": false
-    },
-    {
-      "name": "images/icons/touch-icon-144x144.png",
-      "size": 9519,
-      "chunks": [],
-      "chunkNames": [],
-      "info": {},
-      "emitted": false
-    },
-    {
-      "name": "images/icons/touch-icon-144x144.webp",
-      "size": 3310,
-      "chunks": [],
-      "chunkNames": [],
-      "info": {},
-      "emitted": false
-    },
-    {
-      "name": "images/icons/touch-icon-152x152.png",
-      "size": 10059,
-      "chunks": [],
-      "chunkNames": [],
-      "info": {},
-      "emitted": false
-    },
-    {
-      "name": "images/icons/touch-icon-152x152.webp",
-      "size": 3510,
-      "chunks": [],
-      "chunkNames": [],
-      "info": {},
-      "emitted": false
-    },
-    {
-      "name": "images/icons/touch-icon-180x180.png",
-      "size": 12148,
-      "chunks": [],
-      "chunkNames": [],
-      "info": {},
-      "emitted": false
-    },
-    {
-      "name": "images/icons/touch-icon-180x180.webp",
-      "size": 4144,
-      "chunks": [],
-      "chunkNames": [],
-      "info": {},
-      "emitted": false
-    },
-    {
-      "name": "images/icons/touch-icon-192x192.png",
-      "size": 12937,
-      "chunks": [],
-      "chunkNames": [],
-      "info": {},
-      "emitted": false
-    },
-    {
-      "name": "images/icons/touch-icon-192x192.webp",
-      "size": 4298,
-      "chunks": [],
-      "chunkNames": [],
-      "info": {},
-      "emitted": false
-    },
-    {
-      "name": "images/icons/touch-icon-257x257.png",
-      "size": 17591,
-      "chunks": [],
-      "chunkNames": [],
-      "info": {},
-      "emitted": false
-    },
-    {
-      "name": "images/icons/touch-icon-257x257.webp",
-      "size": 5874,
-      "chunks": [],
-      "chunkNames": [],
-      "info": {},
-      "emitted": false
-    },
-    {
-      "name": "images/icons/touch-icon-384x384.png",
-      "size": 27624,
-      "chunks": [],
-      "chunkNames": [],
-      "info": {},
-      "emitted": false
-    },
-    {
-      "name": "images/icons/touch-icon-384x384.webp",
-      "size": 8728,
-      "chunks": [],
-      "chunkNames": [],
-      "info": {},
-      "emitted": false
-    },
-    {
-      "name": "images/icons/touch-icon-512x512.png",
-      "size": 37641,
-      "chunks": [],
-      "chunkNames": [],
-      "info": {},
-      "emitted": false
-    },
-    {
-      "name": "images/icons/touch-icon-512x512.webp",
-      "size": 11736,
-      "chunks": [],
-      "chunkNames": [],
-      "info": {},
-      "emitted": false
-    },
-    {
-      "name": "images/icons/touch-icon-72x72.png",
-      "size": 4701,
-      "chunks": [],
-      "chunkNames": [],
-      "info": {},
-      "emitted": false
-    },
-    {
-      "name": "images/icons/touch-icon-72x72.webp",
-      "size": 1652,
-      "chunks": [],
-      "chunkNames": [],
-      "info": {},
-      "emitted": false
-    },
-    {
-      "name": "images/icons/touch-icon-76x76.png",
-      "size": 4779,
-      "chunks": [],
-      "chunkNames": [],
-      "info": {},
-      "emitted": false
-    },
-    {
-      "name": "images/icons/touch-icon-76x76.webp",
-      "size": 1824,
-      "chunks": [],
-      "chunkNames": [],
-      "info": {},
-      "emitted": false
-    },
-    {
-      "name": "images/icons/touch-icon-96x96.png",
-      "size": 6158,
-      "chunks": [],
-      "chunkNames": [],
-      "info": {},
-      "emitted": false
-    },
-    {
-      "name": "images/icons/touch-icon-96x96.webp",
-      "size": 2216,
-      "chunks": [],
-      "chunkNames": [],
       "info": {},
       "emitted": false
     }
@@ -229,17 +29,17 @@
         0
       ],
       "assets": [
-        "../server.js"
+        "server.js"
       ],
       "children": {
         "prefetch": [
           {
-            "name": "sections-documentation-DocsPage",
+            "name": "sections-applications-ApplicationsPage",
             "chunks": [
               0
             ],
             "assets": [
-              "../server.js"
+              "server.js"
             ]
           },
           {
@@ -248,7 +48,7 @@
               0
             ],
             "assets": [
-              "../server.js"
+              "server.js"
             ]
           },
           {
@@ -257,23 +57,14 @@
               0
             ],
             "assets": [
-              "../server.js"
-            ]
-          },
-          {
-            "name": "shared-states-LostState",
-            "chunks": [
-              0
-            ],
-            "assets": [
-              "../server.js"
+              "server.js"
             ]
           }
         ]
       },
       "childAssets": {
         "prefetch": [
-          "../server.js"
+          "server.js"
         ]
       }
     }
@@ -284,17 +75,17 @@
         0
       ],
       "assets": [
-        "../server.js"
+        "server.js"
       ],
       "children": {
         "prefetch": [
           {
-            "name": "sections-documentation-DocsPage",
+            "name": "sections-applications-ApplicationsPage",
             "chunks": [
               0
             ],
             "assets": [
-              "../server.js"
+              "server.js"
             ]
           },
           {
@@ -303,7 +94,7 @@
               0
             ],
             "assets": [
-              "../server.js"
+              "server.js"
             ]
           },
           {
@@ -312,32 +103,23 @@
               0
             ],
             "assets": [
-              "../server.js"
-            ]
-          },
-          {
-            "name": "shared-states-LostState",
-            "chunks": [
-              0
-            ],
-            "assets": [
-              "../server.js"
+              "server.js"
             ]
           }
         ]
       },
       "childAssets": {
         "prefetch": [
-          "../server.js"
+          "server.js"
         ]
       }
     },
-    "sections-documentation-DocsPage": {
+    "sections-applications-ApplicationsPage": {
       "chunks": [
         0
       ],
       "assets": [
-        "../server.js"
+        "server.js"
       ],
       "children": {},
       "childAssets": {}
@@ -347,7 +129,7 @@
         0
       ],
       "assets": [
-        "../server.js"
+        "server.js"
       ],
       "children": {},
       "childAssets": {}
@@ -357,17 +139,7 @@
         0
       ],
       "assets": [
-        "../server.js"
-      ],
-      "children": {},
-      "childAssets": {}
-    },
-    "shared-states-LostState": {
-      "chunks": [
-        0
-      ],
-      "assets": [
-        "../server.js"
+        "server.js"
       ],
       "children": {},
       "childAssets": {}

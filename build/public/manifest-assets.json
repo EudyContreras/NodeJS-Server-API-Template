@@ -1,9 +1,121 @@
 {
   "files": {
+    "ico": [
+      {
+        "name": "favicon.ico",
+        "path": "images/favicon.ico"
+      }
+    ],
+    "png": [
+      {
+        "name": "touch-icon.png",
+        "path": "images/icons/touch-icon-120x120.png"
+      },
+      {
+        "name": "touch-icon.png",
+        "path": "images/icons/touch-icon-128x128.png"
+      },
+      {
+        "name": "touch-icon.png",
+        "path": "images/icons/touch-icon-144x144.png"
+      },
+      {
+        "name": "touch-icon.png",
+        "path": "images/icons/touch-icon-152x152.png"
+      },
+      {
+        "name": "touch-icon.png",
+        "path": "images/icons/touch-icon-180x180.png"
+      },
+      {
+        "name": "touch-icon.png",
+        "path": "images/icons/touch-icon-192x192.png"
+      },
+      {
+        "name": "touch-icon.png",
+        "path": "images/icons/touch-icon-257x257.png"
+      },
+      {
+        "name": "touch-icon.png",
+        "path": "images/icons/touch-icon-384x384.png"
+      },
+      {
+        "name": "touch-icon.png",
+        "path": "images/icons/touch-icon-512x512.png"
+      },
+      {
+        "name": "touch-icon.png",
+        "path": "images/icons/touch-icon-72x72.png"
+      },
+      {
+        "name": "touch-icon.png",
+        "path": "images/icons/touch-icon-76x76.png"
+      },
+      {
+        "name": "touch-icon.png",
+        "path": "images/icons/touch-icon-96x96.png"
+      }
+    ],
+    "webp": [
+      {
+        "name": "touch-icon-120x120.webp",
+        "path": "images/icons/touch-icon-120x120.webp"
+      },
+      {
+        "name": "touch-icon-128x128.webp",
+        "path": "images/icons/touch-icon-128x128.webp"
+      },
+      {
+        "name": "touch-icon-144x144.webp",
+        "path": "images/icons/touch-icon-144x144.webp"
+      },
+      {
+        "name": "touch-icon-152x152.webp",
+        "path": "images/icons/touch-icon-152x152.webp"
+      },
+      {
+        "name": "touch-icon-180x180.webp",
+        "path": "images/icons/touch-icon-180x180.webp"
+      },
+      {
+        "name": "touch-icon-192x192.webp",
+        "path": "images/icons/touch-icon-192x192.webp"
+      },
+      {
+        "name": "touch-icon-257x257.webp",
+        "path": "images/icons/touch-icon-257x257.webp"
+      },
+      {
+        "name": "touch-icon-384x384.webp",
+        "path": "images/icons/touch-icon-384x384.webp"
+      },
+      {
+        "name": "touch-icon-512x512.webp",
+        "path": "images/icons/touch-icon-512x512.webp"
+      },
+      {
+        "name": "touch-icon-72x72.webp",
+        "path": "images/icons/touch-icon-72x72.webp"
+      },
+      {
+        "name": "touch-icon-76x76.webp",
+        "path": "images/icons/touch-icon-76x76.webp"
+      },
+      {
+        "name": "touch-icon-96x96.webp",
+        "path": "images/icons/touch-icon-96x96.webp"
+      }
+    ],
     "json": [
       {
         "name": "manifest.json",
         "path": "manifest.json"
+      }
+    ],
+    "html": [
+      {
+        "name": "offline.html",
+        "path": "offline.html"
       }
     ],
     "txt": [
@@ -19,10 +131,9 @@
       }
     ]
   },
-  "entryPoints": {
-    "main": [
-      "scripts/vendor/vendors.bundle.ffbfc2f5670b91fe2c9f.js",
-      "scripts/main.bundle.779c786f3681920a2f6e.js"
-    ]
-  }
+  "styles": [],
+  "scripts": [
+    "scripts/vendors.3111b383724245c29563.chunk.js",
+    "scripts/main.fe75177c528eb0773c7e.js"
+  ]
 }

@@ -103,8 +103,8 @@ const DefaultLayout = (props) => {
 			window.__REDUX_STATE__= ${JSON.stringify(props.state).replace(/</g, '\\u003c')};
 
 			window.addEventListener("load", () => {
-				document.getElementById("robotoFont").removeAttribute("disabled");
-				document.getElementById("materialIcons").removeAttribute("disabled");
+				document.getElementById("robotoFont")?.removeAttribute("disabled");
+				document.getElementById("materialIcons")?.removeAttribute("disabled");
 			});			
 			`
 			}} />

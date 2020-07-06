@@ -3,7 +3,7 @@ require('dotenv').config();
 
 const config = Object.freeze({
 	application: {
-		FILE_DIRECTORY: '../node-template-server/build'
+		FILE_DIRECTORY: '../build'
 	},
 	enviroment: {
 		PRODUCTION: process.env.NODE_ENV === 'true'
@@ -24,6 +24,10 @@ const config = Object.freeze({
 		}
 	},
 	resources: {
+		cachePolicy: {
+			LABEL: 'Cache-Control',
+			VALUE: 'must-revalidate, public, max-age=31536000'
+		},
 		ignored: ['/favicon.ico']
 	},
 	compression: {
@@ -33,6 +37,10 @@ const config = Object.freeze({
 			encodingName: 'deflate',
 			fileExtension: 'zz'
 		}],
+		serveStatic: {
+			maxAge: 234, 
+			cacheControl: false 
+		},
 		orderPreference: ['br']
 	},
 	self: {

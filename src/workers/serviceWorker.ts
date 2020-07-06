@@ -10,11 +10,11 @@ const worker = {
 		const css = 'background: #00b6ffbd; padding: 2px; border-radius: 4px; color: white; font-weight: 600;';
 		console.log('%c ServiceWorker ', css, ...message);
 	},
-	warn: (message: any): void => {
+	warn: (...message: any): void => {
 		const css = 'background: #ffbf00bd; padding: 2px; border-radius: 4px; color: white; font-weight: 600;';
 		console.log('%c ServiceWorker ', css, ...message);
 	},
-	error: (message: any): void => {
+	error: (...message: any): void => {
 		const css = 'background: #ff0038bd; padding: 2px; border-radius: 4px; color: white; font-weight: 600;';
 		console.log('%c ServiceWorker ', css, ...message);
 	}
@@ -474,6 +474,8 @@ self.addEventListener(constants.events.MESSAGE, (event: Event | any) => {
 				.then(throwOnError)
 				.then(response => {
 					caches.open(cacheKeys.STATIC_CACHE).then(cache => cache.put(request, response));
+				}).catch((error) => {
+					worker.error('Something went wrong!', error);
 				});
 		}
 	}

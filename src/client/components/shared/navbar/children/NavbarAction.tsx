@@ -29,7 +29,10 @@ class Action extends React.PureComponent<Props, any> {
 			this.setState({
 				iconLoaded: true
 			});
+		}).catch((error) => {
+			console.log('Something went wrong!', error);
 		});
+		
 		if (!InstallHelper.hasInstallInfo()) {
 			this.props.setInstalled(true);
 		} else {
