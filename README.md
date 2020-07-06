@@ -1,4 +1,6 @@
-<h1>React Isomorphic PWA</h1>
+<div align="center">
+  <h1>React Isomorphic PWA</h1>
+</div>
 
 ### Isomorphic react PWA backed by Express and MongoDB
 
@@ -7,7 +9,7 @@ MERN stack architecture. It features a fully installable Isomorphic/Universal re
 a well as redux for state management. The boilerplate is highly customizable and it allows
 you to choose the render method of choice. (SSR, CSR)
 
-<img src="./media/audits.png">.
+<img src="./media/demovid.gif">.
 
 
 <div align="center">
