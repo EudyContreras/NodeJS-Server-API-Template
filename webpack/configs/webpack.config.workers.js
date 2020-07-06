@@ -3,6 +3,7 @@
 require('dotenv').config();
 
 const path = require('path');
+const optimization = require('../sections/optimization');
 const WaitPlugin = require('../plugins/WaitPlugin');
 const tsLoader = require('../loaders/loader.ts');
 
@@ -26,6 +27,7 @@ module.exports = {
 		hints: false
 	},
 	plugins: [new WaitPlugin({ filename: 'build/public/manifest-assets.json' })],
+	optimization: optimization({ splitChunk: null, production: isProduction, dropConsole: isProduction }),
 	output: {
 		path: path.join(__dirname, publicPath),
 		futureEmitAssets: isProduction,

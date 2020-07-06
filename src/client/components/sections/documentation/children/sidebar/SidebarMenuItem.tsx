@@ -44,6 +44,8 @@ class SidebarMenuItem extends React.PureComponent<any, State>{
 					iconLoaded: true
 				});
 			}
+		}).catch((error) => {
+			console.log('Something went wrong!', error);
 		});
 	};
 

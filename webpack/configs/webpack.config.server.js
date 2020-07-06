@@ -7,6 +7,7 @@ const WaitPlugin = require('../plugins/WaitPlugin');
 const NodeExternals = require('webpack-node-externals');
 const optimization = require('../sections/optimization');
 const imageLoader = require('../loaders/loader.image');
+const fileLoader = require('../loaders/loader.file');
 const styleLoader = require('../loaders/loader.stylings');
 const LoadablePlugin = require('@loadable/webpack-plugin');
 const NodemonPlugin = require('nodemon-webpack-plugin');
@@ -64,13 +65,12 @@ module.exports = {
 		globalObject: 'this'
 	},
 	plugins: plugins,
-	optimization: optimization({ splitChunk: null, production: isProduction }),
+	optimization: optimization({ splitChunk: null, production: isProduction, dropConsole: false }),
 	externals: [NodeExternals()],
 	module: {
 		rules: [
-			{ test: /\.txt$/, use: 'raw-loader' },
 			{ test: /\.(jsx|tsx|ts|js)$/, exclude: /(node_modules)/, use:  'babel-loader' }, 
-			...imageLoader('images', true),
+			...imageLoader('public/images', true),
 			...styleLoader(path, isProduction)
 		]
 	},

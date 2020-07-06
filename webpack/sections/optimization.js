@@ -13,7 +13,7 @@ const developmentOptimization = () => ({
 	removeEmptyChunks: false
 });
 
-const productionOptimization = (splitChunk) => ({
+const productionOptimization = (splitChunk, dropConsole) => ({
 	minimize: true,
 	minimizer: [
 		new TerserPlugin({
@@ -38,7 +38,7 @@ const productionOptimization = (splitChunk) => ({
 					ecma: 5,
 					warnings: true,
 					comparisons: false,
-					drop_console: false,
+					drop_console: dropConsole,
 					inline: 2
 				},
 				mangle: {
@@ -66,6 +66,6 @@ const productionOptimization = (splitChunk) => ({
 	...splitChunk
 });
 
-module.exports = ({ splitChunk, production = false }) => (
-	{ ...(production ? productionOptimization(splitChunk) : developmentOptimization()) }
+module.exports = ({ splitChunk, production = false, dropConsole = false }) => (
+	{ ...(production ? productionOptimization(splitChunk, dropConsole) : developmentOptimization()) }
 );

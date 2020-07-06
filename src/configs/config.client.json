@@ -29,7 +29,7 @@
 		},
 		{
 			"LABEL": "Cache-Control",
-			"VALUE": "max-age=600"
+			"VALUE": "max-age=31536000"
 		}
 	],
 	"layout": {

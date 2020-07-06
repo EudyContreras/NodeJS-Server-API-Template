@@ -186,7 +186,7 @@ module.exports = {
 		jquery: 'jQuery'
 	},
 	optimization: {
-		...optimization({ splitChunk: splitChunk, production: isProduction })
+		...optimization({ splitChunk: splitChunk, production: isProduction, dropConsole: isProduction })
 	},
 	module: {
 		rules: loaders(path, isProduction)

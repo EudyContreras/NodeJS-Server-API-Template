@@ -55,6 +55,8 @@ class SidebarSearch extends React.PureComponent<Props, any> {
 					iconLoaded: true
 				});
 			}
+		}).catch((error) => {
+			console.log('Something went wrong!', error);
 		});
 	};
 

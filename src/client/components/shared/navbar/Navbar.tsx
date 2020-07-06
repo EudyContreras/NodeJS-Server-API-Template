@@ -1,11 +1,11 @@
 import React from 'react';
 import memoize from 'fast-memoize';
-import Action from './children/NavabarAction';
+import Action from './children/NavbarAction';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import swMessager from '../../../utilities/messageBus';
 import { IStateTree } from '../../../reducers';
-import { shallowEqual } from '../../utililties/comparer.utils';
+import { shallowEqual } from '../../utililties/comparer.utils';
 import { appendWhen, join } from '../../../appliers/style.applier';
 import { getNavigationBar } from '../../../selectors/navbar.selector';
 import { showLoader, hideLoader } from '../../../actions/common/loader.action';
@@ -51,7 +51,7 @@ class Navbar extends React.Component<Props, State> {
 	}
 
 	public shouldComponentUpdate = (nextProps: any): boolean => {
-		return !shallowEqual(this.props.anchored, nextProps.anchored) 
+		return !shallowEqual(this.props.anchored, nextProps.anchored)
 			|| !shallowEqual(this.props.mouseInside, nextProps.mouseInside)
 			|| !shallowEqual(this.props.activeTab, nextProps.activeTab);
 	};
@@ -71,7 +71,7 @@ class Navbar extends React.Component<Props, State> {
 
 		const topPosition = Math.abs(scroll) + (scrollTop - topOffset);
 
-		this.props.setOffsetTop(margin-1);
+		this.props.setOffsetTop(margin - 1);
 
 		window.addEventListener('scroll', () => this.anchor(topPosition));
 	};
@@ -143,7 +143,7 @@ class Navbar extends React.Component<Props, State> {
 		if (this.props.activeTab === null) {
 			this.props.setActiveTab(tab);
 		} else if (this.props.activeTab.label !== tab.label) {
-			this.props.setActiveTab(tab);		
+			this.props.setActiveTab(tab);
 		}
 	};
 
@@ -186,9 +186,9 @@ class Navbar extends React.Component<Props, State> {
 
 		return (
 			<header {...properties}>
-				<Link to='/' onClick= {(): void => this.handleLinkClick(null)}>
-					<div className={style.navLogo}>
-						<div className={style.status} />
+				<Link to='/' onClick={(): void => this.handleLinkClick(null)}>
+					<div className={style.navLogo} title="Home">
+						<div className={style.status}></div>
 					</div>
 				</Link>
 				<ul>
@@ -198,7 +198,7 @@ class Navbar extends React.Component<Props, State> {
 						</li>
 					)}
 				</ul>
-				<Action styling={style}/>
+				<Action styling={style} />
 			</header>
 		);
 	};
