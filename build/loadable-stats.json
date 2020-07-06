@@ -2,7 +2,7 @@
   "errors": [],
   "warnings": [],
   "version": "4.43.0",
-  "hash": "edd83c55fd9b0558dcf8",
+  "hash": "fdbe734ba4337b1783ef",
   "publicPath": "/",
   "outputPath": "/Users/personal/Documents/Repositories/NodeJS-Server-API-Template/build",
   "assetsByChunkName": {
@@ -11,7 +11,7 @@
   "assets": [
     {
       "name": "server.js",
-      "size": 121498,
+      "size": 121384,
       "chunks": [
         0
       ],

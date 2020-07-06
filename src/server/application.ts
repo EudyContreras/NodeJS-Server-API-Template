@@ -106,9 +106,7 @@ export default class Application {
 		if (!config.presentation.IS_SSR) {
 			this.app.use(ignoreFavicon());
 		}
-		if (!config.enviroment.PRODUCTION) {
-			this.app.use(logger('dev'));
-		}
+	
 		if (config.ssl.ACTIVE) {
 			this.app.enable('trust proxy');
 			this.app.use(expressEnforceSSL());
