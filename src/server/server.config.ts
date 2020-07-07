@@ -58,7 +58,7 @@ const config = Object.freeze({
 	host: {
 		APP_NAME: 'app name',
 		BASE_URL: '',
-		PORT: process.env.PORT,
+		PORT: process.env.PORT || process.env.PORT_HTTP,
 		PORT_HTTP: process.env.PORT_HTTP,
 		PORT_HTTPS: process.env.PORT_HTTPS,
 		REDIRECT_TO_HTTPS: false,

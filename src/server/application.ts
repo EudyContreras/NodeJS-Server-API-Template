@@ -79,7 +79,7 @@ export default class Application {
 	public startlistening(): void {
 		const secure = config.ssl.ACTIVE;
 
-		const port = config.presentation.HAS_REACT_HMR ? config.host.PORT : config.host.PORT_HTTP;
+		const port = config.host.PORT;
 
 		if (secure) {
 			const port = config.host.PORT_HTTPS;
