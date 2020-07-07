@@ -4,18 +4,16 @@
 
 ### Isomorphic react PWA backed by Express and MongoDB
 
-A simple and production ready boilerplate backed by express and mongoDB using the
+A production ready boilerplate backed by express and mongoDB using the
 MERN stack architecture. It features a fully installable Isomorphic/Universal rendering experience using react, as
 a well as redux for state management. The boilerplate is highly customizable and it allows
 you to choose the render method of choice. (SSR, CSR)
 
-<img src="./media/demovid.gif">.
-
+<img src="./.media/demo_light.gif">.
 
 <div align="center">
   <sub>Created and maintained with love ❤️ by your friendly neighborhood coder <a href="https://github.com/EudyContreras">Eudy Contreras</a> </a>.</sub>
 </div>
-
 
 ### Technologies
 
