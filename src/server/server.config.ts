@@ -59,7 +59,6 @@ const config = Object.freeze({
 		APP_NAME: 'app name',
 		BASE_URL: '',
 		PORT: process.env.PORT,
-		PORT_HTTP: process.env.PORT_HTTP,
 		PORT_HTTPS: process.env.PORT_HTTPS,
 		REDIRECT_TO_HTTPS: false,
 		SECURE_MAX_AGE: 31536000,

@@ -26,11 +26,11 @@ const logger = {
 		const css = 'background: #ffbf00bd; padding: 2px; border-radius: 4px; color: white; font-weight: 600;';
 		console.log('%c SW Register ', css, ...message);
 	},
-	warn: (message) => {
+	warn: (...message) => {
 		const css = 'background: #ffbf00bd; padding: 2px; border-radius: 4px; color: rgba(200, 180, 40, 1); font-weight: 600;';
 		console.log('%c SW Register ', css, ...message);
 	},
-	error: (message) => {
+	error: (...message) => {
 		const css = 'background: #ffbf00bd; padding: 2px; border-radius: 4px; color: rgba(200, 80, 20, 1); font-weight: 600;';
 		console.log('%c SW Register ', css, ...message);
 	}
@@ -337,6 +337,10 @@ const unregisterWorker = () => {
 	}
 };
 
+export const addToCache = async (cache, urls) => {
+	const myCache = await window.caches.open(cache);
+	await myCache.addAll(urls);
+};
 
 const watchOnlineStatus = () => {
 	function isOnline() {

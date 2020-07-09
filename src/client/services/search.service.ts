@@ -14,7 +14,8 @@ export default class RoutingService {
 			const data: RequestData = {
 				params: { searchText: prefix }
 			};
-			const response = await axios.get('http://localhost:5000/rest/api/search', data);
+			const endpoint = process.env.REACT_APP_SERVER_API_URL;
+			const response = await axios.get(`${endpoint}/search`, data);
 			return { result: response.data.content };
 		} catch(error) {
 			return { error: error };

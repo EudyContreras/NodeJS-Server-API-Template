@@ -7,7 +7,6 @@ const WaitPlugin = require('../plugins/WaitPlugin');
 const NodeExternals = require('webpack-node-externals');
 const optimization = require('../sections/optimization');
 const imageLoader = require('../loaders/loader.image');
-const fileLoader = require('../loaders/loader.file');
 const styleLoader = require('../loaders/loader.stylings');
 const LoadablePlugin = require('@loadable/webpack-plugin');
 const NodemonPlugin = require('nodemon-webpack-plugin');

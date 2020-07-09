@@ -1,484 +1,446 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+importScripts('https://storage.googleapis.com/workbox-cdn/releases/5.1.2/workbox-sw.js');
 
-self.__WB_MANIFEST;
+declare const workbox: typeof import('workbox-sw').default;
 
-import { contentTypes, cacheKeys, syncEvents, updateNotification, constants } from './constants';
+import { worker, supportsWebp, ClientMessage, WorkerMessage, filetypePatterns } from './commons';
 
-const TIMEOUT = 1000;
+import {
+	httpMethods,
+	updateNotification,
+	cachableTypes,
+	commonOrigins,
+	fallbacks,
+	cacheKeys,
+	constants,
+	messages,
+	syncEvents
+} from './constants';
 
-const worker = {
-	log: (...message: any): void => {
-		const css = 'background: #00b6ffbd; padding: 2px; border-radius: 4px; color: white; font-weight: 600;';
-		console.log('%c ServiceWorker ', css, ...message);
-	},
-	warn: (...message: any): void => {
-		const css = 'background: #ffbf00bd; padding: 2px; border-radius: 4px; color: white; font-weight: 600;';
-		console.log('%c ServiceWorker ', css, ...message);
-	},
-	error: (...message: any): void => {
-		const css = 'background: #ff0038bd; padding: 2px; border-radius: 4px; color: white; font-weight: 600;';
-		console.log('%c ServiceWorker ', css, ...message);
-	}
-};
+const precacheManifest = [...self.__WB_MANIFEST];
 
-const initialSync = (): Promise<boolean> => {
-	return new Promise((resolve)=> {
-		return resolve(true);
-	});
-};
-
-const contentSync = (): Promise<boolean> => {
-	return new Promise((resolve)=> {
-		return resolve(true);
-	});
-};
-
-const addDelay = (ms: number) => (): any => new Promise(resolve => setTimeout(() => resolve(), ms));
-
-const getFallback = async (contentType: string = contentTypes.HTML): Promise<any> => {
-	switch(contentType) {
-		case contentTypes.HTML: {
-			const cache = await caches.open(cacheKeys.FALLBACK_CACHE);
-			return cache.match('/offline.html');
-		}
-	}
-};
-
-const useFallback = (contentType: string = contentTypes.HTML): any => {
-	switch(contentType) {
-		case contentTypes.IMAGE: {
-			return Promise.resolve(new Response(cacheKeys.FALLBACK_CACHE, {
-				headers: {
-					'Content-Type': 'image/svg+xml'
-				}
-			}));
-		}
-	}
+const isNullOrEmpty = (path): boolean => {
+	return !path || path === '' || path == undefined;
 };
 
 const throwOnError = (response: Response): Response => {
 	if (response.status >= 200 && response.status < 300 || response.status === 0) {
 		return response;
 	}
-	worker.error(response.statusText);
+	if (process.env.NODE_ENV !== 'production') {
+		worker.error(response.statusText);
+	}
 	return new Response(null);
 };
 
-const isRequestForStaticHtml = (request: Request): boolean => {
-	return /.(html)$/.test(request.url);
+const notifyClient = (event: Event | any, message: ClientMessage): void => {
+	event.waitUntil(async () => {
+		if (!event.clientId) return;
+	
+		const client = await self.clients.get(event.clientId);
+
+		if (!client) return;
+
+		client.postMessage(message);
+	});
 };
 
-const isRequestForStaticAsset = (request: Request): boolean => {
-	return /.(png|svg|json|jpg|jpeg|gif|ico|css|js)$/.test(request.url);
+const addToCache = async (cacheName: string, ...urls: string[]): Promise<void> => {
+	const myCache = await caches.open(cacheName);
+	await myCache.addAll(urls);
+};
+
+const cacheResponse = async (cacheName: string, request: Request, response: Response): Promise<void> => {
+	const myCache = await caches.open(cacheName);
+	await myCache.put(request, response);
 };
 
 const isSideEffectRequest = (request: Request): boolean => {
-	return [...Object.values(constants.http)].includes(request.method) || request.method != 'GET';
+	return [...Object.values(constants.sideEffects)].includes(request.method) || request.method != httpMethods.GET;
 };
 
-const isApiRequest = (request: Request): boolean => {
-	return request.url.includes('/api/');
+const isWebFontRequest = (request: Request, url: any): boolean => {
+	return request.destination === cachableTypes.FONT || url.origin === commonOrigins.STATIC_WEB_FONTS;
 };
 
-const fromNetwork = (request: Request): Promise<any> => {
-	return new Promise((resolve, reject) => {
-		const timeoutId = setTimeout(reject, TIMEOUT);
-
-		fetch(request).then(response => {
-			clearTimeout(timeoutId);
-			resolve(response);
-		}, reject);
-	});
+const isAcceptedApiRequest = (request: Request): boolean => {
+	return request.url.includes('/api/') && request.method == httpMethods.GET;
 };
 
-const fromCache = (request: Request, cacheName: string): Promise<Response> => {
-	return caches.open(cacheName)
-		.then(cache => cache.match(request))
-		.then(match => match || Promise.reject('no-request-match'));
+const days = (count: number): number => hours(count * 24);
+const years = (count: number): number => days(count * 365);
+const months = (count: number): number => days(count * 30);
+const hours = (count: number): number => minutes(count * 60);
+const minutes = (count: number): number => 1 * 24 * count * 60;
+
+const any = (request: Request, ...types: string[]): boolean => {
+	for (let index = 0; index < types.length; index++) {
+		const type = types[index];
+		if (request.destination === type) {
+			return true;
+		}
+	}
+	return false;
 };
 
-const updateCache = (request: Request, cacheName: string): Promise<void> => {
-	return caches.open(cacheName).then((cache) => {
-		return fetch(request).then((response) => {
-			return cache.put(request, response.clone());
+if (workbox) {
+	if (process.env.NODE_ENV !== 'production') {
+		worker.log('Yay! Workbox is loaded 🎉');
+	}
+
+	if (process.env.NODE_ENV !== 'production') {
+		workbox.setConfig({
+			debug: true
 		});
+	}
+
+	workbox.core.skipWaiting();
+	workbox.core.clientsClaim();
+
+	workbox.core.setCacheNameDetails({
+		precache: cacheKeys.PRECACHE_CACHE,
+		runtime: cacheKeys.RUNTIME_CACHE,
+		googleAnalytics: cacheKeys.GOGGLE_ANALYTICS
 	});
-};
 
-const refreshClient = (response: Response): void => {
-	return self.clients.matchAll()
-		.then((clients: any[]) => clients.forEach(client => {
-			client.postMessage(JSON.stringify({
-				type: constants.messages.REFRESH,
-				url: response.url
-			}));
-		}));
-};
-
-const update = (request: RequestInfo, cacheName: string = cacheKeys.DATA_CACHE): Promise<any> => {
-	return fetch(request).then(response => {
-		if (!response.ok) throw new Error('Network error');
-
-		return caches.open(cacheName).then(cache => {
-			cache.put(request, response.clone());
-			return response;
-		}).then(response => response);
+	workbox.googleAnalytics.initialize({
+		hitFilter: (params) => {
+			const queueTimeInSeconds = Math.round(params.get('qt') / 1000);
+			params.set('cm1', queueTimeInSeconds);
+		}
 	});
-};
 
-const refresh = (response: Response): Promise<any> => {
-	return response.json()
-		.then(jsonResponse => {		
-			self.clients.matchAll().then((clients: any[]) => {
-				clients.forEach(client => {
-					client.postMessage(JSON.stringify({
-						type: constants.messages.APP_UPDATE,
-						data: {
-							url: response.url,
-							payload: jsonResponse.content
-						}
-					}));
-				});
-			});
-			return jsonResponse.content;
-		});
-};
+	const precacheableFallbacks = [
+		{ url: fallbacks.FALLBACK_IMAGE_URL, revision: null },
+		{ url: fallbacks.FALLBACK_ERROR_URL, revision: null },
+		{ url: fallbacks.FALLBACK_FONT_URL, revision: null }
+	];
+	
+	workbox.precaching.precacheAndRoute(precacheManifest || []);
 
-const updateSync = (baseUrl: string): Promise<any> => {
-	return update(baseUrl + '/rest/api/schema', cacheKeys.DATA_CACHE)
-		.then(refresh)
-		.then((data: any) => {
-			self.registration.showNotification(`New api version ${data.version}`);
-			return 'Notification sent';
-		});
-};
+	workbox.routing.setDefaultHandler(new workbox.strategies.StaleWhileRevalidate());
 
-const networkOrCache = (request: Request, cacheName: string): Promise<Response> => {
-	return fromNetwork(request).then(response => {
-		return response.ok ? response : fromCache(request, cacheName);
-	}).catch(() => {
-		return fromCache(request, cacheName);
-	});
-};
-
-const cacheOrNetwork = (request: Request, cacheName: string): Promise<Response> => {
-	return fromCache(request, cacheName).then(response => {
-		return response.ok ? response : fromNetwork(request);
-	}).catch(() => {
-		return fromNetwork(request);
-	});
-};
-
-const staleWhileRevalidate = (event: any, cacheName: string): void => {
-	const request = event.request.clone();
-	event.respondWith(
-		caches.open(cacheName).then(cache => {
-			return cache.match(request).then(response => {
-				const fetchPromise = fetch(request).then(networkResponse => {
-					cache.put(request, networkResponse.clone());
-					return networkResponse;
-				});
-				return response || fetchPromise;
-			});
+	workbox.routing.registerRoute(
+		({ url }) => url.origin === self.location.origin && isNullOrEmpty(url.pathname),
+		new workbox.strategies.StaleWhileRevalidate({
+			cacheName: cacheKeys.STATIC_CACHE
 		})
 	);
-};
 
-const supportsWebp = async (): Promise<boolean> => {
-	if (!self.createImageBitmap) return false;
-
-	const webpData = 'data:image/webp;base64,UklGRh4AAABXRUJQVlA4TBEAAAAvAAAAAAfQ//73v/+BiOh/AAA=';
-	const blob = await fetch(webpData).then(r => r.blob());
-
-	return createImageBitmap(blob).then(() => true, () => false);
-};
-
-type StragedyArgs = {
-	event: Event | any;
-	request: Request;
-	cache?: CacheStorage | undefined | any;
-	stragedy?: string | undefined | any;
-	contentType?: string | undefined | any;
-};
-
-const useStragedy = ({ event, request, cache, stragedy = constants.stragedies.CACHE_FIRST, contentType = contentTypes.HTML }: StragedyArgs): any => {
-	switch(stragedy) {
-		case constants.stragedies.CACHE_ONLY: {
-			return cache.match(request).then(() => useFallback(contentType));
-		}
-		case constants.stragedies.NETWORK_ONLY: {
-			return fetch(request).then(() => useFallback(contentType));
-		}
-		case constants.stragedies.CACHE_FIRST: {
-			return cache.match(request).then((response: Response | any) => {
-				return response || fetch(request).then(response => {
-					event.waitUntil(cache.put(request, response.clone()));
-					return response;
-				}).catch(() => {
-					return cache.match('/offline.html');
-				});
-			});
-		}
-		case constants.stragedies.NETWORK_FIRST: {
-			return fetch(request).then(throwOnError).then(response => {
-				cache.put(request, response.clone());
-				return response;
-			}).catch(() => {
-				return cache.match(request).then((response: Response) => {
-					return response || getFallback();
-				});
-			});
-		}
-		case constants.stragedies.STALE_REVALIDATE: {
-			return cache.match(request).then((response: Response) => {
-				const fetchPromise = fetch(request).then(response => {
-					cache.put(request, response.clone());
-					return response;
-				});
-				return response || fetchPromise || useFallback();
-			});
-		}
-		case constants.stragedies.UPDATE_REFRESH: {
-			return cache.match(request).then((response: Response) => {
-				return new Response(response.body);
-			}).catch(() => {
-				return fetch(request)
-					.then(response => {
-						cache.put(request, response.clone());
-						return response;
-					})
-					.catch(() => {
-						const body = JSON.stringify({ error: 'ServiceWorker: Sorry, you are offline. Please, try later.' });
-						const headers = { 'Content-Type': 'application/json' };
-						const response = new Response(body, { status: 404, statusText: 'Not Found', headers });
-						return response;
-					});
-			});
-		}
-		case constants.stragedies.CACHE_THEN_PRELOAD: {
-			return caches.match(request).then(response => {
-				return response || event.preloadResponse.then((response: Response) => {
-					return response || fetch(request).then(response => {
-						cache.put(request, response.clone());
-						return response;
-					}).catch(() => {
-						return useFallback();
-					});
-				});
-			});
-		}
-		case constants.stragedies.NON_FOUND: {
-			return fetch(request)
-				.catch(() => {
-					const body = JSON.stringify({ error: 'ServiceWorker: Sorry, you are offline. Please, try later.' });
-					const headers = { 'Content-Type': 'application/json' };
-					const response = new Response(body, { status: 404, statusText: 'Not Found', headers });
-					return response;
-				});
-		}
-	}
-};
-
-/**
- * Get stuff nice and ready on this event. Make 
- * the preparations for the SW to work as desired.
- * Store all static assets necessary to render the site
- * as if it were a functional native application here. 
- * Can be used to cache emidiate and non-emidiate resources.
- */
-self.addEventListener(constants.events.INSTALL, (event: Event | any) => {
-	worker.log('Installed:', event);
-	event.waitUntil(
-		caches.open(cacheKeys.STATIC_CACHE)
-			.then(cache => {
-				const cacheRes = (self.__WB_MANIFEST || self.__precacheManifest).map((x: any) => x.url);
-				return cache.addAll([...constants.urlsToCache, ...cacheRes]);
-			})
-			.then(() => self.skipWaiting())
-			.catch(error => worker.log(error))
-	);
-});
-
-/**
- * Do clean up here but keep lightweight to avoid
- * a potential render block
- */
-self.addEventListener(constants.events.ACTIVATE, (event: Event | any) => {
-	worker.log('Activated:', event);
-
-	const expectedCaches = [cacheKeys.STATIC_CACHE, cacheKeys.DATA_CACHE, cacheKeys.IMAGE_CACHE];
-
-	event.waitUntil(
-		caches.keys()
-			.then(keys => keys.filter(key => !expectedCaches.includes(key)))
-			.then(keys => Promise.all(keys.map(key => {
-				worker.log(`Deleting cache ${key}`);
-				return caches.delete(key);
-			})))
+	workbox.routing.registerRoute(
+		({ request }) => any(request, cachableTypes.STYLES, cachableTypes.SCRIPTS, cachableTypes.DOCUMENT),
+		new workbox.strategies.StaleWhileRevalidate({
+			cacheName: cacheKeys.STATIC_CACHE
+		})
 	);
 
-	return self.clients.claim();
-});
+	workbox.routing.registerRoute(
+		({ request }) => any(request, cachableTypes.STYLES, cachableTypes.SCRIPTS),
+		new workbox.strategies.StaleWhileRevalidate({
+			cacheName: cacheKeys.STATIC_CACHE
+		})
+	);
 
-self.addEventListener(constants.events.FETCH, (event: Event | any) => {
-	const request = event.request.clone();
+	workbox.routing.registerRoute(
+		({ url }) => url.origin === commonOrigins.STYLESHEET_FONTS,
+		new workbox.strategies.StaleWhileRevalidate({
+			cacheName: cacheKeys.GOOGLE_FONTS_SHEETS_CACHE
+		})
+	);
 
-	if(!(request.url.indexOf('http') === 0)){
-		return;
-	}
+	workbox.routing.registerRoute(
+		({ url }) => url.origin === commonOrigins.STATIC_WEB_FONTS,
+		new workbox.strategies.CacheFirst({
+			cacheName: cacheKeys.GOOGLE_FONTS_WEB_CACHE,
+			plugins: [
+				new workbox.cacheableResponse.CacheableResponsePlugin({
+					statuses: [0, 200, 203, 202]
+				}),
+				new workbox.expiration.ExpirationPlugin({
+					maxAgeSeconds: years(1),
+					maxEntries: 30
+				})
+			]
+		})
+	);
 
-	if (isSideEffectRequest(request)) {
-		event.respondWith(useStragedy({ event, request, stragedy: constants.stragedies.NON_FOUND }));
-		return;
-	}
+	workbox.routing.registerRoute(
+		({ request, url }) => isWebFontRequest(request, url),
+		new workbox.strategies.CacheFirst({
+			cacheName: cacheKeys.GOOGLE_FONTS_WEB_CACHE,
+			plugins: [
+				new workbox.expiration.ExpirationPlugin({
+					maxAgeSeconds: days(30),
+					maxEntries: 80
+				})
+			]
+		})
+	);
 
-	if (isApiRequest(request)) {
-		const cache = caches.open(cacheKeys.DATA_CACHE);
-		event.respondWith(cache.then(cache => useStragedy({ event, request, cache, stragedy: constants.stragedies.UPDATE_REFRESH })));
-		event.waitUntil(update(request).then(refresh)); 
-		return;
-	}
+	workbox.routing.registerRoute(
+		({ request }) => {
+			if (filetypePatterns.PROGRESSIVE_IMAGE.test(request.url)) {
+				return supportsWebp();
+			}
+			return request.destination === cachableTypes.IMAGES;
+		},
+		new workbox.strategies.CacheFirst({
+			cacheName: cacheKeys.IMAGE_CACHE,
+			plugins: [
+				new workbox.expiration.ExpirationPlugin({
+					purgeOnQuotaError: true,
+					maxAgeSeconds: days(30),
+					maxEntries: 80
+				})
+			]
+		})
+	);
 
-	if (isRequestForStaticAsset(request)) {
-		const cache = caches.open(cacheKeys.STATIC_CACHE);
-		event.respondWith(cache.then(cache => useStragedy({ event, request, cache, stragedy: constants.stragedies.CACHE_FIRST })));
-		return;
-	}
-	
-	if (isRequestForStaticHtml(request)) {
-		worker.log('Static html request:', request);
-		// Responsd with an app-shell otherwise
-		if (request.mode === 'navigate') {
-			worker.log('Navigation fetch event:', request);
-			event.respondWith(async () => {
-				try {
-					const preloadedResponse = await event.preloadResponse;
+	workbox.routing.registerRoute(
+		({ request }) => request.destination === cachableTypes.AUDIO,
+		new workbox.strategies.CacheFirst({
+			cacheName: cacheKeys.MEDIA_CACHE,
+			plugins: [
+				new workbox.cacheableResponse.CacheableResponsePlugin({ statuses: [200] }),
+				new workbox.expiration.ExpirationPlugin({
+					purgeOnQuotaError: true,
+					maxAgeSeconds: days(30),
+					maxEntries: 60
+				})
+			]
+		})
+	);
 
-					if (preloadedResponse) {
-						return preloadedResponse;
-					}
+	workbox.routing.registerRoute(
+		({ request }) => request.destination === cachableTypes.VIDEO,
+		new workbox.strategies.CacheFirst({
+			cacheName: cacheKeys.MEDIA_CACHE,
+			plugins: [
+				new workbox.cacheableResponse.CacheableResponsePlugin({ statuses: [200] }),
+				new workbox.rangeRequests.RangeRequestsPlugin(),
+				new workbox.expiration.ExpirationPlugin({
+					purgeOnQuotaError: true,
+					maxAgeSeconds: months(6),
+					maxEntries: 8
+				})
+			]
+		})
+	);
 
-					const response = await fetch(event.request);
-					const clone = response.clone();
+	workbox.routing.registerRoute(
+		({ request }) => isAcceptedApiRequest(request),
+		new workbox.strategies.StaleWhileRevalidate({
+			cacheName: cacheKeys.DATA_CACHE,
+			plugins: [
+				new workbox.broadcastUpdate.BroadcastUpdatePlugin(),
+				new workbox.expiration.ExpirationPlugin({
+					maxAgeSeconds: minutes(10)
+				})
+			]
+		})
+	);
 
-					caches.open(cacheKeys.STATIC_CACHE).then(cache => {
-						cache.put(request, clone);
-					});
+	workbox.routing.registerRoute(
+		filetypePatterns.API_DATA,
+		new workbox.strategies.NetworkOnly({
+			plugins: [
+				new workbox.backgroundSync.BackgroundSyncPlugin(constants.cacheKeys.QUEUE_CACHE, {
+					maxRetentionTime: hours(24)
+				})
+			]
+		}),
+		constants.sideEffects.POST
+	);
 
-					return response;
-				} catch (error) {
-					const cache = await caches.open(cacheKeys.STATIC_CACHE);
-					const cachedResponse = await cache.match(constants.offlineFallbackPage);
-					return cachedResponse;
-				}
+	workbox.routing.setCatchHandler(({ event }) => {
+		switch (event.request.destination) {
+			case cachableTypes.DOCUMENT:
+				return workbox.matchPrecache(fallbacks.FALLBACK_HTML_URL);
+			case cachableTypes.IMAGES:
+				return workbox.matchPrecache(fallbacks.FALLBACK_IMAGE_URL);
+			case cachableTypes.FONT:
+				return workbox.matchPrecache(fallbacks.FALLBACK_FONT_URL);
+			default:
+				return workbox.matchPrecache(fallbacks.FALLBACK_ERROR_URL);
+		}
+	});
+
+	self.addEventListener(constants.events.INSTALLED, async (event: any) => {
+		if (process.env.NODE_ENV !== 'production') {
+			worker.log(constants.events.INSTALLED, event);
+		}
+		if (event.isUpdate) {
+			notifyClient(event, {
+				type: constants.clientMessages.UPDATE_AVAILABLE
 			});
 		} else {
-			worker.log('Regular fetch event:', request);
-			const cache = caches.open(cacheKeys.STATIC_CACHE);
-			event.respondWith(cache.then(cache => useStragedy({ event, request, cache, stragedy: constants.stragedies.CACHE_FIRST })));
+			if (process.env.NODE_ENV !== 'production') {
+				worker.log(constants.events.INSTALLED, 'First installation');
+			}
 		}
-		return;
-	}
+	});
 
-	const cache = caches.open(cacheKeys.STATIC_CACHE);
-	event.respondWith(cache.then(cache => useStragedy({ event, request, cache, stragedy: constants.stragedies.CACHE_FIRST })));
-});
+	self.addEventListener(constants.events.INSTALL, async (event: any) => {
+		if (process.env.NODE_ENV !== 'production') {
+			worker.log(constants.events.INSTALL, event);
+		}
 
-self.addEventListener(constants.events.PUSH, (event: Event | any) => {
-	worker.log('Push event received:', event.data);
+		event.waitUntil(
+			caches.open(cacheKeys.STATIC_CACHE)
+				.then(cache => {
+					const cacheRes = (precacheManifest).map((x: any) => x.url);
+					return cache.addAll([...constants.urlsToCache, ...cacheRes]);
+				})
+				.then(() => self.skipWaiting())
+				.catch(error => worker.log(error))
+		);
+	});
+
+	self.addEventListener(constants.events.ACTIVATE, async (event: any) => {
+		if (process.env.NODE_ENV !== 'production') {
+			worker.log(constants.events.ACTIVATE, event);
+		}
+
+		const expectedCaches = Object.values(cacheKeys);
+
+		event.waitUntil(async () => {
+			caches.keys()
+				.then(keys => keys.filter(key => !expectedCaches.includes(key)))
+				.then(keys => Promise.all(keys.map(key => {
+					worker.log(`Deleting cache ${key}`);
+					return caches.delete(key);
+				})));
+		});
+		return self.clients.claim();
+	});
+
+	self.addEventListener(constants.events.ACTIVATED, async (event: any) => {
+		if (process.env.NODE_ENV !== 'production') {
+			worker.log(constants.events.ACTIVATED, event);
+		}
+		const urlsToCache = [
+			location.href,
+			...performance.getEntriesByType('resource').map((r) => r.name)
+		];
+
+		workbox.messageSW({
+			type: messages.CACHE_URLS,
+			payload: { urlsToCache }
+		});
+	});
+
+	self.addEventListener(constants.events.CONTROLLING, async (event: any) => {
+		if (process.env.NODE_ENV !== 'production') {
+			worker.log(constants.events.CONTROLLING, event);
+		}
+		window.location.reload();
+	});
 	
-	const { title, options } = updateNotification;
+	self.addEventListener(constants.events.EXTERNAL_WAITING, async (event: any) => {
+		if (process.env.NODE_ENV !== 'production') {
+			worker.log(constants.events.WAITING, event);
+		}
+		notifyClient(event, {
+			type: constants.clientMessages.UPDATE_AVAILABLE
+		});
+	});
 
-	const notificationPromise = self.registration.showNotification(title, options);
-	event.waitUntil(notificationPromise);
-});
- 
-self.addEventListener(constants.events.NOTIFY_CLICK, (event: Event | any) => {
-	worker.log('Notification has been clicked');
+	self.addEventListener(constants.events.WAITING, async (event: any) => {
+		if (process.env.NODE_ENV !== 'production') {
+			worker.log(constants.events.WAITING, event);
+		}
+		notifyClient(event, {
+			type: constants.clientMessages.UPDATE_AVAILABLE
+		});
+	});
+
+	self.addEventListener(constants.events.PUSH, (event: Event | any) => {
+		worker.log('Push event received:', event.data);
+		
+		const { title, options } = updateNotification;
 	
-	event.notification.close();
-
-	const tag = event.notification.tag;
-
-	switch(tag) {
-		case constants.push.NEW_UPDATE: {
-			event.waitUntil(
-				self.clients.openWindow(constants.baseUrl)
-			);
-			break;
+		const notificationPromise = self.registration.showNotification(title, options);
+		event.waitUntil(notificationPromise);
+	});
+	
+	self.addEventListener(constants.events.NOTIFY_CLICK, (event: Event | any) => {
+		worker.log('Notification has been clicked');
+		
+		event.notification.close();
+	
+		const tag = event.notification.tag;
+	
+		switch(tag) {
+			case constants.push.NEW_UPDATE: {
+				event.waitUntil(self.clients.openWindow(constants.baseUrl));
+				break;
+			}
+			default: {
+				event.waitUntil(self.clients.openWindow(constants.baseUrl));
+			}
 		}
-		default: {
-			event.waitUntil(
-				self.clients.openWindow(constants.baseUrl)
-			);
+	});
+
+	
+	/**
+	 * Attempt to sync non-urgent content silently on the background
+	 */
+	self.addEventListener(constants.events.SYNC, (event: Event | any) => {
+		if (process.env.NODE_ENV !== 'production') {
+			worker.log(constants.events.SYNC, 'Triggered sync event:', event);
 		}
+	});
+
+	self.addEventListener(constants.events.PERIODIC_SYNC, (event: Event | any) => {
+		if (process.env.NODE_ENV !== 'production') {
+			worker.log(constants.events.PERIODIC_SYNC, 'Triggered periodic sync event:', event);
+		}
+	});
+
+	self.addEventListener(constants.events.MESSAGE, async (event: any) => {
+		if (process.env.NODE_ENV !== 'production') {
+			worker.log(constants.events.MESSAGE, event);
+		}
+
+		const data: WorkerMessage = event.data;
+
+		if (!data) return;
+
+		switch (data.type) {
+			case messages.SKIP_WAITING: {
+				self.skipWaiting();
+				break;
+			}
+			case messages.CACHE_URLS: {
+				const payload = data.payload;
+				addToCache(payload.cacheName, ...payload.urlsToCache);
+				break;
+			}
+			case messages.ADD_TO_CACHE: {
+				const request = new Request(data.payload);
+
+				fetch(request)
+					.then(throwOnError)
+					.then(response => {
+						switch (event.request.destination) {
+							case cachableTypes.IMAGES:
+								cacheResponse(cacheKeys.IMAGE_CACHE, request, response);
+								break;
+							case cachableTypes.AUDIO: case cachableTypes.VIDEO:
+								cacheResponse(cacheKeys.MEDIA_CACHE, request, response);
+								break;
+							default:
+								cacheResponse(cacheKeys.STATIC_CACHE, request, response);
+								break;
+						}
+					}).catch((error) => {
+						if (process.env.NODE_ENV !== 'production') worker.error('Something went wrong!', error);
+					});
+			}
+		}
+	});
+} else {
+	if (process.env.NODE_ENV !== 'production') {
+		worker.log('Boo! Workbox didn\'t load 😬');
 	}
-});
-
-
-/**
- * Attempt to sync non-urgent content silently on the background
- */
-self.addEventListener(constants.events.SYNC, (event: Event | any) => {
-	worker.log('Received sync event:', event.tag);
-	switch(event.tag) {
-		case syncEvents.INITIAL_SYNC: {
-			event.waitUntil(initialSync().then(x => {
-				worker.log('Sync event result:', x);
-			}));
-			break;
-		}
-		case syncEvents.UPDATE_SYNC: {
-			event.waitUntil(updateSync(constants.baseUrl).then(x => {
-				worker.log('Sync event result:', x);
-			}));
-			break;
-		}
-		default: {
-			worker.log('Received sync event:', event.tag);
-			break;
-		}
-	}
-});
-
-self.addEventListener(constants.events.PERIODIC_SYNC, (event: Event | any) => {
-	worker.log('Triggered periodic sync:', event);
-
-	switch(event.tag) {
-		case syncEvents.CONTENT_SYNC: {
-			event.waitUntil(contentSync().then(x => {
-				worker.log('Sync event result:', x);
-			}));
-			break;
-		}
-		default: {
-			worker.log('Received sync event:', event.tag);
-			break;
-		}
-	}
-});
-
-self.addEventListener(constants.events.MESSAGE, (event: Event | any) => {
-	worker.log('Received message', event);
-
-	const command = event.data;
-
-	switch (command.type) {
-		case constants.messages.SKIP_WAITING: {
-			self.skipWaiting();
-			break;
-		}
-		case constants.messages.ADD_TO_CACHE: {
-			const request = new Request(command.payload);
-
-			fetch(request)
-				.then(throwOnError)
-				.then(response => {
-					caches.open(cacheKeys.STATIC_CACHE).then(cache => cache.put(request, response));
-				}).catch((error) => {
-					worker.error('Something went wrong!', error);
-				});
-		}
-	}
-});
-
-export default constants;
+}

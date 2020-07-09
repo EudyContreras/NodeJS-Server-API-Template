@@ -1,5 +1,15 @@
-const baseUrl = '/';
+const baseUrl = '/?source=pwa';
+const appShellPage = '/?appshell=true';
 const offlineFallbackPage = '/offline.html';
+
+const info = {
+	APP_NAME: 'template-engine',
+	CACHE_VERSION: 'v0.01'
+};
+
+const clientMessages = {
+	UPDATE_AVAILABLE: 'update_available'
+};
 
 const urlsToCache = [
 	'',
@@ -11,8 +21,15 @@ const urlsToCache = [
 const cacheKeys = {
 	DATA_CACHE: 'eudcon-universal-data-cache',
 	IMAGE_CACHE: 'eudcon-universal-image-cache',
+	MEDIA_CACHE: 'eudcon-universal-media-cache',
 	STATIC_CACHE: 'eudcon-universal-static-cache',
-	FALLBACK_CACHE: 'eudcon-universal-fallback-cache'
+	FALLBACK_CACHE: 'eudcon-universal-fallback-cache',
+	PRECACHE_CACHE: 'eudcon-universal-precache-cache',
+	RUNTIME_CACHE: 'eudcon-universal-runtime-cache',
+	QUEUE_CACHE: 'eudcon-universal-request-queue-cache',
+	GOGGLE_ANALYTICS: 'eudcon-universal-google-analytics',
+	GOOGLE_FONTS_SHEETS_CACHE: 'educon-universal-google-fonts-sheets',
+	GOOGLE_FONTS_WEB_CACHE: 'educon-universal-google-fonts-web'
 };
 
 const syncEvents = {
@@ -33,8 +50,8 @@ const updateNotification = {
 	options: {
 		requireInteraction: true,
 		body: 'There is update available! Would you like to see it?',
-		icon: '../static/images/icons/icon-152x152.png',
-		badge: '../static/images/icons/icon-152x152.png',
+		icon: './images/icons/icon-152x152.png',
+		badge: './images/icons/icon-152x152.png',
 		actions: [{
 			title: 'yes',
 			action: 'action-1'
@@ -47,10 +64,15 @@ const updateNotification = {
 
 const events = {
 	SYNC: 'sync',
+	CONTROLLING: 'controlling',
 	PERIODIC_SYNC: 'periodicsync',
 	NOTIFY_CLICK: 'notificationclick',
+	EXTERNAL_WAITING: 'externalwaiting',
+	INSTALLED: 'installed',
 	INSTALL: 'install',
 	ACTIVATE: 'activate',
+	ACTIVATED: 'activated',
+	WAITING: 'waiting',
 	MESSAGE: 'message',
 	FETCH: 'fetch',
 	PUSH: 'push'
@@ -67,11 +89,16 @@ const stragedies = Object.freeze({
 	NON_FOUND: 'no_found_stragedy' // When no suitable stragedy is found for the request
 });
 
-const http = {
+const sideEffects = {
 	PUT: 'PUT',
 	POST: 'POST',
 	DELETE: 'DELETE',
 	PATCH: 'PATCH'
+};
+
+const httpMethods = {
+	...sideEffects,
+	GET: 'GET'
 };
 
 const push = {
@@ -80,39 +107,77 @@ const push = {
 
 const messages = {
 	REFRESH: 'refresh',
-	APP_UPDATE: 'add_update',
-	READ_OFFLINE: 'read_offline',
-	SKIP_WAITING: 'skip_awaitng',
-	ADD_TO_CACHE: 'add_to_cache',
-	REMOVE_FROM_CACHE: 'remove_from_cache'
+	CACHE_URLS: 'cache-urls',
+	APP_UPDATE: 'add-update',
+	READ_OFFLINE: 'read-offline',
+	SKIP_WAITING: 'skip-awaitng',
+	ADD_TO_CACHE: 'add-to-cache',
+	WB_BROADCAST_UPDATE: 'workbox-broadcast-update',
+	REMOVE_FROM_CACHE: 'remove-from-cache'
+};
+
+const cachableTypes = {
+	DOCUMENT: 'document',
+	IMAGES: 'images',
+	SCRIPTS: 'script',
+	STYLES: 'styles',
+	AUDIO: 'audio',
+	VIDEO: 'video',
+	FONT: 'font'
+};
+
+const commonOrigins = {
+	STYLESHEET_FONTS: 'https://fonts.googleapis.com',
+	STATIC_WEB_FONTS: 'https://fonts.gstatic.com'
+};
+
+const fallbacks = {
+	FALLBACK_HTML_URL: offlineFallbackPage,
+	FALLBACK_ERROR_URL: '',
+	FALLBACK_IMAGE_URL: '',
+	FALLBACK_FONT_URL: ''
 };
 
 const constants = Object.freeze({
+	info: info,
 	push: push,
-	http: http,
 	events: events,
 	baseUrl: baseUrl,
+	fallbacks: fallbacks,
 	urlsToCache: urlsToCache,
 	stragedies: stragedies,
 	messages: messages,
 	cacheKeys: cacheKeys,
+	sideEffects: sideEffects,
+	httpMethods: httpMethods,
 	syncEvents: syncEvents,
+	appShellPage: appShellPage,
 	contentTypes: contentTypes,
+	commonOrigins: commonOrigins,
+	cachableTypes: cachableTypes,
+	clientMessages: clientMessages,
 	offlineFallbackPage: offlineFallbackPage,
 	updateNotification: updateNotification
 });
 
 export {
 	push,
-	http,
+	info,
 	events,
 	baseUrl,
 	urlsToCache,
 	stragedies,
 	messages,
+	fallbacks,
 	cacheKeys,
 	syncEvents,
+	httpMethods,
+	sideEffects,
 	contentTypes,
+	cachableTypes,
+	commonOrigins,
+	appShellPage,
+	clientMessages,
 	updateNotification,
 	offlineFallbackPage,
 	constants

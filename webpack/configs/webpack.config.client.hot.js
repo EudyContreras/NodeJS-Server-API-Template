@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable @typescript-eslint/no-var-requires */
 
-require('dotenv').config();
-
 const path = require('path');
+const webpack = require('webpack');
 const loaders = require('../loaders');
+const EnvDefiner = require('../sections/envdefiner');
 const WaitPlugin = require('../plugins/WaitPlugin');
 const LoadablePlugin = require('@loadable/webpack-plugin');
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
@@ -17,22 +17,26 @@ const usesCSR = process.env.CSR === 'true';
 const publicPath = '../../build/public';
 const entryPoint = './src/client/client.jsx';
 
-const fileName = './scripts/[name].js';
+const fileName = './scripts/[name].bundle.js';
 const serverURL = `http://localhost:${serverPort}`;
 
 const proxyOptions = !usesCSR ? {
 	proxy: {
 		'/': {
 			target: serverURL,
+			changeOrigin: true,
 			secure: false
 		},
 		'/rest/api': {
 			target: serverURL,
+			changeOrigin: true,
 			secure: false
 		}
 	}
 } : { };
+
 const pluggins = [
+	new webpack.DefinePlugin(EnvDefiner()),
 	new WaitPlugin({ filename: 'build/public/loadable-stats.json', timeout: 15000 }),
 	new ReactRefreshWebpackPlugin(),
 	new LoadablePlugin()
@@ -40,7 +44,7 @@ const pluggins = [
 
 const splitChunk = {
 	splitChunks: {
-		...splitchunks.singleShunk
+		...splitchunks(false).singleChunk
 	}
 };
 
@@ -52,8 +56,9 @@ module.exports = {
 	cache: true,
 	devtool: 'eval-cheap-source-map',
 	stats: 'minimal',
+	entry: { app: entryPoint },
 	devServer: {
-		port: Number.parseInt(process.env.PORT_HTTP),
+		port: 8081,
 		publicPath: publicPath,
 		contentBase: usesCSR ? path.join(__dirname, publicPath) : publicPath,
 		watchContentBase: false,
@@ -68,7 +73,6 @@ module.exports = {
 		},
 		hotOnly: true
 	},
-	entry: entryPoint,
 	performance: {
 		hints: false
 	},

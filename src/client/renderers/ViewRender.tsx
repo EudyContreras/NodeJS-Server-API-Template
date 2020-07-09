@@ -64,7 +64,7 @@ class IndexViewRenderer extends ViewRenderer {
 	};
 
 	private renderApplication = async (req: Request, res: Response, cssInjector: Function): Promise<void> => {
-		const extractor = new ChunkExtractor({ statsFile });
+		const extractor = new ChunkExtractor({ statsFile: statsFile, entrypoints: ['app'] });
 
 		const content = extractor.collectChunks(application(req.url, this.store, this.context, cssInjector));
 
