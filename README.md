@@ -48,7 +48,7 @@ Built to provide the best possible developer experience with scaleability, perfo
   <dd>Create universal routings using the industry's standard react-router. React Router allows you to easily add navigateable pages to your application. It also works nicely with route-based code splitting</dd>
 
   <dt>Fast Refresh and Instant Feedback</dt>
-  Enjoy the best DX (Developer eXperience) with the power of HMR and Fast Refresh. All the page content is updated real-time as you make changes. Both the server and client side of the application will hot reload with every change.
+  <dd>Enjoy the best DX (Developer eXperience) with the power of HMR and Fast Refresh. All the page content is updated real-time as you make changes. Both the server and client side of the application will hot reload with every change.</dd>
   
   <dt>Internationalization support</dt>
   <dd>Scalable apps need to support multiple languages, easily add and support multiple languages with `react-intl`.</dd>
@@ -57,14 +57,14 @@ Built to provide the best possible developer experience with scaleability, perfo
   <dd>Allows component based code splitting using loadable components for a consistently fast application that dynamically loads the chunks needed at runtime. 
   
   <dt>Typescript</dt>
-  Write highly scalable, maintainable and self-documented code which is easy-to-debug in large applications and codebases with a highly productive development experience.
+  <dd>Write highly scalable, maintainable and self-documented code which is easy-to-debug in large applications and codebases with a highly productive development experience.</dd>
   
   <dt>Efficient Compression</dt>
-  Uses lightweight and highly efficient compression methods to provides smallest bundles possible made possible with: Gzip and Brotli compression
+  <dd>Uses lightweight and highly efficient compression methods to provides smallest bundles possible made possible with: Gzip and Brotli compression</dd>
   
   <dt>Universal/Isomorphic React</dt>
-  Render the content on both the server and the client for a full isomorphic experience. The app allows you to seamlessly switch between CSR and SSR. An Isomorphic approach can for example allow the initial page to be rendered on the server while subsequent pages load directly from the client.
-  <ul>
+  <dd>Render the content on both the server and the client for a full isomorphic experience. The app allows you to seamlessly switch between CSR and SSR. An Isomorphic approach can for example allow the initial page to be rendered on the server while subsequent pages load directly from the client.</dd>
+  <dd><ul>
   <li><b>Fast initial paga</b>  - Prevents flashing a blank page to the user and improves the user experience. Perfect for SPAs
   <li><b>Improved SEO</b> - Provides consistent SEO performance. Google favors sites with faster load times.
   </ul>
@@ -83,20 +83,20 @@ Built to provide the best possible developer experience with scaleability, perfo
   <li><b>Discoverable</b>  – Are identifiable as “applications” thanks to the manifests and service worker registration, and discoverable by search engines.</li>
   <li><b>Installable</b>  – Provides homescreen icons without the use of an App Store. Can be installed on all devices and provide a stand alone experience.</li>
   <li><b>Linkable</b>  – Can easily be shared via a URL, and does not require complex installation.</li>
-</ul>  
+</ul></dd>  
 
 
 ## Requirements
 
 * [node & npm](https://nodejs.org/en/)
 
-## Install project.
+## Install and run project.
 
 * `git clone `
 * `npm install`
 
 
-## All scripts
+#### All scripts
 
 * `start`: Starts the server for the current build
 * `cleanup`: Cleans up the dist and build folders
@@ -111,17 +111,17 @@ Built to provide the best possible developer experience with scaleability, perfo
 * `debug:hot:server`: Runs the server using nodemon.
 * `debug:hot:client`: Runs the client using webpack-dev-server and HMR. Note that this will run only the client on CSR
 
-## Build project.
+#### Build project.
 
 * `npm run build:dev` Builds the code into a bundle and places the code in the build folder.
 * `npm run build:prod` Builds and minifies the code into a bundle and plcaes the code in the dist folder.
 
-## Build and Run project.
+#### Build and Run project.
 
 * `npm run build:dev:start` Runs the development version of the applicatipn.
 * `npm run build:prod:start` Runs the production version of the applicatipn.
 
-## Debug project
+#### Debug project
 
 The scripts specified here are used for debugging purpose. Running this scripsts
 will run the code in with hot-reload modes. Nodemon is used for the server and webpacks dev-sever HMR is used for
