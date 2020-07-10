@@ -13,7 +13,7 @@ Built to provide the best possible developer experience with scaleability, perfo
   <sub>Created and maintained with love ❤️ by your friendly neighborhood coder <a href="https://github.com/EudyContreras">Eudy Contreras</a>.</sub>
 </div>
 
-### Technologies
+## Technologies
 
 * TS Node
 * Babel
@@ -31,29 +31,8 @@ Built to provide the best possible developer experience with scaleability, perfo
 * SASS (SCSS)
 * ESList TSLint
 
-### Supports out of the box
 
-**Predictable state management**
-Read-only predictable, flexible and easy to debug data state using redux.
-
-
-* Universal rendering using Node and React
-* Environment Variables
-* React-Fast-Refresh Hot Module Reload
-* MVC Architecture with SSR
-* Supports Installation
-* Supports Notifications
-* Supports Background Sync
-* Supports Periodic Sync
-* Supports background and periodic-sync envents
-* Gzip and Brotli compression
-* Webjobs using AgendaJS
-* Supports CSS Modules and critical CSS
-* Suppors component styling using sass with isomorphic-style-loader
-* Easy setup for component based code-splitting using loadable/components
-* Docker containarised
-
-### Features:
+## Features:
 
 <dl>
   <dt>Predictable state managemen</dt>
@@ -80,6 +59,9 @@ Read-only predictable, flexible and easy to debug data state using redux.
   <dt>Typescript</dt>
   Write highly scalable, maintainable and self-documented code which is easy-to-debug in large applications and codebases with a highly productive development experience.
   
+  <dt>Efficient Compression</dt>
+  Uses lightweight and highly efficient compression methods to provides smallest bundles possible made possible with: Gzip and Brotli compression
+  
   <dt>Universal/Isomorphic React</dt>
   Render the content on both the server and the client for a full isomorphic experience. The app allows you to seamlessly switch between CSR and SSR. An Isomorphic approach can for example allow the initial page to be rendered on the server while subsequent pages load directly from the client.
   <ul>
@@ -104,17 +86,17 @@ Read-only predictable, flexible and easy to debug data state using redux.
 </ul>  
 
 
-### Requirements
+## Requirements
 
 * [node & npm](https://nodejs.org/en/)
 
-### Install project.
+## Install project.
 
 * `git clone `
 * `npm install`
 
 
-### All scripts
+## All scripts
 
 * `start`: Starts the server for the current build
 * `cleanup`: Cleans up the dist and build folders
@@ -129,17 +111,17 @@ Read-only predictable, flexible and easy to debug data state using redux.
 * `debug:hot:server`: Runs the server using nodemon.
 * `debug:hot:client`: Runs the client using webpack-dev-server and HMR. Note that this will run only the client on CSR
 
-### Build project.
+## Build project.
 
 * `npm run build:dev` Builds the code into a bundle and places the code in the build folder.
 * `npm run build:prod` Builds and minifies the code into a bundle and plcaes the code in the dist folder.
 
-### Build and Run project.
+## Build and Run project.
 
 * `npm run build:dev:start` Runs the development version of the applicatipn.
 * `npm run build:prod:start` Runs the production version of the applicatipn.
 
-### Debug project
+## Debug project
 
 The scripts specified here are used for debugging purpose. Running this scripsts
 will run the code in with hot-reload modes. Nodemon is used for the server and webpacks dev-sever HMR is used for
@@ -150,6 +132,6 @@ the client together with the react-fast-refresh plugin.
 * `npm run debug:hot` Runs the the full configuration by executing both the hot server and hot client
 
 
-### License
+## License
 
 This project is licensed under the MIT License - see the [**Licence**](./LICENSE) file for details
