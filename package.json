@@ -1,7 +1,7 @@
 {
   "name": "template-server",
   "private": true,
-  "version": "1.0.0",
+  "version": "1.0.1",
   "license": "MIT",
   "author": "Eudy Contreras",
   "email": "Econtreras12@live.com",
@@ -24,7 +24,6 @@
     "cleanup": "rimraf pre dist build",
     "compile-ts": "npm run cleanup && tsc -b ./ && cpy --cwd=src --parents '**/*' '!**/*.(ts|js|tsx|jsx)' ../dist/ ",
     "build:client": "webpack --config webpack/configs/webpack.config.client.js",
-    "build:workers": "webpack --config webpack/configs/webpack.config.workers.js",
     "build:client:watch": "webpack --config webpack/configs/webpack.config.client.js --watch",
     "build:server:watch": "webpack --config webpack/configs/webpack.config.server.js --watch",
     "build:prod": "npm run cleanup && cross-env NODE_ENV=production PRECOMPILE=true REACT_HMR=false && npm run compile-ts && webpack",
@@ -33,7 +32,7 @@
     "build:dev:start": "npm run build:dev && npm run start",
     "debug:hot": "npm run cleanup && cross-env NODE_ENV=development REACT_HMR=true PRECOMPILE=false CSR=false concurrently --kill-others \"npm-run-all compile-ts build:client build:server:watch\" \"webpack-dev-server --hot\"",
     "debug:hot:server": "npm run cleanup && cross-env NODE_ENV=development REACT_HMR=false PRECOMPILE=false CSR=true npm run build:server:watch",
-    "debug:hot:client": "npm run cleanup && cross-env NODE_ENV=development REACT_HMR=true PRECOMPILE=false CSR=true npm-run-all build:client build:workers && cross-env NODE_ENV=development CSR=true REACT_HMR=true PRECOMPILE=false webpack-dev-server --hot"
+    "debug:hot:client": "npm run cleanup && cross-env NODE_ENV=development REACT_HMR=true PRECOMPILE=false CSR=true npm-run-all build:client && cross-env NODE_ENV=development CSR=true REACT_HMR=true PRECOMPILE=false webpack-dev-server --hot"
   },
   "keywords": [
     "ssr",
@@ -70,7 +69,6 @@
     "agenda": "^2.1.0",
     "axios": "^0.19.0",
     "bcryptjs": "^2.4.3",
-    "circular-dependency-plugin": "^5.2.0",
     "commonjs": "0.0.1",
     "compression": "^1.7.4",
     "cookie-parser": "^1.4.5",

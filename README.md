@@ -1,9 +1,9 @@
 <div align="center">
   <h1>React Isomorphic PWA</h1>
-</div>
 
-[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/Naereen/StrapDown.js/graphs/commit-activity)
-[![MIT license](https://img.shields.io/badge/License-MIT-blue.svg)](https://lbesson.mit-license.org/)
+  [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/Naereen/StrapDown.js/graphs/commit-activity)
+  [![MIT license](https://img.shields.io/badge/License-MIT-blue.svg)](https://lbesson.mit-license.org/)
+</div>
 
 A production ready boilerplate backed by express and mongoDB using the
 MERN stack architecture. It features a fully installable Isomorphic/Universal rendering experience using react, as
@@ -32,6 +32,10 @@ you to choose the render method of choice. (SSR, CSR)
 * ESList TSLint
 
 ### Supports out of the box
+
+** Predictable state management **
+Read-only predictable, flexible and easy to debug data state using redux.
+
 
 * Universal rendering using Node and React
 * Environment Variables

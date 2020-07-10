@@ -1,11 +1,7 @@
+
 const baseUrl = '/?source=pwa';
 const appShellPage = '/?appshell=true';
 const offlineFallbackPage = '/offline.html';
-
-const info = {
-	APP_NAME: 'template-engine',
-	CACHE_VERSION: 'v0.01'
-};
 
 const clientMessages = {
 	UPDATE_AVAILABLE: 'update_available'
@@ -13,24 +9,33 @@ const clientMessages = {
 
 const urlsToCache = [
 	'',
+	'/',
 	'https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js',
 	'https://fonts.googleapis.com/css?family=Roboto&display=optional',
 	'https://fonts.gstatic.com/s/materialicons/v48/flUhRq6tzZclQEJ-Vdg-IuiaDsNcIhQ8tQ.woff2'
 ];
 
-const cacheKeys = {
-	DATA_CACHE: 'eudcon-universal-data-cache',
-	IMAGE_CACHE: 'eudcon-universal-image-cache',
-	MEDIA_CACHE: 'eudcon-universal-media-cache',
-	STATIC_CACHE: 'eudcon-universal-static-cache',
-	FALLBACK_CACHE: 'eudcon-universal-fallback-cache',
-	PRECACHE_CACHE: 'eudcon-universal-precache-cache',
-	RUNTIME_CACHE: 'eudcon-universal-runtime-cache',
-	QUEUE_CACHE: 'eudcon-universal-request-queue-cache',
-	GOGGLE_ANALYTICS: 'eudcon-universal-google-analytics',
-	GOOGLE_FONTS_SHEETS_CACHE: 'educon-universal-google-fonts-sheets',
-	GOOGLE_FONTS_WEB_CACHE: 'educon-universal-google-fonts-web'
+interface CacheNames {
+	DATA_CACHE: string;
+	IMAGE_CACHE: string;
+	MEDIA_CACHE: string;
+	STATIC_CACHE: string;
+	FALLBACK_CACHE: string;
+	QUEUE_CACHE: string;
+	GOOGLE_FONTS_SHEETS_CACHE: string;
+	GOOGLE_FONTS_WEB_CACHE: string;
 };
+
+const cacheNames = (version?: string | undefined): CacheNames =>({
+	DATA_CACHE: `eudcon-universal-data-cache-${version || ''}`,
+	IMAGE_CACHE: `eudcon-universal-image-cache-${version || ''}`,
+	MEDIA_CACHE: `eudcon-universal-media-cache-${version || ''}`,
+	STATIC_CACHE: `eudcon-universal-static-cache-${version || ''}`,
+	FALLBACK_CACHE: `eudcon-universal-fallback-cache-${version || ''}`,
+	QUEUE_CACHE: `eudcon-universal-request-queue-cache-${version || ''}`,
+	GOOGLE_FONTS_SHEETS_CACHE: `educon-universal-google-fonts-sheets-${version || ''}`,
+	GOOGLE_FONTS_WEB_CACHE: `educon-universal-google-fonts-web-${version || ''}`
+});
 
 const syncEvents = {
 	INITIAL_SYNC: 'initial-sync',
@@ -62,7 +67,7 @@ const updateNotification = {
 	}
 };
 
-const events = {
+export const events = {
 	SYNC: 'sync',
 	CONTROLLING: 'controlling',
 	PERIODIC_SYNC: 'periodicsync',
@@ -105,7 +110,7 @@ const push = {
 	NEW_UPDATE: 'new-update'
 };
 
-const messages = {
+export const messages = {
 	REFRESH: 'refresh',
 	CACHE_URLS: 'cache-urls',
 	APP_UPDATE: 'add-update',
@@ -139,15 +144,13 @@ const fallbacks = {
 };
 
 const constants = Object.freeze({
-	info: info,
 	push: push,
-	events: events,
 	baseUrl: baseUrl,
 	fallbacks: fallbacks,
 	urlsToCache: urlsToCache,
 	stragedies: stragedies,
 	messages: messages,
-	cacheKeys: cacheKeys,
+	cacheNames: cacheNames,
 	sideEffects: sideEffects,
 	httpMethods: httpMethods,
 	syncEvents: syncEvents,
@@ -162,14 +165,11 @@ const constants = Object.freeze({
 
 export {
 	push,
-	info,
-	events,
 	baseUrl,
 	urlsToCache,
 	stragedies,
-	messages,
 	fallbacks,
-	cacheKeys,
+	cacheNames,
 	syncEvents,
 	httpMethods,
 	sideEffects,
@@ -182,5 +182,3 @@ export {
 	offlineFallbackPage,
 	constants
 };
-
-export default constants;

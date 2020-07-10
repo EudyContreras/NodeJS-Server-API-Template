@@ -1,9 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-importScripts('https://storage.googleapis.com/workbox-cdn/releases/5.1.2/workbox-sw.js');
 
-declare const workbox: typeof import('workbox-sw').default;
-
-import { worker, supportsWebp, ClientMessage, WorkerMessage, filetypePatterns } from './commons';
+import { staleWhileRevalidate, cacheFirst, networkFirst, addToCache, cacheResponse, fromNetwork } from './stragedies';
+import { logger, supportsWebp, ClientMessage, WorkerMessage, filetypePatterns, filetypeCache, isNullOrEmpty, CacheQuotaOptions, CachePredicate, inRange } from './commons';
 
 import {
 	httpMethods,
@@ -11,48 +9,27 @@ import {
 	cachableTypes,
 	commonOrigins,
 	fallbacks,
-	cacheKeys,
+	cacheNames,
 	constants,
 	messages,
-	syncEvents
+	events
 } from './constants';
 
+const cacheKeys = cacheNames(__VERSION_NUMBER__);
 const precacheManifest = [...self.__WB_MANIFEST];
+const allowRequestLog = true;
 
-const isNullOrEmpty = (path): boolean => {
-	return !path || path === '' || path == undefined;
-};
-
-const throwOnError = (response: Response): Response => {
-	if (response.status >= 200 && response.status < 300 || response.status === 0) {
-		return response;
-	}
-	if (process.env.NODE_ENV !== 'production') {
-		worker.error(response.statusText);
-	}
-	return new Response(null);
-};
-
+   
 const notifyClient = (event: Event | any, message: ClientMessage): void => {
 	event.waitUntil(async () => {
 		if (!event.clientId) return;
-	
+
 		const client = await self.clients.get(event.clientId);
 
 		if (!client) return;
 
 		client.postMessage(message);
 	});
-};
-
-const addToCache = async (cacheName: string, ...urls: string[]): Promise<void> => {
-	const myCache = await caches.open(cacheName);
-	await myCache.addAll(urls);
-};
-
-const cacheResponse = async (cacheName: string, request: Request, response: Response): Promise<void> => {
-	const myCache = await caches.open(cacheName);
-	await myCache.put(request, response);
 };
 
 const isSideEffectRequest = (request: Request): boolean => {
@@ -69,9 +46,11 @@ const isAcceptedApiRequest = (request: Request): boolean => {
 
 const days = (count: number): number => hours(count * 24);
 const years = (count: number): number => days(count * 365);
+const weeks = (count: number): number => days(count * 7);
 const months = (count: number): number => days(count * 30);
 const hours = (count: number): number => minutes(count * 60);
 const minutes = (count: number): number => 1 * 24 * count * 60;
+const seconds = (count: number): number => count * 1000;
 
 const any = (request: Request, ...types: string[]): boolean => {
 	for (let index = 0; index < types.length; index++) {
@@ -83,364 +62,268 @@ const any = (request: Request, ...types: string[]): boolean => {
 	return false;
 };
 
-if (workbox) {
-	if (process.env.NODE_ENV !== 'production') {
-		worker.log('Yay! Workbox is loaded 🎉');
+if (process.env.NODE_ENV !== 'production') {
+	logger.log('Yay! worker is loaded 🎉');
+}
+
+const precacheableFallbacks = [
+	{ url: fallbacks.FALLBACK_IMAGE_URL, revision: null },
+	{ url: fallbacks.FALLBACK_ERROR_URL, revision: null },
+	{ url: fallbacks.FALLBACK_FONT_URL, revision: null }
+];
+
+self.addEventListener(events.FETCH, async (event: any) => {
+	const request: Request = event.request.clone();
+	const url: any = request.url;
+
+	if (!(url.indexOf('http') === 0)) {
+		return;
 	}
 
-	if (process.env.NODE_ENV !== 'production') {
-		workbox.setConfig({
-			debug: true
-		});
+	if (process.env.NODE_ENV !== 'production' && allowRequestLog) {
+		logger.info(request.destination, url);
+	}
+	if (url.origin === self.location.origin && isNullOrEmpty(url.pathname)) {
+		const cacheName = cacheKeys.STATIC_CACHE;
+		staleWhileRevalidate({ event, request, cacheName });
 	}
 
-	workbox.core.skipWaiting();
-	workbox.core.clientsClaim();
+	if (any(request, cachableTypes.STYLES, cachableTypes.SCRIPTS, cachableTypes.DOCUMENT)) {
+		const cacheName = cacheKeys.STATIC_CACHE;
+		const cachePredicate: CachePredicate = {
+			cacheCondition: ({ response }) => response && inRange(response?.status, 200, 300) || false
+		};
+		staleWhileRevalidate({ event, request, cacheName, cachePredicate });
+	}
 
-	workbox.core.setCacheNameDetails({
-		precache: cacheKeys.PRECACHE_CACHE,
-		runtime: cacheKeys.RUNTIME_CACHE,
-		googleAnalytics: cacheKeys.GOGGLE_ANALYTICS
-	});
+	if (url.origin === commonOrigins.STYLESHEET_FONTS) {
+		const cacheName = cacheKeys.GOOGLE_FONTS_SHEETS_CACHE;
+		const cachePredicate: CachePredicate = {
+			cacheCondition: ({ response }) => response && inRange(response?.status, 200, 300) || false
+		};
+		staleWhileRevalidate({ event, request, cacheName, cachePredicate });
+	}
 
-	workbox.googleAnalytics.initialize({
-		hitFilter: (params) => {
-			const queueTimeInSeconds = Math.round(params.get('qt') / 1000);
-			params.set('cm1', queueTimeInSeconds);
-		}
-	});
+	if (isWebFontRequest(request, url)) {
+		const cacheName = cacheKeys.GOOGLE_FONTS_WEB_CACHE;
+		const cachePredicate: CachePredicate = {
+			acceptedStatus: [0, 200, 203, 202]
+		};
+		cacheFirst({ event, request, cacheName, cachePredicate });
+	}
 
-	const precacheableFallbacks = [
-		{ url: fallbacks.FALLBACK_IMAGE_URL, revision: null },
-		{ url: fallbacks.FALLBACK_ERROR_URL, revision: null },
-		{ url: fallbacks.FALLBACK_FONT_URL, revision: null }
-	];
-	
-	workbox.precaching.precacheAndRoute(precacheManifest || []);
-
-	workbox.routing.setDefaultHandler(new workbox.strategies.StaleWhileRevalidate());
-
-	workbox.routing.registerRoute(
-		({ url }) => url.origin === self.location.origin && isNullOrEmpty(url.pathname),
-		new workbox.strategies.StaleWhileRevalidate({
-			cacheName: cacheKeys.STATIC_CACHE
-		})
-	);
-
-	workbox.routing.registerRoute(
-		({ request }) => any(request, cachableTypes.STYLES, cachableTypes.SCRIPTS, cachableTypes.DOCUMENT),
-		new workbox.strategies.StaleWhileRevalidate({
-			cacheName: cacheKeys.STATIC_CACHE
-		})
-	);
-
-	workbox.routing.registerRoute(
-		({ request }) => any(request, cachableTypes.STYLES, cachableTypes.SCRIPTS),
-		new workbox.strategies.StaleWhileRevalidate({
-			cacheName: cacheKeys.STATIC_CACHE
-		})
-	);
-
-	workbox.routing.registerRoute(
-		({ url }) => url.origin === commonOrigins.STYLESHEET_FONTS,
-		new workbox.strategies.StaleWhileRevalidate({
-			cacheName: cacheKeys.GOOGLE_FONTS_SHEETS_CACHE
-		})
-	);
-
-	workbox.routing.registerRoute(
-		({ url }) => url.origin === commonOrigins.STATIC_WEB_FONTS,
-		new workbox.strategies.CacheFirst({
-			cacheName: cacheKeys.GOOGLE_FONTS_WEB_CACHE,
-			plugins: [
-				new workbox.cacheableResponse.CacheableResponsePlugin({
-					statuses: [0, 200, 203, 202]
-				}),
-				new workbox.expiration.ExpirationPlugin({
-					maxAgeSeconds: years(1),
-					maxEntries: 30
-				})
-			]
-		})
-	);
-
-	workbox.routing.registerRoute(
-		({ request, url }) => isWebFontRequest(request, url),
-		new workbox.strategies.CacheFirst({
-			cacheName: cacheKeys.GOOGLE_FONTS_WEB_CACHE,
-			plugins: [
-				new workbox.expiration.ExpirationPlugin({
-					maxAgeSeconds: days(30),
-					maxEntries: 80
-				})
-			]
-		})
-	);
-
-	workbox.routing.registerRoute(
-		({ request }) => {
-			if (filetypePatterns.PROGRESSIVE_IMAGE.test(request.url)) {
-				return supportsWebp();
-			}
-			return request.destination === cachableTypes.IMAGES;
-		},
-		new workbox.strategies.CacheFirst({
-			cacheName: cacheKeys.IMAGE_CACHE,
-			plugins: [
-				new workbox.expiration.ExpirationPlugin({
-					purgeOnQuotaError: true,
-					maxAgeSeconds: days(30),
-					maxEntries: 80
-				})
-			]
-		})
-	);
-
-	workbox.routing.registerRoute(
-		({ request }) => request.destination === cachableTypes.AUDIO,
-		new workbox.strategies.CacheFirst({
-			cacheName: cacheKeys.MEDIA_CACHE,
-			plugins: [
-				new workbox.cacheableResponse.CacheableResponsePlugin({ statuses: [200] }),
-				new workbox.expiration.ExpirationPlugin({
-					purgeOnQuotaError: true,
-					maxAgeSeconds: days(30),
-					maxEntries: 60
-				})
-			]
-		})
-	);
-
-	workbox.routing.registerRoute(
-		({ request }) => request.destination === cachableTypes.VIDEO,
-		new workbox.strategies.CacheFirst({
-			cacheName: cacheKeys.MEDIA_CACHE,
-			plugins: [
-				new workbox.cacheableResponse.CacheableResponsePlugin({ statuses: [200] }),
-				new workbox.rangeRequests.RangeRequestsPlugin(),
-				new workbox.expiration.ExpirationPlugin({
-					purgeOnQuotaError: true,
-					maxAgeSeconds: months(6),
-					maxEntries: 8
-				})
-			]
-		})
-	);
-
-	workbox.routing.registerRoute(
-		({ request }) => isAcceptedApiRequest(request),
-		new workbox.strategies.StaleWhileRevalidate({
-			cacheName: cacheKeys.DATA_CACHE,
-			plugins: [
-				new workbox.broadcastUpdate.BroadcastUpdatePlugin(),
-				new workbox.expiration.ExpirationPlugin({
-					maxAgeSeconds: minutes(10)
-				})
-			]
-		})
-	);
-
-	workbox.routing.registerRoute(
-		filetypePatterns.API_DATA,
-		new workbox.strategies.NetworkOnly({
-			plugins: [
-				new workbox.backgroundSync.BackgroundSyncPlugin(constants.cacheKeys.QUEUE_CACHE, {
-					maxRetentionTime: hours(24)
-				})
-			]
-		}),
-		constants.sideEffects.POST
-	);
-
-	workbox.routing.setCatchHandler(({ event }) => {
-		switch (event.request.destination) {
-			case cachableTypes.DOCUMENT:
-				return workbox.matchPrecache(fallbacks.FALLBACK_HTML_URL);
-			case cachableTypes.IMAGES:
-				return workbox.matchPrecache(fallbacks.FALLBACK_IMAGE_URL);
-			case cachableTypes.FONT:
-				return workbox.matchPrecache(fallbacks.FALLBACK_FONT_URL);
-			default:
-				return workbox.matchPrecache(fallbacks.FALLBACK_ERROR_URL);
-		}
-	});
-
-	self.addEventListener(constants.events.INSTALLED, async (event: any) => {
-		if (process.env.NODE_ENV !== 'production') {
-			worker.log(constants.events.INSTALLED, event);
-		}
-		if (event.isUpdate) {
-			notifyClient(event, {
-				type: constants.clientMessages.UPDATE_AVAILABLE
+	if (request.destination === cachableTypes.IMAGES) {
+		const cacheName = cacheKeys.IMAGE_CACHE;
+		const quotaOptions: CacheQuotaOptions = {
+			clearOnError: true,
+			maxAgeSeconds: months(3),
+			maxEntries: 100
+		};
+		if (filetypePatterns.PROGRESSIVE_IMAGE.test(request.url)) {
+			supportsWebp().then(hasSupport => {
+				if (hasSupport) cacheFirst({ event, request, cacheName, quotaOptions });
+			}).catch(error => {
+				logger.warn('No support for webp!', error);
 			});
 		} else {
-			if (process.env.NODE_ENV !== 'production') {
-				worker.log(constants.events.INSTALLED, 'First installation');
-			}
+			cacheFirst({ event, request, cacheName, quotaOptions });
 		}
-	});
-
-	self.addEventListener(constants.events.INSTALL, async (event: any) => {
-		if (process.env.NODE_ENV !== 'production') {
-			worker.log(constants.events.INSTALL, event);
-		}
-
-		event.waitUntil(
-			caches.open(cacheKeys.STATIC_CACHE)
-				.then(cache => {
-					const cacheRes = (precacheManifest).map((x: any) => x.url);
-					return cache.addAll([...constants.urlsToCache, ...cacheRes]);
-				})
-				.then(() => self.skipWaiting())
-				.catch(error => worker.log(error))
-		);
-	});
-
-	self.addEventListener(constants.events.ACTIVATE, async (event: any) => {
-		if (process.env.NODE_ENV !== 'production') {
-			worker.log(constants.events.ACTIVATE, event);
-		}
-
-		const expectedCaches = Object.values(cacheKeys);
-
-		event.waitUntil(async () => {
-			caches.keys()
-				.then(keys => keys.filter(key => !expectedCaches.includes(key)))
-				.then(keys => Promise.all(keys.map(key => {
-					worker.log(`Deleting cache ${key}`);
-					return caches.delete(key);
-				})));
-		});
-		return self.clients.claim();
-	});
-
-	self.addEventListener(constants.events.ACTIVATED, async (event: any) => {
-		if (process.env.NODE_ENV !== 'production') {
-			worker.log(constants.events.ACTIVATED, event);
-		}
-		const urlsToCache = [
-			location.href,
-			...performance.getEntriesByType('resource').map((r) => r.name)
-		];
-
-		workbox.messageSW({
-			type: messages.CACHE_URLS,
-			payload: { urlsToCache }
-		});
-	});
-
-	self.addEventListener(constants.events.CONTROLLING, async (event: any) => {
-		if (process.env.NODE_ENV !== 'production') {
-			worker.log(constants.events.CONTROLLING, event);
-		}
-		window.location.reload();
-	});
-	
-	self.addEventListener(constants.events.EXTERNAL_WAITING, async (event: any) => {
-		if (process.env.NODE_ENV !== 'production') {
-			worker.log(constants.events.WAITING, event);
-		}
-		notifyClient(event, {
-			type: constants.clientMessages.UPDATE_AVAILABLE
-		});
-	});
-
-	self.addEventListener(constants.events.WAITING, async (event: any) => {
-		if (process.env.NODE_ENV !== 'production') {
-			worker.log(constants.events.WAITING, event);
-		}
-		notifyClient(event, {
-			type: constants.clientMessages.UPDATE_AVAILABLE
-		});
-	});
-
-	self.addEventListener(constants.events.PUSH, (event: Event | any) => {
-		worker.log('Push event received:', event.data);
-		
-		const { title, options } = updateNotification;
-	
-		const notificationPromise = self.registration.showNotification(title, options);
-		event.waitUntil(notificationPromise);
-	});
-	
-	self.addEventListener(constants.events.NOTIFY_CLICK, (event: Event | any) => {
-		worker.log('Notification has been clicked');
-		
-		event.notification.close();
-	
-		const tag = event.notification.tag;
-	
-		switch(tag) {
-			case constants.push.NEW_UPDATE: {
-				event.waitUntil(self.clients.openWindow(constants.baseUrl));
-				break;
-			}
-			default: {
-				event.waitUntil(self.clients.openWindow(constants.baseUrl));
-			}
-		}
-	});
-
-	
-	/**
-	 * Attempt to sync non-urgent content silently on the background
-	 */
-	self.addEventListener(constants.events.SYNC, (event: Event | any) => {
-		if (process.env.NODE_ENV !== 'production') {
-			worker.log(constants.events.SYNC, 'Triggered sync event:', event);
-		}
-	});
-
-	self.addEventListener(constants.events.PERIODIC_SYNC, (event: Event | any) => {
-		if (process.env.NODE_ENV !== 'production') {
-			worker.log(constants.events.PERIODIC_SYNC, 'Triggered periodic sync event:', event);
-		}
-	});
-
-	self.addEventListener(constants.events.MESSAGE, async (event: any) => {
-		if (process.env.NODE_ENV !== 'production') {
-			worker.log(constants.events.MESSAGE, event);
-		}
-
-		const data: WorkerMessage = event.data;
-
-		if (!data) return;
-
-		switch (data.type) {
-			case messages.SKIP_WAITING: {
-				self.skipWaiting();
-				break;
-			}
-			case messages.CACHE_URLS: {
-				const payload = data.payload;
-				addToCache(payload.cacheName, ...payload.urlsToCache);
-				break;
-			}
-			case messages.ADD_TO_CACHE: {
-				const request = new Request(data.payload);
-
-				fetch(request)
-					.then(throwOnError)
-					.then(response => {
-						switch (event.request.destination) {
-							case cachableTypes.IMAGES:
-								cacheResponse(cacheKeys.IMAGE_CACHE, request, response);
-								break;
-							case cachableTypes.AUDIO: case cachableTypes.VIDEO:
-								cacheResponse(cacheKeys.MEDIA_CACHE, request, response);
-								break;
-							default:
-								cacheResponse(cacheKeys.STATIC_CACHE, request, response);
-								break;
-						}
-					}).catch((error) => {
-						if (process.env.NODE_ENV !== 'production') worker.error('Something went wrong!', error);
-					});
-			}
-		}
-	});
-} else {
-	if (process.env.NODE_ENV !== 'production') {
-		worker.log('Boo! Workbox didn\'t load 😬');
 	}
-}
+
+	if (request.destination === cachableTypes.AUDIO) {
+		const cacheName = cacheKeys.MEDIA_CACHE;
+		const quotaOptions: CacheQuotaOptions = {
+			clearOnError: true,
+			maxAgeSeconds: months(2),
+			maxEntries: 30
+		};
+		cacheFirst({ event, request, cacheName, quotaOptions });
+	}
+
+	if (request.destination === cachableTypes.VIDEO) {
+		const cacheName = cacheKeys.MEDIA_CACHE;
+		const quotaOptions: CacheQuotaOptions = {
+			clearOnError: true,
+			maxAgeSeconds: days(30),
+			maxEntries: 10
+		};
+		cacheFirst({ event, request, cacheName, quotaOptions });
+	}
+
+	if (isAcceptedApiRequest(request)) {
+		const cacheName = cacheKeys.DATA_CACHE;
+		const quotaOptions: CacheQuotaOptions = {
+			clearOnError: true,
+			maxAgeSeconds: hours(6),
+			maxEntries: 8
+		};
+		networkFirst({ event, request, cacheName, quotaOptions });
+	}
+});
+
+self.addEventListener(events.INSTALL, async (event: any) => {
+	if (process.env.NODE_ENV !== 'production') {
+		logger.log(events.INSTALL, `Version : ${__VERSION_NUMBER__}`, event);
+	}
+
+	if (event.isUpdate) {
+		logger.log(events.INSTALLED, 'Update available');
+		notifyClient(event, {
+			type: constants.clientMessages.UPDATE_AVAILABLE
+		});
+	} else {
+		if (process.env.NODE_ENV !== 'production') {
+			logger.log(events.INSTALLED, 'First installation');
+		}
+	}
+
+	const allResources = new Set([...precacheManifest.map((x: any) => x.url), ...constants.urlsToCache]);
+	const precacheCallback = async (cacheName: string, urls: string[]): Promise<void> => {
+		try {
+			const cache = await caches.open(cacheName);
+			await cache.addAll(urls);
+		} catch (error) {
+			logger.error('Could not save urls: ', urls, error);
+		}
+	};
+
+	event.waitUntil(
+		handleInstallation(Array.from(allResources), precacheCallback)
+			.then(() => self.skipWaiting())
+			.catch(error => logger.log(error))
+	);
+});
+
+const handleInstallation = async (urls: string[], callback: (cacheName: string, urls: string[]) => void): Promise<void> => {
+	try {
+		const imageAssets = urls.filter(x => filetypePatterns.IMAGE.test(x) || filetypePatterns.PROGRESSIVE_IMAGE.test(x));
+		const mediaAssets = urls.filter(x => filetypePatterns.VIDEO.test(x) || filetypePatterns.AUDIO.test(x));
+		const fontAssests = urls.filter(x => filetypePatterns.FONT.test(x));
+		const staticAssets = urls.filter(x => filetypePatterns.STATIC.test(x));
+		const dataAssets = urls.filter(x => filetypePatterns.DATA.test(x));
+
+		if (imageAssets.length > 0) {
+			await callback(cacheKeys.IMAGE_CACHE, imageAssets);
+		}
+		if (fontAssests.length > 0) {
+			await callback(cacheKeys.GOOGLE_FONTS_WEB_CACHE, fontAssests);
+		}
+		if (staticAssets.length > 0) {
+			await callback(cacheKeys.STATIC_CACHE, staticAssets);
+		}
+		if (mediaAssets.length > 0) {
+			await callback(cacheKeys.MEDIA_CACHE, mediaAssets);
+		}
+		if (dataAssets.length > 0) {
+			await callback(cacheKeys.MEDIA_CACHE, dataAssets);
+		}
+	} catch (error) {
+		logger.error('Something went wrong!', error);
+	}
+};
+
+self.addEventListener(events.ACTIVATE, async (event: any) => {
+	if (process.env.NODE_ENV !== 'production') {
+		logger.log(events.ACTIVATE, `Version : ${__VERSION_NUMBER__}`, event);
+	}
+
+	event.waitUntil(
+		caches.keys()
+			.then(currentCaches => {
+				const expectedCaches = Object.values(cacheKeys);
+				return currentCaches.filter(key => !expectedCaches.includes(key));
+			}).then(keys => {
+				keys.forEach(key => {
+					logger.log(`Deleting cache name: ${key}`);
+					return caches.delete(key);
+				});
+			}).catch(error => logger.log(error)));
+	return self.clients.claim();
+});
+
+self.addEventListener(events.CONTROLLING, async (event: any) => {
+	if (process.env.NODE_ENV !== 'production') {
+		logger.log(events.CONTROLLING, event);
+	}
+	window.location.reload();
+});
+
+self.addEventListener(events.WAITING, async (event: any) => {
+	if (process.env.NODE_ENV !== 'production') {
+		logger.log(events.WAITING, event);
+	}
+	notifyClient(event, {
+		type: constants.clientMessages.UPDATE_AVAILABLE
+	});
+});
+
+self.addEventListener(events.PUSH, (event: Event | any) => {
+	logger.log('Push event received:', event.data);
+
+	const { title, options } = updateNotification;
+
+	const notificationPromise = self.registration.showNotification(title, options);
+	event.waitUntil(notificationPromise);
+});
+
+self.addEventListener(events.NOTIFY_CLICK, (event: Event | any) => {
+	logger.log('Notification has been clicked');
+
+	event.notification.close();
+
+	const tag = event.notification.tag;
+
+	switch (tag) {
+		case constants.push.NEW_UPDATE: {
+			event.waitUntil(self.clients.openWindow(constants.baseUrl));
+			break;
+		}
+		default: {
+			event.waitUntil(self.clients.openWindow(constants.baseUrl));
+		}
+	}
+});
+
+self.addEventListener(events.SYNC, (event: Event | any) => {
+	if (process.env.NODE_ENV !== 'production') {
+		logger.log(events.SYNC, 'Triggered sync event:', event);
+	}
+});
+
+self.addEventListener(events.PERIODIC_SYNC, (event: Event | any) => {
+	if (process.env.NODE_ENV !== 'production') {
+		logger.log(events.PERIODIC_SYNC, 'Triggered periodic sync event:', event);
+	}
+});
+
+self.addEventListener(events.MESSAGE, async (event: any) => {
+	if (process.env.NODE_ENV !== 'production') {
+		logger.log(events.MESSAGE, event);
+	}
+
+	const data: WorkerMessage = event.data;
+
+	if (!data) return;
+
+	switch (data.type) {
+		case messages.SKIP_WAITING: {
+			self.skipWaiting();
+			break;
+		}
+		case messages.CACHE_URLS: {
+			const payload = data.payload;
+			addToCache(payload.cacheName, ...payload.urlsToCache);
+			break;
+		}
+		case messages.ADD_TO_CACHE: {
+			const request = new Request(data.payload);
+			const cacheName = filetypeCache(data.payload, cacheKeys);
+			try {
+				const response = await fromNetwork(request, seconds(10));
+				cacheResponse(cacheName, request, response);
+			} catch (error) {
+				if (process.env.NODE_ENV !== 'production') logger.error('Something went wrong!', error);
+			}
+		}
+	}
+});

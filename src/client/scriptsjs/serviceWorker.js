@@ -1,4 +1,3 @@
-
 // This optional code is used to register a service worker.
 // register() is not called by default.
 
@@ -61,9 +60,9 @@ const urlB64ToUint8Array = (base64String) => {
 
 const onRegistration = async (listener) => {
 	if (!('serviceWorker' in navigator)) return;
-	
+
 	const registration = await navigator.serviceWorker.ready;
-	
+
 	if (!registration) return;
 
 	listener(registration);
@@ -82,7 +81,7 @@ const subscribeUser = () => {
 		}).then(subscription => {
 			logger.log('User has now subscribed to push notifications', subscription);
 			isSubscribed = true;
-		}).catch(err =>{
+		}).catch(err => {
 			logger.error('Failed to subscribe the user to push notification: ', err);
 		});
 	});
@@ -139,7 +138,7 @@ const registerValidSW = (swUrl, config) => {
 		})
 		.then(registration => {
 			logger.log(`ServiceWorker: Registered succesfully with scope: ${registration.scope}`);
-		
+
 			if (config.registerPushNotifications) {
 				if ('PushManager' in window) {
 					initializeSubscription();
@@ -147,7 +146,7 @@ const registerValidSW = (swUrl, config) => {
 					logger.log('Push notifications is not supported by your current browser! Please use a modern browser to take advantage of push notifications capabitilies');
 				}
 			}
-		
+
 			registration.onupdatefound = () => {
 				logger.log('ServiceWorker: update found!');
 				const installingWorker = registration.installing;
@@ -218,7 +217,7 @@ const registerWorker = (config) => {
 		if ('serviceWorker' in navigator) {
 			// The URL constructor is available in all browsers that support SW.
 			const publicUrl = new URL(process.env.PUBLIC_URL, window.location.href);
-	
+
 			if (publicUrl.origin !== window.location.origin) {
 				// Our service worker won't work if PUBLIC_URL is on a different origin
 				// from what our page is served on. This might happen if a CDN is used to
@@ -228,12 +227,12 @@ const registerWorker = (config) => {
 
 			window.addEventListener('load', () => {
 				const swUrl = 'service-worker.js';
-	
+
 				if (isLocalhost) {
 					logger.log('ServiceWorker: in localhost!');
 					// This is running on localhost. Let's check if a service worker still exists or not.
 					checkValidServiceWorker(swUrl, config);
-	
+
 					// Add some additional logging to localhost, pointing developers to the
 					// service worker/PWA documentation.
 					navigator.serviceWorker.ready.then(() => {
@@ -253,7 +252,18 @@ const registerWorker = (config) => {
 	} else {
 		if ('serviceWorker' in navigator) {
 			window.addEventListener('load', () => {
-				navigator.serviceWorker.register('service-worker.js').catch(error => logger.error(error));
+				navigator.serviceWorker.register('service-worker.js').then(registration => {
+					registration.onupdatefound = () => {
+						const worker = registration.installing;
+						worker.onstatechange = () => {
+							if (worker.state === 'waiting') {
+								worker.postMessage('skipWaiting');
+							}
+							// Handle whatever other SW states you care about, like 'active'.
+						};
+					};
+					return registration;
+				}).catch(error => logger.error(error));
 			});
 		} else {
 			logger.warn('Service workers not supported on your current browser! Please use a modern browser to take advantage of offline capabitilies');
@@ -279,11 +289,11 @@ const addPeriodicBackgroundSync = async () => {
 	const status = await navigator.permissions.query({
 		name: 'periodic-background-sync'
 	});
-	
+
 	if (status.state === 'granted') {
-	
+
 		const registration = await navigator.serviceWorker.ready;
-	
+
 		if ('periodicSync' in registration) {
 			const tags = await registration.periodicSync.getTags();
 			// Only update content if sync isn't set up.
@@ -292,7 +302,7 @@ const addPeriodicBackgroundSync = async () => {
 			}
 			try {
 				await registration.periodicSync.register({
-					tag: 'content-sync',				// An interval of one day.
+					tag: 'content-sync', // An interval of one day.
 					minInterval: 24 * 60 * 60 * 1000,
 					powerState: 'avoid-draining',
 					networkState: 'avoid-cellular'
@@ -307,16 +317,16 @@ const addPeriodicBackgroundSync = async () => {
 	} else {
 		// Permision for periodic background sync has not been granted
 	}
-	
+
 };
 
 const addMessageListening = () => {
 	navigator.serviceWorker.onmessage = event => {
 		const command = event.data;
-	
+
 		logger.log('Message received', command);
-		
-		switch(command.type) {
+
+		switch (command.type) {
 			case clientMessage.APP_UPDATE: {
 				const message = JSON.parse(command);
 				logger.log('Application update message', message);
@@ -345,14 +355,13 @@ export const addToCache = async (cache, urls) => {
 const watchOnlineStatus = () => {
 	function isOnline() {
 		const connectionStatus = document.getElementById('connectionStatus');
-	
 		if (navigator.onLine) {
 			connectionStatus.innerHTML = 'You are currently online!';
 		} else {
 			connectionStatus.innerHTML = 'You are currently offline. Any requests made will be queued and synced as soon as you are connected again.';
 		}
 	}
-	
+
 	window.addEventListener('online', isOnline);
 	window.addEventListener('offline', isOnline);
 };

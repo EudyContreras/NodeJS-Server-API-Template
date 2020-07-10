@@ -4,6 +4,7 @@
 const path = require('path');
 const webpack = require('webpack');
 const loaders = require('../loaders');
+const packageJson = require('../../package.json');
 const EnvDefiner = require('../sections/envdefiner');
 const CopyPlugin = require('copy-webpack-plugin');
 const WorkboxPlugin = require('workbox-webpack-plugin');
@@ -105,7 +106,7 @@ const plugins = [
 		cwd: process.cwd()
 	}),
 	new DuplicatePackageCheckerPlugin(),
-	new BundleAnalyzerPlugin({ token: process.env.BUNDLE_ANALYZER_TOKEN }),
+	//new BundleAnalyzerPlugin({ token: process.env.BUNDLE_ANALYZER_TOKEN }),
 	new CleanWebpackPlugin({ cleanStaleWebpackAssets: isProduction }),
 	new CopyPlugin(resources),
 	new HtmlWebpackPlugin({
@@ -114,7 +115,7 @@ const plugins = [
 		filename: 'offline.html',
 		minify: true
 	}),
-	new webpack.DefinePlugin(EnvDefiner())
+	new webpack.DefinePlugin(EnvDefiner(packageJson.version))
 ];
 
 if (usesCSR) {
@@ -171,10 +172,12 @@ if (isProduction) {
 }
 
 plugins.push(new WorkboxPlugin.InjectManifest({
+	maximumFileSizeToCacheInBytes: 5000000,
 	swSrc: path.join(process.cwd(), `${sourceLocation}/workers/serviceWorker.${precompile ? 'js' : 'ts'}`),
-	swDest: `../../build/public/service-worker.js`,
+	swDest: `${publicPath}/service-worker.js`,
 	compileSrc: true,
-	exclude: [/\.(DS_Store)$/, /manifest-assets.*\.json$/, /loadable-stats.*\.json$/]
+	exclude: [/\.(DS_Store)$/, /manifest-assets.*\.json$/, /service-worker.*\.js$/,/loadable-stats.*\.json$/],
+	webpackCompilationPlugins: []
 }));
 
 module.exports = {

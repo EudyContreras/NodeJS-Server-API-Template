@@ -10,7 +10,7 @@ import { appendWhen, join } from '../../../appliers/style.applier';
 import { getNavigationBar } from '../../../selectors/navbar.selector';
 import { showLoader, hideLoader } from '../../../actions/common/loader.action';
 import { DispatchProps, Dispatchers } from '../../../actions/common/navigation.action';
-import constants from '../../../../workers/constants';
+import { events, messages } from '../../../../workers/constants';
 
 interface StateProps {
 	anchored: boolean;
@@ -131,8 +131,6 @@ class Navbar extends React.Component<Props, State> {
 	};
 
 	private handleLinkClick = (tab: any): void => {
-		const { events, messages } = constants;
-
 		this.manageLoader(tab);
 
 		if (tab == null) {

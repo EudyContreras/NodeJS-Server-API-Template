@@ -6,10 +6,36 @@ export interface WorkerMessage {
     cacheName?: string;
     payload?: any;
 }
+
 export interface ClientMessage {
-	type: string;
-	meta?: string;
-	payload?: any;
+    type: string;
+    meta?: string;
+    payload?: any;
+}
+export interface CacheQuotaOptions {
+	clearOnError: boolean;
+	maxAgeSeconds: number;
+	maxEntries: number;
+};
+
+export interface CacheConditionTargets {
+    request: Request;
+    response: Response;
+    url: URL;
+}
+
+export interface CachePredicate {
+    cacheCondition?: (targets: CacheConditionTargets) => boolean;
+    acceptedStatus?: number[];
+    crossOrigin?: boolean;
+}
+
+export interface CacheStragedy {
+	event: any;
+	request: Request;
+    cacheName: string;
+    quotaOptions?: CacheQuotaOptions;
+	cachePredicate?: CachePredicate;
 }
 
 export const filetypePatterns = {
@@ -33,7 +59,20 @@ export const filetypeCache = (url, cacheKeys): string => {
 	return cacheKeys.STATIC_CACHE;
 };
 
+export const inRange = (value: number, min: number, max: number): boolean => value >= min && value < max;
+
+export const inRangeInclusive = (value: number, min: number, max: number): boolean => value >= min && value <= max;
+
 export const addDelay = (ms: number) => (): any => new Promise(resolve => setTimeout(() => resolve(), ms));
+
+export const isNullOrEmpty = (path): boolean => !path || path === '' || path == undefined;
+
+export const handleExpiration = (quotaOptions: CacheQuotaOptions) => {
+	const expires = new Date();
+	expires.setSeconds(
+		expires.getSeconds() + quotaOptions.maxAgeSeconds
+	);
+};
 
 export const supportsWebp = async (): Promise<boolean> => {
 	if (!self.createImageBitmap) return false;
@@ -44,7 +83,25 @@ export const supportsWebp = async (): Promise<boolean> => {
 	return createImageBitmap(blob).then(() => true, () => false);
 };
 
-const workerLogger = {
+export function timeoutPromise<T>(ms: number, promise: Promise<T>): Promise<T> {
+	return new Promise((resolve, reject) => {
+		const timeoutId = setTimeout(() => {
+			reject(new Error('promise timeout'));
+		}, ms);
+		promise.then(
+			(res) => {
+				clearTimeout(timeoutId);
+				resolve(res);
+			},
+			(err) => {
+				clearTimeout(timeoutId);
+				reject(err);
+			}
+		);
+	});
+}
+
+export const logger = {
 	log: (...message: any): void => {
 		const css = 'background: #00b6ffbd; padding: 2px; border-radius: 4px; color: white; font-weight: 600;';
 		console.log('%c ServiceWorker ', css, ...message);
@@ -53,10 +110,14 @@ const workerLogger = {
 		const css = 'background: #ffbf00bd; padding: 2px; border-radius: 4px; color: white; font-weight: 600;';
 		console.log('%c ServiceWorker ', css, ...message);
 	},
+	info: (...message: any): void => {
+		const css = 'background: #3aa178; padding: 2px; border-radius: 4px; color: white; font-weight: 600;';
+		console.log('%c ServiceWorker ', css, ...message);
+	},
 	error: (...message: any): void => {
 		const css = 'background: #ff0038bd; padding: 2px; border-radius: 4px; color: white; font-weight: 600;';
 		console.log('%c ServiceWorker ', css, ...message);
 	}
 };
 
-export const worker = workerLogger;
+export const worker = logger;
