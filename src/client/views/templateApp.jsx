@@ -9,6 +9,7 @@ export default (props) => {
 
 const DefaultLayout = (props) => {
 	const options = {
+		context: props.context,
 		enableSW: props.enableSW,
 		watchConnection: props.watchConnection,
 		clientSideRendered: props.clientSideRendered
@@ -92,15 +93,15 @@ const DefaultLayout = (props) => {
 			<link rel="manifest" href="/manifest.json" />
 
 			<style id="serverCSS" dangerouslySetInnerHTML={{ __html: props.css.cssText }}/>
+			<noscript>You need to enable JavaScript to fully be able to use this this web-app.</noscript>
 		</head>
 		<body >
-			<noscript>You need to enable JavaScript to fully be able to use this this web-app.</noscript>
 			<section id="content">{props.content}</section>
 			<script dangerouslySetInnerHTML={{
 				__html:
 					`
 			window.__RENDER_OPTIONS__=${JSON.stringify(options).replace(/</g, '\\u003c')};
-			window.__REDUX_STATE__= ${JSON.stringify(props.state).replace(/</g, '\\u003c')};
+			window.__PRELOADED_STATE__= ${JSON.stringify(props.state).replace(/</g, '\\u003c')};
 
 			window.addEventListener("load", () => {
 				document.getElementById("robotoFont")?.removeAttribute("disabled");
@@ -125,6 +126,7 @@ DefaultLayout.propTypes = {
 	styles: PropType.arrayOf(PropType.any),
 	enableSW: PropType.bool,
 	content: PropType.any,
+	context: PropType.any,
 	state: PropType.any,
 	html: PropType.any,
 	css: PropType.any

@@ -19,7 +19,6 @@ class IndexViewRenderer extends ViewRenderer {
 
 	private routing = '/';
 	private router: Router;
-	private context = {};
 	private store: Store<any, IAction>;
 	private state: any;
 	private css: any;
@@ -46,7 +45,6 @@ class IndexViewRenderer extends ViewRenderer {
 	};
 
 	private renderRoutes = async (req: Request, res: Response): Promise<void> => {
-
 		if (process.env.CSR == 'true') {
 			res.status(200).send();
 		} else {
@@ -66,7 +64,8 @@ class IndexViewRenderer extends ViewRenderer {
 	private renderApplication = async (req: Request, res: Response, cssInjector: Function): Promise<void> => {
 		const extractor = new ChunkExtractor({ statsFile: statsFile, entrypoints: ['app'] });
 
-		const content = extractor.collectChunks(application(req.url, this.store, this.context, cssInjector));
+		const context = {};
+		const content = extractor.collectChunks(application(req.url, this.store, context, cssInjector));
 
 		const entryPoints = extractor.getMainAssets();
 
@@ -79,6 +78,7 @@ class IndexViewRenderer extends ViewRenderer {
 			state: this.state,
 			styles: styles,
 			scripts: scripts,
+			context: context,
 			enableSW: process.env.USE_SW == 'true',
 			clientSideRendered: process.env.CSR == 'true',
 			watchConnection: true,
@@ -93,13 +93,14 @@ class IndexViewRenderer extends ViewRenderer {
 	};
 
 	private renderShell = async (req: Request, res: Response, cssInjector: Function): Promise<void> => {
-	
-		const content = application(req.url, this.store, this.context, cssInjector);
+		const context = {};
+		const content = application(req.url, this.store, context, cssInjector);
 
 		const props = {
 			css: this.css,
 			html: config.html,
 			enableSW: process.env.USE_SW == 'true',
+			context: context,
 			content: content,
 			cache: true
 		};

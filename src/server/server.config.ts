@@ -6,7 +6,7 @@ const config = Object.freeze({
 		FILE_DIRECTORY: '../build'
 	},
 	enviroment: {
-		PRODUCTION: process.env.NODE_ENV === 'true'
+		PRODUCTION: process.env.NODE_ENV === 'production'
 	},
 	presentation: {
 		path: 'client',

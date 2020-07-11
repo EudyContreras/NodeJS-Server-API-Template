@@ -42,9 +42,11 @@ class AdminPage extends React.Component<Props, any> {
 			classes.push(style.routePageloaded);
 		}
 		
-		return <section className={join(...classes)}>
-			<h2>Adming Page</h2>
-		</section>;
+		return (
+			<section className={join(...classes)}>
+				<h2>Adming Page</h2>
+			</section>
+		);
 	};
 }
 

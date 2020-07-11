@@ -62,7 +62,6 @@ module.exports = {
 		publicPath: publicPath,
 		contentBase: usesCSR ? path.join(__dirname, publicPath) : publicPath,
 		watchContentBase: false,
-		writeToDisk: !usesCSR,
 		historyApiFallback: true,
 		open: {
 			app: ['Google Chrome', '--incognito']

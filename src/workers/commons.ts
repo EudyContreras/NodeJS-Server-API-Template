@@ -67,11 +67,16 @@ export const addDelay = (ms: number) => (): any => new Promise(resolve => setTim
 
 export const isNullOrEmpty = (path): boolean => !path || path === '' || path == undefined;
 
-export const handleExpiration = (quotaOptions: CacheQuotaOptions) => {
+export const handleExpiration = (response: Response, quotaOptions: CacheQuotaOptions) => {
 	const expires = new Date();
 	expires.setSeconds(
 		expires.getSeconds() + quotaOptions.maxAgeSeconds
 	);
+	const cachedResponseFields = {
+		status: response.status,
+		statusText: response.statusText,
+		headers: { 'SW-Cache-Expires': expires.toUTCString() }
+	};
 };
 
 export const supportsWebp = async (): Promise<boolean> => {

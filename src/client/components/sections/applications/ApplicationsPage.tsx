@@ -42,9 +42,11 @@ class ApplicationPage extends React.Component<Props, any> {
 			classes.push(style.routePageloaded);
 		}
 		
-		return <section className={join(...classes)}>
-			<h2>Application Page</h2>
-		</section>;
+		return (
+			<section className={join(...classes)}>
+				<h2>Application Page</h2>
+			</section>
+		);
 	};
 }
 

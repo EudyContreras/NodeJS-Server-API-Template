@@ -11,7 +11,6 @@ const WorkboxPlugin = require('workbox-webpack-plugin');
 const ManifestPlugin = require('webpack-manifest-plugin');
 const CompressPlugin = require('compression-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const CircularDependencyPlugin = require('circular-dependency-plugin');
 const LoadablePlugin = require('@loadable/webpack-plugin');
 const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const BundleAnalyzerPlugin = require('@bundle-analyzer/webpack-plugin');
@@ -97,13 +96,6 @@ const plugins = [
 				}
 			};
 		}
-	}),
-	new CircularDependencyPlugin({
-		exclude: /a\.js|node_modules/,
-		include: /src/,
-		failOnError: true,
-		allowAsyncCycles: false,
-		cwd: process.cwd()
 	}),
 	new DuplicatePackageCheckerPlugin(),
 	//new BundleAnalyzerPlugin({ token: process.env.BUNDLE_ANALYZER_TOKEN }),
