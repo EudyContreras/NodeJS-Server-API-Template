@@ -5,15 +5,20 @@
 <br>
 A blazing fast and production ready boilerplate backed by the MERN stack architecture. It features a fully installable Isomorphi PWA that uses redux for state management. The boilerplate is highly customizable and it allows you to choose the render method of choice. (SSR, CSR) among many other things.
 Built to provide the best possible developer experience with scaleability, performance and best practices in mind.
+
 <br>
+<br>
+
 <div align="center">
 <img alt="License MIT" src="https://img.shields.io/github/license/EudyContreras/NodeJS-Server-API-Template?color=blue&logo=github&style=for-the-badge">
 <img alt="GitHub repository size" src="https://img.shields.io/github/repo-size/EudyContreras/NodeJS-Server-API-Template?style=for-the-badge&logo=github">
 <img alt="GitHub language count" src="https://img.shields.io/github/languages/count/EudyContreras/NodeJS-Server-API-Template?style=for-the-badge&logo=github">
 <img alt="GitHub top language" src="https://img.shields.io/github/languages/top/EudyContreras/NodeJS-Server-API-Template?style=for-the-badge&logo=github">
+<img alt="Package Version" src="https://img.shields.io/github/package-json/v/EudyContreras/NodeJS-Server-API-Template?logo=github&style=for-the-badge">
 </div>
+<br>
 <img src="./.media/demo_light.gif">.
-
+<br>
 <div align="center">
 <img alt="CodeFactor Grade" src="https://img.shields.io/codefactor/grade/github/EudyContreras/NodeJS-Server-API-Template/master?style=for-the-badge&logo=codefactor">
 <img alt="David" src="https://img.shields.io/david/EudyContreras/NodeJS-Server-API-Template?style=for-the-badge&color=gree&logo=Dependabot">
@@ -21,7 +26,7 @@ Built to provide the best possible developer experience with scaleability, perfo
 <img alt="GitHub contributors" src="https://img.shields.io/github/contributors/EudyContreras/NodeJS-Server-API-Template?style=for-the-badge&color=green&logo=github">
 </div>
 <br>
-
+<br>
 <div align="center">
   <sub>Created and maintained with love ❤️ by your friendly neighborhood coder <a href="https://github.com/EudyContreras">Eudy Contreras</a>.</sub>
 </div>
