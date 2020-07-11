@@ -6,8 +6,15 @@
 A blazing fast and production ready boilerplate backed by the MERN stack architecture. It features a fully installable Isomorphi PWA that uses redux for state management. The boilerplate is highly customizable and it allows you to choose the render method of choice. (SSR, CSR) among many other things.
 Built to provide the best possible developer experience with scaleability, performance and best practices in mind.
 
-<br>
 
+<img src="./.media/demo_light.gif">.
+
+
+<div align="center">
+  <sub>Created and maintained with love ❤️ by your friendly neighborhood coder <a href="https://github.com/EudyContreras">Eudy Contreras</a>.</sub>
+</div>
+
+<br>
 <div align="center">
 <img alt="License MIT" src="https://img.shields.io/github/license/EudyContreras/NodeJS-Server-API-Template?color=blue&logo=github&style=for-the-badge">
 <img alt="CodeFactor Grade" src="https://img.shields.io/codefactor/grade/github/EudyContreras/NodeJS-Server-API-Template/master?style=for-the-badge&logo=codefactor">
@@ -20,11 +27,6 @@ Built to provide the best possible developer experience with scaleability, perfo
 </div>
 
 <br>
-<img src="./.media/demo_light.gif">.
-
-<div align="center">
-  <sub>Created and maintained with love ❤️ by your friendly neighborhood coder <a href="https://github.com/EudyContreras">Eudy Contreras</a>.</sub>
-</div>
 
 ## Technologies
 
