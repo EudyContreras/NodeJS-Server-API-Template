@@ -59,7 +59,7 @@ Fast production ready boilerplate backed by the MERN stack. Built to provide the
   <dt>Next generation JavaScript</dt>
   <dd>Write next gen type safe JS using features such as Spread and Rest Operator, Imports and Exports, Arrow functions, JSX/TSX syntax, template strings, object destructuring and more.</dd>
 
-  <dt>Next generation CSS</dt>
+  <dt>Modularized CSS</dt>
   <dd>Write cheap, modular and composable CSS using SASS or SCSS. Eliminates style clashes with unique generated class names. Ship only the critical CSS for the best user experience and performance.</dd>
 
   <dt>React-Router</dt>
@@ -68,9 +68,6 @@ Fast production ready boilerplate backed by the MERN stack. Built to provide the
   <dt>Fast Refresh and Instant Feedback</dt>
   <dd>Enjoy the best DX (Developer eXperience) with the power of HMR and Fast Refresh. All the page content is updated real-time as you make changes. Both the server and client side of the application will hot reload with every change.</dd>
   
-  <dt>Internationalization support</dt>
-  <dd>Scalable apps need to support multiple languages, easily add and support multiple languages with `react-intl`.</dd>
-
   <dt>Code Splitting</dt>
   <dd>Allows component based code splitting using loadable components for a consistently fast application that dynamically loads the chunks needed at runtime. 
   
