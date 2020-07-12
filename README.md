@@ -15,7 +15,7 @@ Fast production ready boilerplate backed by the MERN stack. Built to provide the
 <img alt="Package Version" src="https://img.shields.io/github/package-json/v/EudyContreras/NodeJS-Server-API-Template?logo=github&style=for-the-badge">
 </div>
 <br>
-<img src="./.media/demo_light.gif">.
+<img src="./.media/lighthouse.gif">.
 <br>
 <div align="center">
 <img alt="CodeFactor Grade" src="https://img.shields.io/codefactor/grade/github/EudyContreras/NodeJS-Server-API-Template/master?style=for-the-badge&logo=codefactor">
