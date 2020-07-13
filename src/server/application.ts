@@ -108,8 +108,6 @@ export default class Application {
 		}
 		if (!config.enviroment.PRODUCTION) {
 			this.app.use(logger('dev'));
-		} else {
-			this.app.use(logger('combined'));
 		}
 		if (config.ssl.ACTIVE) {
 			this.app.enable('trust proxy');

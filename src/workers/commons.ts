@@ -1,4 +1,6 @@
 
+import { expiration } from './constants';
+
 export const TIMEOUT = 1000;
 
 export interface WorkerMessage {
@@ -26,7 +28,8 @@ export interface CacheConditionTargets {
 
 export interface CachePredicate {
     cacheCondition?: (targets: CacheConditionTargets) => boolean;
-    acceptedStatus?: number[];
+	acceptedStatus?: number[];
+	allowOpaque?: boolean;
     crossOrigin?: boolean;
 }
 
@@ -36,6 +39,16 @@ export interface CacheStragedy {
     cacheName: string;
     quotaOptions?: CacheQuotaOptions;
 	cachePredicate?: CachePredicate;
+}
+
+export interface ResponseTuple {
+	cacheableResponse: Response;
+	effectiveResponse: Response;
+}
+
+export interface WebpSupportCallback<T> {
+	onHasSupport: () => Promise<T>;
+	onNoSupport: () => Promise<T>;
 }
 
 export const filetypePatterns = {
@@ -67,25 +80,83 @@ export const addDelay = (ms: number) => (): any => new Promise(resolve => setTim
 
 export const isNullOrEmpty = (path): boolean => !path || path === '' || path == undefined;
 
-export const handleExpiration = (response: Response, quotaOptions: CacheQuotaOptions) => {
-	const expires = new Date();
-	expires.setSeconds(
-		expires.getSeconds() + quotaOptions.maxAgeSeconds
-	);
-	const cachedResponseFields = {
-		status: response.status,
-		statusText: response.statusText,
-		headers: { 'SW-Cache-Expires': expires.toUTCString() }
-	};
+export const checkExpiration = (response: Response | undefined, quotaOptions: CacheQuotaOptions | undefined): Response | undefined => {
+	if (response && quotaOptions) {
+		const expiryData = response.headers.get(expiration.EXPIRATION_HEADER_KEY);
+
+		if (!expiryData) return response;
+		
+		const expirationDate = expiryData && Date.parse(expiryData);
+		const now = Date.now();
+
+		if (expirationDate && expirationDate > now) {
+			return response;
+		}
+	}	
+	return response;
 };
 
-export const supportsWebp = async (): Promise<boolean> => {
+export const attachExpiration = (response: Response, quotaOptions: CacheQuotaOptions | undefined): Promise<ResponseTuple> => {
+	if (response && quotaOptions) {
+		const expires = new Date();
+		expires.setSeconds(expires.getSeconds() + quotaOptions.maxAgeSeconds);
+	
+		const cachedResponseFields = {
+			status: response.status,
+			statusText: response.statusText,
+			headers: {
+				[expiration.EXPIRATION_HEADER_KEY] : expires.toUTCString()
+			}
+		};
+		response.headers.forEach((value, key) => {
+			cachedResponseFields.headers[key] = value;
+		});
+
+		const returnedResponse = response.clone();
+		return response.blob().then((body) => {
+			logger.warn('Expiration attached to: ', response);
+			return { 
+				effectiveResponse: returnedResponse,
+				cacheableResponse: new Response(body, cachedResponseFields)
+			};
+		}).catch(e => {
+			logger.error(e);
+			return { 
+				effectiveResponse: returnedResponse,
+				cacheableResponse: returnedResponse.clone()
+			}; 
+		});
+	}
+	return Promise.resolve({ effectiveResponse: response, cacheableResponse: response.clone() } );
+};
+
+/**
+ * Remove entries that are used the least
+ * @param cacheName 
+ * @param quotaOptions 
+ * @param newEntryCount 
+ */
+export const replaceStaledEntries = (cacheName: string, quotaOptions: CacheQuotaOptions, newEntryCount: number) => {
+
+};
+
+export const purgeCacheOnQuotaError = (cacheName: string) => {
+
+};
+
+export const handleWebp = async <T> (supportCallbacks: WebpSupportCallback<T>): Promise<any> => {
 	if (!self.createImageBitmap) return false;
 
 	const webpData = 'data:image/webp;base64,UklGRh4AAABXRUJQVlA4TBEAAAAvAAAAAAfQ//73v/+BiOh/AAA=';
 	const blob = await fetch(webpData).then(r => r.blob());
 
-	return createImageBitmap(blob).then(() => true, () => false);
+	return createImageBitmap(blob).then(() => true, () => false).then(hasSupport =>{
+		if (hasSupport) {
+			return supportCallbacks.onHasSupport();
+		} else {
+			return supportCallbacks.onNoSupport();
+		}
+	});
 };
 
 export function timeoutPromise<T>(ms: number, promise: Promise<T>): Promise<T> {
@@ -105,6 +176,22 @@ export function timeoutPromise<T>(ms: number, promise: Promise<T>): Promise<T> {
 		);
 	});
 }
+
+export const storeDataAndUpdateUI = async (): Promise<void> => {
+	if ('storage' in navigator && 'estimate' in navigator.storage) {
+		const { usage, quota } = await navigator.storage.estimate();
+		
+		if (usage && quota){
+			const percentUsed = Math.round(usage / quota * 100);
+			const usageInMib = Math.round(usage / (1024 * 1024));
+			const quotaInMib = Math.round(quota / (1024 * 1024));
+
+			const details = `${usageInMib} out of ${quotaInMib} MiB used (${percentUsed}%)`;
+
+			console.log(details);
+		}
+	}
+};
 
 export const logger = {
 	log: (...message: any): void => {

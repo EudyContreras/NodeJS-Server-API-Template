@@ -3,11 +3,16 @@ const baseUrl = '/?source=pwa';
 const appShellPage = '/?appshell=true';
 const offlineFallbackPage = '/offline.html';
 
-const clientMessages = {
+export const expiration = {
+	EXPIRATION_HEADER_KEY: 'sw-cache-expiration-date',
+	FREQUENCY_HEADER_KEY: 'sw-cache-use-frequency'
+};
+
+export const clientMessages = {
 	UPDATE_AVAILABLE: 'update_available'
 };
 
-const urlsToCache = [
+export const urlsToCache = [
 	'',
 	'/',
 	'https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js',
@@ -15,7 +20,7 @@ const urlsToCache = [
 	'https://fonts.gstatic.com/s/materialicons/v48/flUhRq6tzZclQEJ-Vdg-IuiaDsNcIhQ8tQ.woff2'
 ];
 
-interface CacheNames {
+export interface CacheNames {
 	DATA_CACHE: string;
 	IMAGE_CACHE: string;
 	MEDIA_CACHE: string;
@@ -26,7 +31,7 @@ interface CacheNames {
 	GOOGLE_FONTS_WEB_CACHE: string;
 };
 
-const cacheNames = (version?: string | undefined): CacheNames =>({
+export const cacheNames = (version?: string | undefined): CacheNames =>({
 	DATA_CACHE: `eudcon-universal-data-cache-${version || ''}`,
 	IMAGE_CACHE: `eudcon-universal-image-cache-${version || ''}`,
 	MEDIA_CACHE: `eudcon-universal-media-cache-${version || ''}`,
@@ -37,20 +42,20 @@ const cacheNames = (version?: string | undefined): CacheNames =>({
 	GOOGLE_FONTS_WEB_CACHE: `educon-universal-google-fonts-web-${version || ''}`
 });
 
-const syncEvents = {
+export const syncEvents = {
 	INITIAL_SYNC: 'initial-sync',
 	UPDATE_SYNC: 'update-sync',
 	CONTENT_SYNC: 'content-sync'
 };
 
-const contentTypes = {
+export const contentTypes = {
 	HTML: 'text/html',
 	SVG: 'image/svg+xml',
 	IMAGE: 'image/png',
 	FONT: ''
 };
 
-const updateNotification = {
+export const updateNotification = {
 	title: 'Template engine',
 	options: {
 		requireInteraction: true,
@@ -83,7 +88,7 @@ export const events = {
 	PUSH: 'push'
 };
 
-const stragedies = Object.freeze({
+export const stragedies = Object.freeze({
 	CACHE_ONLY: 'cache_only_stragedy', // If there is available cache only serve the cache
 	CACHE_FIRST: 'cache_first_stragedy', // Ideal for resources that do not change often
 	CACHE_THEN_PRELOAD: 'cache_then_preload_stragedy', // Ideal for resources that do not change often
@@ -94,19 +99,19 @@ const stragedies = Object.freeze({
 	NON_FOUND: 'no_found_stragedy' // When no suitable stragedy is found for the request
 });
 
-const sideEffects = {
+export const sideEffects = {
 	PUT: 'PUT',
 	POST: 'POST',
 	DELETE: 'DELETE',
 	PATCH: 'PATCH'
 };
 
-const httpMethods = {
+export const httpMethods = {
 	...sideEffects,
 	GET: 'GET'
 };
 
-const push = {
+export const push = {
 	NEW_UPDATE: 'new-update'
 };
 
@@ -117,33 +122,43 @@ export const messages = {
 	READ_OFFLINE: 'read-offline',
 	SKIP_WAITING: 'skip-awaitng',
 	ADD_TO_CACHE: 'add-to-cache',
+	PURGE_EXPIRED_CACHE: 'purgo-expired-cache',
 	WB_BROADCAST_UPDATE: 'workbox-broadcast-update',
 	REMOVE_FROM_CACHE: 'remove-from-cache'
 };
 
-const cachableTypes = {
+export const cachableTypes = {
 	DOCUMENT: 'document',
-	IMAGES: 'images',
-	SCRIPTS: 'script',
-	STYLES: 'styles',
+	WORKER: 'worker',
+	OBJECT: 'object',
+	IMAGE: 'image',
+	SCRIPT: 'script',
+	STYLE: 'style',
 	AUDIO: 'audio',
 	VIDEO: 'video',
 	FONT: 'font'
 };
 
-const commonOrigins = {
+export const responseType = {
+	CORS: 'cors',
+	BASIC: 'basice',
+	ERROR: 'error',
+	OPAQUE: 'opaque'
+};
+
+export const commonOrigins = {
 	STYLESHEET_FONTS: 'https://fonts.googleapis.com',
 	STATIC_WEB_FONTS: 'https://fonts.gstatic.com'
 };
 
-const fallbacks = {
+export const fallbacks = {
 	FALLBACK_HTML_URL: offlineFallbackPage,
 	FALLBACK_ERROR_URL: '',
 	FALLBACK_IMAGE_URL: '',
 	FALLBACK_FONT_URL: ''
 };
 
-const constants = Object.freeze({
+export const constants = Object.freeze({
 	push: push,
 	baseUrl: baseUrl,
 	fallbacks: fallbacks,
@@ -162,23 +177,3 @@ const constants = Object.freeze({
 	offlineFallbackPage: offlineFallbackPage,
 	updateNotification: updateNotification
 });
-
-export {
-	push,
-	baseUrl,
-	urlsToCache,
-	stragedies,
-	fallbacks,
-	cacheNames,
-	syncEvents,
-	httpMethods,
-	sideEffects,
-	contentTypes,
-	cachableTypes,
-	commonOrigins,
-	appShellPage,
-	clientMessages,
-	updateNotification,
-	offlineFallbackPage,
-	constants
-};

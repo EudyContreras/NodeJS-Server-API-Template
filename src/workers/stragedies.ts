@@ -1,6 +1,6 @@
 
-import { cachableTypes, cacheNames, fallbacks } from './constants';
-import { logger, inRange, timeoutPromise, CacheStragedy, CachePredicate } from './commons';
+import { cachableTypes, cacheNames, fallbacks, responseType } from './constants';
+import { logger, inRange, timeoutPromise, CacheStragedy, CachePredicate, checkExpiration, attachExpiration } from './commons';
 
 const TIMEOUT = 10000;
 
@@ -8,26 +8,30 @@ const cacheKeys = cacheNames();
 
 const defaultPredicate: CachePredicate = {
 	crossOrigin: true,
+	allowOpaque: false,
 	cacheCondition: ({ response }) => response && inRange(response.status, 200, 300) || false
 };
 
 const isValidResponse = (request: Request, response: Response, cachePredicate?: CachePredicate): boolean => {
-	if (!response || !response.ok ) return false;
 
-	const { acceptedStatus, crossOrigin, cacheCondition } = cachePredicate || defaultPredicate;
-	const valid = acceptedStatus ? matchesCode(response, acceptedStatus) : cacheCondition && cacheCondition({ request, response, url: new URL(request.url) });
+	if (!response || (!response.ok && response.type !== responseType.OPAQUE)) return false;
+
+	const { acceptedStatus, crossOrigin, allowOpaque, cacheCondition } = cachePredicate || defaultPredicate;
+	const isValid = acceptedStatus ? acceptedStatus.includes(response.status) : cacheCondition && cacheCondition({ request, response, url: new URL(request.url) });
 	
-	if(!valid || (!crossOrigin && response.type !== 'basic')) {
-		return false;
+	switch (response.type) {
+		case responseType.CORS: {
+			return (crossOrigin && isValid) ? true : false;
+		}
+		case responseType.OPAQUE: {
+			return (allowOpaque && isValid) ? true : false;
+		}
+		case responseType.ERROR: {
+			return false;
+		}
 	}
-	return true;
-};
-
-const matchesCode = (response: Response | undefined, statusCodes?: number[] | undefined): boolean => {
-	if (response && statusCodes && statusCodes.length > 0) {
-		return statusCodes.indexOf(response.status) != -1;
-	}
-	return true;
+	
+	return isValid ? true : false;
 };
 
 const errorResponse = (): Response => {
@@ -51,59 +55,56 @@ export const fromNetwork = async (request: Request, timeout: number = TIMEOUT): 
 	return timeoutPromise(timeout, fetch(request));
 };
 
-export const staleWhileRevalidate = async (stragedy: CacheStragedy): Promise<void> => {
+export const staleWhileRevalidate = (stragedy: CacheStragedy): Promise<any> => {
 	const { event, request, cacheName, cachePredicate } = stragedy;
-	return event.respondWith(
-		caches.open(cacheName).then(cache => {
-			return cache.match(request).then(response => {
-				const fetchPromise = fromNetwork(request).then(response => {
-					if (isValidResponse(request, response, cachePredicate)) {
-						cache.put(request, response.clone());
+	return caches.open(cacheName).then(cache => {
+		return cache.match(request).then(response => {
+			const fetchPromise = fromNetwork(request).then(liveResponse => {
+				if (isValidResponse(request, liveResponse, cachePredicate )) {
+					cache.put(request, liveResponse.clone());
+				}
+				return liveResponse;
+			});
+			return response || fetchPromise || getFallback(request.destination);
+		}).catch(error => {
+			handleFailure(event, request, error);
+		});
+	});		
+};
+
+export const cacheFirst = (stragedy: CacheStragedy): Promise<any> => {
+	const { event, request, cacheName, cachePredicate, quotaOptions } = stragedy;
+	return caches.open(cacheName).then(cache => {
+		return cache.match(request).then(response => {
+			return checkExpiration(response, quotaOptions) || fromNetwork(request).then(response => {
+				attachExpiration(response.clone(), quotaOptions).then(responseTuple => {
+					const { effectiveResponse, cacheableResponse } = responseTuple;
+					if (isValidResponse(request, effectiveResponse, cachePredicate )) {
+						cache.put(request, cacheableResponse);
 					}
-					return response;
 				});
-				return response || fetchPromise || getFallback(request.destination);
+				return response || getFallback(request.destination);
 			}).catch(error => {
 				handleFailure(event, request, error);
 			});
-		})
-	);
+		});
+	});
 };
 
-export const cacheFirst = async (stragedy: CacheStragedy): Promise<void> => {
+export const networkFirst = (stragedy: CacheStragedy): Promise<any> => {
 	const { event, request, cacheName, cachePredicate } = stragedy;
-	return event.respondWith(
-		caches.open(cacheName).then(cache => {
-			return cache.match(request).then(response => {
-				return response || fetch(request).then(response => {
-					if (isValidResponse(request, response, cachePredicate )) {
-						event.waitUntil(cache.put(request, response.clone()));
-					}
-					return response || getFallback(request.destination);
-				}).catch(error => {
-					handleFailure(event, request, error);
-				});
-			});
-		})
-	);
-};
-
-export const networkFirst = async (stragedy: CacheStragedy): Promise<void> => {
-	const { event, request, cacheName, cachePredicate } = stragedy;
-	return event.respondWith(
-		caches.open(cacheName).then(cache => {
-			return fromNetwork(request).then(response => {
-				if (isValidResponse(request, response, cachePredicate)) {
-					event.waitUntil(cache.put(request, response.clone()));
-				}
-				return response || cache.match(request).then(response => {
-					return response || getFallback(request.destination);
-				}).catch(error => {
-					handleFailure(event, request, error);
-				});
-			});
-		})
-	);
+	const cache = caches.open(cacheName);
+	return fromNetwork(request).then(liveResponse => {
+		const response = liveResponse.clone();
+		if (isValidResponse(request, response, cachePredicate )) {
+			event.waitUntil(cache.then(cache => cache.put(request, response)));
+		}
+		return response || cache.then(cache => cache.match(request).then(response => {
+			return response || getFallback(request.destination);
+		})).catch(error => {
+			handleFailure(event, request, error);
+		});
+	});
 };
 
 const getFallback = async (destination: string): Promise<Response | undefined> => {
@@ -113,7 +114,7 @@ const getFallback = async (destination: string): Promise<Response | undefined> =
 		case cachableTypes.FONT: {
 			return await cache.match(fallbacks.FALLBACK_FONT_URL) || errorResponse();
 		}
-		case cachableTypes.IMAGES: {
+		case cachableTypes.IMAGE: {
 			return await cache.match(fallbacks.FALLBACK_IMAGE_URL) || errorResponse();
 		}
 		default:

@@ -87,7 +87,7 @@ const DefaultLayout = (props) => {
 			<link rel="apple-touch-startup-image" type="image/png" href="images/icons/touch-icon-348x348.png" defer />
 
 			<link rel="stylesheet" href="styles/material.css" media="all" id="materialIcons" async disabled />
-			<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto&display=optional" media="all" id="robotoFont" defer disabled />
+			<link rel="stylesheet" crossOrigin="anonymous" href="https://fonts.googleapis.com/css?family=Roboto&display=optional" media="all" id="robotoFont" defer disabled />
 
 			{/* <!-- Manifest.json  --> */}
 			<link rel="manifest" href="/manifest.json" />
@@ -109,8 +109,8 @@ const DefaultLayout = (props) => {
 			});			
 			`
 			}} />
-			<script async rel="preconnect" src="https://cdn.jsdelivr.net/npm/pwacompat@2.0.9/pwacompat.min.js" integrity="sha384-VcI6S+HIsE80FVM1jgbd6WDFhzKYA0PecD/LcIyMQpT4fMJdijBh0I7Iblaacawc" crossOrigin="anonymous" />
-			<script defer rel="preconnect" src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js" />
+			<script async rel="preconnect" crossOrigin="anonymous" src="https://cdn.jsdelivr.net/npm/pwacompat@2.0.9/pwacompat.min.js" integrity="sha384-VcI6S+HIsE80FVM1jgbd6WDFhzKYA0PecD/LcIyMQpT4fMJdijBh0I7Iblaacawc" />
+			<script defer rel="preconnect" crossOrigin="anonymous" src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js" />
 			<script id="__LOADABLE_REQUIRED_CHUNKS__" type='text/javascript'>[]</script>
 			{props.scripts.map((x, i) => <script async data-chunk="app" type='text/javascript' key={i} src={x.url} />)}
 		</body>
