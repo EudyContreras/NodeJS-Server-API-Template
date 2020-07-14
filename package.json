@@ -87,6 +87,7 @@
     "isomorphic-style-loader": "^5.1.0",
     "jquery": "^3.5.1",
     "jsonwebtoken": "^8.5.1",
+    "localforage": "^1.7.4",
     "mongoose": "^5.7.5",
     "morgan": "^1.10.0",
     "node-zopfli-es": "^1.0.3",

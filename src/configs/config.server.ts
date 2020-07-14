@@ -56,7 +56,7 @@ const config = Object.freeze({
 		PASS_PHRASE: process.env.PASS_PHRASE
 	},
 	host: {
-		APP_NAME: 'app name',
+		APP_NAME: 'React Template Engine',
 		BASE_URL: '',
 		PORT: process.env.PORT,
 		PORT_HTTPS: process.env.PORT_HTTPS,

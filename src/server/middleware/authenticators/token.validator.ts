@@ -1,5 +1,5 @@
 
-import config from '../../server.config';
+import config from '../../../configs/config.server';
 import webtoken from 'jsonwebtoken';
 import httpCode from '../../definitions/httpCode';
 import AuthenticationService from '../../services/authentication.service';

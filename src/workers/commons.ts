@@ -1,5 +1,5 @@
 
-import { expiration } from './constants';
+import { headers } from './constants';
 
 export const TIMEOUT = 1000;
 
@@ -41,9 +41,15 @@ export interface CacheStragedy {
 	cachePredicate?: CachePredicate;
 }
 
-export interface ResponseTuple {
+export interface AgingResponseInfo {
 	cacheableResponse: Response;
 	effectiveResponse: Response;
+	expirationDate: Date | null;
+}
+
+export interface CacheExpirationInfo {
+	response: Response | undefined;
+	expiration: number | null;
 }
 
 export interface WebpSupportCallback<T> {
@@ -80,23 +86,32 @@ export const addDelay = (ms: number) => (): any => new Promise(resolve => setTim
 
 export const isNullOrEmpty = (path): boolean => !path || path === '' || path == undefined;
 
-export const checkExpiration = (response: Response | undefined, quotaOptions: CacheQuotaOptions | undefined): Response | undefined => {
+export const checkExpiration = (response: Response | undefined, quotaOptions: CacheQuotaOptions | undefined): CacheExpirationInfo => {
 	if (response && quotaOptions) {
-		const expiryData = response.headers.get(expiration.EXPIRATION_HEADER_KEY);
+		const expiryData = response.headers.get(headers.EXPIRATION_HEADER_KEY);
 
-		if (!expiryData) return response;
+		if (!expiryData) return {
+			response: response,
+			expiration: null
+		};
 		
 		const expirationDate = expiryData && Date.parse(expiryData);
 		const now = Date.now();
 
 		if (expirationDate && expirationDate > now) {
-			return response;
+			return {
+				response: response,
+				expiration: expirationDate
+			};
 		}
 	}	
-	return response;
+	return {
+		response: response,
+		expiration: null
+	};
 };
 
-export const attachExpiration = (response: Response, quotaOptions: CacheQuotaOptions | undefined): Promise<ResponseTuple> => {
+export const attachExpiration = (response: Response, quotaOptions: CacheQuotaOptions | undefined): Promise<(AgingResponseInfo)> => {
 	if (response && quotaOptions) {
 		const expires = new Date();
 		expires.setSeconds(expires.getSeconds() + quotaOptions.maxAgeSeconds);
@@ -105,7 +120,7 @@ export const attachExpiration = (response: Response, quotaOptions: CacheQuotaOpt
 			status: response.status,
 			statusText: response.statusText,
 			headers: {
-				[expiration.EXPIRATION_HEADER_KEY] : expires.toUTCString()
+				[headers.EXPIRATION_HEADER_KEY] : expires.toUTCString()
 			}
 		};
 		response.headers.forEach((value, key) => {
@@ -116,18 +131,20 @@ export const attachExpiration = (response: Response, quotaOptions: CacheQuotaOpt
 		return response.blob().then((body) => {
 			logger.warn('Expiration attached to: ', response);
 			return { 
+				expirationDate: expires,
 				effectiveResponse: returnedResponse,
 				cacheableResponse: new Response(body, cachedResponseFields)
 			};
 		}).catch(e => {
 			logger.error(e);
 			return { 
+				expirationDate: null,
 				effectiveResponse: returnedResponse,
 				cacheableResponse: returnedResponse.clone()
 			}; 
 		});
 	}
-	return Promise.resolve({ effectiveResponse: response, cacheableResponse: response.clone() } );
+	return Promise.resolve({ effectiveResponse: response, cacheableResponse: response.clone(), expirationDate: null } );
 };
 
 /**
@@ -177,6 +194,23 @@ export function timeoutPromise<T>(ms: number, promise: Promise<T>): Promise<T> {
 	});
 }
 
+export function timeoutRequest(request: Request): Promise<Response|null> {
+	const controller = new AbortController();
+	const signal = controller.signal;
+
+	const timeoutId = setTimeout(() => controller.abort(), 5000);
+
+	return fetch(request, { signal }).then(response => {
+		clearTimeout(timeoutId);
+		return response;
+	}).catch(error => {
+		if (error.code !== DOMException.ABORT_ERR) {
+			logger.error('An error occured!', error);
+		}
+		return null;
+	});
+}
+
 export const storeDataAndUpdateUI = async (): Promise<void> => {
 	if ('storage' in navigator && 'estimate' in navigator.storage) {
 		const { usage, quota } = await navigator.storage.estimate();
@@ -188,7 +222,7 @@ export const storeDataAndUpdateUI = async (): Promise<void> => {
 
 			const details = `${usageInMib} out of ${quotaInMib} MiB used (${percentUsed}%)`;
 
-			console.log(details);
+			logger.log(details);
 		}
 	}
 };

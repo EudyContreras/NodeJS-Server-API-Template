@@ -1,6 +1,6 @@
 
 
-import config from '../server.config';
+import config from '../../configs/config.server';
 import webtoken from 'jsonwebtoken';
 import UserService from './user.service';
 import PasswordRepository from '../repositories/password.repository';

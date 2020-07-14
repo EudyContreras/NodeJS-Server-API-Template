@@ -3,7 +3,13 @@ const baseUrl = '/?source=pwa';
 const appShellPage = '/?appshell=true';
 const offlineFallbackPage = '/offline.html';
 
-export const expiration = {
+export const storage = {
+	NAME: 'Worker data storage',
+	DESCRIPTION: 'Templagte Engine Cache Handling Storage'
+};
+
+export const headers = {
+	DATE_HEADER_KEY: 'date',
 	EXPIRATION_HEADER_KEY: 'sw-cache-expiration-date',
 	FREQUENCY_HEADER_KEY: 'sw-cache-use-frequency'
 };
@@ -45,7 +51,9 @@ export const cacheNames = (version?: string | undefined): CacheNames =>({
 export const syncEvents = {
 	INITIAL_SYNC: 'initial-sync',
 	UPDATE_SYNC: 'update-sync',
-	CONTENT_SYNC: 'content-sync'
+	periodic: {
+		CONTENT_SYNC: 'content-sync'
+	}
 };
 
 export const contentTypes = {

@@ -27,6 +27,7 @@ const DefaultLayout = (props) => {
 			<meta name="application-name" content={props.html.title} />
 
 			{/*!-- Android  --> */}
+			<meta name="mobile-web-app-capable" content="yes" />
 			<meta name="theme-color" content={props.html.themeColor} />
 
 			{/* <!-- Apple IOS --> */}

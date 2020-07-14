@@ -66,3 +66,7 @@ declare module 'isomorphic-style-loader/withStyles';
 declare module 'react-loadable-ssr-addon'
 
 declare const __VERSION_NUMBER__: any;
+
+interface Cache {
+   addToCache(equest: Request, response: Response, cacheName: string): Promise<void>;
+}

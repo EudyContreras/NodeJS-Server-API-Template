@@ -1,6 +1,6 @@
 
 import nodemailer from 'nodemailer';
-import config from '../server.config';
+import config from '../../configs/config.server';
 
 export default class EmailHandler {
 

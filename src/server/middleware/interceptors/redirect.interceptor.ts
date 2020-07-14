@@ -1,4 +1,4 @@
-import config from '../../server.config';
+import config from '../../../configs/config.server';
 import httpMethod from '../../definitions/httpMethod';
 import httpCodes from '../../definitions/httpCode';
 import { MiddlewareMessages } from '../../messages/message.response';

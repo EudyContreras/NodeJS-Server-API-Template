@@ -1,5 +1,5 @@
 import Joi from '@hapi/joi';
-import config from '../../../server.config';
+import config from '../../../../configs/config.server';
 
 import { SchemaValidation  } from '../../../messages/message.validation';
 import { ALL } from '../../../localstore/accessrole.store';

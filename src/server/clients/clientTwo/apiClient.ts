@@ -1,6 +1,6 @@
 
 import Client from '../client';
-import config from '../../server.config';
+import config from '../../../configs/config.server';
 import Endpoints from './endpoints';
 import ContentTypes from '../../definitions/httpContent';
 import HttpMethod from '../../definitions/httpMethod';

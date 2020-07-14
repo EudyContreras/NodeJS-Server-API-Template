@@ -168,7 +168,7 @@ plugins.push(new WorkboxPlugin.InjectManifest({
 	swSrc: path.join(process.cwd(), `${sourceLocation}/workers/serviceWorker.${precompile ? 'js' : 'ts'}`),
 	swDest: `${publicPath}/service-worker.js`,
 	compileSrc: true,
-	exclude: [/\.(DS_Store)$/, /manifest-assets.*\.json$/, /service-worker.*\.js$/,/loadable-stats.*\.json$/],
+	exclude: [/\.(DS_Store)$/, /manifest-assets.*\.json$/, /service-worker.*\.js$/, /service-worker.js/, /loadable-stats.*\.json$/],
 	webpackCompilationPlugins: []
 }));
 

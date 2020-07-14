@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
+import { seconds, minutes, hours, days, weeks, months, years } from './helpers/spanHelpers';
 import { staleWhileRevalidate, cacheFirst, networkFirst, addToCache, cacheResponse, fromNetwork } from './stragedies';
 import { logger, handleWebp, ClientMessage, WorkerMessage, filetypePatterns, filetypeCache, isNullOrEmpty, CacheQuotaOptions, CachePredicate, inRange } from './commons';
-
+import { syncContent } from './helpers/syncHelpers';
 import {
 	httpMethods,
 	updateNotification,
@@ -10,8 +11,9 @@ import {
 	commonOrigins,
 	fallbacks,
 	cacheNames,
-	expiration,
+	headers,
 	constants,
+	syncEvents,
 	messages,
 	events
 } from './constants';
@@ -25,6 +27,12 @@ const precacheManifest = [...self.__WB_MANIFEST];
 const handleSideEffects = false;
 const allowRequestLog = true;
 
+const precacheableFallbacks = [
+	{ url: fallbacks.FALLBACK_IMAGE_URL, revision: null },
+	{ url: fallbacks.FALLBACK_ERROR_URL, revision: null },
+	{ url: fallbacks.FALLBACK_FONT_URL, revision: null }
+];
+
 const notifyClient = (event: Event | any, message: ClientMessage): void => {
 	event.waitUntil(async () => {
 		if (!event.clientId) return;
@@ -36,6 +44,16 @@ const notifyClient = (event: Event | any, message: ClientMessage): void => {
 		client.postMessage(message);
 	});
 };
+
+function sendMessageToClients(clientMessage: ClientMessage): void {
+	self.clients.matchAll({ includeUncontrolled: true }).then((clients) => {
+		clients.forEach((client) => {
+			client.postMessage({ ...clientMessage });
+		});
+	}, (error) => {
+		logger.log(error);
+	});
+}
 
 const defaultCachePredicate: CachePredicate = {
 	crossOrigin: true,
@@ -54,31 +72,19 @@ const isAcceptedApiRequest = (request: Request): boolean => {
 	return request.url.includes('/api/') && request.method == httpMethods.GET;
 };
 
-const days = (count: number): number => hours(count * 24);
-const years = (count: number): number => days(count * 365);
-const weeks = (count: number): number => days(count * 7);
-const months = (count: number): number => days(count * 30);
-const hours = (count: number): number => minutes(count * 60);
-const minutes = (count: number): number => 1 * 24 * count * 60;
-const seconds = (count: number): number => count * 1000;
-
 const any = (request: Request, ...types: string[]): boolean => {
 	return types.includes(request.destination);
 };
 
 DEBUG_MODE && logger.log('Yay! worker is loaded 🎉');
 
-const precacheableFallbacks = [
-	{ url: fallbacks.FALLBACK_IMAGE_URL, revision: null },
-	{ url: fallbacks.FALLBACK_ERROR_URL, revision: null },
-	{ url: fallbacks.FALLBACK_FONT_URL, revision: null }
-];
-
 self.addEventListener(events.FETCH, (event: any) => {
 	const request: Request = event.request.clone();
 	const url: URL = new URL(request.url);
 
-	if (!(url.origin.indexOf('http') === 0) || (isSideEffectRequest(request) && !handleSideEffects)) return;
+	DEBUG_MODE && logger.info(request.destination, request.url);
+
+	if (!(url.origin.startsWith('http')) || isSideEffectRequest(request) && !handleSideEffects) return;
 
 	if (url.origin === self.location.origin && isNullOrEmpty(url.pathname)) {
 		const cacheName = cacheKeys.STATIC_CACHE;
@@ -90,7 +96,7 @@ self.addEventListener(events.FETCH, (event: any) => {
 		const cacheName = url.origin === commonOrigins.STYLESHEET_FONTS ? cacheKeys.GOOGLE_FONTS_SHEETS_CACHE : cacheKeys.STATIC_CACHE;
 		const cachePredicate: CachePredicate = {
 			crossOrigin: true,
-			acceptedStatus: [0, 200, 203, 202],
+			acceptedStatus: [0, 200, 202, 203, 202],
 			cacheCondition: ({ response }) => response && inRange(response?.status, 200, 300) || false
 		};
 		const promise = staleWhileRevalidate({ event, request, cacheName, cachePredicate: cachePredicate });
@@ -164,7 +170,7 @@ self.addEventListener(events.FETCH, (event: any) => {
 self.addEventListener(events.INSTALL, async (event: any) => {
 	DEBUG_MODE && logger.log(events.INSTALL, `Version : ${__VERSION_NUMBER__}`, event);
 
-	const allResources = new Set([...precacheManifest.map((x: any) => x.url), ...constants.urlsToCache]);
+	const allResources = new Set([]);
 	const precacheCallback = async (cacheName: string, urls: string[]): Promise<void> => {
 		try {
 			const cache = await caches.open(cacheName);
@@ -202,7 +208,7 @@ const handleInstallation = async (urls: string[], callback: (cacheName: string, 
 			await callback(cacheKeys.MEDIA_CACHE, mediaAssets);
 		}
 		if (dataAssets.length > 0) {
-			await callback(cacheKeys.MEDIA_CACHE, dataAssets);
+			await callback(cacheKeys.DATA_CACHE, dataAssets);
 		}
 	} catch (error) {
 		DEBUG_MODE && logger.error('Something went wrong!', error);
@@ -271,6 +277,12 @@ self.addEventListener(events.SYNC, (event: Event | any) => {
 
 self.addEventListener(events.PERIODIC_SYNC, (event: Event | any) => {
 	DEBUG_MODE && logger.log(events.PERIODIC_SYNC, 'Triggered periodic sync event:', event);
+
+	switch(event.tag) {
+		case syncEvents.periodic.CONTENT_SYNC: {
+			event.waitUntil(syncContent(cacheKeys));
+		}
+	}
 });
 
 self.addEventListener(events.MESSAGE, async (event: any) => {
@@ -309,7 +321,7 @@ self.addEventListener(events.MESSAGE, async (event: any) => {
 				const keys = await cache.keys();
 				keys.forEach(key => 
 					cache.match(key).then((cachedResponse) => {
-						const expiryData = cachedResponse && cachedResponse.headers.get(expiration.EXPIRATION_HEADER_KEY);
+						const expiryData = cachedResponse && cachedResponse.headers.get(headers.EXPIRATION_HEADER_KEY);
 						const expirationDate = expiryData && Date.parse(expiryData);
 						const now = Date.now();
 						if (expirationDate && expirationDate < now) {

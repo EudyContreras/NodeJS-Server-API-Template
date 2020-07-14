@@ -10,7 +10,7 @@ import logger from 'morgan';
 import express, { NextFunction, Request, Response } from 'express';
 import mongoose from 'mongoose';
 import cookieParser from 'cookie-parser';
-import config from './server.config';
+import config from '../configs/config.server';
 import Interceptor from './middleware/interceptor';
 import Controller from './controllers/controller';
 import ErrorHandler from './handlers/error.handler';

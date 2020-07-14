@@ -1,5 +1,5 @@
 import Agenda from 'agenda';
-import config from '../server.config';
+import config from '../../configs/config.server';
 import CronJob from '../webjobs/cronJob';
 import CronTask from '../webjobs/cronTask';
 import ErrorHandler from './error.handler';
