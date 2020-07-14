@@ -52,7 +52,6 @@ export interface AgingResponseInfo {
 }
 
 export interface CacheExpirationInfo {
-	response: Response | undefined;
 	expiration: number | null;
 }
 
@@ -90,27 +89,22 @@ export const addDelay = (ms: number) => (): any => new Promise(resolve => setTim
 
 export const isNullOrEmpty = (path): boolean => !path || path === '' || path == undefined;
 
-export const checkExpiration = (response: Response | undefined, quotaOptions: CacheQuotaOptions | undefined): CacheExpirationInfo => {
-	if (response && quotaOptions) {
+export const checkExpiration = (response: Response, quotaOptions: CacheQuotaOptions | undefined): CacheExpirationInfo => {
+	if (quotaOptions) {
 		const expiryData = response.headers.get(headers.EXPIRATION_HEADER_KEY);
 
-		if (!expiryData) return {
-			response: response,
-			expiration: null
+		if (expiryData) {
+			const expirationDate = expiryData && Date.parse(expiryData);
+			const now = Date.now();
+			
+			if (expirationDate && expirationDate > now) {
+				return {
+					expiration: expirationDate
+				};
+			}
 		};
-		
-		const expirationDate = expiryData && Date.parse(expiryData);
-		const now = Date.now();
-
-		if (expirationDate && expirationDate > now) {
-			return {
-				response: response,
-				expiration: expirationDate
-			};
-		}
 	}	
 	return {
-		response: response,
 		expiration: null
 	};
 };
@@ -133,14 +127,14 @@ export const attachExpiration = (response: Response, quotaOptions: CacheQuotaOpt
 
 		const returnedResponse = response.clone();
 		return response.blob().then((body) => {
-			logger.warn('Expiration attached to: ', response);
+			//logger.warn('Expiration attached to: ', response);
 			return { 
 				expirationDate: expires,
 				effectiveResponse: returnedResponse,
 				cacheableResponse: new Response(body, cachedResponseFields)
 			};
 		}).catch(e => {
-			logger.error(e);
+			//logger.error(e);
 			return { 
 				expirationDate: null,
 				effectiveResponse: returnedResponse,

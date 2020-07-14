@@ -65,8 +65,9 @@
 		}
 	],
 	"serviceworker": {
-		"src": "service-worker.js",
-		"scope": "/"
+		"src": "./service-worker.js",
+		"scope": "/app",
+		"type": ""
 	},
 	"scope": "/",
 	"gcm_sender_id": "",

@@ -46,8 +46,10 @@ export async function getAllEntries(): Promise<Entry[]> {
 	});
 }
 
-export function updateEntry(key: string, { clearOnError = null, expiryDate = null, visited = false }: UpdateEntryArgs): void {
-	instance.getItem<CacheEntryInfo>(key).then((entry: CacheEntryInfo) => {
+export async function updateEntry(key: string, { clearOnError = null, expiryDate = null, visited = false }: UpdateEntryArgs): Promise<CacheEntryInfo> {	
+	try {
+		const entry: CacheEntryInfo = await instance.getItem<CacheEntryInfo>(key);
+
 		const frequency = visited ? (entry.visitFrequency ?? 0) + 1 : (entry.visitFrequency ?? 0);
 		const updatedEntry: CacheEntryInfo = {
 			...entry,
@@ -55,45 +57,49 @@ export function updateEntry(key: string, { clearOnError = null, expiryDate = nul
 			clearOnError: clearOnError ?? entry.clearOnError ?? false,
 			expiryDate: expiryDate ?? entry.expiryDate ?? null
 		};
-		instance.setItem(key, updatedEntry);
-	}).catch(() => {
-		instance.setItem(key, defaultEntry());
-	});
+
+		return await instance.setItem(key, updatedEntry);
+	} catch(error) {
+		return await instance.setItem(key, defaultEntry());
+	}
 }
 
-export function setEntryClearOnError(key: string, clearOnError: boolean): void {
-	instance.getItem<CacheEntryInfo>(key).then((entry: CacheEntryInfo) => {
+export async function setEntryClearOnError(key: string, clearOnError: boolean): Promise<CacheEntryInfo> {
+	try {
+		const entry: CacheEntryInfo = await instance.getItem<CacheEntryInfo>(key);
 		const updatedEntry: CacheEntryInfo = {
-			...entry,
+			...entry ?? defaultEntry,
 			clearOnError: clearOnError
 		};
-		instance.setItem(key, updatedEntry);
-	}).catch(() => {
-		instance.setItem(key, defaultEntry());
-	});
+		return await instance.setItem(key, updatedEntry);
+	} catch(error) {
+		return await instance.setItem(key, defaultEntry());
+	}
 }
 
-export function setEntryExpiryDate(key: string, expiryDate: number): void {
-	instance.getItem<CacheEntryInfo>(key).then((entry: CacheEntryInfo) => {
+export async function setEntryExpiryDate(key: string, expiryDate: number): Promise<CacheEntryInfo> {
+	try {
+		const entry: CacheEntryInfo = await instance.getItem<CacheEntryInfo>(key);
 		const updatedEntry: CacheEntryInfo = {
-			...entry,
+			...entry ?? defaultEntry,
 			expiryDate: expiryDate
 		};
-		instance.setItem(key, updatedEntry);
-	}).catch(() => {
-		instance.setItem(key, defaultEntry());
-	});
+		return await instance.setItem(key, updatedEntry);
+	} catch(error) {
+		return await instance.setItem(key, defaultEntry());
+	}
 }
 
-export function increaseVisitFrequency(key: string): void {
-	instance.getItem<CacheEntryInfo>(key).then((entry: CacheEntryInfo) => {
+export async function increaseVisitFrequency(key: string): Promise<CacheEntryInfo> {
+	try {
+		const entry: CacheEntryInfo = await instance.getItem<CacheEntryInfo>(key);
 		const updatedEntry: CacheEntryInfo = {
-			...entry,
+			...entry ?? defaultEntry,
 			visitFrequency: entry.visitFrequency + 1
 		};
-		instance.setItem(key, updatedEntry);
-	}).catch(() => {
-		instance.setItem(key, defaultEntry());
-	});
+		return await instance.setItem(key, updatedEntry);
+	} catch(error) {
+		return await instance.setItem(key, defaultEntry());
+	}
 }
 

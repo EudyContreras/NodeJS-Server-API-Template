@@ -18,7 +18,6 @@ import {
 	events
 } from './constants';
 
-
 const DEBUG_MODE = (process.env.NODE_ENV !== 'production');
    
 const cacheKeys = cacheNames(__VERSION_NUMBER__);
@@ -88,19 +87,16 @@ self.addEventListener(events.FETCH, (event: any) => {
 
 	if (url.origin === self.location.origin && isNullOrEmpty(url.pathname)) {
 		const cacheName = cacheKeys.STATIC_CACHE;
-		const promise = staleWhileRevalidate({ event, request, cacheName });
-		return event.respondWith(promise);
+		staleWhileRevalidate({ event, request, cacheName });
 	}
 
 	if (any(request, cachableTypes.STYLE, cachableTypes.SCRIPT, cachableTypes.DOCUMENT)) {
 		const cacheName = url.origin === commonOrigins.STYLESHEET_FONTS ? cacheKeys.GOOGLE_FONTS_SHEETS_CACHE : cacheKeys.STATIC_CACHE;
 		const cachePredicate: CachePredicate = {
 			crossOrigin: true,
-			acceptedStatus: [0, 200, 202, 203, 202],
 			cacheCondition: ({ response }) => response && inRange(response?.status, 200, 300) || false
 		};
-		const promise = staleWhileRevalidate({ event, request, cacheName, cachePredicate: cachePredicate, theresholdAge: days(1) });
-		return event.respondWith(promise);
+		staleWhileRevalidate({ event, request, cacheName, cachePredicate: cachePredicate, theresholdAge: days(1) });
 	}
 
 	if (isWebFontRequest(request, url)) {
@@ -109,8 +105,7 @@ self.addEventListener(events.FETCH, (event: any) => {
 			crossOrigin: true,
 			acceptedStatus: [0, 200, 203, 202]
 		};
-		const promise = cacheFirst({ event, request, cacheName, cachePredicate });
-		return event.respondWith(promise);
+		cacheFirst({ event, request, cacheName, cachePredicate });
 	}
 
 	if (request.destination === cachableTypes.IMAGE) {
@@ -121,15 +116,14 @@ self.addEventListener(events.FETCH, (event: any) => {
 			maxEntries: 100
 		};
 
-		const promise = cacheFirst({ event, request, cacheName, quotaOptions, cachePredicate: defaultCachePredicate });
-	
 		if (filetypePatterns.PROGRESSIVE_IMAGE.test(url.pathname)) {
-			return event.respondWith(handleWebp<any>({
-				onHasSupport: () => { return promise; },
-				onNoSupport: () => { return fromNetwork(event.request); }
-			}));
+			//return event.respondWith(handleWebp<any>({
+			//	onHasSupport: () => { return promise; },
+			//	onNoSupport: () => { return fromNetwork(event.request); }
+			//}));
+			cacheFirst({ event, request, cacheName, quotaOptions, cachePredicate: defaultCachePredicate });
 		} else {
-			return event.respondWith(promise);
+			cacheFirst({ event, request, cacheName, quotaOptions, cachePredicate: defaultCachePredicate });
 		}
 	}
 
@@ -140,8 +134,7 @@ self.addEventListener(events.FETCH, (event: any) => {
 			maxAgeSeconds: months(2),
 			maxEntries: 30
 		};
-		const promise = cacheFirst({ event, request, cacheName, quotaOptions, cachePredicate: defaultCachePredicate });
-		return event.respondWith(promise);
+		cacheFirst({ event, request, cacheName, quotaOptions, cachePredicate: defaultCachePredicate });
 	}
 
 	if (request.destination === cachableTypes.VIDEO) {
@@ -151,8 +144,7 @@ self.addEventListener(events.FETCH, (event: any) => {
 			maxAgeSeconds: days(30),
 			maxEntries: 10
 		};
-		const promise = cacheFirst({ event, request, cacheName, quotaOptions, cachePredicate: defaultCachePredicate });
-		return event.respondWith(promise);
+		cacheFirst({ event, request, cacheName, quotaOptions, cachePredicate: defaultCachePredicate });
 	}
 
 	if (isAcceptedApiRequest(request)) {
@@ -162,8 +154,7 @@ self.addEventListener(events.FETCH, (event: any) => {
 			maxAgeSeconds: hours(6),
 			maxEntries: 8
 		};
-		const promise = networkFirst({ event, request, cacheName, quotaOptions, cachePredicate: defaultCachePredicate });
-		return event.respondWith(promise);
+		networkFirst({ event, request, cacheName, quotaOptions, cachePredicate: defaultCachePredicate });
 	}
 });
 
@@ -171,6 +162,7 @@ self.addEventListener(events.INSTALL, async (event: any) => {
 	DEBUG_MODE && logger.log(events.INSTALL, `Version : ${__VERSION_NUMBER__}`, event);
 
 	const allResources = new Set([]);
+	//const allResources = new Set([...precacheManifest.map((x: any) => x.url), ...constants.urlsToCache]);
 	const precacheCallback = async (cacheName: string, urls: string[]): Promise<void> => {
 		try {
 			const cache = await caches.open(cacheName);
