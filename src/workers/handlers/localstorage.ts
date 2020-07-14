@@ -48,12 +48,12 @@ export async function getAllEntries(): Promise<Entry[]> {
 
 export function updateEntry(key: string, { clearOnError = null, expiryDate = null, visited = false }: UpdateEntryArgs): void {
 	instance.getItem<CacheEntryInfo>(key).then((entry: CacheEntryInfo) => {
-		const frequency = visited ? (entry.visitFrequency ?? 1) + 1 : (entry.visitFrequency ?? 0);
+		const frequency = visited ? (entry.visitFrequency ?? 0) + 1 : (entry.visitFrequency ?? 0);
 		const updatedEntry: CacheEntryInfo = {
 			...entry,
 			visitFrequency: frequency,
-			clearOnError: clearOnError ?? entry.clearOnError,
-			expiryDate: expiryDate ?? entry.expiryDate
+			clearOnError: clearOnError ?? entry.clearOnError ?? false,
+			expiryDate: expiryDate ?? entry.expiryDate ?? null
 		};
 		instance.setItem(key, updatedEntry);
 	}).catch(() => {

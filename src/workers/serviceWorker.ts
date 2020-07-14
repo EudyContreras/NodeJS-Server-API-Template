@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-import { seconds, minutes, hours, days, weeks, months, years } from './helpers/spanHelpers';
+import { minutes, hours, days, weeks, months, years, seconds } from './helpers/spanHelpers';
 import { staleWhileRevalidate, cacheFirst, networkFirst, addToCache, cacheResponse, fromNetwork } from './stragedies';
 import { logger, handleWebp, ClientMessage, WorkerMessage, filetypePatterns, filetypeCache, isNullOrEmpty, CacheQuotaOptions, CachePredicate, inRange } from './commons';
 import { syncContent } from './helpers/syncHelpers';
@@ -99,7 +99,7 @@ self.addEventListener(events.FETCH, (event: any) => {
 			acceptedStatus: [0, 200, 202, 203, 202],
 			cacheCondition: ({ response }) => response && inRange(response?.status, 200, 300) || false
 		};
-		const promise = staleWhileRevalidate({ event, request, cacheName, cachePredicate: cachePredicate });
+		const promise = staleWhileRevalidate({ event, request, cacheName, cachePredicate: cachePredicate, theresholdAge: days(1) });
 		return event.respondWith(promise);
 	}
 

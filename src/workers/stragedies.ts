@@ -1,7 +1,7 @@
 
 import { cachableTypes, cacheNames, fallbacks, responseType, headers } from './constants';
 import { seconds, minutes, hours, days, weeks, months, years } from './helpers/spanHelpers';
-import { logger, inRange, timeoutPromise, CacheStragedy, CachePredicate, checkExpiration, attachExpiration, CacheQuotaOptions } from './commons';
+import { logger, inRange, timeoutPromise, CacheStragedy, CachePredicate, checkExpiration, attachExpiration, CacheQuotaOptions, RevalidateCacheStragedy } from './commons';
 import { increaseVisitFrequency, setEntryExpiryDate, updateEntry, getEntry, CacheEntryInfo, getAllEntries } from './handlers/localstorage';
 
 const TIMEOUT = 10000;
@@ -73,24 +73,24 @@ export const fromNetwork = async (request: Request, timeout: number = TIMEOUT): 
 	return timeoutPromise(timeout, fetch(request));
 };
 
-const isStale = (date: Date, quotaOptions: CacheQuotaOptions | undefined): boolean => {
+const isStale = (date: Date, quotaOptions: CacheQuotaOptions | undefined, theresholdAge: number | undefined): boolean => {
 	if (!date) return false;
 	if (quotaOptions) {
 		const expiration = date.getSeconds() + (quotaOptions.maxAgeSeconds ?? 0);
 		return (Date.now() - expiration) < 0;
 	}
-	return (Date.now() - date.getSeconds()) > days(1);
+	return (Date.now() - date.getSeconds()) > (theresholdAge ?? days(1));
 };
 
-export const staleWhileRevalidate = (stragedy: CacheStragedy): Promise<any> => {
+export const staleWhileRevalidate = (stragedy: RevalidateCacheStragedy): Promise<any> => {
 	const { event, request, cacheName, cachePredicate, quotaOptions } = stragedy;
 	const cache = caches.open(cacheName);
 	return cache.then(cache => {
 		return cache.match(request).then(response => {	
-			const dateAdded= response && response.headers.get(headers.DATE_HEADER_KEY);
-			const dateParsed: Date = dateAdded ? new Date(dateAdded): new Date() ;
-			if (!response || isStale(dateParsed, quotaOptions)) {
-				return response;
+			if (response) {
+				const dateAdded= response && response.headers.get(headers.DATE_HEADER_KEY);
+				const dateParsed: Date = dateAdded ? new Date(dateAdded): new Date() ;
+				if (!isStale(dateParsed, quotaOptions, stragedy.theresholdAge)) return response;
 			}
 			const fetchPromise = fromNetwork(request).then(response => {
 				if (isValidResponse(request, response, cachePredicate )) {
@@ -121,9 +121,11 @@ export const cacheFirst = (stragedy: CacheStragedy): Promise<any> => {
 			return response || fromNetwork(request).then(response => {
 				attachExpiration(response.clone(), quotaOptions).then(responseTuple => {
 					const { effectiveResponse, cacheableResponse, expirationDate } = responseTuple;
-					if (expirationDate != null) {
-						setEntryExpiryDate(request.url, expirationDate.getSeconds());
-					}
+					updateEntry(request.url, {
+						visited: true,
+						clearOnError: quotaOptions?.clearOnError ?? null,
+						expiryDate: expirationDate?.getSeconds()
+					});
 					if (isValidResponse(request, effectiveResponse, cachePredicate)) {
 						cache.addToCache(request, cacheableResponse, cacheName);
 					}

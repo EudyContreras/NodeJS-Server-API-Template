@@ -41,6 +41,10 @@ export interface CacheStragedy {
 	cachePredicate?: CachePredicate;
 }
 
+export interface RevalidateCacheStragedy extends CacheStragedy {
+	theresholdAge?: number;
+}
+
 export interface AgingResponseInfo {
 	cacheableResponse: Response;
 	effectiveResponse: Response;
