@@ -1,3 +1,4 @@
+
 declare module '*.png' {
    const value: any;
    export = value;
@@ -68,5 +69,5 @@ declare module 'react-loadable-ssr-addon'
 declare const __VERSION_NUMBER__: any;
 
 interface Cache {
-   addToCache(equest: Request, response: Response, cacheName: string): Promise<void>;
+   addToCache(request: Request, response: Response | any, cacheName: string, maxEntries?: number): Promise<void>;
 }

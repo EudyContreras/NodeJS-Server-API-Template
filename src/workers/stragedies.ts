@@ -1,10 +1,10 @@
 
 import { cachableTypes, cacheNames, fallbacks, responseType, headers } from './constants';
-import { seconds, minutes, hours, days, weeks, months, years } from './helpers/spanHelpers';
-import { logger, inRange, timeoutPromise, CacheStragedy, CachePredicate, checkExpiration, attachExpiration, CacheQuotaOptions, RevalidateCacheStragedy } from './commons';
-import { increaseVisitFrequency, updateEntry, getEntry, CacheEntryInfo } from './handlers/localstorage';
+import { days } from './helpers/spanHelpers';
+import { logger, inRange, timeoutPromise, CacheStragedy, CachePredicate, CacheQuotaOptions, RevalidateCacheStragedy } from './commons';
+import { hasExpired, attachExpiration, getAllEntries, getEntry, CacheEntryInfo } from './handlers/localstorage';
 
-const TIMEOUT = 10000;
+const TIMEOUT = 5000;
 
 const cacheKeys = cacheNames();
 
@@ -22,10 +22,10 @@ const isValidResponse = (request: Request, response: Response, cachePredicate?: 
 	
 	switch (response.type) {
 		case responseType.CORS: {
-			return (crossOrigin && isValid) ? true : false;
+			return (crossOrigin && isValid) == true;
 		}
 		case responseType.OPAQUE: {
-			return (allowOpaque && isValid) ? true : false;
+			return (allowOpaque && isValid) == true;
 		}
 		case responseType.ERROR: {
 			return false;
@@ -42,11 +42,16 @@ const errorResponse = (): Response => {
 	return response;
 };
 
-Cache.prototype.addToCache = async function(request: Request, response: Response, cacheName: string): Promise<void> {
+Cache.prototype.addToCache = async function(request: Request, response: Response | any, cacheName: string, maxEntries?: number): Promise<void> {
 	try {
-		///const entries = await getAllEntries();
-		//const sorted = entries.sort((a: CacheEntryInfo, b: CacheEntryInfo) => a.visitFrequency - b.visitFrequency);
 		await this.put(request, response);
+		if (maxEntries) {
+			const entries = await getAllEntries(cacheName);
+			if (entries.values.length >= maxEntries) {
+				const leastFrequent = entries.reduce((prev: CacheEntryInfo, current: CacheEntryInfo) => prev.visitFrequency < current.visitFrequency ? prev : current);
+				this.delete(leastFrequent.url);
+			}
+		}
 	} catch(error) {
 		if (error.code == DOMException.QUOTA_EXCEEDED_ERR) {
 			getEntry(request.url).then((entry: CacheEntryInfo) => {
@@ -93,7 +98,7 @@ export const staleWhileRevalidate = (stragedy: RevalidateCacheStragedy): void =>
 			}
 			const fetchPromise = fromNetwork(request).then(response => {
 				if (isValidResponse(request, response, cachePredicate )) {
-					cache.addToCache(request, response.clone(), cacheName);
+					cache.addToCache(request, response.clone(), cacheName, quotaOptions?.maxEntries);
 				}
 				return response || getFallback(request.destination);
 			});
@@ -107,57 +112,87 @@ export const staleWhileRevalidate = (stragedy: RevalidateCacheStragedy): void =>
 export const cacheFirst = (stragedy: CacheStragedy): void => {
 	const { event, request, cacheName, cachePredicate, quotaOptions } = stragedy;
 	const cache = caches.open(cacheName);
-	event.respondWith(cache.then(cache => {
-		return cache.match(request).then(response => {
+	const network = (cache: Cache): Promise<Response | undefined> => {
+		return fetch(request).then(response => {
 			if (response) {
-				const { expiration } = checkExpiration(response, quotaOptions);
-				updateEntry(request.url, {
-					visited: true,
-					clearOnError: quotaOptions?.clearOnError ?? null,
-					expiryDate: expiration ?? null
-				});
+				attachExpiration(request.url, cacheName, quotaOptions);
+				if (isValidResponse(request, response, cachePredicate)) {
+					cache.addToCache(request, response.clone(), cacheName, quotaOptions?.maxEntries);
+				}
 				return response;
 			}
-			return fromNetwork(request).then(response => {
-				if (response) {
-					attachExpiration(response.clone(), quotaOptions).then(responseTuple => {
-						const { effectiveResponse, cacheableResponse, expirationDate } = responseTuple;
-						updateEntry(request.url, {
-							visited: true,
-							clearOnError: quotaOptions?.clearOnError ?? null,
-							expiryDate: expirationDate?.getSeconds()
-						});
-						if (isValidResponse(request, effectiveResponse, cachePredicate)) {
-							cache.addToCache(request, cacheableResponse, cacheName);
-						}
-					});
-					return response;
-				}
-				return getFallback(request.destination);
-			}).catch(error => {
-				return handleFailure(event, request, error);
-			});
+			return getFallback(request.destination);
+		}).catch(error => {
+			return handleFailure(event, request, error);
 		});
+	};
+	event.respondWith(cache.then(cache => {
+		return cache.match(request).then(response => {
+			if (response && quotaOptions) {
+				return hasExpired(request.url, cacheName).then(expired => {
+					return !expired ? response : network(cache);
+				});
+			}
+			return response || network(cache);
+		});
+	}));
+};
+
+interface RefreshCallbacks {
+	onLoading: (loading: boolean) => void;
+	onReady: (response: any) => void;
+	onError: (error: Error) => void;
+}
+
+export const cacheThenNetwork = (stragedy: CacheStragedy, refreshCallbacks: RefreshCallbacks): void => {
+	const { request, cacheName, cachePredicate } = stragedy;
+	
+	const cache = caches.open(cacheName);
+	let networkDataReceived = false;
+
+	refreshCallbacks.onLoading(true);
+	
+	const networkUpdate = fetch(request).then((response) => {
+		if (isValidResponse(request, response, cachePredicate)) {
+			return response.json();
+		} else {
+			throw Error('The received response is not valid!'); 
+		}
+	}).then((data) => {
+		networkDataReceived = true;
+		cache.then(cache => cache.addToCache(request, data, cacheName));
+		refreshCallbacks.onReady(data);
+	});
+
+	cache.then(cache => cache.match(request).then((response) => {
+		if (!response) throw Error('No cached data available!');
+		return response.json();
+	}).then((data) => {
+		if (!networkDataReceived) {
+			refreshCallbacks.onReady(data);
+		}
+	}).catch(() => {
+		return networkUpdate;
+	}).catch((error) => {
+		refreshCallbacks.onError(error);
+	}).then(() => {
+		refreshCallbacks.onLoading(false);
 	}));
 };
 
 export const networkFirst = (stragedy: CacheStragedy): void => {
 	const { event, request, cacheName, cachePredicate } = stragedy;
 	const cache = caches.open(cacheName);
-	event.respondWith(fromNetwork(request).then(liveResponse => {
-		if (liveResponse) {
-			const response = liveResponse.clone();
+	event.respondWith(fromNetwork(request).then(response => {
+		if (response) {
 			if (isValidResponse(request, response, cachePredicate )) {
 				event.waitUntil(cache.then(cache => {
-					cache.addToCache(request, response, cacheName);
+					cache.addToCache(request, response.clone(), cacheName);
 				}));
 				return response;
 			}
 		}
 		return cache.then(cache => cache.match(request).then(response => {
-			if (response) {
-				increaseVisitFrequency(request.url);
-			}
 			return response || getFallback(request.destination);
 		})).catch(error => {
 			return handleFailure(event, request, error);
