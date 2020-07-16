@@ -11,7 +11,6 @@ import {
 	commonOrigins,
 	fallbacks,
 	cacheNames,
-	headers,
 	constants,
 	syncEvents,
 	messages,
@@ -23,10 +22,8 @@ const DEBUG_MODE = (process.env.NODE_ENV !== 'production');
 const cacheKeys = cacheNames(__VERSION_NUMBER__);
 const precacheManifest = [...self.__WB_MANIFEST];
 
-const handleSideEffects = false;
-const allowRequestLog = true;
-
 const precacheableFallbacks = [
+	{ url: fallbacks.FALLBACK_HTML_URL, revision: null },
 	{ url: fallbacks.FALLBACK_IMAGE_URL, revision: null },
 	{ url: fallbacks.FALLBACK_ERROR_URL, revision: null },
 	{ url: fallbacks.FALLBACK_FONT_URL, revision: null }
@@ -305,25 +302,6 @@ self.addEventListener(events.MESSAGE, async (event: any) => {
 				DEBUG_MODE && logger.error('Something went wrong!', error);
 			}
 			break;
-		}
-		case messages.PURGE_EXPIRED_CACHE: {
-			const cacheKeys = await caches.keys();
-
-			cacheKeys.forEach(async (element) => {
-				const cache = await caches.open(element);
-				const keys = await cache.keys();
-				keys.forEach(key => 
-					cache.match(key).then((cachedResponse) => {
-						const expiryData = cachedResponse && cachedResponse.headers.get(headers.EXPIRATION_HEADER_KEY);
-						const expirationDate = expiryData && Date.parse(expiryData);
-						const now = Date.now();
-						if (expirationDate && expirationDate < now) {
-							DEBUG_MODE && logger.warn(`Purging (expired) entry ${key.url} from cache.`);
-							cache.delete(key);
-						}
-					})
-				);
-			});
 		}
 	}
 });

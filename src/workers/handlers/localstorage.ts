@@ -1,25 +1,35 @@
-import localforage from 'localforage';
+
 import { storage } from '../constants';
-import { CacheQuotaOptions } from '../commons';
+import { openDB, DBSchema } from 'idb';
+import { CacheQuotaOptions, logger } from '../commons';
 
-const instance = localforage.createInstance({
-	driver: [localforage.INDEXEDDB, localforage.WEBSQL, localforage.LOCALSTORAGE],
-	description: storage.NAME,
-	name: storage.DESCRIPTION
-});
+const READ_WRITE = 'readwrite';
+const READ_ONLY = 'readonly';
 
-export interface CacheEntryInfo {
-	id: string;
-	url: string;
-	cacheName: string;
-    expiryDate: number | null;
-    clearOnError: boolean;
-	visitFrequency: number;
-}
+const indexes = {
+	ENTRY_ID: 'by-id',
+	ENTRY_URL: 'by-url',
+	CACHE_NAME: 'by-cachename'
+};
+const structure = {
+	DB_NAME: storage.NAME,
+	STORE_NAME: 'expiration',
+	methods: {
+		READ_WRITE: READ_WRITE
+	},
+	keyPaths: {
+		PRIMARY_KEY: { index: indexes.ENTRY_ID, target: 'id' },
+		KEYS: [
+			{ index: indexes.ENTRY_URL, target:'url' },
+			{ index: indexes.CACHE_NAME, target:'cacheName' }
+		]
+	}
+};
 
 export interface UpdateEntryArgs {
     clearOnError: boolean | null | undefined;
-    expiryDate: number | null | undefined;
+	expiryDate: number | null | undefined;
+	persist: boolean | undefined;
     visited: boolean | undefined;
 }
 
@@ -27,10 +37,82 @@ export interface Entry {
     [key: string]: CacheEntryInfo;
 }
 
+export interface CacheEntryInfo {
+	id: string;
+	url: string;
+	persist: boolean;
+	cacheName: string;
+	expiryDate: number | null;
+	clearOnError: boolean;
+	visitFrequency: number;
+}
+
+export interface CacheEntrySchema extends DBSchema {
+	cacheEntry: {
+		key: string;
+		value: CacheEntryInfo;
+	};
+}
+
+const database = openDB(structure.DB_NAME, 1, {
+	upgrade(database) {
+		const storeMame = structure.STORE_NAME;
+		const primaryKey = structure.keyPaths.PRIMARY_KEY;
+		const indexKeys = structure.keyPaths.KEYS;
+	
+		const objectStore = database.createObjectStore(storeMame);
+	
+		objectStore.createIndex(primaryKey.index, primaryKey.target, { unique: true });
+		
+		indexKeys.forEach(element => {
+			objectStore.createIndex(element.index, element.target, { unique: false });
+		});
+	}
+});
+   
+const instance = {
+	async getAllItems(query: { index: string; key: string }): Promise<CacheEntryInfo[]> {
+		const transaction = (await database).transaction(structure.STORE_NAME, READ_ONLY).store;
+		const index = await transaction.index(query.index);
+		return index.getAll(query.key);
+	},
+	async getEntryCount(query: { index: string; key: string }): Promise<number> {
+		const transaction = (await database).transaction(structure.STORE_NAME, READ_ONLY).store;
+		const index = await transaction.index(query.index);
+		return index.count(query.key);
+	},
+	async clearEntries(query: { index: string; key: string }): Promise<void> {
+		const transaction = (await database).transaction(structure.STORE_NAME, READ_WRITE).store;
+		const index = await transaction.index(query.index);
+		const items: CacheEntryInfo[] = await index.getAll(query.key);
+		return items.forEach(item => {
+			if (!item.persist) {
+				transaction.delete(item.id);
+			}
+		});
+	},
+	async getItem(key): Promise<CacheEntryInfo | undefined> {
+		return (await database).get(structure.STORE_NAME, key);
+	},
+	async setItem(key, value): Promise<IDBValidKey> {
+		return (await database).put(structure.STORE_NAME, value, key);
+	},
+	async deleteItem(key): Promise<void> {
+		return (await database).delete(structure.STORE_NAME, key);
+	},
+	async clearItems(): Promise<void> {
+		return (await database).clear(structure.STORE_NAME);
+	},
+	async keys(): Promise<IDBValidKey[]> {
+		return (await database).getAllKeys(structure.STORE_NAME);
+	}
+};
+
 export const defaultEntry = (url, cacheName, expiryDate = null, visitFrequency = 0, clearOnError = true): CacheEntryInfo => {
 	return {
-		id: `${url}|${cacheName}`,
+		id: `${cacheName}|${url}`,
 		url: url,
+		persist: false,
 		cacheName: cacheName,
 		expiryDate: expiryDate,
 		clearOnError: clearOnError,
@@ -38,26 +120,36 @@ export const defaultEntry = (url, cacheName, expiryDate = null, visitFrequency =
 	};
 };
 
-export function getEntry(key: string): Promise<CacheEntryInfo> {
-	return instance.getItem(key);
+export async function getEntry(key: string): Promise<CacheEntryInfo | undefined> {
+	return await instance.getItem(key);
 }
 
-export async function getAllEntries(cacheName: string): Promise<CacheEntryInfo[]> {
-	return instance.keys().then(async (keys) => {
-		const cacheKeys = keys.filter(x => x == cacheName);
-		const entries: CacheEntryInfo[] = [];
-		for (const key of cacheKeys) {
-			const cacheItem = await instance.getItem(key);
-			entries[key] = cacheItem;
-		}
-		return entries;
+export async function clearEntries(cacheName: string): Promise<void> {
+	return await instance.clearEntries({
+		index: indexes.CACHE_NAME,
+		key: cacheName
 	});
 }
 
-export async function updateEntry(key: string, cacheName: string, { clearOnError = null, expiryDate = null, visited = false }: UpdateEntryArgs): Promise<CacheEntryInfo> {	
-	try {
-		const entry: CacheEntryInfo = await instance.getItem<CacheEntryInfo>(key);
+export async function getEntryCount(cacheName: string): Promise<number> {
+	return await instance.getEntryCount({
+		index: indexes.CACHE_NAME,
+		key: cacheName
+	});
+}
 
+export async function getAllEntries(cacheName: string): Promise<CacheEntryInfo[]> {
+	return await instance.getAllItems({
+		index: indexes.CACHE_NAME,
+		key: cacheName
+	});
+}
+
+export async function updateEntry(key: string, cacheName: string, { clearOnError = null, expiryDate = null, visited = false, persist = false }: UpdateEntryArgs): Promise<void> {	
+	try {
+		const item = await instance.getItem(key);
+		const entry = item ? item : defaultEntry(key, cacheName);
+		
 		const frequency = visited ? (entry.visitFrequency ?? 0) + 1 : (entry.visitFrequency ?? 0);
 		const updatedEntry: CacheEntryInfo = {
 			...entry,
@@ -65,23 +157,23 @@ export async function updateEntry(key: string, cacheName: string, { clearOnError
 			clearOnError: clearOnError ?? entry.clearOnError ?? false,
 			expiryDate: expiryDate ?? entry.expiryDate ?? null
 		};
-
-		return await instance.setItem(key, updatedEntry);
+		await instance.setItem(key, updatedEntry);
 	} catch(error) {
-		return await instance.setItem(key, defaultEntry(key, cacheName));
+		logger.error('Something went wrong', error);
 	}
 }
 
-export async function hasExpired(key: string, cacheName: string): Promise<boolean>{
+export async function hasExpired(key: string): Promise<boolean>{
 	try {
-		const entry: CacheEntryInfo = await instance.getItem<CacheEntryInfo>(key);
-		return entry.expiryDate ? Date.now() > entry.expiryDate : false;
+		const entry = await instance.getItem(key);
+		return entry ? entry.expiryDate ? Date.now() > entry.expiryDate: false : true;
 	} catch(error) {
-		return false;
+		logger.error('Something went wrong', error);
+		return true;
 	}
 }
 
-export async function attachExpiration(key: string, cacheName: string, quotaOptions?: CacheQuotaOptions): Promise<CacheEntryInfo> {
+export async function attachExpiration(key: string, cacheName: string, quotaOptions?: CacheQuotaOptions): Promise<void> {
 	const expires = new Date();
 	let attacheExpiration = false;
 	if (quotaOptions) {
@@ -90,49 +182,11 @@ export async function attachExpiration(key: string, cacheName: string, quotaOpti
 			attacheExpiration = true;
 		}
 	}
-	return updateEntry(key, cacheName, {
+	return await updateEntry(key, cacheName, {
 		visited: true,
+		persist: false,
 		clearOnError: quotaOptions?.clearOnError,
-		expiryDate: attacheExpiration ? expires.getSeconds() : null
+		expiryDate: attacheExpiration ? expires.getTime() : null
 	});
-}
-
-export async function setEntryClearOnError(key: string, cacheName: string, clearOnError: boolean): Promise<CacheEntryInfo> {
-	try {
-		const entry: CacheEntryInfo = await instance.getItem<CacheEntryInfo>(key);
-		const updatedEntry: CacheEntryInfo = {
-			...entry ?? defaultEntry,
-			clearOnError: clearOnError
-		};
-		return await instance.setItem(key, updatedEntry);
-	} catch(error) {
-		return await instance.setItem(key, defaultEntry(key, cacheName));
-	}
-}
-
-export async function setEntryExpiryDate(key: string, cacheName: string, expiryDate: number): Promise<CacheEntryInfo> {
-	try {
-		const entry: CacheEntryInfo = await instance.getItem<CacheEntryInfo>(key);
-		const updatedEntry: CacheEntryInfo = {
-			...entry ?? defaultEntry,
-			expiryDate: expiryDate
-		};
-		return await instance.setItem(key, updatedEntry);
-	} catch(error) {
-		return await instance.setItem(key, defaultEntry(key, cacheName));
-	}
-}
-
-export async function increaseVisitFrequency(key: string, cacheName: string): Promise<CacheEntryInfo> {
-	try {
-		const entry: CacheEntryInfo = await instance.getItem<CacheEntryInfo>(key);
-		const updatedEntry: CacheEntryInfo = {
-			...entry ?? defaultEntry,
-			visitFrequency: entry.visitFrequency + 1
-		};
-		return await instance.setItem(key, updatedEntry);
-	} catch(error) {
-		return await instance.setItem(key, defaultEntry(key, cacheName));
-	}
 }
 

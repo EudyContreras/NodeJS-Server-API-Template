@@ -1,5 +1,5 @@
 
-import { cachableTypes, cacheNames, fallbacks, responseType, headers } from './constants';
+import { cachableTypes, cacheNames, fallbacks, responseType, headers, DEBUG_MODE } from './constants';
 import { days } from './helpers/spanHelpers';
 import { logger, inRange, timeoutPromise, CacheStragedy, CachePredicate, CacheQuotaOptions, RevalidateCacheStragedy } from './commons';
 import { hasExpired, attachExpiration, getAllEntries, getEntry, CacheEntryInfo } from './handlers/localstorage';
@@ -46,16 +46,17 @@ Cache.prototype.addToCache = async function(request: Request, response: Response
 	try {
 		await this.put(request, response);
 		if (maxEntries) {
-			const entries = await getAllEntries(cacheName);
-			if (entries.values.length >= maxEntries) {
-				const leastFrequent = entries.reduce((prev: CacheEntryInfo, current: CacheEntryInfo) => prev.visitFrequency < current.visitFrequency ? prev : current);
-				this.delete(leastFrequent.url);
-			}
+			getAllEntries(cacheName).then(entries => {
+				if (entries.values.length >= maxEntries) {
+					const leastFrequent = entries.reduce((prev: CacheEntryInfo, current: CacheEntryInfo) => prev.visitFrequency < current.visitFrequency ? prev : current);
+					this.delete(leastFrequent.url);
+				}
+			});
 		}
 	} catch(error) {
 		if (error.code == DOMException.QUOTA_EXCEEDED_ERR) {
-			getEntry(request.url).then((entry: CacheEntryInfo) => {
-				if (entry.clearOnError) {
+			getEntry(request.url).then((entry: CacheEntryInfo | undefined) => {
+				if (entry?.clearOnError) {
 					caches.delete(cacheName);
 				}
 			});
@@ -127,9 +128,9 @@ export const cacheFirst = (stragedy: CacheStragedy): void => {
 		});
 	};
 	event.respondWith(cache.then(cache => {
-		return cache.match(request).then(response => {
+		return cache.match(request).then(async (response) => {
 			if (response && quotaOptions) {
-				return hasExpired(request.url, cacheName).then(expired => {
+				return hasExpired(request.url).then(expired => {
 					return !expired ? response : network(cache);
 				});
 			}
@@ -201,7 +202,7 @@ export const networkFirst = (stragedy: CacheStragedy): void => {
 };
 
 const getFallback = async (destination: string): Promise<Response | undefined> => {
-	logger.warn('Retrieving fallback for: ', destination);
+	DEBUG_MODE && logger.warn('Retrieving fallback for: ', destination);
 	const cache = await caches.open(cacheKeys.FALLBACK_CACHE);
 	switch (destination) {
 		case cachableTypes.FONT: {
@@ -216,6 +217,6 @@ const getFallback = async (destination: string): Promise<Response | undefined> =
 };
 
 const handleFailure = (event: any, request: any, error?: any): Promise<Response> => {
-	logger.error('Handling failure: ', error);
+	DEBUG_MODE && logger.error('Handling failure: ', error);
 	return Promise.resolve(errorResponse());
 };

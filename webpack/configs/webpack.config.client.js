@@ -40,6 +40,9 @@ const resources = [
 	}, {
 		from: `${sourceLocation}/client/resources/styles/material.css`,
 		to: 'styles/'
+	}, {
+		from: `${sourceLocation}/client/resources/styles/roboto.css`,
+		to: 'styles/'
 	}
 ];
 
