@@ -110,6 +110,9 @@ const plugins = [
 		filename: 'offline.html',
 		minify: true
 	}),
+	new webpack.WatchIgnorePlugin([
+		/css\.d\.ts$/
+	]),
 	new webpack.DefinePlugin(EnvDefiner(packageJson.version))
 ];
 
