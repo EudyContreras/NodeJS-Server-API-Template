@@ -1,7 +1,7 @@
 
 import { storage } from '../constants';
 import { openDB, DBSchema } from 'idb';
-import { CacheQuotaOptions, logger } from '../commons';
+import { logger } from '../commons';
 
 const READ_WRITE = 'readwrite';
 const READ_ONLY = 'readonly';
@@ -26,28 +26,7 @@ const structure = {
 	}
 };
 
-export interface UpdateEntryArgs {
-    clearOnError: boolean | null | undefined;
-	expiryDate: number | null | undefined;
-	persist: boolean | undefined;
-    visited: boolean | undefined;
-}
-
-export interface Entry {
-    [key: string]: CacheEntryInfo;
-}
-
-export interface CacheEntryInfo {
-	id: string;
-	url: string;
-	persist: boolean;
-	cacheName: string;
-	expiryDate: number | null;
-	clearOnError: boolean;
-	visitFrequency: number;
-}
-
-export interface CacheEntrySchema extends DBSchema {
+interface CacheEntrySchema extends DBSchema {
 	cacheEntry: {
 		key: string;
 		value: CacheEntryInfo;

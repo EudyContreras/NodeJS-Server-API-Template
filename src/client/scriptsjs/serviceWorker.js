@@ -271,15 +271,6 @@ const registerWorker = (config) => {
 	}
 };
 
-const addBackgroundSync = (syncName) => {
-	onRegistration(registration => {
-		if (registration.sync) {
-			registration.sync.register(syncName)
-				.then(() => logger.log('Registered background sync: ', syncName))
-				.catch(err => logger.error('Error registering background sync', err));
-		}
-	});
-};
 
 const updateContentOnPageLoad = () => {
 
@@ -368,5 +359,4 @@ const watchOnlineStatus = () => {
 
 export const register = registerWorker;
 export const unregister = unregisterWorker;
-export const addSync = addBackgroundSync;
 export const watchConnection = watchOnlineStatus;

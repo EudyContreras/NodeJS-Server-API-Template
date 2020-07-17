@@ -84,12 +84,13 @@ const DefaultLayout = (props) => {
 			<link rel="apple-touch-icon" type="image/png" sizes="348x348" href="images/icons/touch-icon-348x348.png" defer />
 			<link rel="apple-touch-icon" type="image/png" sizes="512x512" href="images/icons/touch-icon-512x512.png" defer />
 
-			<link rel="apple-touch-icon-precomposed" type="image/png" sizes="57x57" href="images/icon-57x57.png" defer />
-			<link rel="apple-touch-startup-image" type="image/png" href="images/icons/touch-icon-348x348.png" defer />
+			<link rel="apple-touch-icon-precomposed" type="image/png" sizes="57x57" href="images/icons/touch-icon-64x64.png" defer />
+			<link rel="apple-touch-startup-image" type="image/png" sizes="348x348" href="images/icons/touch-icon-348x348.png" defer />
 
-			<link rel="stylesheet" crossOrigin="anonymous" as="font" href="styles/material.css" media="all" id="materialIcons" async disabled />
-			<link rel="stylesheet" crossOrigin="anonymous" as="font" href="styles/roboto.css" media="all" id="robotoFonts" async disabled/>
-			<link rel="preconnect" crossOrigin href="https://fonts.gstatic.com/" />
+			<link rel="stylesheet" crossOrigin="anonymous" href="styles/material.css" as="font" media="all" id="materialIcons" async disabled />
+			<link rel="stylesheet" crossOrigin="anonymous" href="styles/roboto.css" as="font" media="all" id="robotoFonts" async disabled/>
+			<link rel="preconnect" crossOrigin="anonymous" href="https://fonts.gstatic.com" />
+			<link rel="preconnect" crossOrigin="anonymous" href="https://fonts.googleapis.com" />
 			{/* <!-- Manifest.json  --> */}
 			<link rel="manifest" href="/manifest.json" />
 			<style id="serverCSS" dangerouslySetInnerHTML={{ __html: props.css.cssText }}/>
@@ -99,7 +100,7 @@ const DefaultLayout = (props) => {
 			<section id="content">{props.content}</section>
 			<script dangerouslySetInnerHTML={{
 				__html:
-					`
+			`
 			window.__RENDER_OPTIONS__=${JSON.stringify(options).replace(/</g, '\\u003c')};
 			window.__PRELOADED_STATE__= ${JSON.stringify(props.state).replace(/</g, '\\u003c')};
 
@@ -110,7 +111,7 @@ const DefaultLayout = (props) => {
 			`
 			}} />
 			<script id="__LOADABLE_REQUIRED_CHUNKS__" type='text/javascript'>[]</script>
-			<script async crossOrigin="anonymous" rel="preconnect" src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js" />
+			<script rel="preconnect" async crossOrigin="anonymous" src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js" />
 			{props.scripts.map((x, i) => <script async data-chunk="app" type='text/javascript' key={i} src={x.url} />)}
 		</body>
 	</html>;

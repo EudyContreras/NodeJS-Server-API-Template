@@ -4,7 +4,7 @@ import rippleEffect from '../../../../appliers/ripple.applier';
 import FontFaceObserver from 'fontfaceobserver';
 import { connect } from 'react-redux';
 import { join } from '../../../../appliers/style.applier';
-import * as InstallHelper from '../../../../scriptsjs/helpers/intallation.helper';
+import * as InstallHelper from '../../../../../workers/helpers/intallation.helper';
 import { DispatchProps, Dispatchers } from '../../../../actions/common/application/appdata.action';
 
 interface StateProps {

@@ -7,39 +7,40 @@ const events = {
 	AFTER_INSTALL: 'appinstalled'
 };
 
-let deferredPrompt = null;
+let deferredPrompt: any | null = null;
 
-export const register = (onInstalled) => {
+export const register = (onInstalled): void => {
 	window.addEventListener(events.BEFORE_INSTALL, event => {
 		event.preventDefault();
 		console.log('Not installed');
-		localStorage.setItem(keys.APP_INSTALLED, false);
+		localStorage.setItem(keys.APP_INSTALLED, String(false));
 		onInstalled(false);
 		deferredPrompt = event;
 	});
 
 	window.addEventListener(events.AFTER_INSTALL, () => {
-		localStorage.setItem(keys.APP_INSTALLED, true);
+		localStorage.setItem(keys.APP_INSTALLED, String(false));
 		console.log('Is installed');
 		onInstalled(true);
 	});
 };
 
-export const isInstalled = () => {
+export const isInstalled = (): boolean => {
 	const installationState = localStorage.getItem(keys.APP_INSTALLED);
 	if (installationState) {
 		console.log('Has installation flag');
 		return localStorage.getItem(keys.APP_INSTALLED) === 'true';
 	} else {
 		console.log('Has no installation flag');
+		return false;
 	}
 };
 
-export const hasInstallInfo = () => {
-	return localStorage.getItem(keys.APP_INSTALLED);
+export const hasInstallInfo = (): boolean => {
+	return localStorage.getItem(keys.APP_INSTALLED) != null;
 };
 
-export const showPrompt = () => {
+export const showPrompt = (): void => {
 	if (deferredPrompt !== null) {
 		deferredPrompt.prompt();
 		// Wait for the user to respond to the prompt
@@ -54,9 +55,9 @@ export const showPrompt = () => {
 	}
 };
 
-export const toggleFullScreen = () => {
-	const doc = window.document;
-	const docEl = doc.documentElement;
+export const toggleFullScreen = (): void => {
+	const doc: any = window.document;
+	const docEl: any = doc.documentElement;
 
 	const requestFullScreen = docEl.requestFullscreen || docEl.mozRequestFullScreen || docEl.webkitRequestFullScreen || docEl.msRequestFullscreen;
 	const cancelFullScreen = doc.exitFullscreen || doc.mozCancelFullScreen || doc.webkitExitFullscreen || doc.msExitFullscreen;

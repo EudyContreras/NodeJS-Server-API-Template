@@ -3,8 +3,6 @@ const baseUrl = '/?source=pwa';
 const appShellPage = '/?appshell=true';
 const offlineFallbackPage = '/offline.html';
 
-export const DEBUG_MODE = (process.env.NODE_ENV !== 'production');
-
 export const storage = {
 	NAME: 'Worker data storage',
 	DESCRIPTION: 'Templagte Engine Cache Handling Storage'
@@ -17,14 +15,13 @@ export const headers = {
 };
 
 export const clientMessages = {
-	UPDATE_AVAILABLE: 'update_available'
+	UPDATE_AVAILABLE: 'update_available',
+	DATA_UPDATE: 'network_data_update'
 };
 
 export const urlsToCache = [
 	'',
-	'/',
-	'https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js',
-	'https://fonts.googleapis.com/css?family=Roboto&display=optional'
+	'https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js'
 ];
 
 export interface CacheNames {
@@ -50,8 +47,11 @@ export const cacheNames = (version?: string | undefined): CacheNames =>({
 });
 
 export const syncEvents = {
-	INITIAL_SYNC: 'initial-sync',
-	UPDATE_SYNC: 'update-sync',
+	normal: {
+		INITIAL_SYNC: 'initial-sync',
+		UPDATE_SYNC: 'update-sync',
+		DATA_SYNC: 'data-sync'
+	},
 	periodic: {
 		CONTENT_SYNC: 'content-sync'
 	}
@@ -131,6 +131,7 @@ export const messages = {
 	READ_OFFLINE: 'read-offline',
 	SKIP_WAITING: 'skip-awaitng',
 	ADD_TO_CACHE: 'add-to-cache',
+	UNREGISTER_SYNC: 'unregister-sync',
 	PURGE_EXPIRED_CACHE: 'purgo-expired-cache',
 	WB_BROADCAST_UPDATE: 'workbox-broadcast-update',
 	REMOVE_FROM_CACHE: 'remove-from-cache'

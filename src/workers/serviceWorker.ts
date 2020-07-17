@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-import { hours, days, months, seconds } from './helpers/spanHelpers';
-import { staleWhileRevalidate, cacheFirst, networkFirst, addToCache, cacheResponse, fromNetwork } from './stragedies';
-import { logger, handleWebp, ClientMessage, WorkerMessage, filetypePatterns, filetypeCache, isNullOrEmpty, CacheQuotaOptions, CachePredicate, inRange } from './commons';
+import { hours, days, months, seconds } from './helpers/span.helper';
+import { staleWhileRevalidate, cacheThenRefresh, cacheFirst, networkFirst, addToCache, cacheResponse, fromNetwork } from './stragedies';
+import { logger, handleWebp, filetypePatterns, filetypeCache, isNullOrEmpty, inRange } from './commons';
 import { syncContent } from './helpers/syncHelpers';
 import {
 	httpMethods,
@@ -41,16 +41,6 @@ const notifyClient = (event: Event | any, message: ClientMessage): void => {
 	});
 };
 
-function sendMessageToClients(clientMessage: ClientMessage): void {
-	self.clients.matchAll({ includeUncontrolled: true }).then((clients) => {
-		clients.forEach((client) => {
-			client.postMessage({ ...clientMessage });
-		});
-	}, (error) => {
-		logger.log(error);
-	});
-}
-
 const defaultCachePredicate: CachePredicate = {
 	crossOrigin: true,
 	cacheCondition: ({ response }) => response && inRange(response?.status, 200, 300) || false
@@ -72,7 +62,7 @@ const any = (request: Request, ...types: string[]): boolean => {
 	return types.includes(request.destination);
 };
 
-DEBUG_MODE && logger.log('Yay! worker is loaded 🎉');
+DEBUG_MODE && logger.log('Your service worker is loaded 🎉');
 
 self.addEventListener(events.FETCH, (event: any) => {
 	const request: Request = event.request.clone();
@@ -144,12 +134,16 @@ self.addEventListener(events.FETCH, (event: any) => {
 
 	if (isAcceptedApiRequest(request)) {
 		const cacheName = cacheKeys.DATA_CACHE;
+		const cachePredicate: CachePredicate = {
+			crossOrigin: true,
+			acceptedStatus: [0, 200, 203, 202]
+		};
 		const quotaOptions: CacheQuotaOptions = {
 			clearOnError: true,
 			maxAgeSeconds: hours(6),
 			maxEntries: 8
 		};
-		networkFirst({ event, request, cacheName, quotaOptions, cachePredicate: defaultCachePredicate });
+		networkFirst({ event, request, cacheName, quotaOptions, cachePredicate: cachePredicate });
 		return;
 	}
 });
@@ -290,6 +284,17 @@ self.addEventListener(events.MESSAGE, async (event: any) => {
 		case messages.CACHE_URLS: {
 			const payload = data.payload;
 			addToCache(payload.cacheName, ...payload.urlsToCache);
+			break;
+		}
+		case messages.UNREGISTER_SYNC: {
+			const payload = data.payload;
+			const registration = await navigator.serviceWorker.ready;
+			await registration.periodicSync.unregister(payload);
+			if (DEBUG_MODE) {
+				registration.periodicSync.getTags().then(tags => {
+					logger.log('Registered tags: ', tags);
+				});
+			}
 			break;
 		}
 		case messages.ADD_TO_CACHE: {
