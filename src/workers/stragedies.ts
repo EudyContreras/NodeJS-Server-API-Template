@@ -1,6 +1,6 @@
 
 import { clientMessages, cachableTypes, cacheNames, fallbacks, responseType, headers } from './constants';
-import { days } from './helpers/span.helper';
+import { days } from './helpers/timespan.helper';
 import { logger, inRange, sendMessageToClients } from './commons';
 import { hasExpired, attachExpiration, getAllEntries, getEntry } from './handlers/localstorage';
 

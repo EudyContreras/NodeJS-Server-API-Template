@@ -1,9 +1,7 @@
 import { CacheNames } from '../constants';
 import { requestPermission, Permission, AccessStatus } from './access.helper';
-import { hasFeature, WorkerFeature } from './feature.helper';
-import { days } from './span.helper';
+import { days } from './timespan.helper';
 import { logger } from '../commons';
-import { onRegistration } from './register.helper';
 
 const DEBUG_MODE = (process.env.NODE_ENV !== 'production');
    
@@ -14,6 +12,10 @@ export const syncEvents = {
 		powerState: 'avoid-draining',
 		networkState: 'avoid-cellular'
 	}
+};
+
+const powerStates = {
+	
 };
 
 export async function syncContent(cacheNames: CacheNames): Promise<void> {
@@ -52,7 +54,7 @@ export async function addPeriodicBackgroundSync(
 	if (status === AccessStatus.GRANTED) {
 		const registration = await navigator.serviceWorker.ready;
 
-		if (hasFeature(registration, WorkerFeature.PERIODIC_SYNC)) {
+		if (registration.periodicSync) {
 			const tags = await registration.periodicSync.getTags();
 
 			if (!tags.includes(syncEvent.tag)) {
@@ -76,12 +78,14 @@ export async function addPeriodicBackgroundSync(
 	}
 };
 
-export function addBackgroundSync(syncName): void {
-	onRegistration(registration => {
-		if (registration.sync) {
-			registration.sync.register(syncName)
-				.then(() => logger.log('Registered background sync: ', syncName))
-				.catch(error => logger.error('Error registering background sync: ', error));
-		}
-	});
+export async function addBackgroundSync(syncName): Promise<void> {
+	if (!navigator.serviceWorker) return;
+
+	const registration = await navigator.serviceWorker.ready;
+
+	if (registration.sync) {
+		registration.sync.register(syncName)
+			.then(() => logger.log('Registered background sync: ', syncName))
+			.catch(error => logger.error('Error registering background sync: ', error));
+	}
 };

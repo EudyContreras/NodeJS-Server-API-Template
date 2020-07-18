@@ -111,7 +111,7 @@ const DefaultLayout = (props) => {
 			`
 			}} />
 			<script id="__LOADABLE_REQUIRED_CHUNKS__" type='text/javascript'>[]</script>
-			<script rel="preconnect" async crossOrigin="anonymous" src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js" />
+			<script async crossOrigin="anonymous" rel="preconnect" src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js" />
 			{props.scripts.map((x, i) => <script async data-chunk="app" type='text/javascript' key={i} src={x.url} />)}
 		</body>
 	</html>;

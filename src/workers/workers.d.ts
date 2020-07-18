@@ -99,8 +99,8 @@ interface Cache {
   addToCache(request: Request, response: Response | any, cacheName: string, maxEntries?: number): Promise<Response>;
 }
 
-type NetworkState = 'avoid-cellular';
-type PowerState = 'avoid-cellular';
+type NetworkState = 'auto' | 'avoid-draining';
+type PowerState = 'online' | 'avoid-cellular';
 
 interface PeriodicSyncEvent {
 	tag: string;

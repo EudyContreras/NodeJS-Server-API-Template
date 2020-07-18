@@ -1,3 +1,7 @@
+import { logger } from '../commons';
+
+const DEBUG_MODE = (process.env.NODE_ENV !== 'production');
+   
 const keys = {
 	APP_INSTALLED: 'APP_INSTALLED'
 };
@@ -9,18 +13,18 @@ const events = {
 
 let deferredPrompt: any | null = null;
 
-export const register = (onInstalled): void => {
+export const register = (onInstalled: (intalled: boolean) => void): void => {
 	window.addEventListener(events.BEFORE_INSTALL, event => {
 		event.preventDefault();
-		console.log('Not installed');
 		localStorage.setItem(keys.APP_INSTALLED, String(false));
+		DEBUG_MODE && logger.log('PWA not installed');
 		onInstalled(false);
 		deferredPrompt = event;
 	});
 
 	window.addEventListener(events.AFTER_INSTALL, () => {
 		localStorage.setItem(keys.APP_INSTALLED, String(false));
-		console.log('Is installed');
+		DEBUG_MODE && logger.log('PWA is installed');
 		onInstalled(true);
 	});
 };
@@ -28,10 +32,11 @@ export const register = (onInstalled): void => {
 export const isInstalled = (): boolean => {
 	const installationState = localStorage.getItem(keys.APP_INSTALLED);
 	if (installationState) {
-		console.log('Has installation flag');
-		return localStorage.getItem(keys.APP_INSTALLED) === 'true';
+		const installed = localStorage.getItem(keys.APP_INSTALLED) === 'true';
+		DEBUG_MODE && logger.log('PWA has been installed: ', installed);
+		return installed;
 	} else {
-		console.log('Has no installation flag');
+		DEBUG_MODE && logger.log('PWA has not been installed');
 		return false;
 	}
 };
@@ -43,12 +48,11 @@ export const hasInstallInfo = (): boolean => {
 export const showPrompt = (): void => {
 	if (deferredPrompt !== null) {
 		deferredPrompt.prompt();
-		// Wait for the user to respond to the prompt
 		deferredPrompt.userChoice.then((choiceResult) => {
 			if (choiceResult.outcome === 'accepted') {
-				console.log('User accepted the app installation prompt');
+				DEBUG_MODE && logger.log('User accepted the app installation prompt');
 			} else {
-				console.log('User dismissed the app installation prompt');
+				DEBUG_MODE && logger.log('User dismissed the app installation prompt');
 			}
 			deferredPrompt = null;
 		});

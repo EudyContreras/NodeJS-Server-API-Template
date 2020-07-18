@@ -69,6 +69,7 @@ interface CssExports {
   'subMenuItem': string;
   'subMenuItemWrapper': string;
   'topSection': string;
+  'topSectionVersion': string;
   'truncate': string;
 }
 export const cssExports: CssExports;

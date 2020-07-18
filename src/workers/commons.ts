@@ -1,6 +1,4 @@
 
-import { headers } from './constants';
-
 export const TIMEOUT = 1000;
 
 export const filetypePatterns = {

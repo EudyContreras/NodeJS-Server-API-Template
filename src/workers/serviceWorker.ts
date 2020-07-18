@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-import { hours, days, months, seconds } from './helpers/span.helper';
+import { hours, days, months, seconds } from './helpers/timespan.helper';
 import { staleWhileRevalidate, cacheThenRefresh, cacheFirst, networkFirst, addToCache, cacheResponse, fromNetwork } from './stragedies';
 import { logger, handleWebp, filetypePatterns, filetypeCache, isNullOrEmpty, inRange } from './commons';
-import { syncContent } from './helpers/syncHelpers';
+import { syncContent } from './helpers/syncevent.Helper';
 import {
 	httpMethods,
 	updateNotification,
@@ -68,9 +68,9 @@ self.addEventListener(events.FETCH, (event: any) => {
 	const request: Request = event.request.clone();
 	const url: URL = new URL(request.url);
 
-	DEBUG_MODE && logger.info(request.destination, request.url);
-
 	if (!(url.origin.startsWith('http'))) return;
+
+	DEBUG_MODE && logger.info(request.destination, request.url);
 
 	if (url.origin === self.location.origin && isNullOrEmpty(url.pathname)) {
 		const cacheName = cacheKeys.STATIC_CACHE;
@@ -265,6 +265,10 @@ self.addEventListener(events.PERIODIC_SYNC, (event: Event | any) => {
 	switch(event.tag) {
 		case syncEvents.periodic.CONTENT_SYNC: {
 			event.waitUntil(syncContent(cacheKeys));
+			break;
+		}
+		default: {
+			event.registration.unregister();
 		}
 	}
 });
@@ -288,12 +292,16 @@ self.addEventListener(events.MESSAGE, async (event: any) => {
 		}
 		case messages.UNREGISTER_SYNC: {
 			const payload = data.payload;
-			const registration = await navigator.serviceWorker.ready;
-			await registration.periodicSync.unregister(payload);
-			if (DEBUG_MODE) {
-				registration.periodicSync.getTags().then(tags => {
-					logger.log('Registered tags: ', tags);
-				});
+			try {
+				const registration = await navigator.serviceWorker.ready;
+				await registration.periodicSync.unregister(payload);
+				if (DEBUG_MODE) {
+					registration.periodicSync.getTags().then(tags => {
+						logger.log('Registered tags: ', tags);
+					});
+				}
+			} catch (error) {
+				logger.error('Error under sync unregistration!', error);
 			}
 			break;
 		}

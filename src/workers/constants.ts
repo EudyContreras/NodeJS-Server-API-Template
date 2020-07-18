@@ -20,8 +20,8 @@ export const clientMessages = {
 };
 
 export const urlsToCache = [
-	'',
-	'https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js'
+	'/',
+	'https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js'
 ];
 
 export interface CacheNames {
@@ -83,6 +83,9 @@ export const updateNotification = {
 
 export const events = {
 	SYNC: 'sync',
+	LOAD: 'load',
+	ONLINE: 'online',
+	OFFLINE: 'offline',
 	CONTROLLING: 'controlling',
 	PERIODIC_SYNC: 'periodicsync',
 	NOTIFY_CLICK: 'notificationclick',
