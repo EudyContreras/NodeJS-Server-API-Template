@@ -40,6 +40,9 @@ const resources = [
 	}, {
 		from: `${sourceLocation}/client/resources/styles/material.css`,
 		to: 'styles/'
+	}, {
+		from: `${sourceLocation}/client/resources/styles/roboto.css`,
+		to: 'styles/'
 	}
 ];
 
@@ -107,6 +110,9 @@ const plugins = [
 		filename: 'offline.html',
 		minify: true
 	}),
+	new webpack.WatchIgnorePlugin([
+		/css\.d\.ts$/
+	]),
 	new webpack.DefinePlugin(EnvDefiner(packageJson.version))
 ];
 

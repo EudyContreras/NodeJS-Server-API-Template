@@ -1,8 +1,8 @@
 
 import ReactDOM from 'react-dom';
 import configureStore from './stores/store';
+import { registerWorker } from '../workers/helpers/register.helper';
 import { loadableReady } from '@loadable/component';
-import { register } from './scriptsjs/serviceWorker';
 import './resources/images/favicon.ico';
 import './resources/images/icons/touch-icon.png';
 import { client } from './views';
@@ -32,7 +32,7 @@ loadableReady(() => {
 	document.getElementById('serverCSS')?.remove();
 
 	if (renderOptions.enableSW == true) {
-		register({ 
+		registerWorker({ 
 			clientSideRendered: renderOptions.clientSideRendered,
 			watchConnnectionState: renderOptions.watchConnection,
 			registerPushNotifications: false,

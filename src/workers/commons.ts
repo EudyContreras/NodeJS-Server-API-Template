@@ -1,65 +1,5 @@
 
-import { headers } from './constants';
-
 export const TIMEOUT = 1000;
-
-export interface WorkerMessage {
-    type: string;
-    cacheName?: string;
-    payload?: any;
-}
-
-export interface ClientMessage {
-    type: string;
-    meta?: string;
-    payload?: any;
-}
-export interface CacheQuotaOptions {
-	clearOnError: boolean;
-	maxAgeSeconds: number;
-	maxEntries: number;
-};
-
-export interface CacheConditionTargets {
-    request: Request;
-    response: Response;
-    url: URL;
-}
-
-export interface CachePredicate {
-    cacheCondition?: (targets: CacheConditionTargets) => boolean;
-	acceptedStatus?: number[];
-	allowOpaque?: boolean;
-    crossOrigin?: boolean;
-}
-
-export interface CacheStragedy {
-	event: any;
-	request: Request;
-    cacheName: string;
-    quotaOptions?: CacheQuotaOptions;
-	cachePredicate?: CachePredicate;
-}
-
-export interface RevalidateCacheStragedy extends CacheStragedy {
-	theresholdAge?: number;
-}
-
-export interface AgingResponseInfo {
-	cacheableResponse: Response;
-	effectiveResponse: Response;
-	expirationDate: Date | null;
-}
-
-export interface CacheExpirationInfo {
-	response: Response | undefined;
-	expiration: number | null;
-}
-
-export interface WebpSupportCallback<T> {
-	onHasSupport: () => Promise<T>;
-	onNoSupport: () => Promise<T>;
-}
 
 export const filetypePatterns = {
 	API_DATA: /\/api\/.*\/*.(json|xml)$/,
@@ -89,81 +29,6 @@ export const inRangeInclusive = (value: number, min: number, max: number): boole
 export const addDelay = (ms: number) => (): any => new Promise(resolve => setTimeout(() => resolve(), ms));
 
 export const isNullOrEmpty = (path): boolean => !path || path === '' || path == undefined;
-
-export const checkExpiration = (response: Response | undefined, quotaOptions: CacheQuotaOptions | undefined): CacheExpirationInfo => {
-	if (response && quotaOptions) {
-		const expiryData = response.headers.get(headers.EXPIRATION_HEADER_KEY);
-
-		if (!expiryData) return {
-			response: response,
-			expiration: null
-		};
-		
-		const expirationDate = expiryData && Date.parse(expiryData);
-		const now = Date.now();
-
-		if (expirationDate && expirationDate > now) {
-			return {
-				response: response,
-				expiration: expirationDate
-			};
-		}
-	}	
-	return {
-		response: response,
-		expiration: null
-	};
-};
-
-export const attachExpiration = (response: Response, quotaOptions: CacheQuotaOptions | undefined): Promise<(AgingResponseInfo)> => {
-	if (response && quotaOptions) {
-		const expires = new Date();
-		expires.setSeconds(expires.getSeconds() + quotaOptions.maxAgeSeconds);
-	
-		const cachedResponseFields = {
-			status: response.status,
-			statusText: response.statusText,
-			headers: {
-				[headers.EXPIRATION_HEADER_KEY] : expires.toUTCString()
-			}
-		};
-		response.headers.forEach((value, key) => {
-			cachedResponseFields.headers[key] = value;
-		});
-
-		const returnedResponse = response.clone();
-		return response.blob().then((body) => {
-			logger.warn('Expiration attached to: ', response);
-			return { 
-				expirationDate: expires,
-				effectiveResponse: returnedResponse,
-				cacheableResponse: new Response(body, cachedResponseFields)
-			};
-		}).catch(e => {
-			logger.error(e);
-			return { 
-				expirationDate: null,
-				effectiveResponse: returnedResponse,
-				cacheableResponse: returnedResponse.clone()
-			}; 
-		});
-	}
-	return Promise.resolve({ effectiveResponse: response, cacheableResponse: response.clone(), expirationDate: null } );
-};
-
-/**
- * Remove entries that are used the least
- * @param cacheName 
- * @param quotaOptions 
- * @param newEntryCount 
- */
-export const replaceStaledEntries = (cacheName: string, quotaOptions: CacheQuotaOptions, newEntryCount: number) => {
-
-};
-
-export const purgeCacheOnQuotaError = (cacheName: string) => {
-
-};
 
 export const handleWebp = async <T> (supportCallbacks: WebpSupportCallback<T>): Promise<any> => {
 	if (!self.createImageBitmap) return false;
@@ -230,6 +95,16 @@ export const storeDataAndUpdateUI = async (): Promise<void> => {
 		}
 	}
 };
+
+export function sendMessageToClients(message: ClientMessage, includeUncontrolled = true): void {
+	self.clients.matchAll({ includeUncontrolled }).then((clients) => {
+		clients.forEach((client) => {
+			client.postMessage(JSON.stringify(message));
+		});
+	}, (error) => {
+		logger.log(error);
+	});
+}
 
 export const logger = {
 	log: (...message: any): void => {

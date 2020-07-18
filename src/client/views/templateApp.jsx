@@ -84,15 +84,15 @@ const DefaultLayout = (props) => {
 			<link rel="apple-touch-icon" type="image/png" sizes="348x348" href="images/icons/touch-icon-348x348.png" defer />
 			<link rel="apple-touch-icon" type="image/png" sizes="512x512" href="images/icons/touch-icon-512x512.png" defer />
 
-			<link rel="apple-touch-icon-precomposed" type="image/png" sizes="57x57" href="images/icon-57x57.png" defer />
-			<link rel="apple-touch-startup-image" type="image/png" href="images/icons/touch-icon-348x348.png" defer />
+			<link rel="apple-touch-icon-precomposed" type="image/png" sizes="57x57" href="images/icons/touch-icon-64x64.png" defer />
+			<link rel="apple-touch-startup-image" type="image/png" sizes="348x348" href="images/icons/touch-icon-348x348.png" defer />
 
-			<link rel="stylesheet" href="styles/material.css" media="all" id="materialIcons" async disabled />
-			<link rel="stylesheet" crossOrigin="anonymous" href="https://fonts.googleapis.com/css?family=Roboto&display=optional" media="all" id="robotoFont" defer disabled />
-
+			<link rel="stylesheet" crossOrigin="anonymous" href="styles/material.css" as="font" media="all" id="materialIcons" async disabled />
+			<link rel="stylesheet" crossOrigin="anonymous" href="styles/roboto.css" as="font" media="all" id="robotoFonts" async disabled/>
+			<link rel="preconnect" crossOrigin="anonymous" href="https://fonts.gstatic.com" />
+			<link rel="preconnect" crossOrigin="anonymous" href="https://fonts.googleapis.com" />
 			{/* <!-- Manifest.json  --> */}
 			<link rel="manifest" href="/manifest.json" />
-
 			<style id="serverCSS" dangerouslySetInnerHTML={{ __html: props.css.cssText }}/>
 			<noscript>You need to enable JavaScript to fully be able to use this this web-app.</noscript>
 		</head>
@@ -100,19 +100,18 @@ const DefaultLayout = (props) => {
 			<section id="content">{props.content}</section>
 			<script dangerouslySetInnerHTML={{
 				__html:
-					`
+			`
 			window.__RENDER_OPTIONS__=${JSON.stringify(options).replace(/</g, '\\u003c')};
 			window.__PRELOADED_STATE__= ${JSON.stringify(props.state).replace(/</g, '\\u003c')};
 
 			window.addEventListener("load", () => {
-				document.getElementById("robotoFont")?.removeAttribute("disabled");
+				document.getElementById("robotoFonts")?.removeAttribute("disabled");
 				document.getElementById("materialIcons")?.removeAttribute("disabled");
 			});			
 			`
 			}} />
-			<script async rel="preconnect" crossOrigin="anonymous" src="https://cdn.jsdelivr.net/npm/pwacompat@2.0.9/pwacompat.min.js" integrity="sha384-VcI6S+HIsE80FVM1jgbd6WDFhzKYA0PecD/LcIyMQpT4fMJdijBh0I7Iblaacawc" />
-			<script defer rel="preconnect" crossOrigin="anonymous" src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js" />
 			<script id="__LOADABLE_REQUIRED_CHUNKS__" type='text/javascript'>[]</script>
+			<script async crossOrigin="anonymous" rel="preconnect" src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js" />
 			{props.scripts.map((x, i) => <script async data-chunk="app" type='text/javascript' key={i} src={x.url} />)}
 		</body>
 	</html>;

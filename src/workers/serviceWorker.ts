@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-import { minutes, hours, days, weeks, months, years, seconds } from './helpers/spanHelpers';
-import { staleWhileRevalidate, cacheFirst, networkFirst, addToCache, cacheResponse, fromNetwork } from './stragedies';
-import { logger, handleWebp, ClientMessage, WorkerMessage, filetypePatterns, filetypeCache, isNullOrEmpty, CacheQuotaOptions, CachePredicate, inRange } from './commons';
-import { syncContent } from './helpers/syncHelpers';
+import { hours, days, months, seconds } from './helpers/timespan.helper';
+import { staleWhileRevalidate, cacheThenRefresh, cacheFirst, networkFirst, addToCache, cacheResponse, fromNetwork } from './stragedies';
+import { logger, handleWebp, filetypePatterns, filetypeCache, isNullOrEmpty, inRange } from './commons';
+import { syncContent } from './helpers/syncevent.Helper';
 import {
 	httpMethods,
 	updateNotification,
@@ -11,23 +11,19 @@ import {
 	commonOrigins,
 	fallbacks,
 	cacheNames,
-	headers,
 	constants,
 	syncEvents,
 	messages,
 	events
 } from './constants';
 
-
 const DEBUG_MODE = (process.env.NODE_ENV !== 'production');
    
 const cacheKeys = cacheNames(__VERSION_NUMBER__);
 const precacheManifest = [...self.__WB_MANIFEST];
 
-const handleSideEffects = false;
-const allowRequestLog = true;
-
 const precacheableFallbacks = [
+	{ url: fallbacks.FALLBACK_HTML_URL, revision: null },
 	{ url: fallbacks.FALLBACK_IMAGE_URL, revision: null },
 	{ url: fallbacks.FALLBACK_ERROR_URL, revision: null },
 	{ url: fallbacks.FALLBACK_FONT_URL, revision: null }
@@ -44,16 +40,6 @@ const notifyClient = (event: Event | any, message: ClientMessage): void => {
 		client.postMessage(message);
 	});
 };
-
-function sendMessageToClients(clientMessage: ClientMessage): void {
-	self.clients.matchAll({ includeUncontrolled: true }).then((clients) => {
-		clients.forEach((client) => {
-			client.postMessage({ ...clientMessage });
-		});
-	}, (error) => {
-		logger.log(error);
-	});
-}
 
 const defaultCachePredicate: CachePredicate = {
 	crossOrigin: true,
@@ -76,31 +62,30 @@ const any = (request: Request, ...types: string[]): boolean => {
 	return types.includes(request.destination);
 };
 
-DEBUG_MODE && logger.log('Yay! worker is loaded 🎉');
+DEBUG_MODE && logger.log('Your service worker is loaded 🎉');
 
 self.addEventListener(events.FETCH, (event: any) => {
 	const request: Request = event.request.clone();
 	const url: URL = new URL(request.url);
 
-	DEBUG_MODE && logger.info(request.destination, request.url);
+	if (!(url.origin.startsWith('http'))) return;
 
-	if (!(url.origin.startsWith('http')) || isSideEffectRequest(request) && !handleSideEffects) return;
+	DEBUG_MODE && logger.info(request.destination, request.url);
 
 	if (url.origin === self.location.origin && isNullOrEmpty(url.pathname)) {
 		const cacheName = cacheKeys.STATIC_CACHE;
-		const promise = staleWhileRevalidate({ event, request, cacheName });
-		return event.respondWith(promise);
+		staleWhileRevalidate({ event, request, cacheName, theresholdAge: days(1) });
+		return;
 	}
 
 	if (any(request, cachableTypes.STYLE, cachableTypes.SCRIPT, cachableTypes.DOCUMENT)) {
 		const cacheName = url.origin === commonOrigins.STYLESHEET_FONTS ? cacheKeys.GOOGLE_FONTS_SHEETS_CACHE : cacheKeys.STATIC_CACHE;
 		const cachePredicate: CachePredicate = {
 			crossOrigin: true,
-			acceptedStatus: [0, 200, 202, 203, 202],
 			cacheCondition: ({ response }) => response && inRange(response?.status, 200, 300) || false
 		};
-		const promise = staleWhileRevalidate({ event, request, cacheName, cachePredicate: cachePredicate, theresholdAge: days(1) });
-		return event.respondWith(promise);
+		staleWhileRevalidate({ event, request, cacheName, cachePredicate: cachePredicate, theresholdAge: days(1) });
+		return;
 	}
 
 	if (isWebFontRequest(request, url)) {
@@ -109,8 +94,8 @@ self.addEventListener(events.FETCH, (event: any) => {
 			crossOrigin: true,
 			acceptedStatus: [0, 200, 203, 202]
 		};
-		const promise = cacheFirst({ event, request, cacheName, cachePredicate });
-		return event.respondWith(promise);
+		cacheFirst({ event, request, cacheName, cachePredicate });
+		return;
 	}
 
 	if (request.destination === cachableTypes.IMAGE) {
@@ -121,16 +106,8 @@ self.addEventListener(events.FETCH, (event: any) => {
 			maxEntries: 100
 		};
 
-		const promise = cacheFirst({ event, request, cacheName, quotaOptions, cachePredicate: defaultCachePredicate });
-	
-		if (filetypePatterns.PROGRESSIVE_IMAGE.test(url.pathname)) {
-			return event.respondWith(handleWebp<any>({
-				onHasSupport: () => { return promise; },
-				onNoSupport: () => { return fromNetwork(event.request); }
-			}));
-		} else {
-			return event.respondWith(promise);
-		}
+		cacheFirst({ event, request, cacheName, quotaOptions, cachePredicate: defaultCachePredicate });
+		return;
 	}
 
 	if (request.destination === cachableTypes.AUDIO) {
@@ -140,8 +117,8 @@ self.addEventListener(events.FETCH, (event: any) => {
 			maxAgeSeconds: months(2),
 			maxEntries: 30
 		};
-		const promise = cacheFirst({ event, request, cacheName, quotaOptions, cachePredicate: defaultCachePredicate });
-		return event.respondWith(promise);
+		cacheFirst({ event, request, cacheName, quotaOptions, cachePredicate: defaultCachePredicate });
+		return;
 	}
 
 	if (request.destination === cachableTypes.VIDEO) {
@@ -151,26 +128,30 @@ self.addEventListener(events.FETCH, (event: any) => {
 			maxAgeSeconds: days(30),
 			maxEntries: 10
 		};
-		const promise = cacheFirst({ event, request, cacheName, quotaOptions, cachePredicate: defaultCachePredicate });
-		return event.respondWith(promise);
+		cacheFirst({ event, request, cacheName, quotaOptions, cachePredicate: defaultCachePredicate });
+		return;
 	}
 
 	if (isAcceptedApiRequest(request)) {
 		const cacheName = cacheKeys.DATA_CACHE;
+		const cachePredicate: CachePredicate = {
+			crossOrigin: true,
+			acceptedStatus: [0, 200, 203, 202]
+		};
 		const quotaOptions: CacheQuotaOptions = {
 			clearOnError: true,
 			maxAgeSeconds: hours(6),
 			maxEntries: 8
 		};
-		const promise = networkFirst({ event, request, cacheName, quotaOptions, cachePredicate: defaultCachePredicate });
-		return event.respondWith(promise);
+		networkFirst({ event, request, cacheName, quotaOptions, cachePredicate: cachePredicate });
+		return;
 	}
 });
 
 self.addEventListener(events.INSTALL, async (event: any) => {
 	DEBUG_MODE && logger.log(events.INSTALL, `Version : ${__VERSION_NUMBER__}`, event);
 
-	const allResources = new Set([]);
+	const allResources = new Set([...precacheManifest.map((x: any) => x.url), ...constants.urlsToCache]);
 	const precacheCallback = async (cacheName: string, urls: string[]): Promise<void> => {
 		try {
 			const cache = await caches.open(cacheName);
@@ -180,11 +161,13 @@ self.addEventListener(events.INSTALL, async (event: any) => {
 		}
 	};
 
-	event.waitUntil(
-		handleInstallation(Array.from(allResources), precacheCallback)
-			.then(() => self.skipWaiting())
-			.catch(error => logger.log(error))
-	);;
+	if (allResources.size > 0) {
+		event.waitUntil(
+			handleInstallation(Array.from(allResources), precacheCallback)
+				.then(() => self.skipWaiting())
+				.catch(error => logger.log(error))
+		);;
+	}
 });
 
 const handleInstallation = async (urls: string[], callback: (cacheName: string, urls: string[]) => void): Promise<void> => {
@@ -222,12 +205,13 @@ self.addEventListener(events.ACTIVATE, async (event: any) => {
 		caches.keys()
 			.then(currentCaches => {
 				const expectedCaches = Object.values(cacheKeys);
-				return currentCaches.filter(key => !expectedCaches.includes(key));
-			}).then(keys => {
-				keys.forEach(key => {
-					DEBUG_MODE && logger.log(`Deleting cache name: ${key}`);
-					return caches.delete(key);
-				});
+				return Promise.all(currentCaches
+					.filter(key => !expectedCaches.includes(key))
+					.map(key => {
+						DEBUG_MODE && logger.log(`Deleting cache name: ${key}`);
+						return caches.delete(key);
+					})
+				);
 			}).catch(error => logger.log(error)));
 	return self.clients.claim();
 });
@@ -281,6 +265,10 @@ self.addEventListener(events.PERIODIC_SYNC, (event: Event | any) => {
 	switch(event.tag) {
 		case syncEvents.periodic.CONTENT_SYNC: {
 			event.waitUntil(syncContent(cacheKeys));
+			break;
+		}
+		default: {
+			event.registration.unregister();
 		}
 	}
 });
@@ -302,6 +290,21 @@ self.addEventListener(events.MESSAGE, async (event: any) => {
 			addToCache(payload.cacheName, ...payload.urlsToCache);
 			break;
 		}
+		case messages.UNREGISTER_SYNC: {
+			const payload = data.payload;
+			try {
+				const registration = await navigator.serviceWorker.ready;
+				await registration.periodicSync.unregister(payload);
+				if (DEBUG_MODE) {
+					registration.periodicSync.getTags().then(tags => {
+						logger.log('Registered tags: ', tags);
+					});
+				}
+			} catch (error) {
+				logger.error('Error under sync unregistration!', error);
+			}
+			break;
+		}
 		case messages.ADD_TO_CACHE: {
 			const request = new Request(data.payload);
 			const cacheName = filetypeCache(data.payload, cacheKeys);
@@ -309,28 +312,9 @@ self.addEventListener(events.MESSAGE, async (event: any) => {
 				const response = await fromNetwork(request, seconds(10));
 				cacheResponse(cacheName, request, response);
 			} catch (error) {
-				if (process.env.NODE_ENV !== 'production') logger.error('Something went wrong!', error);
+				DEBUG_MODE && logger.error('Something went wrong!', error);
 			}
 			break;
-		}
-		case messages.PURGE_EXPIRED_CACHE: {
-			const cacheKeys = await caches.keys();
-
-			cacheKeys.forEach(async (element) => {
-				const cache = await caches.open(element);
-				const keys = await cache.keys();
-				keys.forEach(key => 
-					cache.match(key).then((cachedResponse) => {
-						const expiryData = cachedResponse && cachedResponse.headers.get(headers.EXPIRATION_HEADER_KEY);
-						const expirationDate = expiryData && Date.parse(expiryData);
-						const now = Date.now();
-						if (expirationDate && expirationDate < now) {
-							logger.warn(`Purging (expired) entry ${key.url} from cache.`);
-							cache.delete(key);
-						}
-					})
-				);
-			});
 		}
 	}
 });

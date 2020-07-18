@@ -45,6 +45,7 @@
 		}, {
 			"src": "images/icons/touch-icon-192x192.png",
 			"sizes": "192x192",
+			"purpose": "any maskable",
 			"type": "image/png"
 		}, {
 			"src": "images/icons/touch-icon-257x257.webp",
@@ -65,8 +66,9 @@
 		}
 	],
 	"serviceworker": {
-		"src": "service-worker.js",
-		"scope": "/"
+		"src": "./service-worker.js",
+		"scope": "/app",
+		"type": ""
 	},
 	"scope": "/",
 	"gcm_sender_id": "",

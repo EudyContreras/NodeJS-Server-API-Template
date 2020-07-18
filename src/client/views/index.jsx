@@ -6,16 +6,6 @@ import { Provider } from 'react-redux';
 import { createBrowserHistory, createMemoryHistory } from 'history';
 import { BrowserRouter, StaticRouter } from 'react-router-dom';
 
-export const shell = (url, store, context, insertCss) => (
-	<Provider store={store}>
-		<StaticRouter onUpdate={() => window.scrollTo(0, 0)} location={url} context={context}>
-			<StyleContext.Provider value={{ insertCss }}>
-				<Application location={url} />
-			</StyleContext.Provider>
-		</StaticRouter>
-	</Provider>
-);
-
 export const appLight = (url, css, context) => {
 	const styling = new Set([css]);
 	const insertCss = (...styles) => styles.forEach(style => styling.add(style._getCss()));

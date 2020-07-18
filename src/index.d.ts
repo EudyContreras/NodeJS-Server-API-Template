@@ -13,36 +13,6 @@ declare module '*.webp' {
    export = value;
 }
 
-declare module '*.css' {
-   const content: string;
-   export default content;
-}
-
-declare module '*.scss' {
-   const content: string;
-   export default content;
-}
-
-declare module '*.module.css' {
-   const classes: { [key: string]: string };
-   export default classes;
-}
-
-declare module '*.module.scss' {
-   const classes: { [key: string]: string };
-   export default classes;
-}
-
-declare module '*.module.sass' {
-   const classes: { [key: string]: string };
-   export default classes;
-}
-
-declare module '*.module.less' {
-   const classes: { [key: string]: string };
-   export default classes;
-}
-
 declare module '*.pem' {
    const value: any;
    export = value;
@@ -64,9 +34,3 @@ declare module 'isomorphic-style-loader/StyleContext';
 declare module 'isomorphic-style-loader/withStyles';
 
 declare module 'react-loadable-ssr-addon'
-
-declare const __VERSION_NUMBER__: any;
-
-interface Cache {
-   addToCache(equest: Request, response: Response, cacheName: string): Promise<void>;
-}
