@@ -12,6 +12,7 @@ module.exports = function (api) {
 		'@babel/preset-typescript'
 	];
 	const plugins = [
+		'react-css-modules',
 		'@loadable/babel-plugin',
 		'@babel/plugin-proposal-class-properties',
 		'@babel/plugin-proposal-object-rest-spread',

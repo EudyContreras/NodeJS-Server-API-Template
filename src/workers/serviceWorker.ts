@@ -151,32 +151,35 @@ self.addEventListener(events.FETCH, (event: any) => {
 self.addEventListener(events.INSTALL, async (event: any) => {
 	DEBUG_MODE && logger.log(events.INSTALL, `Version : ${__VERSION_NUMBER__}`, event);
 
-	const allResources = new Set([...precacheManifest.map((x: any) => x.url), ...constants.urlsToCache]);
-	const precacheCallback = async (cacheName: string, urls: string[]): Promise<void> => {
+	const allResources = Array.from(new Set([...precacheManifest.map((x: any) => x.url), ...constants.urlsToCache])).map(url => {
+		return new Request(url, { mode: 'no-cors' });
+	});
+
+	const precacheCallback = async (cacheName: string, requests: RequestInfo[]): Promise<void> => {
 		try {
 			const cache = await caches.open(cacheName);
-			await cache.addAll(urls);
+			await cache.addAll(requests);
 		} catch (error) {
-			DEBUG_MODE && logger.error('Could not save urls: ', urls, error);
+			DEBUG_MODE && logger.error('Could not save urls: ', requests, error);
 		}
 	};
 
-	if (allResources.size > 0) {
+	if (allResources.length > 0) {
 		event.waitUntil(
-			handleInstallation(Array.from(allResources), precacheCallback)
+			handleInstallation(allResources, precacheCallback)
 				.then(() => self.skipWaiting())
 				.catch(error => logger.log(error))
 		);;
 	}
 });
 
-const handleInstallation = async (urls: string[], callback: (cacheName: string, urls: string[]) => void): Promise<void> => {
+const handleInstallation = async (urls: Request[], callback: (cacheName: string, urls: RequestInfo[]) => void): Promise<void> => {
 	try {
-		const imageAssets = urls.filter(x => filetypePatterns.IMAGE.test(x) || filetypePatterns.PROGRESSIVE_IMAGE.test(x));
-		const mediaAssets = urls.filter(x => filetypePatterns.VIDEO.test(x) || filetypePatterns.AUDIO.test(x));
-		const fontAssests = urls.filter(x => filetypePatterns.FONT.test(x));
-		const staticAssets = urls.filter(x => filetypePatterns.STATIC.test(x));
-		const dataAssets = urls.filter(x => filetypePatterns.DATA.test(x));
+		const imageAssets = urls.filter(x => filetypePatterns.IMAGE.test(x.url) || filetypePatterns.PROGRESSIVE_IMAGE.test(x.url));
+		const mediaAssets = urls.filter(x => filetypePatterns.VIDEO.test(x.url) || filetypePatterns.AUDIO.test(x.url));
+		const fontAssests = urls.filter(x => filetypePatterns.FONT.test(x.url));
+		const staticAssets = urls.filter(x => filetypePatterns.STATIC.test(x.url));
+		const dataAssets = urls.filter(x => filetypePatterns.DATA.test(x.url));
 
 		if (imageAssets.length > 0) {
 			await callback(cacheKeys.IMAGE_CACHE, imageAssets);

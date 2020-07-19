@@ -46,9 +46,12 @@ Fast production ready boilerplate backed by the MERN stack. Built to provide the
 * Docker
 * Morgan
 * Nodemon
+* PostCSS
+* Axios
 * SASS (SCSS)
-* ESList TSLint
-
+* Prettier
+* ESList
+* StyleLint
 
 ## Features:
 

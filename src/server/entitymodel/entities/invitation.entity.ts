@@ -16,7 +16,7 @@ const schema = new EntitySchema({
 	},
 	hostessId: {
 		type: String,
-		required: false,
+		required: false
 	},
 	pending: {
 		type: Boolean,

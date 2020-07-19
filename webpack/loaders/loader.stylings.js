@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 module.exports = (path, isProduction) => [
 	{
 		test: /\.(c|le|sa|sc)ss$/,
@@ -16,6 +17,7 @@ module.exports = (path, isProduction) => [
 					importLoaders: 1
 				}
 			},
+			//{ loader: 'postcss-loader' },
 			{
 				loader: 'less-loader',
 				options: {

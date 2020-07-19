@@ -10,6 +10,12 @@
       "typescriptreact"
    ],
 
+   "eslint.alwaysShowStatus": true,
+   "eslint.lintTask.enable": true,
+   
+   "workbench.settings.openDefaultKeybindings": true,
+   "workbench.settings.editor": "json",
+   "workbench.colorTheme": "Super One Dark",
    "workbench.colorCustomizations": {
       "terminal.background": "#191d22",
 
@@ -67,14 +73,23 @@
    },
 
    // "editor.fontWeight": "normal",
-   "editor.mouseWheelZoom": true,
-   "eslint.alwaysShowStatus": true,
-   "eslint.lintTask.enable": true,
+  
    "python.pythonPath": "/usr/local/opt/python/bin/python3.7",
-   "workbench.settings.openDefaultKeybindings": true,
-   "workbench.settings.editor": "json",
-   "keyboard.dispatch": "keyCode",
-   "editor.multiCursorModifier": "ctrlCmd",
-   "debug.node.autoAttach": "off",
 
+   "keyboard.dispatch": "keyCode",
+
+   "editor.mouseWheelZoom": true,
+   "editor.suggestSelection": "first",
+   "editor.multiCursorModifier": "ctrlCmd",
+
+   "debug.node.autoAttach": "off",
+   "files.autoSave": "afterDelay",
+  
+   "javascript.updateImportsOnFileMove.enabled": "always",
+
+   "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
+
+   "[javascript]": {
+       "editor.defaultFormatter": "HookyQR.beautify"
+   },
 }

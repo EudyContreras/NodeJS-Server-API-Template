@@ -90,7 +90,7 @@ export const validateInviteQuery = (data: any): any => {
 			.string()
 			.optional()
 			.allow(...ALL)
-			.only(),
+			.only()
 	}).or('_id', 'email');
 	
 	return {
