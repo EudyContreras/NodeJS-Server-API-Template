@@ -81,7 +81,9 @@
    "editor.mouseWheelZoom": true,
    "editor.suggestSelection": "first",
    "editor.multiCursorModifier": "ctrlCmd",
-
+   "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": true
+   },
    "debug.node.autoAttach": "off",
    "files.autoSave": "afterDelay",
   

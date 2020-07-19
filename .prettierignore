@@ -3,3 +3,4 @@ build/*
 assets/*
 dist/*
 ssl/*
+node_modules/

@@ -22,8 +22,8 @@
   "scripts": {
     "start": "node build/server.js",
     "cleanup": "rimraf pre dist build",
-    "lint-and-fix": "eslint . --ext .ts --fix",
-    "fix-code": "prettier-eslint --write $PWD/'src/**/*.{js,jsx,jsx,tsx}' ",
+    "lint-and-fix": "eslint 'src/**/*.{js,jsx,ts,tsx}' --quiet --fix",
+    "fix-code": "prettier-eslint --write $PWD/'src/**/*.{js,jsx,ts,tsx}' ",
     "fix-styles": "prettier-stylelint --write $PWD/'src/**/*.{css,scss,less,sass}' ",
     "fix-all": "npm-run-all fix-code fix-styles",
     "compile-ts": "npm run cleanup && tsc -b ./ && cpy --cwd=src --parents '**/*' '!**/*.(ts|js|tsx|jsx)' ../dist/ ",
@@ -61,6 +61,16 @@
       "last 1 chrome version",
       "last 1 firefox version",
       "last 1 safari version"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "src/**/*.{js,jsx,ts,tsx}": [
+      "eslint --fix"
     ]
   },
   "dependencies": {
@@ -204,18 +214,22 @@
     "duplicate-package-checker-webpack-plugin": "^3.0.0",
     "eslint": "^6.8.0",
     "eslint-config-airbnb": "^18.0.1",
+    "eslint-config-prettier": "^6.11.0",
     "eslint-plugin-import": "^2.21.2",
     "eslint-plugin-jsx-a11y": "^6.2.3",
+    "eslint-plugin-prettier": "^3.1.4",
     "eslint-plugin-react": "^7.20.3",
     "eslint-plugin-react-hooks": "^1.7.0",
     "file-loader": "^4.2.0",
     "handlebars-loader": "^1.7.1",
     "html-loader": "^1.1.0",
     "html-webpack-plugin": "^4.3.0",
+    "husky": "^4.2.5",
     "image-webpack-loader": "^6.0.0",
     "imagemin-webp-webpack-plugin": "^3.3.1",
     "install": "^0.13.0",
     "less-loader": "^6.2.0",
+    "lint-staged": "^10.2.11",
     "node-sass": "^4.14.1",
     "nodemon": "^1.19.4",
     "nodemon-webpack-plugin": "^4.3.2",
@@ -223,6 +237,7 @@
     "npm-run-all": "^4.1.5",
     "optimize-css-assets-webpack-plugin": "^5.0.3",
     "postcss-loader": "^3.0.0",
+    "prettier": "2.0.5",
     "prettier-eslint": "^11.0.0",
     "prettier-eslint-cli": "^5.0.0",
     "prettier-stylelint": "^0.4.2",
@@ -234,6 +249,7 @@
     "sharp": "^0.23.4",
     "style-loader": "^1.2.1",
     "stylelint": "^13.6.1",
+    "stylelint-config-prettier": "^8.0.2",
     "stylelint-config-sass-guidelines": "^7.0.0",
     "stylelint-config-standard": "^20.0.0",
     "stylelint-order": "^4.1.0",
