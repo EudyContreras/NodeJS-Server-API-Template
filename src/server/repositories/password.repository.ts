@@ -118,7 +118,11 @@ export default class PasswordRepository {
 		return result;
 	}
 
-	public async updatePassword(passwordId: string, update: any, options = { dto: true }): Promise<IPassword | PasswordDTO | null> {
+	public async updatePassword(
+		passwordId: string,
+		update: any,
+		options = { dto: true }
+	): Promise<IPassword | PasswordDTO | null> {
 		const password = await Password.findByIdAndUpdate(passwordId, update, this.options).select(this.exclude).exec();
 
 		const result = password || null;
@@ -130,7 +134,11 @@ export default class PasswordRepository {
 		return result;
 	}
 
-	public async updatePasswordWhere(query: any, update: any, options = { dto: true }): Promise<IPassword | PasswordDTO | null> {
+	public async updatePasswordWhere(
+		query: any,
+		update: any,
+		options = { dto: true }
+	): Promise<IPassword | PasswordDTO | null> {
 		const password = await Password.findOneAndUpdate(query, update, this.options).select(this.exclude).exec();
 
 		const result = password || null;

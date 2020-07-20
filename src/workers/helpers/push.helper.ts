@@ -1,7 +1,8 @@
 import { logger } from '../commons';
 import { seconds } from './timespan.helper';
 
-const applicationServerPublicKey = 'BEWGulnjPN48PcbKh6j2vriH-Z2tREZxe-I9zJJFqsGDMEHg1IyBrhzRgQR1Cn3fFCSmcwG79h3MCCRDLfelvuw';
+const applicationServerPublicKey =
+	'BEWGulnjPN48PcbKh6j2vriH-Z2tREZxe-I9zJJFqsGDMEHg1IyBrhzRgQR1Cn3fFCSmcwG79h3MCCRDLfelvuw';
 
 const urlB64ToUint8Array = (base64String: string): Uint8Array => {
 	const padding = '='.repeat((4 - (base64String.length % 4)) % 4);

@@ -103,8 +103,14 @@ export default class InvitationRepository {
 		return saved;
 	}
 
-	public async updateInvitation(invitationId: string, update: any, options = { dto: true }): Promise<IInvitation | any> {
-		const invitation = await Invitation.findByIdAndUpdate(invitationId, update, this.options).select(this.exclude).exec();
+	public async updateInvitation(
+		invitationId: string,
+		update: any,
+		options = { dto: true }
+	): Promise<IInvitation | any> {
+		const invitation = await Invitation.findByIdAndUpdate(invitationId, update, this.options)
+			.select(this.exclude)
+			.exec();
 
 		if (options.dto === true && invitation != null) {
 			return dataTransferDocument(invitation);

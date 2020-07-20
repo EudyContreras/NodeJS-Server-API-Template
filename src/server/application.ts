@@ -30,7 +30,11 @@ const cachePolicy = (): ((Response, Request, NextFunction) => void) => {
 	};
 };
 
-const ignoreFavicon = (): ((Response, Request, NextFunction) => void) => (request: Request, response: Response, next: NextFunction): void => {
+const ignoreFavicon = (): ((Response, Request, NextFunction) => void) => (
+	request: Request,
+	response: Response,
+	next: NextFunction
+): void => {
 	if (config.resources.ignored.indexOf(request.originalUrl) !== -1) {
 		response.status(204).json({});
 	} else {
@@ -38,7 +42,11 @@ const ignoreFavicon = (): ((Response, Request, NextFunction) => void) => (reques
 	}
 };
 
-const serveCompressed = (app: express.Application): ((Response, Request, NextFunction) => void) => (request: Request, response: Response, next: NextFunction): void => {
+const serveCompressed = (app: express.Application): ((Response, Request, NextFunction) => void) => (
+	request: Request,
+	response: Response,
+	next: NextFunction
+): void => {
 	app.get('*.js', (req, res, next) => {
 		req.url = req.url + '.br';
 		res.set('Content-Encoding', 'br');

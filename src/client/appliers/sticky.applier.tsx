@@ -11,7 +11,12 @@ export class ScrollListener implements IScrollListener {
 	public sticker: JQuery<HTMLElement | Element>;
 	public anchor?: JQuery<HTMLElement | Element>;
 
-	constructor(sticker: HTMLElement | Element, anchor?: HTMLElement | Element | null, topMargin = 0, onFixed?: (fixed: boolean) => void) {
+	constructor(
+		sticker: HTMLElement | Element,
+		anchor?: HTMLElement | Element | null,
+		topMargin = 0,
+		onFixed?: (fixed: boolean) => void
+	) {
 		this.sticker = $(sticker);
 		this.top = this.sticker.offset()!.top - topMargin;
 		this.margin = topMargin;
@@ -65,7 +70,14 @@ export const addAnchor = (style: any, listener: ScrollListener, stickyCallBack: 
 	});
 };
 
-const applyStickyTop = (sticker: JQuery<HTMLElement | Element>, style: any, scroll: number, top: number, margin: number, onFixed: ((fixed: boolean) => void) | undefined): void => {
+const applyStickyTop = (
+	sticker: JQuery<HTMLElement | Element>,
+	style: any,
+	scroll: number,
+	top: number,
+	margin: number,
+	onFixed: ((fixed: boolean) => void) | undefined
+): void => {
 	if (scroll! > top && sticker.hasClass(style.natural)) {
 		sticker.removeClass(style.natural).addClass(style.fixed).css({ top: margin });
 		if (onFixed) onFixed(true);

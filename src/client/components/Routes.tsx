@@ -6,9 +6,18 @@ import Docs from './sections/documentation/DocsPage';
 
 const options = { ssr: true, fallback: <Fragment />, timing: { delay: 250 } };
 
-const Apps = loadable(() => delayBoundary(import(/* webpackPrefetch: true */ './sections/applications/ApplicationsPage'), options.timing), options);
-const About = loadable(() => delayBoundary(import(/* webpackPrefetch: true */ './sections/information/AboutPage'), options.timing), options);
-const Admin = loadable(() => delayBoundary(import(/* webpackPrefetch: true */ './sections/administration/AdminPage'), options.timing), options);
+const Apps = loadable(
+	() => delayBoundary(import(/* webpackPrefetch: true */ './sections/applications/ApplicationsPage'), options.timing),
+	options
+);
+const About = loadable(
+	() => delayBoundary(import(/* webpackPrefetch: true */ './sections/information/AboutPage'), options.timing),
+	options
+);
+const Admin = loadable(
+	() => delayBoundary(import(/* webpackPrefetch: true */ './sections/administration/AdminPage'), options.timing),
+	options
+);
 
 export const routes = [
 	{
@@ -48,16 +57,14 @@ export const routes = [
 	}
 ];
 
-export type Mapping =
-	| any
-	| {
-			navLink: boolean | undefined;
-			label: string | undefined;
-			path: string;
-	  };
+export type Mapping = {
+	navLink: boolean | undefined;
+	label: string | undefined;
+	path: string;
+};
 
 export type RouteMapping = {
-	mapping: Mapping;
+	mapping: Mapping | any;
 	render: (props?: any) => JSX.Element;
 };
 

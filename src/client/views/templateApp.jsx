@@ -72,20 +72,98 @@ const DefaultLayout = (props) => {
 				<link rel="apple-touch-icon" type="image/png" sizes="64x64" href="images/icons/touch-icon-64x64.png" defer />
 				<link rel="apple-touch-icon" type="image/png" sizes="72x72" href="images/icons/touch-icon-72x72.png" defer />
 				<link rel="apple-touch-icon" type="image/png" sizes="76x76" href="images/icons/touch-icon-76x76.png" defer />
-				<link rel="apple-touch-icon" type="image/png" sizes="120x120" href="images/icons/touch-icon-120x120.png" defer />
-				<link rel="apple-touch-icon" type="image/png" sizes="128x128" href="images/icons/touch-icon-128x128.png" defer />
-				<link rel="apple-touch-icon" type="image/png" sizes="144x144" href="images/icons/touch-icon-144x144.png" defer />
-				<link rel="apple-touch-icon" type="image/png" sizes="152x152" href="images/icons/touch-icon-152x152.png" defer />
-				<link rel="apple-touch-icon" type="image/png" sizes="192x192" href="images/icons/touch-icon-192x192.png" defer />
-				<link rel="apple-touch-icon" type="image/png" sizes="256x256" href="images/icons/touch-icon-256x256.png" defer />
-				<link rel="apple-touch-icon" type="image/png" sizes="348x348" href="images/icons/touch-icon-348x348.png" defer />
-				<link rel="apple-touch-icon" type="image/png" sizes="512x512" href="images/icons/touch-icon-512x512.png" defer />
+				<link
+					rel="apple-touch-icon"
+					type="image/png"
+					sizes="120x120"
+					href="images/icons/touch-icon-120x120.png"
+					defer
+				/>
+				<link
+					rel="apple-touch-icon"
+					type="image/png"
+					sizes="128x128"
+					href="images/icons/touch-icon-128x128.png"
+					defer
+				/>
+				<link
+					rel="apple-touch-icon"
+					type="image/png"
+					sizes="144x144"
+					href="images/icons/touch-icon-144x144.png"
+					defer
+				/>
+				<link
+					rel="apple-touch-icon"
+					type="image/png"
+					sizes="152x152"
+					href="images/icons/touch-icon-152x152.png"
+					defer
+				/>
+				<link
+					rel="apple-touch-icon"
+					type="image/png"
+					sizes="192x192"
+					href="images/icons/touch-icon-192x192.png"
+					defer
+				/>
+				<link
+					rel="apple-touch-icon"
+					type="image/png"
+					sizes="256x256"
+					href="images/icons/touch-icon-256x256.png"
+					defer
+				/>
+				<link
+					rel="apple-touch-icon"
+					type="image/png"
+					sizes="348x348"
+					href="images/icons/touch-icon-348x348.png"
+					defer
+				/>
+				<link
+					rel="apple-touch-icon"
+					type="image/png"
+					sizes="512x512"
+					href="images/icons/touch-icon-512x512.png"
+					defer
+				/>
 
-				<link rel="apple-touch-icon-precomposed" type="image/png" sizes="57x57" href="images/icons/touch-icon-64x64.png" defer />
-				<link rel="apple-touch-startup-image" type="image/png" sizes="348x348" href="images/icons/touch-icon-348x348.png" defer />
+				<link
+					rel="apple-touch-icon-precomposed"
+					type="image/png"
+					sizes="57x57"
+					href="images/icons/touch-icon-64x64.png"
+					defer
+				/>
+				<link
+					rel="apple-touch-startup-image"
+					type="image/png"
+					sizes="348x348"
+					href="images/icons/touch-icon-348x348.png"
+					defer
+				/>
 
-				<link rel="stylesheet" crossOrigin="anonymous" href="styles/material.css" as="font" media="all" id="materialIcons" async disabled />
-				<link rel="stylesheet" crossOrigin="anonymous" href="styles/roboto.css" as="font" media="all" id="robotoFonts" async disabled />
+				<link
+					rel="stylesheet"
+					crossOrigin="anonymous"
+					href="styles/material.css"
+					as="font"
+					media="all"
+					id="materialIcons"
+					async
+					disabled
+				/>
+				<link
+					rel="stylesheet"
+					crossOrigin="anonymous"
+					href="styles/roboto.css"
+					as="font"
+					media="all"
+					id="robotoFonts"
+					async
+					disabled
+				/>
 				<link rel="preconnect" crossOrigin="anonymous" href="https://fonts.gstatic.com" />
 				<link rel="preconnect" crossOrigin="anonymous" href="https://fonts.googleapis.com" />
 				{/* <!-- Manifest.json  --> */}
@@ -111,7 +189,12 @@ const DefaultLayout = (props) => {
 				<script id="__LOADABLE_REQUIRED_CHUNKS__" type="text/javascript">
 					[]
 				</script>
-				<script async crossOrigin="anonymous" rel="preconnect" src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js" />
+				<script
+					async
+					crossOrigin="anonymous"
+					rel="preconnect"
+					src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"
+				/>
 				{props.scripts.map((x, i) => (
 					<script async data-chunk="app" type="text/javascript" key={i} src={x.url} />
 				))}

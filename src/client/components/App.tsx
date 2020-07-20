@@ -38,9 +38,13 @@ class App extends React.PureComponent<any, State> {
 		const props = this.props;
 		const routes = router({ styling: this.styling });
 
-		const elements = routes.filter((x) => x.mapping.navLink === true).map((x) => ({ link: x.mapping.path, label: x.mapping.label, lazyLoaded: x.mapping.lazyLoaded }));
+		const elements = routes
+			.filter((x) => x.mapping.navLink === true)
+			.map((x) => ({ link: x.mapping.path, label: x.mapping.label, lazyLoaded: x.mapping.lazyLoaded }));
 
-		const routings = routes.map((route, idx) => <Route exact history={props.history} key={idx} path={route.mapping.path} component={route.render} />);
+		const routings = routes.map((route, idx) => (
+			<Route exact history={props.history} key={idx} path={route.mapping.path} component={route.render} />
+		));
 
 		return (
 			<Fragment>

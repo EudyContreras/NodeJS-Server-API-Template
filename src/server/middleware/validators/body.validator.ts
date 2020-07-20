@@ -11,7 +11,12 @@ import * as PriviledgeSchema from '../../validation/schemas/priviledge/blueprint
 
 import { GET, POST, PUT, DELETE, PATCH } from '../../definitions/httpMethod';
 
-function buildResponse(validation: { message: string; result: ValidationResult } | null, request: any, response: Response, next: NextFunction): void | Response {
+function buildResponse(
+	validation: { message: string; result: ValidationResult } | null,
+	request: any,
+	response: Response,
+	next: NextFunction
+): void | Response {
 	if (validation === null) return next();
 
 	const { error, value } = validation.result;

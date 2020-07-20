@@ -14,7 +14,13 @@ export interface DispatchProps {
 	hideNotifier: () => void;
 }
 
-export const showNotifier = (icon: string, text: string, autoDimiss = true, dismissDelay = 3000, type = NotificationType.MESSAGE) => (dispatch: Function): void => {
+export const showNotifier = (
+	icon: string,
+	text: string,
+	autoDimiss = true,
+	dismissDelay = 3000,
+	type = NotificationType.MESSAGE
+) => (dispatch: Function): void => {
 	dispatch({
 		...notifierShowAction,
 		payload: {

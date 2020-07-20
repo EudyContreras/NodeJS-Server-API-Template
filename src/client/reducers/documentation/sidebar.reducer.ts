@@ -1,4 +1,9 @@
-import { SIDE_MENU, SIDE_MENU_FIXED, SIDE_MENU_TOGGLE, SIDE_MENU_HOVERED } from '../../actions/documentation/sidebar.action';
+import {
+	SIDE_MENU,
+	SIDE_MENU_FIXED,
+	SIDE_MENU_TOGGLE,
+	SIDE_MENU_HOVERED
+} from '../../actions/documentation/sidebar.action';
 
 import * as SearchBar from '../documentation/search.reducer';
 

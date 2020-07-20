@@ -16,7 +16,12 @@ const CREATE = 'create';
 const UPDATE = 'update';
 const DELETE = 'delete';
 
-const PRIVILEDGES = [new PriviledgeData(READ, CODES[0]), new PriviledgeData(CREATE, CODES[1]), new PriviledgeData(UPDATE, CODES[2]), new PriviledgeData(DELETE, CODES[3])];
+const PRIVILEDGES = [
+	new PriviledgeData(READ, CODES[0]),
+	new PriviledgeData(CREATE, CODES[1]),
+	new PriviledgeData(UPDATE, CODES[2]),
+	new PriviledgeData(DELETE, CODES[3])
+];
 
 const ALL = [READ, CREATE, UPDATE, DELETE];
 

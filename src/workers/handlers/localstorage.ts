@@ -86,7 +86,13 @@ const instance = {
 	}
 };
 
-export const defaultEntry = (url, cacheName, expiryDate = null, visitFrequency = 0, clearOnError = true): CacheEntryInfo => ({
+export const defaultEntry = (
+	url,
+	cacheName,
+	expiryDate = null,
+	visitFrequency = 0,
+	clearOnError = true
+): CacheEntryInfo => ({
 	id: `${cacheName}|${url}`,
 	url: url,
 	persist: false,
@@ -121,7 +127,11 @@ export async function getAllEntries(cacheName: string): Promise<CacheEntryInfo[]
 	});
 }
 
-export async function updateEntry(key: string, cacheName: string, { clearOnError = null, expiryDate = null, visited = false, persist = false }: UpdateEntryArgs): Promise<void> {
+export async function updateEntry(
+	key: string,
+	cacheName: string,
+	{ clearOnError = null, expiryDate = null, visited = false, persist = false }: UpdateEntryArgs
+): Promise<void> {
 	try {
 		const item = await instance.getItem(key);
 		const entry = item || defaultEntry(key, cacheName);
@@ -149,7 +159,11 @@ export async function hasExpired(key: string): Promise<boolean> {
 	}
 }
 
-export async function attachExpiration(key: string, cacheName: string, quotaOptions?: CacheQuotaOptions): Promise<void> {
+export async function attachExpiration(
+	key: string,
+	cacheName: string,
+	quotaOptions?: CacheQuotaOptions
+): Promise<void> {
 	const expires = new Date();
 	let attacheExpiration = false;
 	if (quotaOptions) {

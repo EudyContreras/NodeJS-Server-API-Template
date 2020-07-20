@@ -3,8 +3,27 @@
 import { hours, days, months, seconds } from './helpers/timespan.helper';
 import { logger, handleWebp, filetypePatterns, filetypeCache, isNullOrEmpty, inRange } from './commons';
 import { syncContent } from './helpers/syncevent.Helper';
-import { staleWhileRevalidate, cacheThenRefresh, cacheFirst, networkFirst, addToCache, cacheResponse, fromNetwork } from './stragedies';
-import { httpMethods, updateNotification, cachableTypes, commonOrigins, fallbacks, cacheNames, constants, syncEvents, messages, events } from './constants';
+import {
+	staleWhileRevalidate,
+	cacheThenRefresh,
+	cacheFirst,
+	networkFirst,
+	addToCache,
+	cacheResponse,
+	fromNetwork
+} from './stragedies';
+import {
+	httpMethods,
+	updateNotification,
+	cachableTypes,
+	commonOrigins,
+	fallbacks,
+	cacheNames,
+	constants,
+	syncEvents,
+	messages,
+	events
+} from './constants';
 
 const DEBUG_MODE = process.env.NODE_ENV !== 'production';
 
@@ -35,11 +54,14 @@ const defaultCachePredicate: CachePredicate = {
 	cacheCondition: ({ response }) => (response && inRange(response?.status, 200, 300)) || false
 };
 
-const isSideEffectRequest = (request: Request): boolean => [...Object.values(constants.sideEffects)].includes(request.method) || request.method !== httpMethods.GET;
+const isSideEffectRequest = (request: Request): boolean =>
+	[...Object.values(constants.sideEffects)].includes(request.method) || request.method !== httpMethods.GET;
 
-const isWebFontRequest = (request: Request, url: any): boolean => request.destination === cachableTypes.FONT || url.origin === commonOrigins.STATIC_WEB_FONTS;
+const isWebFontRequest = (request: Request, url: any): boolean =>
+	request.destination === cachableTypes.FONT || url.origin === commonOrigins.STATIC_WEB_FONTS;
 
-const isAcceptedApiRequest = (request: Request): boolean => request.url.includes('/api/') && request.method === httpMethods.GET;
+const isAcceptedApiRequest = (request: Request): boolean =>
+	request.url.includes('/api/') && request.method === httpMethods.GET;
 
 const any = (request: Request, ...types: string[]): boolean => types.includes(request.destination);
 
@@ -60,7 +82,8 @@ self.addEventListener(events.FETCH, (event: any) => {
 	}
 
 	if (any(request, cachableTypes.STYLE, cachableTypes.SCRIPT, cachableTypes.DOCUMENT)) {
-		const cacheName = url.origin === commonOrigins.STYLESHEET_FONTS ? cacheKeys.GOOGLE_FONTS_SHEETS_CACHE : cacheKeys.STATIC_CACHE;
+		const cacheName =
+			url.origin === commonOrigins.STYLESHEET_FONTS ? cacheKeys.GOOGLE_FONTS_SHEETS_CACHE : cacheKeys.STATIC_CACHE;
 		const cachePredicate: CachePredicate = {
 			crossOrigin: true,
 			cacheCondition: ({ response }) => (response && inRange(response?.status, 200, 300)) || false
@@ -151,9 +174,14 @@ self.addEventListener(events.INSTALL, async (event: any) => {
 	}
 });
 
-const handleInstallation = async (urls: string[], callback: (cacheName: string, urls: string[]) => void): Promise<void> => {
+const handleInstallation = async (
+	urls: string[],
+	callback: (cacheName: string, urls: string[]) => void
+): Promise<void> => {
 	try {
-		const imageAssets = urls.filter((x) => filetypePatterns.IMAGE.test(x) || filetypePatterns.PROGRESSIVE_IMAGE.test(x));
+		const imageAssets = urls.filter(
+			(x) => filetypePatterns.IMAGE.test(x) || filetypePatterns.PROGRESSIVE_IMAGE.test(x)
+		);
 		const mediaAssets = urls.filter((x) => filetypePatterns.VIDEO.test(x) || filetypePatterns.AUDIO.test(x));
 		const fontAssests = urls.filter((x) => filetypePatterns.FONT.test(x));
 		const staticAssets = urls.filter((x) => filetypePatterns.STATIC.test(x));

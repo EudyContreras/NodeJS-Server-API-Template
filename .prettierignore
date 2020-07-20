@@ -4,3 +4,4 @@ assets/*
 dist/*
 ssl/*
 node_modules/
+**/*.d.ts

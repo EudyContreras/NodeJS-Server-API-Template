@@ -19,7 +19,9 @@ function isValidResponse(request: Request, response: Response, cachePredicate?: 
 	if (!response || (!response.ok && response.type !== responseType.OPAQUE)) return false;
 
 	const { acceptedStatus, crossOrigin, allowOpaque, cacheCondition } = cachePredicate || defaultPredicate;
-	const isValid = acceptedStatus ? acceptedStatus.includes(response.status) : cacheCondition && cacheCondition({ request, response, url: new URL(request.url) });
+	const isValid = acceptedStatus
+		? acceptedStatus.includes(response.status)
+		: cacheCondition && cacheCondition({ request, response, url: new URL(request.url) });
 
 	switch (response.type) {
 		case responseType.CORS: {
@@ -43,13 +45,20 @@ const errorResponse = (): Response => {
 	return response;
 };
 
-Cache.prototype.addToCache = async function (request: Request, response: Response | any, cacheName: string, maxEntries?: number): Promise<Response> {
+Cache.prototype.addToCache = async function (
+	request: Request,
+	response: Response | any,
+	cacheName: string,
+	maxEntries?: number
+): Promise<Response> {
 	try {
 		await this.put(request, response);
 		if (maxEntries) {
 			getAllEntries(cacheName).then((entries) => {
 				if (entries.values.length >= maxEntries) {
-					const leastFrequent = entries.reduce((prev: CacheEntryInfo, current: CacheEntryInfo) => (prev.visitFrequency < current.visitFrequency ? prev : current));
+					const leastFrequent = entries.reduce((prev: CacheEntryInfo, current: CacheEntryInfo) =>
+						prev.visitFrequency < current.visitFrequency ? prev : current
+					);
 					this.delete(leastFrequent.url);
 				}
 			});
@@ -86,7 +95,11 @@ export async function fromNetwork(request: Request, timeout: number = TIMEOUT): 
 	});
 }
 
-export async function fromCache(request: Request, cacheName?: string | undefined, cache?: Promise<Cache> | Cache | undefined): Promise<Response | any> {
+export async function fromCache(
+	request: Request,
+	cacheName?: string | undefined,
+	cache?: Promise<Cache> | Cache | undefined
+): Promise<Response | any> {
 	const noMatch = 'no-match-found';
 	if (cache) {
 		if (cache instanceof Cache) {
@@ -165,7 +178,12 @@ export function cacheFirst(stragedy: CacheStragedy): void {
 	);
 }
 
-async function update(cache: Cache, request: Request, cachePredicate: CachePredicate | undefined, cacheName: string): Promise<Response | undefined> {
+async function update(
+	cache: Cache,
+	request: Request,
+	cachePredicate: CachePredicate | undefined,
+	cacheName: string
+): Promise<Response | undefined> {
 	return fromNetwork(request).then((response) => {
 		if (isValidResponse(request, response, cachePredicate)) {
 			return cache.addToCache(request, response.json(), cacheName).then(() => response);
@@ -255,7 +273,9 @@ export function networkFirst(stragedy: CacheStragedy): void {
 					return response;
 				}
 			}
-			return cache.then((cache) => cache.match(request).then((response) => response || getFallback(request.destination))).catch((error) => handleFailure(event, request, error));
+			return cache
+				.then((cache) => cache.match(request).then((response) => response || getFallback(request.destination)))
+				.catch((error) => handleFailure(event, request, error));
 		})
 	);
 }

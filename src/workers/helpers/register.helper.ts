@@ -42,7 +42,11 @@ async function checkValidServiceWorker(swUrl, config): Promise<void> {
 		.then((response) => {
 			const contentType = response.headers.get('content-type');
 
-			if (!response.ok || response.status === 404 || (contentType != null && contentType.indexOf('javascript') === -1)) {
+			if (
+				!response.ok ||
+				response.status === 404 ||
+				(contentType != null && contentType.indexOf('javascript') === -1)
+			) {
 				navigator.serviceWorker?.ready?.then((registration) => {
 					registration.unregister().then(() => {
 						window.location.reload();
@@ -71,14 +75,21 @@ export const registerWorker = (config): void => {
 
 					navigator.serviceWorker.ready.then(() => {
 						window.removeEventListener(events.LOAD, () => {});
-						DEBUG_MODE && logger.log('This web app is being served cache-first by a service ' + 'worker. To learn more, visit https://bit.ly/CRA-PWA');
+						DEBUG_MODE &&
+							logger.log(
+								'This web app is being served cache-first by a service ' +
+									'worker. To learn more, visit https://bit.ly/CRA-PWA'
+							);
 					});
 				} else {
 					registerValidSW(workerURL, config);
 				}
 			});
 		} else {
-			DEBUG_MODE && logger.warn('Service workers not supported on your current browser! Please use a modern browser to take advantage of offline capabitilies');
+			DEBUG_MODE &&
+				logger.warn(
+					'Service workers not supported on your current browser! Please use a modern browser to take advantage of offline capabitilies'
+				);
 		}
 	} else {
 		if (navigator.serviceWorker) {
@@ -107,7 +118,10 @@ export const registerWorker = (config): void => {
 					.catch((error) => logger.error(error));
 			});
 		} else {
-			DEBUG_MODE && logger.warn('Service workers not supported on your current browser! Please use a modern browser to take advantage of offline capabitilies');
+			DEBUG_MODE &&
+				logger.warn(
+					'Service workers not supported on your current browser! Please use a modern browser to take advantage of offline capabitilies'
+				);
 		}
 	}
 };
@@ -124,7 +138,10 @@ const registerValidSW = async (swUrl, config): Promise<void> => {
 			if (config.registerPushNotifications && window.PushManager) {
 				initializeSubscription();
 			} else {
-				DEBUG_MODE && logger.log('Push notifications is not supported by your current browser! Please use a modern browser to take advantage of push notifications capabitilies');
+				DEBUG_MODE &&
+					logger.log(
+						'Push notifications is not supported by your current browser! Please use a modern browser to take advantage of push notifications capabitilies'
+					);
 			}
 
 			registration.onupdatefound = (): void => {
@@ -138,7 +155,11 @@ const registerValidSW = async (swUrl, config): Promise<void> => {
 				installingWorker.onstatechange = (): void => {
 					if (installingWorker.state === 'installed') {
 						if (navigator.serviceWorker.controller) {
-							DEBUG_MODE && logger.log('ServiceWorker: New content is available and will be used when all ' + 'tabs for this page are closed. See https://bit.ly/CRA-PWA.');
+							DEBUG_MODE &&
+								logger.log(
+									'ServiceWorker: New content is available and will be used when all ' +
+										'tabs for this page are closed. See https://bit.ly/CRA-PWA.'
+								);
 
 							if (config && config.onUpdate) {
 								config.onUpdate(registration);

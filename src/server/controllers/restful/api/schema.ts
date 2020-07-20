@@ -27,5 +27,6 @@ export default class Search extends Controller {
 		router.get('/', this.getAll);
 	}
 
-	private getAll = async (request: any, response: Response): Promise<Response> => this.buildResult(schema, undefined, response, RequestAction.GET_ALL);
+	private getAll = async (request: any, response: Response): Promise<Response> =>
+		this.buildResult(schema, undefined, response, RequestAction.GET_ALL);
 }

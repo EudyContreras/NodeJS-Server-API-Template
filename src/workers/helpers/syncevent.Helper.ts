@@ -42,7 +42,11 @@ export async function syncContent(cacheNames: CacheNames): Promise<void> {
 	return Promise.resolve();
 }
 
-export async function addPeriodicBackgroundSync(syncEvent: PeriodicSyncEvent, syncCallback?: () => void, onError?: (...messages: any[]) => void): Promise<void> {
+export async function addPeriodicBackgroundSync(
+	syncEvent: PeriodicSyncEvent,
+	syncCallback?: () => void,
+	onError?: (...messages: any[]) => void
+): Promise<void> {
 	const status = await requestPermission(Permission.BACKGROUND_SYNC_PERIODIC);
 
 	if (status === AccessStatus.GRANTED) {

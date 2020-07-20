@@ -68,7 +68,10 @@ export default class PriviledgeRepository {
 		return priviledges;
 	}
 
-	public async getPriviledge(priviledgeId: string, options = { dto: true }): Promise<IPriviledge | PriviledgeDTO | null> {
+	public async getPriviledge(
+		priviledgeId: string,
+		options = { dto: true }
+	): Promise<IPriviledge | PriviledgeDTO | null> {
 		const priviledge = await Priviledge.findById(priviledgeId).select(this.exclude).exec();
 
 		const result = priviledge || null;
@@ -122,8 +125,14 @@ export default class PriviledgeRepository {
 		return priviledge;
 	}
 
-	public async updatePriviledge(priviledgeId: string, update: any, options = { dto: true }): Promise<IPriviledge | PriviledgeDTO | null> {
-		const priviledge = await Priviledge.findByIdAndUpdate(priviledgeId, update, this.options).select(this.exclude).exec();
+	public async updatePriviledge(
+		priviledgeId: string,
+		update: any,
+		options = { dto: true }
+	): Promise<IPriviledge | PriviledgeDTO | null> {
+		const priviledge = await Priviledge.findByIdAndUpdate(priviledgeId, update, this.options)
+			.select(this.exclude)
+			.exec();
 
 		const result = priviledge || null;
 
@@ -134,7 +143,11 @@ export default class PriviledgeRepository {
 		return result;
 	}
 
-	public async updatePriviledgeWhere(query: any, update: any, options = { dto: true }): Promise<IPriviledge | PriviledgeDTO | null> {
+	public async updatePriviledgeWhere(
+		query: any,
+		update: any,
+		options = { dto: true }
+	): Promise<IPriviledge | PriviledgeDTO | null> {
 		const priviledge = await Priviledge.findOneAndUpdate(query, update, this.options).select(this.exclude).exec();
 
 		const result = priviledge || null;
@@ -146,7 +159,10 @@ export default class PriviledgeRepository {
 		return result;
 	}
 
-	public async deletePriviledge(priviledgeId: string, options = { dto: true }): Promise<IPriviledge | PriviledgeDTO | null> {
+	public async deletePriviledge(
+		priviledgeId: string,
+		options = { dto: true }
+	): Promise<IPriviledge | PriviledgeDTO | null> {
 		const priviledge = await Priviledge.findByIdAndDelete(priviledgeId).exec();
 
 		const result = priviledge || null;
