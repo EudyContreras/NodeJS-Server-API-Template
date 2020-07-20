@@ -23,7 +23,7 @@
     "start": "node build/server.js",
     "cleanup": "rimraf pre dist build",
     "lint-and-check": "eslint 'src/**/*.{js,jsx,ts,tsx}' && echo 'ESLint done checking!'",
-    "lint-and-fix": "eslint 'src/**/*.{js,jsx,ts,tsx}' --fix . && echo 'ESLint done checking!.'",
+    "lint-and-fix": "eslint 'src/**/*.{js,jsx,ts,tsx}' --fix && echo 'ESLint done checking!.'",
     "fix-code": "prettier-eslint --write $PWD/'src/**/*.{js,jsx,ts,tsx}' ",
     "fix-styles": "prettier-stylelint --write $PWD/'src/**/*.{css,scss,less,sass}' ",
     "fix-all": "npm-run-all fix-code fix-styles",

@@ -21,8 +21,8 @@ const splitchunks = require('../sections/splitchunks');
 const ImageminPlugin= require('imagemin-webp-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
-const precompile = process.env.PRECOMPILE == 'true';
-const usesCSR = process.env.CSR == 'true';
+const precompile = process.env.PRECOMPILE === 'true';
+const usesCSR = process.env.CSR === 'true';
 const enviroment = process.env.NODE_ENV;
 
 const isProduction = enviroment === 'production';
@@ -101,7 +101,7 @@ const plugins = [
 		}
 	}),
 	new DuplicatePackageCheckerPlugin(),
-	//new BundleAnalyzerPlugin({ token: process.env.BUNDLE_ANALYZER_TOKEN }),
+	// new BundleAnalyzerPlugin({ token: process.env.BUNDLE_ANALYZER_TOKEN }),
 	new CleanWebpackPlugin({ cleanStaleWebpackAssets: isProduction }),
 	new CopyPlugin(resources),
 	new HtmlWebpackPlugin({
@@ -125,8 +125,8 @@ if (usesCSR) {
 			filename: 'index.html',
 			scriptLoading: 'defer',
 			title: 'Template Engine',
-			clientSideRendered: process.env.CSR == 'true',
-			enableSW: process.env.USE_SW == 'true',
+			clientSideRendered: process.env.CSR === 'true',
+			enableSW: process.env.USE_SW === 'true',
 			html: clientConfig.html,
 			minify: true
 		})

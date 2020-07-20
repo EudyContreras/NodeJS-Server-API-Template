@@ -6,7 +6,7 @@ const clientConfig = require('./webpack/configs/webpack.config.client');
 const serverConfig = require('./webpack/configs/webpack.config.server');
 
 const configs = [];
-if (process.env.REACT_HMR == 'true') {
+if (process.env.REACT_HMR === 'true') {
 	configs.push(clientConfigHot);
 } else{
 	configs.push(clientConfig);
