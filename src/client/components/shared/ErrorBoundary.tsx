@@ -26,7 +26,7 @@ export default class ErrorBoundary extends React.PureComponent<Props, any> {
 		}
 		return this.props.children;
 	};
-	
+
 	public componentDidCatch = (error: any, errorInfo: any): void => {
 		this.setState({
 			hasError: error != null,

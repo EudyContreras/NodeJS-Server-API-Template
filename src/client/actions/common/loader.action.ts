@@ -10,11 +10,11 @@ export interface DispatchProps {
 }
 
 export const showLoader = () => (dispatch: Function): void => {
-	dispatch(showLoaderAction); 
+	dispatch(showLoaderAction);
 };
 
 export const hideLoader = (loadedRoute?: string) => (dispatch: Function): void => {
-	dispatch({ ...hideLoaderAction, payload:loadedRoute }); 
+	dispatch({ ...hideLoaderAction, payload: loadedRoute });
 };
 
 export const showLoaderAction = {
@@ -27,7 +27,7 @@ export const hideLoaderAction = {
 	type: ROUTE_LOADER_HIDE
 };
 
-export const Dispatchers = { 
-	showLoader, 
+export const Dispatchers = {
+	showLoader,
 	hideLoader
 };

@@ -1,5 +1,4 @@
 
-
 export const years = (count: number): number => count * months(12);
 
 export const months = (count: number): number => count * days(30);

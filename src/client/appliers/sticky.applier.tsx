@@ -51,7 +51,7 @@ export const updateEffect = (style: any, listener: IScrollListener): void => {
 export const addAnchor = (style: any, listener: ScrollListener, stickyCallBack: (stuck: boolean) => void): void => {
 	$(window).on('scroll', () => {
 		const scroll = $(window).scrollTop();
-  
+
 		const sticker = listener.sticker;
 
 		if (scroll! >= listener.top && !sticker.hasClass(style.navSticky)) {

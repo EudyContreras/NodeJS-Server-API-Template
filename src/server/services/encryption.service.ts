@@ -3,7 +3,7 @@ import config from '../../configs/config.server';
 
 export default class EncryptionService {
 	/**
-	 * @description Compares the old password as plain text with the current 
+	 * @description Compares the old password as plain text with the current
 	 * hashed and salted password.
 	 * @param oldPassword The password input as plain text
 	 * @param currentPassword The current password as a hash.
@@ -16,7 +16,7 @@ export default class EncryptionService {
 	/**
 	 * @description Used for encrypting passwords by hashing using salt.
 	 * @param password The password to be encrypted
-	 * @param iterations The number of iterations used for creating the hash salt. 
+	 * @param iterations The number of iterations used for creating the hash salt.
 	 * @returns The hashed and salted password or a generated error.
 	 */
 	public async encryptPassword(password?: string, iterations = config.encryption.SALT_ITERATIONS): Promise<{ hash?: string; error?: any }> {

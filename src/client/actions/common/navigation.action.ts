@@ -13,19 +13,19 @@ export interface DispatchProps {
 }
 
 export const setOffsetTop = (offset: number) => (dispatch: Function): void => {
-	dispatch({ ...offsetTopAction, payload: offset }); 
+	dispatch({ ...offsetTopAction, payload: offset });
 };
 
 export const setMouseInside = (inside: boolean) => (dispatch: Function): void => {
-	dispatch({ ...navInsideAction, payload: inside }); 
+	dispatch({ ...navInsideAction, payload: inside });
 };
 
 export const setAnchored = (anchored: boolean) => (dispatch: Function): void => {
-	dispatch({ ...navAnchorAction, payload: anchored }); 
+	dispatch({ ...navAnchorAction, payload: anchored });
 };
 
 export const setActiveTab = (tab: any) => (dispatch: Function): void => {
-	dispatch({ ...activeTabAction, payload: tab }); 
+	dispatch({ ...activeTabAction, payload: tab });
 };
 
 export const activeTabAction = {
@@ -48,9 +48,9 @@ export const offsetTopAction = {
 	type: NAV_BAR_MENU_OFFSET_TOP
 };
 
-export const Dispatchers = { 
-	setAnchored, 
+export const Dispatchers = {
+	setAnchored,
 	setMouseInside,
-	setActiveTab, 
-	setOffsetTop 
+	setActiveTab,
+	setOffsetTop
 };

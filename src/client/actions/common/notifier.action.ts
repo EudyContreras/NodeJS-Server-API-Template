@@ -10,8 +10,8 @@ export enum NotificationType {
 
 export interface DispatchProps {
 	showNotifier: (
-		icon: string, 
-		text: string, 
+		icon: string,
+		text: string,
 		autoDimiss: boolean,
 		dismissDelay: number,
 		type: NotificationType) => void;
@@ -19,23 +19,26 @@ export interface DispatchProps {
 }
 
 export const showNotifier = (
-	icon: string, 
-	text: string, 
+	icon: string,
+	text: string,
 	autoDimiss = true,
 	dismissDelay = 3000,
 	type = NotificationType.MESSAGE
 ) => (dispatch: Function): void => {
-	dispatch({ ...notifierShowAction, payload: { 
-		icon: icon, 
-		text: text, 
-		autoDimiss: autoDimiss,
-		dismissDelay: dismissDelay,
-		notificationType: type 
-	} }); 
+	dispatch({
+		...notifierShowAction,
+		payload: {
+			icon: icon,
+			text: text,
+			autoDimiss: autoDimiss,
+			dismissDelay: dismissDelay,
+			notificationType: type
+		}
+	});
 };
 
 export const hideNotifier = () => (dispatch: Function): void => {
-	dispatch(notifierHideAction); 
+	dispatch(notifierHideAction);
 };
 
 export const notifierShowAction = {
@@ -48,7 +51,7 @@ export const notifierHideAction = {
 	type: NAV_NOTIFIER_HIDE
 };
 
-export const Dispatchers = { 
-	showNotifier, 
+export const Dispatchers = {
+	showNotifier,
 	hideNotifier
 };

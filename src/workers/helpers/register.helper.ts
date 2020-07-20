@@ -3,7 +3,7 @@ import { initializeSubscription } from './push.helper';
 import { messages, events } from '../constants';
 
 const DEBUG_MODE = (process.env.NODE_ENV !== 'production');
-   
+
 const workerURL = 'service-worker.js';
 
 const isLocalhost = Boolean(
@@ -31,12 +31,11 @@ export const onRegistration = async (listener: (registration: ServiceWorkerRegis
 
 export function unregisterWorker(): void {
 	if (navigator.serviceWorker) {
-		navigator?.serviceWorker?.ready.then(registration => {
+		navigator.serviceWorker?.ready.then(registration => {
 			registration.unregister();
 		});
 	}
 };
-
 
 async function checkValidServiceWorker(swUrl, config): Promise<void> {
 	fetch(swUrl).then(response => {
@@ -115,30 +114,28 @@ const registerValidSW = async (swUrl, config): Promise<void> => {
 	if (!navigator.serviceWorker) return;
 
 	navigator.serviceWorker.register(swUrl)
-		.then(() => {
-			return navigator.serviceWorker.ready;
-		})
+		.then(() => navigator.serviceWorker.ready)
 		.then(registration => {
 			DEBUG_MODE && logger.log(`ServiceWorker: Registered succesfully with scope: ${registration.scope}`);
 
 			if (config.registerPushNotifications && window.PushManager) {
-				initializeSubscription();			
+				initializeSubscription();
 			} else {
-				DEBUG_MODE && logger.log('Push notifications is not supported by your current browser! Please use a modern browser to take advantage of push notifications capabitilies');			
+				DEBUG_MODE && logger.log('Push notifications is not supported by your current browser! Please use a modern browser to take advantage of push notifications capabitilies');
 			}
 
 			registration.onupdatefound = (): void => {
 				DEBUG_MODE && logger.log('Service Worker update found!');
 				const installingWorker = registration.installing;
-                
+
 				if (installingWorker == null) {
 					return;
 				}
-                
+
 				installingWorker.onstatechange = (): void => {
 					if (installingWorker.state === 'installed') {
 						if (navigator.serviceWorker.controller) {
-	
+
 							DEBUG_MODE && logger.log(
 								'ServiceWorker: New content is available and will be used when all ' +
 								'tabs for this page are closed. See https://bit.ly/CRA-PWA.'
@@ -149,7 +146,7 @@ const registerValidSW = async (swUrl, config): Promise<void> => {
 							}
 						} else {
 							DEBUG_MODE && logger.log('ServiceWorker: Content is now cached for offline use');
-                            
+
 							if (config && config.onSuccess) {
 								config.onSuccess(registration);
 							}

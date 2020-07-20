@@ -7,14 +7,10 @@
     },
     "extends": [
         "standard",
-        "standard-jsx",
         "eslint:recommended",
         "plugin:react/recommended",
         "plugin:@typescript-eslint/recommended",
-        "plugin:@typescript-eslint/eslint-recommended",
-        "prettier/@typescript-eslint",
-        "prettier/react",
-        "plugin:prettier/recommended"
+        "plugin:@typescript-eslint/eslint-recommended"
     ],
     "plugins": [
         "react",
@@ -51,6 +47,10 @@
         "SharedArrayBuffer": "readonly"
     },
     "rules": {
+        "no-unused-expressions": ["off", { "allowShortCircuit": true, "allowTernary": true }],
+        "space-before-function-paren": ["warn", {"anonymous": "always", "named": "never", "asyncArrow": "always"}],
+        "padded-blocks": "off",
+        "eol-last": ["warn", "always"],
         "import/extensions": "off",
         "import/order": "off",
         "class-methods-use-this": "off",
@@ -58,6 +58,7 @@
         "linebreak-style": ["error", "unix"],
         "quotes": ["warn", "single"],
         "semi": "off",
+        "no-tabs": "off",
         "camelcase": "off",
         "no-extra-semi": "off",
         "comma-dangle": ["error", "never"],
@@ -67,6 +68,7 @@
         "no-empty-function": "off",
         "no-use-before-define": "off",
         "@typescript-eslint/semi": ["warn"],
+        "indent": ["error", "tab", { "SwitchCase": 1 }],
         "@typescript-eslint/camelcase": ["warn", {
             "properties": "always"
         }],
@@ -85,6 +87,7 @@
         "files": ["*.ts", "*.tsx"],
         "rules": {
             "@typescript-eslint/no-explicit-any": 0,
+            "@typescript-eslint/no-unused-vars": "off",
             "@typescript-eslint/explicit-function-return-type": ["warn"],
             "@typescript-eslint/no-use-before-define": "off",
             "@typescript-eslint/no-non-null-assertion": "off"

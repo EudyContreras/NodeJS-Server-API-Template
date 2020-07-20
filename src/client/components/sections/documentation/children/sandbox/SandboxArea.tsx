@@ -23,16 +23,12 @@ type Props = StateProps & DispatchProps & any;
 
 class SandboxArea extends React.PureComponent<Props, any> {
 
-	constructor(props: any) {
-		super(props);
-	}
-
 	private getProperties = (style: any): any & any => {
 		const styles = [style.sandboxArea];
 		const cssTop = this.props.fixedTop ? this.props.offsetTop : this.props.fixedBottom ? this.props.offsetBottom : 'auto';
 
 		appendWhen(styles, this.props.fixedTop, style.fixed);
-		
+
 		const common = {
 			ref: this.props.self,
 			style: { top: cssTop },

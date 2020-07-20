@@ -24,7 +24,7 @@ export const hasPushSubscription = async (): Promise<boolean> => {
 
 	const registration = await navigator.serviceWorker.ready;
 	const subscription = await registration.pushManager.getSubscription();
-    
+
 	return subscription != null;
 };
 
@@ -35,7 +35,7 @@ export const subscribeUser = async (): Promise<void> => {
 	if (!navigator.serviceWorker) return;
 
 	const applicationServerKey = urlB64ToUint8Array(applicationServerPublicKey);
-    
+
 	const registration = await navigator.serviceWorker.ready;
 
 	registration.pushManager.subscribe({
@@ -57,9 +57,7 @@ export const unsubscribeUser = async (): Promise<boolean | undefined> => {
 	const registration = await navigator.serviceWorker.ready;
 
 	return registration.pushManager.getSubscription()
-		.then(subscription => {
-			return subscription && subscription.unsubscribe() || false;
-		})
+		.then(subscription => (subscription && subscription.unsubscribe()) || false)
 		.catch(error => {
 			logger.error('Error unsubscribing from push notifications', error);
 		})

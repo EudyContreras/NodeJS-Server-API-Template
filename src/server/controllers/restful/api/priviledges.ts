@@ -1,5 +1,5 @@
 
-import express from 'express';
+import express, { Router, Response } from 'express';
 import Controller from '../../controller';
 import RequestAction from '../../../definitions/requestAction';
 import PriviledgeService from '../../../services/priviledge.service';
@@ -7,8 +7,6 @@ import authenticate from '../../../middleware/authenticators/token.validator';
 import allowed from '../../../middleware/authenticators/access.validator';
 import validate from '../../../middleware/validators/body.validator';
 import schemaType from '../../../validation/schemas/priviledge/blueprint';
-
-import { Router, Response } from 'express';
 
 class Priviledges extends Controller {
 

@@ -22,32 +22,28 @@ import expressEnforceSSL from 'express-enforces-ssl';
 import DataInitializer from './initializers/database.initializer';
 import reactRender from 'express-react-views';
 
-const cachePolicy = (): (Response, Request, NextFunction) => void =>{
+const cachePolicy = (): (Response, Request, NextFunction) => void => {
 	const policy = config.resources.cachePolicy;
 	return (request: Request, response: Response, next: NextFunction): void => {
-		response.set(policy.LABEL, policy.VALUE); 
+		response.set(policy.LABEL, policy.VALUE);
 		next();
 	};
 };
 
-const ignoreFavicon = (): (Response, Request, NextFunction) => void => {
-	return (request: Request, response: Response, next: NextFunction): void => {
-		if (config.resources.ignored.indexOf(request.originalUrl) !== -1) {
-			response.status(204).json({});
-		} else {
-			next();
-		}
-	};
+const ignoreFavicon = (): (Response, Request, NextFunction) => void => (request: Request, response: Response, next: NextFunction): void => {
+	if (config.resources.ignored.indexOf(request.originalUrl) !== -1) {
+		response.status(204).json({});
+	} else {
+		next();
+	}
 };
 
-const serveCompressed = (app: express.Application): (Response, Request, NextFunction) => void => {
-	return (request: Request, response: Response, next: NextFunction): void => {
-		app.get('*.js', (req, res, next) => {
-			req.url = req.url + '.br';
-			res.set('Content-Encoding', 'br');
-			next();
-		});
-	};
+const serveCompressed = (app: express.Application): (Response, Request, NextFunction) => void => (request: Request, response: Response, next: NextFunction): void => {
+	app.get('*.js', (req, res, next) => {
+		req.url = req.url + '.br';
+		res.set('Content-Encoding', 'br');
+		next();
+	});
 };
 
 export default class Application {
@@ -142,7 +138,7 @@ export default class Application {
 	}
 
 	private initializeViewRenderers(viewRenderers?: ViewRenderer[]): void {
-		if (viewRenderers != undefined) {
+		if (viewRenderers !== undefined) {
 			viewRenderers.forEach((renderer) => {
 				this.app.use(renderer.getRoute(), renderer.getRouter());
 			});

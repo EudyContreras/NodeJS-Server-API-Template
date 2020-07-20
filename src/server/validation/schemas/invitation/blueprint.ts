@@ -29,7 +29,7 @@ export const validateInviteCreate = (data: any): any => {
 			.number()
 			.optional()
 	});
-	
+
 	return {
 		message: SchemaValidation.CREATE_DATA('invitation'),
 		result: schema.validate(data, {
@@ -54,7 +54,7 @@ export const validateInviteUpdate = (data: any): any => {
 			.number()
 			.optional()
 	});
-	
+
 	return {
 		message: SchemaValidation.UPDATE_DATA('invitation'),
 		result: schema.validate(data, {
@@ -92,7 +92,7 @@ export const validateInviteQuery = (data: any): any => {
 			.allow(...ALL)
 			.only()
 	}).or('_id', 'email');
-	
+
 	return {
 		message: SchemaValidation.FETCH_DATA('invitation'),
 		result: schema.validate(data, {

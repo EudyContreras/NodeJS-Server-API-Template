@@ -18,7 +18,7 @@ const schema = new EntitySchema({
 		trim: true,
 		lowercase: true,
 		minlength: 3,
-		required: true,
+		required: true
 	}
 }, { timestamps: false, strict: false, versionKey: false });
 

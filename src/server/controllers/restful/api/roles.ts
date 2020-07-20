@@ -3,13 +3,12 @@ import authenticate from '../../../middleware/authenticators/token.validator';
 import allowed from '../../../middleware/authenticators/access.validator';
 import RoleService from '../../../services/role.service';
 import Controller from '../../controller';
-import express from 'express';
+import express, { Router, Request, Response } from 'express';
 
-import { Router, Request, Response } from 'express';
 import RequestAction from '../../../definitions/requestAction';
 
 class Roles extends Controller {
-	
+
 	private service = new RoleService();
 	private routing = '/rest/api/roles';
 	private router: Router;
@@ -36,7 +35,7 @@ class Roles extends Controller {
 
 	private get = async (request: Request, response: Response): Promise<Response> => {
 		const roleId: any = request.query.roleId;
-		
+
 		if (roleId) {
 			return this.getOne(roleId, request, response);
 		} else {

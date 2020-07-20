@@ -13,7 +13,7 @@ const extensions = ['webp', 'jpg'];
 
 const Picture: React.FunctionComponent<Props> = (props) => {
 	const parts = props.src.split('.');
-	const ext = parts[parts.length-1];
+	const ext = parts[parts.length - 1];
 	const path = props.src.replace(ext, '');
 
 	return (
@@ -22,7 +22,6 @@ const Picture: React.FunctionComponent<Props> = (props) => {
 			<img src={path + ext} alt={props.alt} title={props.title} />
 		</picture>);
 };
-
 
 Picture.propTypes = {
 	src: PropType.string.isRequired,

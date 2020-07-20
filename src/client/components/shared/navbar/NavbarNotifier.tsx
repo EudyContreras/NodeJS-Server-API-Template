@@ -17,7 +17,7 @@ type NotificationStyling = {
 	icon: { style: string[]; icon: string };
 	text: { style: string };
 	container: { style: string[] };
-	action: { 
+	action: {
 		style: string;
 		icon: string;
 	};
@@ -26,11 +26,6 @@ type NotificationStyling = {
 type Props = StateProps & DispatchProps & any;
 
 class NavBarNotifier extends React.PureComponent<Props, any> {
-
-	constructor(props: any) {
-		super(props);
-	}
-
 	private dimissNotification = (): void => {
 		this.props.hideNotifier();
 	};
@@ -39,7 +34,7 @@ class NavBarNotifier extends React.PureComponent<Props, any> {
 		icon: { style: [MaterialIcons.class, Styles.icon], icon: MaterialIcons.icons.INFORMATION },
 		text: { style: Styles.text },
 		container: { style: [Styles.snackbar, active ? Styles.show : Styles.hide] },
-		action: { 
+		action: {
 			style: Styles.action,
 			icon: MaterialIcons.icons.CLOSE
 		}
@@ -49,7 +44,7 @@ class NavBarNotifier extends React.PureComponent<Props, any> {
 		icon: { style: [MaterialIcons.class, Styles.icon], icon: MaterialIcons.icons.WARNING },
 		text: { style: Styles.textWarning },
 		container: { style: [Styles.snackbarWarning, active ? Styles.show : Styles.hide] },
-		action: { 
+		action: {
 			style: Styles.action,
 			icon: MaterialIcons.icons.CLOSE
 		}
@@ -59,7 +54,7 @@ class NavBarNotifier extends React.PureComponent<Props, any> {
 		icon: { style: [MaterialIcons.class, Styles.icon], icon: MaterialIcons.icons.ERROR },
 		text: { style: Styles.textError },
 		container: { style: [Styles.snackbarError, active ? Styles.show : Styles.hide] },
-		action: { 
+		action: {
 			style: Styles.action,
 			icon: MaterialIcons.icons.CLOSE
 		}
@@ -71,10 +66,10 @@ class NavBarNotifier extends React.PureComponent<Props, any> {
 			autoDismiss: this.props.autoDismiss,
 			dimissDelay: this.props.dimissDelay
 		};
-		
+
 		let styling = this.messageStyling(this.props.isActive);
-		
-		switch(this.props.notificationType) {
+
+		switch (this.props.notificationType) {
 			case NotificationType.WARNING:
 				styling = this.warningStyling(this.props.isActive);
 				break;
@@ -86,7 +81,7 @@ class NavBarNotifier extends React.PureComponent<Props, any> {
 		if (props.autoDismiss) {
 			setTimeout(() => {
 				this.props.hideNotifier();
-			}, props.dimissDelay);	
+			}, props.dimissDelay);
 		}
 
 		return (
@@ -99,10 +94,8 @@ class NavBarNotifier extends React.PureComponent<Props, any> {
 	};
 }
 
-const mapStateToProps = (state: any ): any => {
-	return {
-		...state.generalData.notifier
-	};
-};
+const mapStateToProps = (state: any): any => ({
+	...state.generalData.notifier
+});
 
 export default connect<StateProps, DispatchProps, any>(mapStateToProps, Dispatchers)(NavBarNotifier);

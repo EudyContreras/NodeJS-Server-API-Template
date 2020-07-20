@@ -1,5 +1,5 @@
 
-import express from 'express';
+import express, { Router, Request, Response } from 'express';
 import Controller from '../../controller';
 import RequestAction from '../../../definitions/requestAction';
 import InvitationService from '../../../services/invitation.service';
@@ -7,8 +7,6 @@ import authenticate from '../../../middleware/authenticators/token.validator';
 import allowed from '../../../middleware/authenticators/access.validator';
 import validate from '../../../middleware/validators/body.validator';
 import schemaType from '../../../validation/schemas/invitation/blueprint';
-
-import { Router, Request, Response } from 'express';
 
 class Invitations extends Controller {
 

@@ -51,7 +51,7 @@ export default class UserRepository {
 		return count > 0;
 	}
 
-	public async getAllUsers(options = { dto: true }): Promise<IUser[] | any[]>  {
+	public async getAllUsers(options = { dto: true }): Promise<IUser[] | any[]> {
 		const users = await User
 			.find()
 			.select(this.exclude)
@@ -64,7 +64,7 @@ export default class UserRepository {
 		return users;
 	}
 
-	public async getAllUsersWhere(query: any, options = { dto: true }): Promise<IUser[] | any[]>  {
+	public async getAllUsersWhere(query: any, options = { dto: true }): Promise<IUser[] | any[]> {
 		const users = await User
 			.find(query)
 			.select(this.exclude)
@@ -77,13 +77,13 @@ export default class UserRepository {
 		return users;
 	}
 
-	public async getUser(userId: string, options = { dto: true }): Promise<IUser | any>  {
+	public async getUser(userId: string, options = { dto: true }): Promise<IUser | any> {
 		const user = await User
 			.findById(userId)
 			.select(this.exclude)
 			.exec();
 
-		const result = user ? user : null;
+		const result = user || null;
 
 		if (options.dto === true && result != null) {
 			return dataTransferDocument(result);
@@ -92,13 +92,13 @@ export default class UserRepository {
 		return result;
 	}
 
-	public async getUserWhere(criteria: any, options = { dto: true }): Promise<IUser | any>  {
+	public async getUserWhere(criteria: any, options = { dto: true }): Promise<IUser | any> {
 		const user = await User
 			.findOne(criteria)
 			.select(this.exclude)
 			.exec();
 
-		const result = user ? user : null;
+		const result = user || null;
 
 		if (options.dto === true && result != null) {
 			return dataTransferDocument(result);
@@ -107,25 +107,25 @@ export default class UserRepository {
 		return result;
 	}
 
-	public async getFromUser(userId: string, select: any): Promise<IUser | any>  {
+	public async getFromUser(userId: string, select: any): Promise<IUser | any> {
 		const user = await User
 			.findById(userId)
 			.select(select)
 			.exec();
 
-		const result = user ? user : null;
+		const result = user || null;
 
 		return result;
 	}
 
-	public async insertUser(data: any, options = { dto: true }): Promise<IUser | any>  {
+	public async insertUser(data: any, options = { dto: true }): Promise<IUser | any> {
 		const user = new User(data);
 
 		await user.validate();
 
 		const saved = await user.save(this.options);
 
-		const result = saved ? saved : null;
+		const result = saved || null;
 
 		if (options.dto === true && result != null) {
 			return dataTransferDocument(result);
@@ -134,13 +134,13 @@ export default class UserRepository {
 		return result;
 	}
 
-	public async updateUser(userId: string, update: any, options = { dto: true }): Promise<IUser | any>  {
+	public async updateUser(userId: string, update: any, options = { dto: true }): Promise<IUser | any> {
 		const user = await User
 			.findByIdAndUpdate(userId, update, this.options)
 			.select(this.exclude)
 			.exec();
 
-		const result = user ? user : null;
+		const result = user || null;
 
 		if (options.dto === true && result != null) {
 			return dataTransferDocument(result);
@@ -149,13 +149,13 @@ export default class UserRepository {
 		return result;
 	}
 
-	public async updateUserWhere(query: any, update: any, options = { dto: true }): Promise<IUser | any>  {
+	public async updateUserWhere(query: any, update: any, options = { dto: true }): Promise<IUser | any> {
 		const user = await User
 			.findOneAndUpdate(query, update, this.options)
 			.select(this.exclude)
 			.exec();
 
-		const result = user ? user : null;
+		const result = user || null;
 
 		if (options.dto === true && result != null) {
 			return dataTransferDocument(result);
@@ -164,12 +164,12 @@ export default class UserRepository {
 		return result;
 	}
 
-	public async deleteUser(userId: string, options = { dto: true }): Promise<IUser | any>  {
+	public async deleteUser(userId: string, options = { dto: true }): Promise<IUser | any> {
 		const user = await User
 			.findByIdAndDelete(userId)
 			.exec();
 
-		const result = user ? user : null;
+		const result = user || null;
 
 		if (options.dto === true && result != null) {
 			return dataTransferDocument(result);
@@ -178,12 +178,12 @@ export default class UserRepository {
 		return result;
 	}
 
-	public async deleteUserWhere(query: any, options = { dto: true }): Promise<IUser | any>  {
+	public async deleteUserWhere(query: any, options = { dto: true }): Promise<IUser | any> {
 		const user = await User
 			.findOneAndDelete(query)
 			.exec();
 
-		const result = user ? user : null;
+		const result = user || null;
 
 		if (options.dto === true && result != null) {
 			return dataTransferDocument(result);

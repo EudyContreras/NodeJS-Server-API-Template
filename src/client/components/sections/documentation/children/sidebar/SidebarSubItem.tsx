@@ -3,11 +3,6 @@ import { join } from '../../../../utililties/react.utils';
 import { MaterialIcons } from '../../../../../stores/icon.library';
 
 class SidebarSubItem extends React.PureComponent<any, any> {
-
-	constructor(props: any) {
-		super(props);
-	}
-
 	public render = (): JSX.Element => {
 		const hash = this.props.hash;
 		const label = this.props.label;
@@ -15,7 +10,7 @@ class SidebarSubItem extends React.PureComponent<any, any> {
 		const style = this.props.styling;
 
 		const classes = [style.httpMethod, style.httpAll];
-		
+
 		return (
 
 			<li className={style.subMenuItem}>

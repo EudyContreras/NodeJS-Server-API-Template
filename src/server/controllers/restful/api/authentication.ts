@@ -1,5 +1,5 @@
 
-import express from 'express';
+import express, { Router, Request, Response } from 'express';
 import Controller from '../../controller';
 import validate from '../../../middleware/validators/body.validator';
 import authenticate from '../../../middleware/authenticators/token.validator';
@@ -7,13 +7,12 @@ import schemaType from '../../../validation/schemas/authentication/blueprint';
 import AuthenticationService from '../../../services/authentication.service';
 import RequestAction from '../../../definitions/requestAction';
 
-import { Router, Request, Response } from 'express';
 import { AuthenticationResponse } from '../../../responses/request.response';
 import { AuthenticationMessages } from '../../../messages/message.response';
 import HttpCode from '../../../definitions/httpCode';
 
 class Authentication extends Controller {
-	
+
 	private service: AuthenticationService = new AuthenticationService();
 	private routing = '/rest/api/authentication';
 	private router: Router;

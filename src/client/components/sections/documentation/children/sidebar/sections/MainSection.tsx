@@ -5,10 +5,6 @@ import MenuItem from '../SidebarMenuItem';
 const routes = ['Users', 'Privideles', 'Roles', 'Invitation', 'Users', 'Privideles', 'Roles', 'Invitation'];
 
 export default class MainSection extends React.PureComponent<any, any> {
-	
-	constructor(props: any) {
-		super(props);
-	}
 
 	public render = (): JSX.Element => {
 		const style = this.props.styling;

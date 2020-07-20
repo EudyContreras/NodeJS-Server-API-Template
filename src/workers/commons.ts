@@ -28,7 +28,7 @@ export const inRangeInclusive = (value: number, min: number, max: number): boole
 
 export const addDelay = (ms: number) => (): any => new Promise(resolve => setTimeout(() => resolve(), ms));
 
-export const isNullOrEmpty = (path): boolean => !path || path === '' || path == undefined;
+export const isNullOrEmpty = (path): boolean => !path || path === '' || path === undefined;
 
 export const handleWebp = async <T> (supportCallbacks: WebpSupportCallback<T>): Promise<any> => {
 	if (!self.createImageBitmap) return false;
@@ -36,7 +36,7 @@ export const handleWebp = async <T> (supportCallbacks: WebpSupportCallback<T>): 
 	const webpData = 'data:image/webp;base64,UklGRh4AAABXRUJQVlA4TBEAAAAvAAAAAAfQ//73v/+BiOh/AAA=';
 	const blob = await fetch(webpData).then(r => r.blob());
 
-	return createImageBitmap(blob).then(() => true, () => false).then(hasSupport =>{
+	return createImageBitmap(blob).then(() => true, () => false).then(hasSupport => {
 		if (hasSupport) {
 			return supportCallbacks.onHasSupport();
 		} else {
@@ -83,8 +83,8 @@ export function timeoutRequest(request: Request): Promise<Response|null> {
 export const storeDataAndUpdateUI = async (): Promise<void> => {
 	if ('storage' in navigator && 'estimate' in navigator.storage) {
 		const { usage, quota } = await navigator.storage.estimate();
-		
-		if (usage && quota){
+
+		if (usage && quota) {
 			const percentUsed = Math.round(usage / quota * 100);
 			const usageInMib = Math.round(usage / (1024 * 1024));
 			const quotaInMib = Math.round(quota / (1024 * 1024));

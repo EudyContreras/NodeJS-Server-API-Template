@@ -1,6 +1,6 @@
 import CronTask from './cronTask';
 
-export default class CronJob{
+export default class CronJob {
 	public label: string;
 	public interval: number;
 	public task: CronTask;

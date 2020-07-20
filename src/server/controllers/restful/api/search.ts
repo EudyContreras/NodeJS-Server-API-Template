@@ -1,9 +1,7 @@
 
-import express from 'express';
+import express, { Router, Response, Request } from 'express';
 import Controller from '../../controller';
 import RequestAction from '../../../definitions/requestAction';
-
-import { Router, Response, Request } from 'express';
 
 export default class Search extends Controller {
 

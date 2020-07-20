@@ -15,13 +15,9 @@ class IndexViewRenderer extends ViewRenderer {
 		this.setupRoutes(this.router);
 	}
 
-	public getRoute = (): string => {
-		return this.routing;
-	};
+	public getRoute = (): string => this.routing;
 
-	public getRouter = (): Router => {
-		return this.router;
-	};
+	public getRouter = (): Router => this.router;
 
 	public setupRoutes = (router: Router): void => {
 		router.get('/', this.renderRoutes);
@@ -33,11 +29,11 @@ class IndexViewRenderer extends ViewRenderer {
 		});
 
 		const template: any = config.layout;
-		
-		res.render(template.LIGHT, { 
+
+		res.render(template.LIGHT, {
 			html: config.html,
 			text: 'Welcome to Reach Template Engine',
-			url: req.url 
+			url: req.url
 		});
 	};
 }

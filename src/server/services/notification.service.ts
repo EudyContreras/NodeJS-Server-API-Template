@@ -1,11 +1,11 @@
 import EmailHandler from '../handlers/email.handler';
 
 export default class NotificationService {
-  
+
 	public async sendInvitationEmail(invite: any): Promise<boolean> {
 		return false;
 	}
-	
+
 	public canSendEmails(): boolean {
 		throw new Error('Method not implemented.');
 	}

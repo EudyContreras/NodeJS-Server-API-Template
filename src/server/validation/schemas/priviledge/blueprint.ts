@@ -78,7 +78,7 @@ export const validatePriviledgeUpdate = (data: any): any => {
 };
 
 export const validatePriviledgeQuery = (data: any): any => {
-  
+
 	const schema = Joi.object({
 		userId: Joi
 			.string()

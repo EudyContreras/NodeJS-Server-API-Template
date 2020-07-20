@@ -11,6 +11,6 @@ export class PasswordTask implements ICronTask {
 	}
 
 	private async removedTempPasswords(): Promise<any> {
-		
+
 	}
 }

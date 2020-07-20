@@ -4,11 +4,7 @@ import SideMenuToggle from '../SidebarToggle';
 import VersionInfo from './VersionInfo';
 
 export default class TopSection extends React.PureComponent<any, any> {
-	
-	constructor(props: any) {
-		super(props);
-	}
-	
+
 	public render = (): JSX.Element => {
 		const style = this.props.styling;
 

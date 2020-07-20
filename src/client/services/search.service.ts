@@ -17,7 +17,7 @@ export default class RoutingService {
 			const endpoint = process.env.REACT_APP_SERVER_API_URL;
 			const response = await axios.get(`${endpoint}/search`, data);
 			return { result: response.data.content };
-		} catch(error) {
+		} catch (error) {
 			return { error: error };
 		}
 	};

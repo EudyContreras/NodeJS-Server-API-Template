@@ -6,18 +6,15 @@ const links = [
 	{
 		label: 'Register a user',
 		method: { label: 'PUT' }
-	}
-	, 
+	},
 	{
 		label: 'Get all users',
 		method: { label: 'GET' }
-	}
-	,
+	},
 	{
 		label: 'Update user',
 		method: { label: 'PAT' }
-	}
-	,
+	},
 	{
 		label: 'Delete user',
 		method: { label: 'DEL' }
@@ -44,21 +41,17 @@ class SidebarSubMenu extends React.PureComponent<any, State> {
 		};
 	}
 
-	private hiddenStyle = (): any => {
-		return {
-			height: 0,
-			position: 'absolute',
-			visibility: 'hidden'
-		};
-	};
+	private hiddenStyle = (): any => ({
+		height: 0,
+		position: 'absolute',
+		visibility: 'hidden'
+	});
 
-	private getStyle = (height: number): any => {
-		return {
-			height: height,
-			position: 'relative',
-			visibility: 'visible'
-		};
-	};
+	private getStyle = (height: number): any => ({
+		height: height,
+		position: 'relative',
+		visibility: 'visible'
+	});
 
 	private onHidden = (): void => {
 		this.setState(() => ({
@@ -88,7 +81,7 @@ class SidebarSubMenu extends React.PureComponent<any, State> {
 
 		const classes = [style.subMenu];
 		const listItems = links.map((x, index) => <SidebarSubItem key={index} hash={'#' + x} label={x.label} styling={style} method={x.method.label} />);
-		
+
 		if (this.state.loaded) {
 			classes.push(style.smExpanded);
 			if (expand) {

@@ -8,9 +8,9 @@ export const getAllRoutings = () => async (dispatch: Function): Promise<void> =>
 	dispatch(loading());
 
 	const service = new RoutingService();
-	
+
 	const { error, routings } = await service.getAll();
-	
+
 	if (error) return dispatch(onError(error));
 
 	dispatch({
@@ -19,16 +19,11 @@ export const getAllRoutings = () => async (dispatch: Function): Promise<void> =>
 	});
 };
 
-export const loading = (): any => {
-	return {
-		type: LOADING_ROUTINGS
-	};
-};
+export const loading = (): any => ({
+	type: LOADING_ROUTINGS
+});
 
-export const onError = (error: any): any => {
-	return {
-		type: ERROR_EVENT,
-		payload: error
-	};
-};
-
+export const onError = (error: any): any => ({
+	type: ERROR_EVENT,
+	payload: error
+});

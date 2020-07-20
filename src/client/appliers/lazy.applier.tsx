@@ -26,7 +26,7 @@ if ('IntersectionObserver' in window) {
 		});
 	}, options);
 
-	lazyImages.forEach(image =>{
+	lazyImages.forEach(image => {
 		observer.observe(image);
 	});
 

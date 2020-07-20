@@ -85,7 +85,7 @@ export default class PriviledgeRepository {
 			.select(this.exclude)
 			.exec();
 
-		const result = priviledge ? priviledge : null;
+		const result = priviledge || null;
 
 		if (options.dto === true && result != null) {
 			return dataTransferDocument(result);
@@ -100,7 +100,7 @@ export default class PriviledgeRepository {
 			.select(this.exclude)
 			.exec();
 
-		const result = priviledge ? priviledge : null;
+		const result = priviledge || null;
 
 		if (options.dto === true && result != null) {
 			return dataTransferDocument(result);
@@ -115,7 +115,7 @@ export default class PriviledgeRepository {
 			.select(select)
 			.exec();
 
-		const result = priviledge ? priviledge : null;
+		const result = priviledge || null;
 
 		return result;
 	}
@@ -127,7 +127,7 @@ export default class PriviledgeRepository {
 
 		const saved = await priviledge.save(this.options);
 
-		const result = saved ? saved : null;
+		const result = saved || null;
 
 		if (options.dto === true && result != null) {
 			return dataTransferDocument(result);
@@ -150,7 +150,7 @@ export default class PriviledgeRepository {
 			.select(this.exclude)
 			.exec();
 
-		const result = priviledge ? priviledge : null;
+		const result = priviledge || null;
 
 		if (options.dto === true && result != null) {
 			return dataTransferDocument(result);
@@ -165,7 +165,7 @@ export default class PriviledgeRepository {
 			.select(this.exclude)
 			.exec();
 
-		const result = priviledge ? priviledge : null;
+		const result = priviledge || null;
 
 		if (options.dto === true && result != null) {
 			return dataTransferDocument(result);
@@ -179,7 +179,7 @@ export default class PriviledgeRepository {
 			.findByIdAndDelete(priviledgeId)
 			.exec();
 
-		const result = priviledge ? priviledge : null;
+		const result = priviledge || null;
 
 		if (options.dto === true && result != null) {
 			return dataTransferDocument(result);
@@ -193,7 +193,7 @@ export default class PriviledgeRepository {
 			.findOneAndDelete(query)
 			.exec();
 
-		const result = priviledge ? priviledge : null;
+		const result = priviledge || null;
 
 		if (options.dto === true && result != null) {
 			return dataTransferDocument(result);

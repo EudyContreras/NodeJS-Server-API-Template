@@ -48,7 +48,7 @@ async function authenticate(req: any, res: Response, next: NextFunction): Promis
 
 	try {
 		req.user = webtoken.verify(token, config.jwt.TOKEN_SECRET);
-		
+
 		const blackListed = await isBlackListed(token);
 
 		if (blackListed) {

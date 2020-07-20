@@ -32,27 +32,23 @@ class IndexViewRenderer extends ViewRenderer {
 		this.setupRoutes(this.router);
 	}
 
-	public getRoute = (): string => {
-		return this.routing;
-	};
+	public getRoute = (): string => this.routing;
 
-	public getRouter = (): Router => {
-		return this.router;
-	};
+	public getRouter = (): Router => this.router;
 
 	public setupRoutes = (router: Router): void => {
 		routes.map((x) => router.get(x.path, this.renderRoutes));
 	};
 
 	private renderRoutes = async (req: Request, res: Response): Promise<void> => {
-		if (process.env.CSR == 'true') {
+		if (process.env.CSR === 'true') {
 			res.status(200).send();
 		} else {
 			const shell = req.query.shell !== undefined;
 
 			const css = new Set();
 			const cssInjector = (...styles): void => { styles.forEach(style => css.add(style._getCss())); };
-	
+
 			if (shell) {
 				return await this.renderShell(req, res, cssInjector);
 			} else {
@@ -79,8 +75,8 @@ class IndexViewRenderer extends ViewRenderer {
 			styles: styles,
 			scripts: scripts,
 			context: context,
-			enableSW: process.env.USE_SW == 'true',
-			clientSideRendered: process.env.CSR == 'true',
+			enableSW: process.env.USE_SW === 'true',
+			clientSideRendered: process.env.CSR === 'true',
 			watchConnection: true,
 			content: content,
 			cache: true
@@ -99,7 +95,7 @@ class IndexViewRenderer extends ViewRenderer {
 		const props = {
 			css: this.css,
 			html: config.html,
-			enableSW: process.env.USE_SW == 'true',
+			enableSW: process.env.USE_SW === 'true',
 			context: context,
 			content: content,
 			cache: true

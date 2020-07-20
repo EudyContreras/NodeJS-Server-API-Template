@@ -19,9 +19,9 @@ const schema = new EntitySchema({
 		required: true,
 		default: 0,
 		min: 0,
-		max: 10,
+		max: 10
 	}
-}, { timestamps: true,  strict: true, versionKey: false });
+}, { timestamps: true, strict: true, versionKey: false });
 
 const Role = schema.getModel<IRole>('Role');
 

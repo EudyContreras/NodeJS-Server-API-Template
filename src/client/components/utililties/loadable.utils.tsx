@@ -13,8 +13,8 @@ type DelayOptions = {
 
 export function delayBoundary<T>(
 	call: Promise<DefaultComponent<T>>,
-	options: DelayOptions = { 
-		delay: DEFAULT_DELAY, 
+	options: DelayOptions = {
+		delay: DEFAULT_DELAY,
 		timeout: DEFAULT_TIMEOUT
 	}
 ): Promise<DefaultComponent<T>> {

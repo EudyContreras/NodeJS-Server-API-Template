@@ -35,7 +35,7 @@ export interface CacheNames {
 	GOOGLE_FONTS_WEB_CACHE: string;
 };
 
-export const cacheNames = (version?: string | undefined): CacheNames =>({
+export const cacheNames = (version?: string | undefined): CacheNames => ({
 	DATA_CACHE: `eudcon-universal-data-cache-${version || ''}`,
 	IMAGE_CACHE: `eudcon-universal-image-cache-${version || ''}`,
 	MEDIA_CACHE: `eudcon-universal-media-cache-${version || ''}`,

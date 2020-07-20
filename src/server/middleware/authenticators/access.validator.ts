@@ -17,7 +17,7 @@ function allow(...allowed: string[]): (request: any, response: Response, next: N
 		const { error, result } = await service.getRoleByCode(roleCode);
 
 		if (error) return { error: AccessRoleValidation.INVALID_CODE };
-		
+
 		request.role = result;
 		return { allowed: allowed.indexOf(result.name) > -1 };
 	};
@@ -49,9 +49,7 @@ function allow(...allowed: string[]): (request: any, response: Response, next: N
 			accessResponse.errors.push(rolesMatch.error);
 		}
 
-		if (request.user && isAllowed.allowed && rolesMatch.match)
-			return await priviledgeValidator(request, response, next);
-		else {
+		if (request.user && isAllowed.allowed && rolesMatch.match) { return await priviledgeValidator(request, response, next); } else {
 			accessResponse.granted = false;
 			accessResponse.errors.push(AccessRoleValidation.DENIED);
 			return response.status(httpCode.FORBIDDEN_ACCESS).json(accessResponse);

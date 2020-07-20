@@ -154,7 +154,7 @@ export default class InvitationRepository {
 			.findByIdAndDelete(invitationId)
 			.exec();
 
-		const result = invitation ? invitation : null;
+		const result = invitation || null;
 
 		if (options.dto === true && result != null) {
 			return dataTransferDocument(result);
@@ -168,7 +168,7 @@ export default class InvitationRepository {
 			.findOneAndDelete(query)
 			.exec();
 
-		const result = invitation ? invitation : null;
+		const result = invitation || null;
 
 		if (options.dto === true && result != null) {
 			return dataTransferDocument(result);

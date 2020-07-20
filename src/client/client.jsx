@@ -29,16 +29,18 @@ loadableReady(() => {
 		content
 	);
 
-	document.getElementById('serverCSS')?.remove();
-
-	if (renderOptions.enableSW == true) {
-		registerWorker({ 
+	const element = document.getElementById('serverCSS');
+	if (element) {
+		element.remove();
+	}
+	if (renderOptions.enableSW === true) {
+		registerWorker({
 			clientSideRendered: renderOptions.clientSideRendered,
 			watchConnnectionState: renderOptions.watchConnection,
 			registerPushNotifications: false,
 			registerBackgroundSync: false
 		});
-	}	
+	}
 	if (module.hot) {
 		module.hot.accept();
 	}

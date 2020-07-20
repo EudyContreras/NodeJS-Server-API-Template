@@ -68,7 +68,7 @@ class ApiClient extends Client {
 		};
 
 		this.performRequest(HttpMethod.GET, options, onSuccess, onError, extra);
-	}
+	};
 }
 
 export default ApiClient;

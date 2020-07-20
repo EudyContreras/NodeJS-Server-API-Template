@@ -32,7 +32,7 @@ export const validateUserCreate = (data: any): any => {
 			.min(config.validation.passwords.MIN_LENGTH)
 			.max(config.validation.passwords.MAX_LEGHTH)
 	});
-	
+
 	return {
 		message: SchemaValidation.CREATE_DATA('user'),
 		result: schema.validate(data, {
@@ -66,7 +66,7 @@ export const validateUserUpdate = (data: any): any => {
 			.min(config.validation.passwords.MIN_LENGTH)
 			.max(config.validation.passwords.MAX_LEGHTH)
 	});
-	
+
 	return {
 		message: SchemaValidation.CREATE_DATA('user'),
 		result: schema.validate(data, {
@@ -74,7 +74,6 @@ export const validateUserUpdate = (data: any): any => {
 		})
 	};
 };
-
 
 export const validatePasswordUpdate = (data: any): any => {
 
@@ -93,7 +92,7 @@ export const validatePasswordUpdate = (data: any): any => {
 			.min(config.validation.passwords.MIN_LENGTH)
 			.max(config.validation.passwords.MAX_LEGHTH)
 	});
-	
+
 	return {
 		message: SchemaValidation.CREATE_DATA('user'),
 		result: schema.validate(data, {
@@ -101,6 +100,5 @@ export const validatePasswordUpdate = (data: any): any => {
 		})
 	};
 };
-
 
 export default schamaType;

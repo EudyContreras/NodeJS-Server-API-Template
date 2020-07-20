@@ -25,7 +25,7 @@ const schema = new EntitySchema({
 		type: Boolean,
 		required: true
 	}
-}, { timestamps: true,  strict: true, versionKey: false });
+}, { timestamps: true, strict: true, versionKey: false });
 
 const Password = schema.getModel<IPassword>('Password');
 

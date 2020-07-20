@@ -1,5 +1,4 @@
 
-
 import config from '../../configs/config.server';
 import webtoken from 'jsonwebtoken';
 import UserService from './user.service';
@@ -18,7 +17,7 @@ export default class AuthenticationService {
 	private redisCacheHandler: RedisCacheHandler = new RedisCacheHandler();
 
 	/**
-	 * @description Authenticates the user by verifying that 
+	 * @description Authenticates the user by verifying that
 	 * the credetials match our internal records.
 	 * @param credentials The email and password used for athentication
 	 * @returns The possible user id and token or an error that has been produced.
@@ -45,12 +44,12 @@ export default class AuthenticationService {
 
 					let noMatch = true;
 
-					for(const tempPassword of tempPasswords) {
+					for (const tempPassword of tempPasswords) {
 						const isMatch = await encryptionService.comparePasswords(password, tempPassword.password);
-						
-						if (isMatch) noMatch = false; 
+
+						if (isMatch) noMatch = false;
 					}
-					if(noMatch) return { error: AuthenticationMessages.WRONG_PASSWORD };         
+					if (noMatch) return { error: AuthenticationMessages.WRONG_PASSWORD };
 				}
 			}
 
@@ -104,9 +103,9 @@ export default class AuthenticationService {
 			const password = await passwordRepository.insertPassword(passwordData);
 
 			if (!password) return { error: AuthenticationMessages.FAILURE };
-			
+
 			await notificationService.sendPasswordRecoveryEmail(email, randomPassword);
-			
+
 			return { result: NotificationMessages.RECOVERY_EMAIL };
 		} catch (error) {
 			return { error };

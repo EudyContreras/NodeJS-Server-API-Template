@@ -30,7 +30,7 @@ const ALL = [
 	DELETE
 ];
 
-export{
+export {
 	PRIVILEDGES,
 	READ,
 	CREATE,

@@ -23,7 +23,7 @@ export const validateCredentials = (data: any): any => {
 			.min(config.validation.passwords.MIN_LENGTH)
 			.max(config.validation.passwords.MAX_LEGHTH)
 	});
-	
+
 	return {
 		message: SchemaValidation.CREATE_DATA('credentials'),
 		result: schema.validate(data, {

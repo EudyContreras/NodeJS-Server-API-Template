@@ -2,9 +2,7 @@
 /**
  * Joins css classes into a single string
  */
-export const join = (...names: string[]): string => {
-	return names.join(' ');
-};
+export const join = (...names: string[]): string => names.join(' ');
 
 export default class Styler {
 
@@ -14,13 +12,13 @@ export default class Styler {
 	constructor(...baseStyles: string[]) {
 		this.styles = [...baseStyles];
 	}
-	
-	reset = (style?: string): Styler => { 
+
+	reset = (style?: string): Styler => {
 		this.styles = [...this.styles, style!];
 		return this;
 	};
 
-	add = (style: string): Styler => { 
+	add = (style: string): Styler => {
 		this.styles = [...this.styles, style];
 		return this;
 	};
@@ -51,8 +49,7 @@ export default class Styler {
 	 * @returns The instance of this updater.
 	 */
 	appendWhen = (condition: boolean, style: string, updateState = true): Styler => {
-		if (condition && this.latest) 
-			this.styles = [...this.styles, style];
+		if (condition && this.latest) { this.styles = [...this.styles, style]; }
 		if (updateState) {
 			this.latest = condition;
 		}

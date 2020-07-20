@@ -56,11 +56,9 @@ class SidebarMenu extends React.Component<Props, any> {
 		});
 	};
 
-	public shouldComponentUpdate = (nextProps: any, nextState: any): boolean => {
-		return !shallowEqual(this.props.fixed, nextProps.fixed) 
-			|| !shallowEqual(this.props.hovered, nextProps.hovered)
-			|| !shallowEqual(this.props.expanded, nextProps.expanded);
-	};
+	public shouldComponentUpdate = (nextProps: any, nextState: any): boolean => !shallowEqual(this.props.fixed, nextProps.fixed) ||
+			!shallowEqual(this.props.hovered, nextProps.hovered) ||
+			!shallowEqual(this.props.expanded, nextProps.expanded);
 
 	private getProperties = (style: any): any & any => {
 		const styles = [style.sideMenu];
@@ -69,7 +67,7 @@ class SidebarMenu extends React.Component<Props, any> {
 		appendWhen(styles, !this.props.expanded, style.sideMenuClosed);
 		appendWhen(styles, !this.props.expanded && this.props.hovered, style.sideMenuPeek);
 		appendWhen(styles, this.props.fixed, style.fixed);
-		
+
 		const common = {
 			ref: this.props.self,
 			style: { top: cssTop },
@@ -87,8 +85,8 @@ class SidebarMenu extends React.Component<Props, any> {
 	public render = (): JSX.Element => {
 		const style = this.props.styling;
 
-		const { common , actions } = this.getProperties(style);
-		
+		const { common, actions } = this.getProperties(style);
+
 		return (
 			<aside {...common} {...actions} >
 				< TopSection styling={style} />

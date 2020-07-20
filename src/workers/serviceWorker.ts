@@ -18,7 +18,7 @@ import {
 } from './constants';
 
 const DEBUG_MODE = (process.env.NODE_ENV !== 'production');
-   
+
 const cacheKeys = cacheNames(__VERSION_NUMBER__);
 const precacheManifest = [...self.__WB_MANIFEST];
 
@@ -43,24 +43,16 @@ const notifyClient = (event: Event | any, message: ClientMessage): void => {
 
 const defaultCachePredicate: CachePredicate = {
 	crossOrigin: true,
-	cacheCondition: ({ response }) => response && inRange(response?.status, 200, 300) || false
+	cacheCondition: ({ response }) => (response && inRange(response?.status, 200, 300)) || false
 };
 
-const isSideEffectRequest = (request: Request): boolean => {
-	return [...Object.values(constants.sideEffects)].includes(request.method) || request.method != httpMethods.GET;
-};
+const isSideEffectRequest = (request: Request): boolean => [...Object.values(constants.sideEffects)].includes(request.method) || request.method !== httpMethods.GET;
 
-const isWebFontRequest = (request: Request, url: any): boolean => {
-	return request.destination === cachableTypes.FONT || url.origin === commonOrigins.STATIC_WEB_FONTS;
-};
+const isWebFontRequest = (request: Request, url: any): boolean => request.destination === cachableTypes.FONT || url.origin === commonOrigins.STATIC_WEB_FONTS;
 
-const isAcceptedApiRequest = (request: Request): boolean => {
-	return request.url.includes('/api/') && request.method == httpMethods.GET;
-};
+const isAcceptedApiRequest = (request: Request): boolean => request.url.includes('/api/') && request.method === httpMethods.GET;
 
-const any = (request: Request, ...types: string[]): boolean => {
-	return types.includes(request.destination);
-};
+const any = (request: Request, ...types: string[]): boolean => types.includes(request.destination);
 
 DEBUG_MODE && logger.log('Your service worker is loaded 🎉');
 
@@ -82,7 +74,7 @@ self.addEventListener(events.FETCH, (event: any) => {
 		const cacheName = url.origin === commonOrigins.STYLESHEET_FONTS ? cacheKeys.GOOGLE_FONTS_SHEETS_CACHE : cacheKeys.STATIC_CACHE;
 		const cachePredicate: CachePredicate = {
 			crossOrigin: true,
-			cacheCondition: ({ response }) => response && inRange(response?.status, 200, 300) || false
+			cacheCondition: ({ response }) => (response && inRange(response?.status, 200, 300)) || false
 		};
 		staleWhileRevalidate({ event, request, cacheName, cachePredicate: cachePredicate, theresholdAge: days(1) });
 		return;
@@ -144,16 +136,14 @@ self.addEventListener(events.FETCH, (event: any) => {
 			maxEntries: 8
 		};
 		networkFirst({ event, request, cacheName, quotaOptions, cachePredicate: cachePredicate });
-		return;
+
 	}
 });
 
 self.addEventListener(events.INSTALL, async (event: any) => {
 	DEBUG_MODE && logger.log(events.INSTALL, `Version : ${__VERSION_NUMBER__}`, event);
 
-	const allResources = Array.from(new Set([...precacheManifest.map((x: any) => x.url), ...constants.urlsToCache])).map(url => {
-		return new Request(url, { mode: 'no-cors' });
-	});
+	const allResources = Array.from(new Set([...precacheManifest.map((x: any) => x.url), ...constants.urlsToCache])).map(url => new Request(url, { mode: 'no-cors' }));
 
 	const precacheCallback = async (cacheName: string, requests: RequestInfo[]): Promise<void> => {
 		try {
@@ -169,7 +159,7 @@ self.addEventListener(events.INSTALL, async (event: any) => {
 			handleInstallation(allResources, precacheCallback)
 				.then(() => self.skipWaiting())
 				.catch(error => logger.log(error))
-		);;
+		); ;
 	}
 });
 
@@ -213,9 +203,9 @@ self.addEventListener(events.ACTIVATE, async (event: any) => {
 					.map(key => {
 						DEBUG_MODE && logger.log(`Deleting cache name: ${key}`);
 						return caches.delete(key);
-					})
-				);
-			}).catch(error => logger.log(error)));
+					}));
+			}).catch(error => logger.log(error))
+	);
 	return self.clients.claim();
 });
 
@@ -265,7 +255,7 @@ self.addEventListener(events.SYNC, (event: Event | any) => {
 self.addEventListener(events.PERIODIC_SYNC, (event: Event | any) => {
 	DEBUG_MODE && logger.log(events.PERIODIC_SYNC, 'Triggered periodic sync event:', event);
 
-	switch(event.tag) {
+	switch (event.tag) {
 		case syncEvents.periodic.CONTENT_SYNC: {
 			event.waitUntil(syncContent(cacheKeys));
 			break;

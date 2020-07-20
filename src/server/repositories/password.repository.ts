@@ -87,7 +87,7 @@ export default class PasswordRepository {
 			.select(this.exclude)
 			.exec();
 
-		const result = password ? password : null;
+		const result = password || null;
 
 		if (options.dto === true && result != null) {
 			return dataTransferDocument(result);
@@ -102,7 +102,7 @@ export default class PasswordRepository {
 			.select(this.exclude)
 			.exec();
 
-		const result = password ? password : null;
+		const result = password || null;
 
 		if (options.dto === true && result != null) {
 			return dataTransferDocument(result);
@@ -117,7 +117,7 @@ export default class PasswordRepository {
 			.select(select)
 			.exec();
 
-		const result = password ? password : null;
+		const result = password || null;
 
 		return result;
 	}
@@ -129,7 +129,7 @@ export default class PasswordRepository {
 
 		const saved = await password.save(this.options);
 
-		const result = saved ? saved : null;
+		const result = saved || null;
 
 		if (options.dto === true && result != null) {
 			return dataTransferDocument(result);
@@ -144,7 +144,7 @@ export default class PasswordRepository {
 			.select(this.exclude)
 			.exec();
 
-		const result = password ? password : null;
+		const result = password || null;
 
 		if (options.dto === true && result != null) {
 			return dataTransferDocument(result);
@@ -159,7 +159,7 @@ export default class PasswordRepository {
 			.select(this.exclude)
 			.exec();
 
-		const result = password ? password : null;
+		const result = password || null;
 
 		if (options.dto === true && result != null) {
 			return dataTransferDocument(result);
@@ -173,7 +173,7 @@ export default class PasswordRepository {
 			.findByIdAndDelete(passwordId)
 			.exec();
 
-		const result = password ? password : null;
+		const result = password || null;
 
 		if (options.dto === true && result != null) {
 			return dataTransferDocument(result);
@@ -187,7 +187,7 @@ export default class PasswordRepository {
 			.findOneAndDelete(query)
 			.exec();
 
-		const result = password ? password : null;
+		const result = password || null;
 
 		if (options.dto === true && result != null) {
 			return dataTransferDocument(result);

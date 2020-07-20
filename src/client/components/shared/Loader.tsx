@@ -12,10 +12,6 @@ type Props = StateProps & DispatchProps;
 
 class Loading extends React.PureComponent<Props, any> {
 
-	constructor(props: Props) {
-		super(props);
-	}
-
 	public render = (): JSX.Element => {
 		const styling = this.props.styling;
 
@@ -29,7 +25,7 @@ class Loading extends React.PureComponent<Props, any> {
 		}
 		return <Fragment/>;
 	};
-} 
+}
 
 const mapStateToProps = (state: IStateTree & any): any => ({
 	isActive: state.generalData.routeLoader.isActive

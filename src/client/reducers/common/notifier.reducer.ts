@@ -42,7 +42,7 @@ export default function (state = InitialState, action: IAction): INavNotifier {
 				...state,
 				isActive: false,
 				text: '',
-				icon:''
+				icon: ''
 			};
 		}
 		default:

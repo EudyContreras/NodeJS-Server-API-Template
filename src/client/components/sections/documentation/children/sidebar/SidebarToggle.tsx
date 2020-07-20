@@ -20,10 +20,6 @@ type Props = StateProps & DispatchProps & any;
 
 class SidebarToggle extends React.PureComponent<Props, State> {
 
-	constructor(props: any) {
-		super(props);
-	}
-
 	private toggleSidebar = (event: React.MouseEvent<HTMLElement, MouseEvent>): void => {
 		const style = this.props.styling;
 
@@ -65,10 +61,8 @@ class SidebarToggle extends React.PureComponent<Props, State> {
 	};
 }
 
-const mapStateToProps = (state: any): any => {
-	return {
-		...state.presentation.documentation.sidebar.toggle
-	};
-};
+const mapStateToProps = (state: any): any => ({
+	...state.presentation.documentation.sidebar.toggle
+});
 
 export default connect<StateProps, DispatchProps, any>(mapStateToProps, { toggleExpand })(SidebarToggle);

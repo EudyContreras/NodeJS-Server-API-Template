@@ -2,7 +2,7 @@
 import React from 'react';
 
 export default class VersionInfo extends React.PureComponent<any, any> {
-	
+
 	constructor(props: any) {
 		super(props);
 		this.state = {

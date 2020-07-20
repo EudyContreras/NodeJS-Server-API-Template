@@ -5,15 +5,15 @@ export const SIDE_MENU_TOGGLE = 'SIDE_MENU_TOGGLE';
 export const SIDE_MENU_HOVERED = 'SIDE_MENU_HOVERED';
 
 export const toggleExpand = () => (dispatch: Function): void => {
-	dispatch(toggleAction); 
+	dispatch(toggleAction);
 };
 
 export const setHovered = (hovered: boolean) => (dispatch: Function): void => {
-	dispatch({ ...hoverAction, payload: hovered }); 
+	dispatch({ ...hoverAction, payload: hovered });
 };
 
 export const setFixed = (fixed: boolean) => (dispatch: Function): void => {
-	dispatch({ ...fixedAction, payload: fixed }); 
+	dispatch({ ...fixedAction, payload: fixed });
 };
 
 export const toggleAction = {

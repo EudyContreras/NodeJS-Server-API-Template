@@ -26,7 +26,7 @@ const ACCESS_ROLES = [
 	new RoleData(GUEST, CODES[3], config.roles.CLEARANCE.LOW)
 ];
 
-const ALL = [ ROOT, ADMIN, GUEST, USER ];
+const ALL = [ROOT, ADMIN, GUEST, USER];
 
 export {
 	ACCESS_ROLES,
@@ -42,4 +42,3 @@ export {
 export default {
 	ROOT, ADMIN, GUEST, USER, ACCESS_ROLES
 };
-

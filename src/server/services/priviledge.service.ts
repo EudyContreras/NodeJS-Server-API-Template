@@ -41,7 +41,7 @@ export default class AccessPriviledgeService {
 			if (!priviledge) {
 				return { error: PriviledgeMessages.ACCESS_DENIED };
 			}
-			const hasPermission =  priviledge.permissions.some((x) => x === query.permission);
+			const hasPermission = priviledge.permissions.some((x) => x === query.permission);
 
 			return { result: hasPermission };
 		} catch (error) {
@@ -89,7 +89,7 @@ export default class AccessPriviledgeService {
 	 * @description Revokes/deletes a new priviledge that matches the specified
 	 * action data for the specified user id.
 	 * @param actionData The data containing information about the priviledge.
-	 * @returns The revoked priviledge 
+	 * @returns The revoked priviledge
 	 * or a produced error.
 	 */
 	public async revokePriviledge(data: any): Promise<{ result?: any; error?: any }> {

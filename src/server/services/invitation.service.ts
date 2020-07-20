@@ -8,10 +8,10 @@ import { InvitationMessages } from '../messages/message.response';
 export default class InviationService {
 
 	/**
-	 * @description Checks if there if an invitation has been issued to 
-	 * the current user. 
+	 * @description Checks if there if an invitation has been issued to
+	 * the current user.
 	 * @param email The email of the possibly invited user.
-	 * @returns The possible flag indicating if the user has 
+	 * @returns The possible flag indicating if the user has
 	 * received and invitation or the generated error.
 	 */
 	public async hasInvitation(email: string): Promise<{ result?: any; error?: any }> {
@@ -29,10 +29,10 @@ export default class InviationService {
 	}
 
 	/**
-	 * @description Checks if there if an invitation has been issued to 
-	 * the current user and if the invitation is active. 
+	 * @description Checks if there if an invitation has been issued to
+	 * the current user and if the invitation is active.
 	 * @information An invitation is active when it has not expired.
-	 * @param email The email of the possibly invited user. 
+	 * @param email The email of the possibly invited user.
 	 * @returns The possible flag indicating if the user has received
 	 * and invitation or the generated error.
 	 */
@@ -51,11 +51,11 @@ export default class InviationService {
 	}
 
 	/**
-	 * @description Checks if there if an invitation has been issued to 
+	 * @description Checks if there if an invitation has been issued to
 	 * the current user and if the invitation is active and pending.
 	 * @information An invitation is active when it has not expired.
-	 * @param email The email of the possibly invited user. 
-	 * @returns  The possible flag indicating if the user has received 
+	 * @param email The email of the possibly invited user.
+	 * @returns  The possible flag indicating if the user has received
 	 * and invitation or the generated error.
 	 */
 	public async hasActivePendingInvitation(email: string): Promise<{ result?: any; error?: any }> {
@@ -167,12 +167,12 @@ export default class InviationService {
 				const service = new RoleService();
 
 				const { result } = await service.getRoleCode(data.role);
-	
+
 				delete data.role;
 
 				if (result) data.roleCode = result;
 			}
-			
+
 			const result = await repository.updateInvitation(inviteId, data);
 
 			if (!result) return { error: InvitationMessages.NO_INVITATION };
@@ -210,7 +210,7 @@ export default class InviationService {
 	 * @param creatorId The user that issued the invitaiton.
 	 * @param inviteData  The data containing the invitation details.
 	 * @returns The created invitation attached to the given id or the generated error.
-	 * @throws 
+	 * @throws
 	 */
 	public async createInvitation(hostId: string | null, inviteData: any): Promise<{ result?: any; error?: any }> {
 		const email = inviteData.email;
@@ -314,7 +314,7 @@ export default class InviationService {
 			const invitation = await repository.getInvitationWhere({ email: email });
 
 			if (invitation === null) return { error: InvitationMessages.NO_INVITATION };
-			
+
 			if (invitation.pending && !invitation.expired) {
 				return { error: InvitationMessages.IS_PENDING };
 			}

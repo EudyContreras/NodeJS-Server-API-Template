@@ -1,5 +1,4 @@
 
-
 import UserRepository from '../repositories/user.repository';
 import AccessRoleRepository from '../repositories/role.repository';
 
@@ -7,7 +6,7 @@ import { AccessRoleMessages, UserMessages } from '../messages/message.response';
 
 export default class AccessRoleService {
 	/**
-	 * @description Retrieves all the available roles 
+	 * @description Retrieves all the available roles
 	 * @returns A list containing all the roles or a produced error.
 	 */
 	public async getAllRoles(): Promise<{ result?: any[]; error?: any }> {
@@ -34,7 +33,7 @@ export default class AccessRoleService {
 			const result = await repository.getRole(roleId);
 
 			if (!result) return { error: AccessRoleMessages.NO_SUCH_ROLE };
-			
+
 			return { result };
 		} catch (error) {
 			return { error };

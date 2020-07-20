@@ -1,7 +1,7 @@
 import { logger } from '../commons';
 
 const DEBUG_MODE = (process.env.NODE_ENV !== 'production');
-   
+
 const keys = {
 	APP_INSTALLED: 'APP_INSTALLED'
 };
@@ -41,9 +41,7 @@ export const isInstalled = (): boolean => {
 	}
 };
 
-export const hasInstallInfo = (): boolean => {
-	return localStorage.getItem(keys.APP_INSTALLED) != null;
-};
+export const hasInstallInfo = (): boolean => localStorage.getItem(keys.APP_INSTALLED) != null;
 
 export const showPrompt = (): void => {
 	if (deferredPrompt !== null) {

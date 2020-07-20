@@ -16,9 +16,9 @@ export interface DispatchProps {
 }
 
 export const setAll = (
-	sidebarFixed: boolean, 
-	sandboxFixedTop: boolean, 
-	sandboxFixedBottom: boolean, 
+	sidebarFixed: boolean,
+	sandboxFixedTop: boolean,
+	sandboxFixedBottom: boolean,
 	sandboxOffsetBottom: number
 ) => (dispatch: Function): void => {
 	dispatch({

@@ -4,7 +4,7 @@ import PasswordRepository from '../repositories/password.repository';
 import { PasswordMessages } from '../messages/message.response';
 export default class PasswordService {
 	/**
-	 * @description Retrieves all the available passwords 
+	 * @description Retrieves all the available passwords
 	 * @returns A list containing all the passwords or a produced error.
 	 */
 	public async getAllPasswords(): Promise<{ result?: any[]; error?: any }> {
@@ -31,7 +31,7 @@ export default class PasswordService {
 			const result = await repository.getPasswordWhere({ userId });
 
 			if (!result) return { error: PasswordMessages.NO_SUCH_PASSWORD };
-			
+
 			return { result };
 		} catch (error) {
 			return { error };

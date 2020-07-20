@@ -7,7 +7,7 @@ export interface DispatchProps {
 }
 
 export const setInstalled = (installed: boolean) => (dispatch: Function): void => {
-	dispatch({ ...installationAction, payload: installed }); 
+	dispatch({ ...installationAction, payload: installed });
 };
 
 export const installationAction = {
@@ -15,6 +15,6 @@ export const installationAction = {
 	type: APPLICATION_INSTALLED
 };
 
-export const Dispatchers = { 
+export const Dispatchers = {
 	setInstalled
 };

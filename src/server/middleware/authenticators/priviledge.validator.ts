@@ -8,9 +8,7 @@ import { PriviledgeMessages } from '../../messages/message.response';
 import { PriviledgeResponse } from '../../responses/request.response';
 
 import { Response, NextFunction } from 'express';
-import HttpMethod from '../../definitions/httpMethod';
-
-import {
+import HttpMethod, {
 	GET,
 	POST,
 	PUT,
@@ -59,7 +57,7 @@ async function controlAccess(request: any, response: Response, next: NextFunctio
 			priviledgeResponse.permission = query.permission;
 			priviledgeResponse.message = PriviledgeMessages.NOT_GRANTED;
 			priviledgeResponse.errors.push(error);
-			
+
 			return response.status(httpCode.UNAUTHORIZED).json(response);
 		}
 
@@ -68,7 +66,7 @@ async function controlAccess(request: any, response: Response, next: NextFunctio
 			priviledgeResponse.permission = query.permission;
 			priviledgeResponse.message = PriviledgeMessages.NOT_GRANTED;
 			priviledgeResponse.errors.push(PriviledgeMessages.ACCESS_DENIED);
-			
+
 			return response.status(httpCode.UNAUTHORIZED).json(response);
 		}
 	}

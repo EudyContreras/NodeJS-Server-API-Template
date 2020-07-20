@@ -25,14 +25,14 @@ class Action extends React.PureComponent<Props, any> {
 	public componentDidMount = (): void => {
 		const font = new FontFaceObserver('Material Icons');
 
-		font.load().then( () => {
+		font.load().then(() => {
 			this.setState({
 				iconLoaded: true
 			});
 		}).catch((error) => {
 			console.log('Something went wrong!', error);
 		});
-		
+
 		if (!InstallHelper.hasInstallInfo()) {
 			this.props.setInstalled(true);
 		} else {

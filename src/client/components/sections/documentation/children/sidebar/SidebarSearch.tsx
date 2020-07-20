@@ -30,26 +30,26 @@ class SidebarSearch extends React.PureComponent<Props, any> {
 			iconLoaded: false
 		};
 	}
-	
+
 	private performSearch = async (event: React.MouseEvent<HTMLElement, MouseEvent>): Promise<void> => {
 		event.preventDefault();
 
 		rippleEffect(event, this.props.styling);
 
 		const searchText = this.inputRef.current!.value;
-		
+
 		this.props.performSearch(searchText);
 	};
 
 	public componentWillUnmount = (): void => {
 		this._isMounted = false;
 	};
-	
+
 	public componentDidMount = (): void => {
 		this._isMounted = true;
 		const font = new FontFaceObserver('Material Icons');
 
-		font.load().then( () => {
+		font.load().then(() => {
 			if (this._isMounted) {
 				this.setState({
 					iconLoaded: true

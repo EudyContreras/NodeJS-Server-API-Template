@@ -3,9 +3,9 @@ import {
 	APPLICATION_INSTALLED
 } from '../../actions/common/application/appdata.action';
 
-export const SOURCE = APPLICATION;
-
 import IAction from '../../actions/action';
+
+export const SOURCE = APPLICATION;
 
 export interface IApplicationData {
 	installed: boolean;

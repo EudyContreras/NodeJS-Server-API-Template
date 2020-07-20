@@ -15,7 +15,7 @@ import {
 	POST,
 	PUT,
 	DELETE,
-	PATCH,
+	PATCH
 } from '../../definitions/httpMethod';
 
 function buildResponse(validation: { message: string; result: ValidationResult } | null, request: any, response: Response, next: NextFunction): void | Response {

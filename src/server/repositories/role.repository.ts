@@ -75,7 +75,7 @@ export default class RoleRepository {
 			.select(this.exclude)
 			.exec();
 
-		const result = role ? role : null;
+		const result = role || null;
 
 		if (options.dto === true && result != null) {
 			return dataTransferDocument(result);
@@ -90,7 +90,7 @@ export default class RoleRepository {
 			.select(this.exclude)
 			.exec();
 
-		const result = role ? role : null;
+		const result = role || null;
 
 		if (options.dto === true && result != null) {
 			return dataTransferDocument(result);
@@ -105,7 +105,7 @@ export default class RoleRepository {
 			.select(select)
 			.exec();
 
-		const result = role ? role : null;
+		const result = role || null;
 
 		return result;
 	}
@@ -117,7 +117,7 @@ export default class RoleRepository {
 
 		const saved = await role.save(this.options);
 
-		const result = saved ? saved : null;
+		const result = saved || null;
 
 		if (options.dto === true && result != null) {
 			return dataTransferDocument(result);
@@ -132,7 +132,7 @@ export default class RoleRepository {
 			.select(this.exclude)
 			.exec();
 
-		const result = role ? role : null;
+		const result = role || null;
 
 		if (options.dto === true && result != null) {
 			return dataTransferDocument(result);
@@ -147,7 +147,7 @@ export default class RoleRepository {
 			.select(this.exclude)
 			.exec();
 
-		const result = role ? role : null;
+		const result = role || null;
 
 		if (options.dto === true && result != null) {
 			return dataTransferDocument(result);
@@ -161,7 +161,7 @@ export default class RoleRepository {
 			.findByIdAndDelete(roleId)
 			.exec();
 
-		const result = role ? role : null;
+		const result = role || null;
 
 		if (options.dto === true && result != null) {
 			return dataTransferDocument(result);
@@ -175,7 +175,7 @@ export default class RoleRepository {
 			.findOneAndDelete(query)
 			.exec();
 
-		const result = role ? role : null;
+		const result = role || null;
 
 		if (options.dto === true && result != null) {
 			return dataTransferDocument(result);

@@ -40,11 +40,10 @@ export async function requestPermission(type: Permission): Promise<string> {
 
 export function registerNotification(callback: PermissionCallback): void {
 	Notification.requestPermission(permission => {
-		if (permission === AccessStatus.GRANTED){ 
-			callback.onGranted(); 
-		}
-		else {
-            callback.onDenied?.('Permission was not granted.');
+		if (permission === AccessStatus.GRANTED) {
+			callback.onGranted();
+		} else {
+			callback.onDenied && callback.onDenied('Permission was not granted.');
 		};
 	});
 }

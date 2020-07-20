@@ -12,7 +12,7 @@ interface State {
 }
 
 export default class Toggle extends React.PureComponent<Props, State> {
-	
+
 	constructor(props: any) {
 		super(props);
 		this.state = {
@@ -30,4 +30,4 @@ export default class Toggle extends React.PureComponent<Props, State> {
 
 		return (<input className={join(...classes)} type='checkbox'></input>);
 	};
-} 
+}

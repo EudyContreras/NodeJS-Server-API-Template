@@ -1,10 +1,6 @@
 import React from 'react';
 
 class FooterArea extends React.Component<any, any> {
-	
-	constructor(props: any) {
-		super(props);
-	}
 
 	public render = (): JSX.Element => {
 
@@ -14,6 +10,6 @@ class FooterArea extends React.Component<any, any> {
 			<footer ref={this.props.self} className={style.footerArea}></footer>
 		);
 	};
-} 
+}
 
 export default FooterArea;

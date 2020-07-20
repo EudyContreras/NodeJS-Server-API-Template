@@ -22,7 +22,7 @@ class Client {
 			if (onSuccess) {
 				onSuccess(content, data, extra);
 			}
-		};			
+		};
 
 		try {
 			switch (type) {

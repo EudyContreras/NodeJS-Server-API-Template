@@ -31,7 +31,7 @@ const schema = new EntitySchema({
 	lastLogin: {
 		type: Date,
 		required: false
-	},
+	}
 }, { timestamps: true, strict: true, versionKey: false });
 
 const User = schema.getModel<IUser>('User');

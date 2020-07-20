@@ -10,7 +10,7 @@ interface State {
 	iconLoaded: boolean;
 }
 
-class SidebarMenuItem extends React.PureComponent<any, State>{
+class SidebarMenuItem extends React.PureComponent<any, State> {
 	private _isMounted: boolean;
 
 	constructor(props: any) {
@@ -33,13 +33,13 @@ class SidebarMenuItem extends React.PureComponent<any, State>{
 	public componentWillUnmount = (): void => {
 		this._isMounted = false;
 	};
-	
+
 	public componentDidMount = (): void => {
 		this._isMounted = true;
 		const font = new FontFaceObserver('Material Icons');
 
-		font.load().then( () => {
-			if(this._isMounted) {
+		font.load().then(() => {
+			if (this._isMounted) {
 				this.setState({
 					iconLoaded: true
 				});
@@ -60,7 +60,7 @@ class SidebarMenuItem extends React.PureComponent<any, State>{
 		if (this.state.expanded) {
 			classes.push(style.active);
 		}
-		
+
 		if (!this.state.iconLoaded) {
 			iconClasses.push(style.loadable);
 		} else {

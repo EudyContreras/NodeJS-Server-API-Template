@@ -4,7 +4,7 @@ import { days } from './timespan.helper';
 import { logger } from '../commons';
 
 const DEBUG_MODE = (process.env.NODE_ENV !== 'production');
-   
+
 export const syncEvents = {
 	contentSync: {
 		tag: 'content-sync',
@@ -15,7 +15,7 @@ export const syncEvents = {
 };
 
 const powerStates = {
-	
+
 };
 
 export async function syncContent(cacheNames: CacheNames): Promise<void> {
@@ -37,7 +37,7 @@ export async function syncContent(cacheNames: CacheNames): Promise<void> {
 				await caches.delete(key);
 			}
 		}
-	} catch(error) {
+	} catch (error) {
 		DEBUG_MODE && logger.error('Could not sync all content: ', error);
 	}
 
@@ -50,7 +50,7 @@ export async function addPeriodicBackgroundSync(
 	onError?: (...messages: any[]) => void
 ): Promise<void> {
 	const status = await requestPermission(Permission.BACKGROUND_SYNC_PERIODIC);
-	
+
 	if (status === AccessStatus.GRANTED) {
 		const registration = await navigator.serviceWorker.ready;
 

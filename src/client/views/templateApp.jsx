@@ -1,11 +1,8 @@
 
-
 import React from 'react';
 import PropType from 'prop-types';
 
-export default (props) => {
-	return <DefaultLayout {...props} />;
-};
+export default (props) => <DefaultLayout {...props} />;
 
 const DefaultLayout = (props) => {
 	const options = {
@@ -26,7 +23,7 @@ const DefaultLayout = (props) => {
 			<meta name="description" content={props.html.description} />
 			<meta name="application-name" content={props.html.title} />
 
-			{/*!-- Android  --> */}
+			{/* <!-- Android  --> */}
 			<meta name="mobile-web-app-capable" content="yes" />
 			<meta name="theme-color" content={props.html.themeColor} />
 

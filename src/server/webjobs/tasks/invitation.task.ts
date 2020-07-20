@@ -11,6 +11,6 @@ export class InvitationTask implements ICronTask {
 	}
 
 	private async removedExpiredInvitation(): Promise<any> {
-		
+
 	}
 }

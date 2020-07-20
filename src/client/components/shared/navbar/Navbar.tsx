@@ -50,11 +50,9 @@ class Navbar extends React.Component<Props, State> {
 		};
 	}
 
-	public shouldComponentUpdate = (nextProps: any): boolean => {
-		return !shallowEqual(this.props.anchored, nextProps.anchored)
-			|| !shallowEqual(this.props.mouseInside, nextProps.mouseInside)
-			|| !shallowEqual(this.props.activeTab, nextProps.activeTab);
-	};
+	public shouldComponentUpdate = (nextProps: any): boolean => !shallowEqual(this.props.anchored, nextProps.anchored) ||
+			!shallowEqual(this.props.mouseInside, nextProps.mouseInside) ||
+			!shallowEqual(this.props.activeTab, nextProps.activeTab);
 
 	public componentDidMount = (): void => {
 		this.applyAnchor(this.navbar.current!);
@@ -156,7 +154,7 @@ class Navbar extends React.Component<Props, State> {
 
 		const properties = {
 			className: join(...classes),
-			onClick: ((): void => this.handleLinkClick({ ...element, index: idx })),
+			onClick: (): void => this.handleLinkClick({ ...element, index: idx }),
 			to: element.link
 		};
 
@@ -193,8 +191,7 @@ class Navbar extends React.Component<Props, State> {
 					{routes.map((element: any, idx: number) =>
 						<li key={idx}>
 							<Link {...memoize(this.getLinkProps)(style, element, idx)}>{element.label}</Link>
-						</li>
-					)}
+						</li>)}
 				</ul>
 				<Action styling={style} />
 			</header>

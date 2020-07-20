@@ -11,7 +11,7 @@ const config = Object.freeze({
 	presentation: {
 		path: 'client',
 		HAS_REACT_HMR: process.env.REACT_HMR === 'true',
-		IS_SSR: process.env.CSR == 'false',
+		IS_SSR: process.env.CSR === 'false',
 		viewEngine: {
 			type: 'jsx',
 			alias: 'views',
@@ -38,8 +38,8 @@ const config = Object.freeze({
 			fileExtension: 'zz'
 		}],
 		serveStatic: {
-			maxAge: 234, 
-			cacheControl: false 
+			maxAge: 234,
+			cacheControl: false
 		},
 		orderPreference: ['br']
 	},
@@ -86,9 +86,7 @@ const config = Object.freeze({
 	},
 	api: {
 		someapi: {
-			baseUrl: (endpoint: string): string => {
-				return `/${endpoint}`;
-			},
+			baseUrl: (endpoint: string): string => `/${endpoint}`,
 			auth: {
 				PREFIX: 'Basic ',
 				TOKEN: process.env.API_TOKEN,

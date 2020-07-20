@@ -48,7 +48,7 @@ export const routes = [
 	}
 ];
 
-export type Mapping = { 
+export type Mapping = {
 	navLink: boolean | undefined;
 	label: string | undefined;
 	path: string;

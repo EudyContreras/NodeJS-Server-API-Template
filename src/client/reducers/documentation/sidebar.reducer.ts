@@ -54,7 +54,7 @@ export const InitialState: ISideMenu = {
 };
 
 export default function (state = InitialState, action: IAction): ISideMenu {
-	if (action.from != SOURCE) return handleSubReducers(state, action);
+	if (action.from !== SOURCE) return handleSubReducers(state, action);
 	switch (action.type) {
 		case SIDE_MENU_TOGGLE: {
 			return {
@@ -97,14 +97,13 @@ export default function (state = InitialState, action: IAction): ISideMenu {
 }
 
 const handleSubReducers = (state = InitialState, action: IAction): ISideMenu => {
-	switch(action.from) {
+	switch (action.from) {
 		case SearchBar.SOURCE: {
 			return {
 				...state,
 				searchbar: SearchBar.default(state.searchbar, action)
 			};
 		}
-		default:
-			return state; 
+		default: return state;
 	};
 };

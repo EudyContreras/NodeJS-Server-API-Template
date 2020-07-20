@@ -5,14 +5,14 @@ export default class ErrorHandler {
 	/**
 	 * Constructs an ErrorHandler with an error logger.
 	 * @param logger The logger used by this
-	 * error handler for logging handled errors.  
+	 * error handler for logging handled errors.
 	 */
 	constructor(logger: Logger) {
 		this.logger = logger;
 	}
 
 	/**
-	 * Handles a produce error and logs information about 
+	 * Handles a produce error and logs information about
 	 * the error.
 	 * @param error The error that was produced.
 	 * @param type The type of error to handle.

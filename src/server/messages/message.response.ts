@@ -67,9 +67,7 @@ export const SchedulerMessages = {
 	LABEL_REQUIRED: 'A job label must be provided',
 	INTERVAL_REQUIRED: 'A job interval must be provided',
 
-	notifyStart: (job: CronJob): string => {
-		return `Satarted job: '${job.label}' to run at: '${job.interval}'`;
-	}
+	notifyStart: (job: CronJob): string => `Satarted job: '${job.label}' to run at: '${job.interval}'`
 };
 
 export const ResponseMessages = {
