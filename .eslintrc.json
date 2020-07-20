@@ -28,7 +28,7 @@
             "modules": true,
             "experimentalObjectRestSpread": true
         },
-        "ecmaVersion": 2018,
+        "ecmaVersion": 2020,
         "sourceType": "module"
     },
     "settings": {
@@ -52,7 +52,7 @@
         "SharedArrayBuffer": "readonly"
     },
     "rules": {
-        "semi-spacing": ["error", {"before": false, "after": false}],
+        "semi-spacing": ["error", { "before": false, "after": true }],
         "no-unused-expressions": ["off", { "allowShortCircuit": true, "allowTernary": true }],
         "space-before-function-paren": ["warn", {"anonymous": "always", "named": "never", "asyncArrow": "always"}],
         "padded-blocks": "off",
