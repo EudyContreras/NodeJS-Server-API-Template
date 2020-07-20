@@ -1,6 +1,6 @@
 import { logger } from '../commons';
 
-const DEBUG_MODE = (process.env.NODE_ENV !== 'production');
+const DEBUG_MODE = process.env.NODE_ENV !== 'production';
 
 const keys = {
 	APP_INSTALLED: 'APP_INSTALLED'
@@ -14,7 +14,7 @@ const events = {
 let deferredPrompt: any | null = null;
 
 export const register = (onInstalled: (intalled: boolean) => void): void => {
-	window.addEventListener(events.BEFORE_INSTALL, event => {
+	window.addEventListener(events.BEFORE_INSTALL, (event) => {
 		event.preventDefault();
 		localStorage.setItem(keys.APP_INSTALLED, String(false));
 		DEBUG_MODE && logger.log('PWA not installed');

@@ -1,4 +1,3 @@
-
 export const TIMEOUT = 1000;
 
 export const filetypePatterns = {
@@ -26,23 +25,28 @@ export const inRange = (value: number, min: number, max: number): boolean => val
 
 export const inRangeInclusive = (value: number, min: number, max: number): boolean => value >= min && value <= max;
 
-export const addDelay = (ms: number) => (): any => new Promise(resolve => setTimeout(() => resolve(), ms));
+export const addDelay = (ms: number) => (): any => new Promise((resolve) => setTimeout(() => resolve(), ms));
 
 export const isNullOrEmpty = (path): boolean => !path || path === '' || path === undefined;
 
-export const handleWebp = async <T> (supportCallbacks: WebpSupportCallback<T>): Promise<any> => {
+export const handleWebp = async <T>(supportCallbacks: WebpSupportCallback<T>): Promise<any> => {
 	if (!self.createImageBitmap) return false;
 
 	const webpData = 'data:image/webp;base64,UklGRh4AAABXRUJQVlA4TBEAAAAvAAAAAAfQ//73v/+BiOh/AAA=';
-	const blob = await fetch(webpData).then(r => r.blob());
+	const blob = await fetch(webpData).then((r) => r.blob());
 
-	return createImageBitmap(blob).then(() => true, () => false).then(hasSupport => {
-		if (hasSupport) {
-			return supportCallbacks.onHasSupport();
-		} else {
-			return supportCallbacks.onNoSupport();
-		}
-	});
+	return createImageBitmap(blob)
+		.then(
+			() => true,
+			() => false
+		)
+		.then((hasSupport) => {
+			if (hasSupport) {
+				return supportCallbacks.onHasSupport();
+			} else {
+				return supportCallbacks.onNoSupport();
+			}
+		});
 };
 
 export function timeoutPromise<T>(ms: number, promise: Promise<T>): Promise<T> {
@@ -63,21 +67,23 @@ export function timeoutPromise<T>(ms: number, promise: Promise<T>): Promise<T> {
 	});
 }
 
-export function timeoutRequest(request: Request): Promise<Response|null> {
+export function timeoutRequest(request: Request): Promise<Response | null> {
 	const controller = new AbortController();
 	const signal = controller.signal;
 
 	const timeoutId = setTimeout(() => controller.abort(), 5000);
 
-	return fetch(request, { signal }).then(response => {
-		clearTimeout(timeoutId);
-		return response;
-	}).catch(error => {
-		if (error.code !== DOMException.ABORT_ERR) {
-			logger.error('An error occured!', error);
-		}
-		return null;
-	});
+	return fetch(request, { signal })
+		.then((response) => {
+			clearTimeout(timeoutId);
+			return response;
+		})
+		.catch((error) => {
+			if (error.code !== DOMException.ABORT_ERR) {
+				logger.error('An error occured!', error);
+			}
+			return null;
+		});
 }
 
 export const storeDataAndUpdateUI = async (): Promise<void> => {
@@ -85,7 +91,7 @@ export const storeDataAndUpdateUI = async (): Promise<void> => {
 		const { usage, quota } = await navigator.storage.estimate();
 
 		if (usage && quota) {
-			const percentUsed = Math.round(usage / quota * 100);
+			const percentUsed = Math.round((usage / quota) * 100);
 			const usageInMib = Math.round(usage / (1024 * 1024));
 			const quotaInMib = Math.round(quota / (1024 * 1024));
 
@@ -97,13 +103,16 @@ export const storeDataAndUpdateUI = async (): Promise<void> => {
 };
 
 export function sendMessageToClients(message: ClientMessage, includeUncontrolled = true): void {
-	self.clients.matchAll({ includeUncontrolled }).then((clients) => {
-		clients.forEach((client) => {
-			client.postMessage(JSON.stringify(message));
-		});
-	}, (error) => {
-		logger.log(error);
-	});
+	self.clients.matchAll({ includeUncontrolled }).then(
+		(clients) => {
+			clients.forEach((client) => {
+				client.postMessage(JSON.stringify(message));
+			});
+		},
+		(error) => {
+			logger.log(error);
+		}
+	);
 }
 
 export const logger = {

@@ -1,23 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
 import { hours, days, months, seconds } from './helpers/timespan.helper';
-import { staleWhileRevalidate, cacheThenRefresh, cacheFirst, networkFirst, addToCache, cacheResponse, fromNetwork } from './stragedies';
 import { logger, handleWebp, filetypePatterns, filetypeCache, isNullOrEmpty, inRange } from './commons';
 import { syncContent } from './helpers/syncevent.Helper';
-import {
-	httpMethods,
-	updateNotification,
-	cachableTypes,
-	commonOrigins,
-	fallbacks,
-	cacheNames,
-	constants,
-	syncEvents,
-	messages,
-	events
-} from './constants';
+import { staleWhileRevalidate, cacheThenRefresh, cacheFirst, networkFirst, addToCache, cacheResponse, fromNetwork } from './stragedies';
+import { httpMethods, updateNotification, cachableTypes, commonOrigins, fallbacks, cacheNames, constants, syncEvents, messages, events } from './constants';
 
-const DEBUG_MODE = (process.env.NODE_ENV !== 'production');
+const DEBUG_MODE = process.env.NODE_ENV !== 'production';
 
 const cacheKeys = cacheNames(__VERSION_NUMBER__);
 const precacheManifest = [...self.__WB_MANIFEST];
@@ -60,7 +49,7 @@ self.addEventListener(events.FETCH, (event: any) => {
 	const request: Request = event.request.clone();
 	const url: URL = new URL(request.url);
 
-	if (!(url.origin.startsWith('http'))) return;
+	if (!url.origin.startsWith('http')) return;
 
 	DEBUG_MODE && logger.info(request.destination, request.url);
 
@@ -136,16 +125,15 @@ self.addEventListener(events.FETCH, (event: any) => {
 			maxEntries: 8
 		};
 		networkFirst({ event, request, cacheName, quotaOptions, cachePredicate: cachePredicate });
-
 	}
 });
 
 self.addEventListener(events.INSTALL, async (event: any) => {
 	DEBUG_MODE && logger.log(events.INSTALL, `Version : ${__VERSION_NUMBER__}`, event);
 
-	const allResources = Array.from(new Set([...precacheManifest.map((x: any) => x.url), ...constants.urlsToCache])).map(url => new Request(url, { mode: 'no-cors' }));
+	const allResources = Array.from(new Set([...precacheManifest.map((x: any) => x.url), ...constants.urlsToCache]));
 
-	const precacheCallback = async (cacheName: string, requests: RequestInfo[]): Promise<void> => {
+	const precacheCallback = async (cacheName: string, requests: string[]): Promise<void> => {
 		try {
 			const cache = await caches.open(cacheName);
 			await cache.addAll(requests);
@@ -158,18 +146,18 @@ self.addEventListener(events.INSTALL, async (event: any) => {
 		event.waitUntil(
 			handleInstallation(allResources, precacheCallback)
 				.then(() => self.skipWaiting())
-				.catch(error => logger.log(error))
-		); ;
+				.catch((error) => logger.log(error))
+		);
 	}
 });
 
-const handleInstallation = async (urls: Request[], callback: (cacheName: string, urls: RequestInfo[]) => void): Promise<void> => {
+const handleInstallation = async (urls: string[], callback: (cacheName: string, urls: string[]) => void): Promise<void> => {
 	try {
-		const imageAssets = urls.filter(x => filetypePatterns.IMAGE.test(x.url) || filetypePatterns.PROGRESSIVE_IMAGE.test(x.url));
-		const mediaAssets = urls.filter(x => filetypePatterns.VIDEO.test(x.url) || filetypePatterns.AUDIO.test(x.url));
-		const fontAssests = urls.filter(x => filetypePatterns.FONT.test(x.url));
-		const staticAssets = urls.filter(x => filetypePatterns.STATIC.test(x.url));
-		const dataAssets = urls.filter(x => filetypePatterns.DATA.test(x.url));
+		const imageAssets = urls.filter((x) => filetypePatterns.IMAGE.test(x) || filetypePatterns.PROGRESSIVE_IMAGE.test(x));
+		const mediaAssets = urls.filter((x) => filetypePatterns.VIDEO.test(x) || filetypePatterns.AUDIO.test(x));
+		const fontAssests = urls.filter((x) => filetypePatterns.FONT.test(x));
+		const staticAssets = urls.filter((x) => filetypePatterns.STATIC.test(x));
+		const dataAssets = urls.filter((x) => filetypePatterns.DATA.test(x));
 
 		if (imageAssets.length > 0) {
 			await callback(cacheKeys.IMAGE_CACHE, imageAssets);
@@ -195,16 +183,20 @@ self.addEventListener(events.ACTIVATE, async (event: any) => {
 	DEBUG_MODE && logger.log(events.ACTIVATE, `Version : ${__VERSION_NUMBER__}`, event);
 
 	event.waitUntil(
-		caches.keys()
-			.then(currentCaches => {
+		caches
+			.keys()
+			.then((currentCaches) => {
 				const expectedCaches = Object.values(cacheKeys);
-				return Promise.all(currentCaches
-					.filter(key => !expectedCaches.includes(key))
-					.map(key => {
-						DEBUG_MODE && logger.log(`Deleting cache name: ${key}`);
-						return caches.delete(key);
-					}));
-			}).catch(error => logger.log(error))
+				return Promise.all(
+					currentCaches
+						.filter((key) => !expectedCaches.includes(key))
+						.map((key) => {
+							DEBUG_MODE && logger.log(`Deleting cache name: ${key}`);
+							return caches.delete(key);
+						})
+				);
+			})
+			.catch((error) => logger.log(error))
 	);
 	return self.clients.claim();
 });
@@ -289,7 +281,7 @@ self.addEventListener(events.MESSAGE, async (event: any) => {
 				const registration = await navigator.serviceWorker.ready;
 				await registration.periodicSync.unregister(payload);
 				if (DEBUG_MODE) {
-					registration.periodicSync.getTags().then(tags => {
+					registration.periodicSync.getTags().then((tags) => {
 						logger.log('Registered tags: ', tags);
 					});
 				}

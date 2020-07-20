@@ -1,30 +1,20 @@
-
 export const NAV_NOTIFIER = 'NAV_NOTIFIER';
 
 export const NAV_NOTIFIER_HIDE = 'NAV_NOTIFIER_HIDE';
 export const NAV_NOTIFIER_SHOW = 'NAV_NOTIFIER_SHOW';
 
 export enum NotificationType {
-	ERROR, WARNING, MESSAGE
+	ERROR,
+	WARNING,
+	MESSAGE
 }
 
 export interface DispatchProps {
-	showNotifier: (
-		icon: string,
-		text: string,
-		autoDimiss: boolean,
-		dismissDelay: number,
-		type: NotificationType) => void;
+	showNotifier: (icon: string, text: string, autoDimiss: boolean, dismissDelay: number, type: NotificationType) => void;
 	hideNotifier: () => void;
 }
 
-export const showNotifier = (
-	icon: string,
-	text: string,
-	autoDimiss = true,
-	dismissDelay = 3000,
-	type = NotificationType.MESSAGE
-) => (dispatch: Function): void => {
+export const showNotifier = (icon: string, text: string, autoDimiss = true, dismissDelay = 3000, type = NotificationType.MESSAGE) => (dispatch: Function): void => {
 	dispatch({
 		...notifierShowAction,
 		payload: {

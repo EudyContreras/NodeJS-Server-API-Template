@@ -22,7 +22,7 @@ import expressEnforceSSL from 'express-enforces-ssl';
 import DataInitializer from './initializers/database.initializer';
 import reactRender from 'express-react-views';
 
-const cachePolicy = (): (Response, Request, NextFunction) => void => {
+const cachePolicy = (): ((Response, Request, NextFunction) => void) => {
 	const policy = config.resources.cachePolicy;
 	return (request: Request, response: Response, next: NextFunction): void => {
 		response.set(policy.LABEL, policy.VALUE);
@@ -30,7 +30,7 @@ const cachePolicy = (): (Response, Request, NextFunction) => void => {
 	};
 };
 
-const ignoreFavicon = (): (Response, Request, NextFunction) => void => (request: Request, response: Response, next: NextFunction): void => {
+const ignoreFavicon = (): ((Response, Request, NextFunction) => void) => (request: Request, response: Response, next: NextFunction): void => {
 	if (config.resources.ignored.indexOf(request.originalUrl) !== -1) {
 		response.status(204).json({});
 	} else {
@@ -38,7 +38,7 @@ const ignoreFavicon = (): (Response, Request, NextFunction) => void => (request:
 	}
 };
 
-const serveCompressed = (app: express.Application): (Response, Request, NextFunction) => void => (request: Request, response: Response, next: NextFunction): void => {
+const serveCompressed = (app: express.Application): ((Response, Request, NextFunction) => void) => (request: Request, response: Response, next: NextFunction): void => {
 	app.get('*.js', (req, res, next) => {
 		req.url = req.url + '.br';
 		res.set('Content-Encoding', 'br');
@@ -47,7 +47,6 @@ const serveCompressed = (app: express.Application): (Response, Request, NextFunc
 };
 
 export default class Application {
-
 	public app: express.Application;
 
 	private loggHandler: LoggingHandler;
@@ -150,9 +149,7 @@ export default class Application {
 		this.app.use(middleware.getErrorHandler());
 	}
 
-	private initializeWebjobs(): void {
-
-	}
+	private initializeWebjobs(): void {}
 
 	private connectToTheDatabase(createInitialData = false): void {
 		const dataInitializer = new DataInitializer(this.errorHandler, this.loggHandler);

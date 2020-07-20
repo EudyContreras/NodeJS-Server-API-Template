@@ -1,15 +1,10 @@
-import {
-	NotificationType,
-	NAV_NOTIFIER,
-	NAV_NOTIFIER_SHOW,
-	NAV_NOTIFIER_HIDE
-} from '../../actions/common/notifier.action';
+import { NotificationType, NAV_NOTIFIER, NAV_NOTIFIER_SHOW, NAV_NOTIFIER_HIDE } from '../../actions/common/notifier.action';
 
 import IAction from '../../actions/action';
 
 export const SOURCE = NAV_NOTIFIER;
 
-export interface INavNotifier{
+export interface INavNotifier {
 	notificationType: NotificationType;
 	autoDismiss: boolean;
 	dismissDelay?: number;

@@ -1,4 +1,3 @@
-
 import httpCode from '../../definitions/httpCode';
 import roles from '../../localstore/accessrole.store';
 import actions from '../../localstore/priviledge.store';
@@ -8,12 +7,7 @@ import { PriviledgeMessages } from '../../messages/message.response';
 import { PriviledgeResponse } from '../../responses/request.response';
 
 import { Response, NextFunction } from 'express';
-import HttpMethod, {
-	GET,
-	POST,
-	PUT,
-	DELETE
-} from '../../definitions/httpMethod';
+import HttpMethod, { GET, POST, PUT, DELETE } from '../../definitions/httpMethod';
 
 function createQuery(method: HttpMethod, controller: string): any {
 	switch (method) {

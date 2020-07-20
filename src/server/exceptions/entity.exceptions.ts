@@ -1,4 +1,3 @@
-
 export class MongoDBException extends Error {
 	action: string;
 	document: string;

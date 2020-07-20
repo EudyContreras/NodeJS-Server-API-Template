@@ -38,15 +38,18 @@ class SidebarMenuItem extends React.PureComponent<any, State> {
 		this._isMounted = true;
 		const font = new FontFaceObserver('Material Icons');
 
-		font.load().then(() => {
-			if (this._isMounted) {
-				this.setState({
-					iconLoaded: true
-				});
-			}
-		}).catch((error) => {
-			console.log('Something went wrong!', error);
-		});
+		font
+			.load()
+			.then(() => {
+				if (this._isMounted) {
+					this.setState({
+						iconLoaded: true
+					});
+				}
+			})
+			.catch((error) => {
+				console.log('Something went wrong!', error);
+			});
 	};
 
 	public render = (): JSX.Element => {

@@ -1,4 +1,3 @@
-
 export class EmainNotificationException extends Error {
 	sender: string;
 	recipient: string;

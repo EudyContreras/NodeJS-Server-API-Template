@@ -28,7 +28,6 @@ interface State {
 }
 
 class SidebarSubMenu extends React.PureComponent<any, State> {
-
 	private readonly menu: RefObject<HTMLUListElement>;
 
 	constructor(props: any) {
@@ -75,7 +74,6 @@ class SidebarSubMenu extends React.PureComponent<any, State> {
 	};
 
 	public render = (): JSX.Element => {
-
 		const style = this.props.styling;
 		const expand = this.props.expanded;
 
@@ -86,7 +84,7 @@ class SidebarSubMenu extends React.PureComponent<any, State> {
 			classes.push(style.smExpanded);
 			if (expand) {
 				return (
-					<ul ref={this.menu} onTransitionEnd={this.onShown} className={join(...classes)} style={this.getStyle(this.state.height)} >
+					<ul ref={this.menu} onTransitionEnd={this.onShown} className={join(...classes)} style={this.getStyle(this.state.height)}>
 						{listItems}
 					</ul>
 				);
@@ -100,7 +98,11 @@ class SidebarSubMenu extends React.PureComponent<any, State> {
 				);
 			}
 		}
-		return (<ul ref={this.menu} className={join(...classes)}>{listItems}</ul>);
+		return (
+			<ul ref={this.menu} className={join(...classes)}>
+				{listItems}
+			</ul>
+		);
 	};
 }
 

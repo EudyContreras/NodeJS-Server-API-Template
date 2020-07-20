@@ -1,4 +1,3 @@
-
 import HttpCode from '../definitions/httpCode';
 import RequestAction from '../definitions/requestAction';
 

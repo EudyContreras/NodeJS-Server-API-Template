@@ -1,4 +1,3 @@
-
 import express, { Router, Request, Response } from 'express';
 import Controller from '../../controller';
 import validate from '../../../middleware/validators/body.validator';
@@ -12,7 +11,6 @@ import { AuthenticationMessages } from '../../../messages/message.response';
 import HttpCode from '../../../definitions/httpCode';
 
 class Authentication extends Controller {
-
 	private service: AuthenticationService = new AuthenticationService();
 	private routing = '/rest/api/authentication';
 	private router: Router;
@@ -46,7 +44,6 @@ class Authentication extends Controller {
 	};
 
 	private performAuthentication = async (request: any, response: Response): Promise<Response> => {
-
 		const { result, error } = await this.service.authenticate(request.data);
 
 		return this.buildResult(result, error, response, RequestAction.AUTHENTICATE);

@@ -1,4 +1,3 @@
-
 import { storage } from '../constants';
 import { openDB, DBSchema } from 'idb';
 import { logger } from '../commons';
@@ -43,7 +42,7 @@ const database = openDB(structure.DB_NAME, 1, {
 
 		objectStore.createIndex(primaryKey.index, primaryKey.target, { unique: true });
 
-		indexKeys.forEach(element => {
+		indexKeys.forEach((element) => {
 			objectStore.createIndex(element.index, element.target, { unique: false });
 		});
 	}
@@ -64,13 +63,13 @@ const instance = {
 		const transaction = (await database).transaction(structure.STORE_NAME, READ_WRITE).store;
 		const index = await transaction.index(query.index);
 		const items: CacheEntryInfo[] = await index.getAll(query.key);
-		return items.forEach(item => {
+		return items.forEach((item) => {
 			if (!item.persist) {
 				transaction.delete(item.id);
 			}
 		});
 	},
-	async getItem(key): Promise<CacheEntryInfo | undefined> {
+	async getItem(key): Promise<CacheEntryInfo | undefined> {
 		return (await database).get(structure.STORE_NAME, key);
 	},
 	async setItem(key, value): Promise<IDBValidKey> {
@@ -127,7 +126,7 @@ export async function updateEntry(key: string, cacheName: string, { clearOnError
 		const item = await instance.getItem(key);
 		const entry = item || defaultEntry(key, cacheName);
 
-		const frequency = visited ? (entry.visitFrequency ?? 0) + 1 : (entry.visitFrequency ?? 0);
+		const frequency = visited ? (entry.visitFrequency ?? 0) + 1 : entry.visitFrequency ?? 0;
 		const updatedEntry: CacheEntryInfo = {
 			...entry,
 			visitFrequency: frequency,
@@ -143,7 +142,7 @@ export async function updateEntry(key: string, cacheName: string, { clearOnError
 export async function hasExpired(key: string): Promise<boolean> {
 	try {
 		const entry = await instance.getItem(key);
-		return entry ? entry.expiryDate ? Date.now() > entry.expiryDate : false : true;
+		return entry ? (entry.expiryDate ? Date.now() > entry.expiryDate : false) : true;
 	} catch (error) {
 		logger.error('Something went wrong', error);
 		return true;

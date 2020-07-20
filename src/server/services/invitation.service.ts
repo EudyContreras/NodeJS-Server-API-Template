@@ -1,4 +1,3 @@
-
 import InvitationRepository from '../repositories/invitation.repository';
 import NoticationService from './notification.service';
 import RoleService from './role.service';
@@ -6,7 +5,6 @@ import RoleService from './role.service';
 import { InvitationMessages } from '../messages/message.response';
 
 export default class InviationService {
-
 	/**
 	 * @description Checks if there if an invitation has been issued to
 	 * the current user.
@@ -91,10 +89,10 @@ export default class InviationService {
 	}
 
 	/**
-	  * @description Gets all the available invitations.
-	  * @param criteria The criteria used for making the search.
-	  * @returns The possible list of invitations or the generated error.
-	  */
+	 * @description Gets all the available invitations.
+	 * @param criteria The criteria used for making the search.
+	 * @returns The possible list of invitations or the generated error.
+	 */
 	public async getAllInvitationsWhere(criteria: any): Promise<{ result?: any[]; error?: any }> {
 		try {
 			const repository = new InvitationRepository();
@@ -184,12 +182,12 @@ export default class InviationService {
 	}
 
 	/**
-  * @description Updates the role code of the invitation that
-  * matches the given invite Id.
-  * @param criteria The invitation criteria.
-  * @param update The invitation data used for the update.
-  * @returns The invitation attached to the given id or the generated error.
-  */
+	 * @description Updates the role code of the invitation that
+	 * matches the given invite Id.
+	 * @param criteria The invitation criteria.
+	 * @param update The invitation data used for the update.
+	 * @returns The invitation attached to the given id or the generated error.
+	 */
 	public async updateInvitationWhere(criteria: any, update: any): Promise<{ result?: any; error?: any }> {
 		try {
 			const repository = new InvitationRepository();

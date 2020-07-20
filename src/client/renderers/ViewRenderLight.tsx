@@ -5,7 +5,6 @@ import ViewRenderer from '../../server/middleware/renderer';
 import { Router, Request, Response } from 'express';
 
 class IndexViewRenderer extends ViewRenderer {
-
 	private routing = '/';
 	private router: Router;
 
@@ -24,7 +23,7 @@ class IndexViewRenderer extends ViewRenderer {
 	};
 
 	private renderRoutes = async (req: Request, res: Response): Promise<void> => {
-		config.headers.forEach(header => {
+		config.headers.forEach((header) => {
 			res.setHeader(header.LABEL, header.VALUE);
 		});
 

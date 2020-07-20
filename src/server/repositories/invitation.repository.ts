@@ -17,7 +17,6 @@ function dataTransferDocument(data: IInvitation): any {
  * for interfacing with the invitation data.
  */
 export default class InvitationRepository {
-
 	private exclude: any;
 	private options: any;
 
@@ -33,26 +32,19 @@ export default class InvitationRepository {
 	}
 
 	public async hasInvitation(invitationId: string): Promise<boolean> {
-		const count = await Invitation
-			.countDocuments({ _id: invitationId })
-			.exec();
+		const count = await Invitation.countDocuments({ _id: invitationId }).exec();
 
 		return count > 0;
 	}
 
 	public async hasInvitationWhere(query: any): Promise<boolean> {
-		const count = await Invitation
-			.countDocuments(query)
-			.exec();
+		const count = await Invitation.countDocuments(query).exec();
 
 		return count > 0;
 	}
 
 	public async getAllInvitations(options = { dto: true }): Promise<IInvitation[] | any[]> {
-		const invitations = await Invitation
-			.find()
-			.select(this.exclude)
-			.exec();
+		const invitations = await Invitation.find().select(this.exclude).exec();
 
 		if (options.dto === true) {
 			return invitations.map((x) => dataTransferDocument(x));
@@ -62,10 +54,7 @@ export default class InvitationRepository {
 	}
 
 	public async getAllInvitationsWhere(query: any, options = { dto: true }): Promise<IInvitation[] | any[]> {
-		const invitations = await Invitation
-			.find(query)
-			.select(this.exclude)
-			.exec();
+		const invitations = await Invitation.find(query).select(this.exclude).exec();
 
 		if (options.dto === true) {
 			return invitations.map((x) => dataTransferDocument(x));
@@ -75,10 +64,7 @@ export default class InvitationRepository {
 	}
 
 	public async getInvitation(invitationId: string, options = { dto: true }): Promise<IInvitation | any> {
-		const invitation = await Invitation
-			.findById(invitationId)
-			.select(this.exclude)
-			.exec();
+		const invitation = await Invitation.findById(invitationId).select(this.exclude).exec();
 
 		if (options.dto === true && invitation != null) {
 			return dataTransferDocument(invitation);
@@ -88,10 +74,7 @@ export default class InvitationRepository {
 	}
 
 	public async getInvitationWhere(criteria: any, options = { dto: true }): Promise<IInvitation | any> {
-		const invitation = await Invitation
-			.findOne(criteria)
-			.select(this.exclude)
-			.exec();
+		const invitation = await Invitation.findOne(criteria).select(this.exclude).exec();
 
 		if (options.dto === true && invitation != null) {
 			return dataTransferDocument(invitation);
@@ -101,10 +84,7 @@ export default class InvitationRepository {
 	}
 
 	public async getFromInvitation(invitationId: string, select: any): Promise<IInvitation | any> {
-		const invitation = await Invitation
-			.findById(invitationId)
-			.select(select)
-			.exec();
+		const invitation = await Invitation.findById(invitationId).select(select).exec();
 
 		return invitation;
 	}
@@ -124,10 +104,7 @@ export default class InvitationRepository {
 	}
 
 	public async updateInvitation(invitationId: string, update: any, options = { dto: true }): Promise<IInvitation | any> {
-		const invitation = await Invitation
-			.findByIdAndUpdate(invitationId, update, this.options)
-			.select(this.exclude)
-			.exec();
+		const invitation = await Invitation.findByIdAndUpdate(invitationId, update, this.options).select(this.exclude).exec();
 
 		if (options.dto === true && invitation != null) {
 			return dataTransferDocument(invitation);
@@ -137,10 +114,7 @@ export default class InvitationRepository {
 	}
 
 	public async updateInvitationWhere(query: any, update: any, options = { dto: true }): Promise<IInvitation | any> {
-		const invitation = await Invitation
-			.findOneAndUpdate(query, update, this.options)
-			.select(this.exclude)
-			.exec();
+		const invitation = await Invitation.findOneAndUpdate(query, update, this.options).select(this.exclude).exec();
 
 		if (options.dto === true && invitation != null) {
 			return dataTransferDocument(invitation);
@@ -150,9 +124,7 @@ export default class InvitationRepository {
 	}
 
 	public async deleteInvitation(invitationId: string, options = { dto: true }): Promise<IInvitation | any> {
-		const invitation = await Invitation
-			.findByIdAndDelete(invitationId)
-			.exec();
+		const invitation = await Invitation.findByIdAndDelete(invitationId).exec();
 
 		const result = invitation || null;
 
@@ -164,9 +136,7 @@ export default class InvitationRepository {
 	}
 
 	public async deleteInvitationWhere(query: any, options = { dto: true }): Promise<IInvitation | any> {
-		const invitation = await Invitation
-			.findOneAndDelete(query)
-			.exec();
+		const invitation = await Invitation.findOneAndDelete(query).exec();
 
 		const result = invitation || null;
 
@@ -178,14 +148,10 @@ export default class InvitationRepository {
 	}
 
 	public async clearAllWhere(query: any): Promise<any> {
-		return await Invitation
-			.deleteMany(query)
-			.exec();
+		return await Invitation.deleteMany(query).exec();
 	}
 
 	public async clearAll(): Promise<any> {
-		return await Invitation
-			.deleteMany({})
-			.exec();
+		return await Invitation.deleteMany({}).exec();
 	}
 }

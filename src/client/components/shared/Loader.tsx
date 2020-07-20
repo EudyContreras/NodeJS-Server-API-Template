@@ -11,19 +11,20 @@ interface StateProps {
 type Props = StateProps & DispatchProps;
 
 class Loading extends React.PureComponent<Props, any> {
-
 	public render = (): JSX.Element => {
 		const styling = this.props.styling;
 
 		if (this.props.isActive) {
-			return <section className={styling.loadingPage}>
-				<div className={styling.loading}>
-					<div></div>
-					<div></div>
-				</div>
-			</section>;
+			return (
+				<section className={styling.loadingPage}>
+					<div className={styling.loading}>
+						<div></div>
+						<div></div>
+					</div>
+				</section>
+			);
 		}
-		return <Fragment/>;
+		return <Fragment />;
 	};
 }
 

@@ -1,4 +1,3 @@
-
 import express, { Router, Response } from 'express';
 import Controller from '../../controller';
 import RequestAction from '../../../definitions/requestAction';
@@ -9,7 +8,6 @@ import validate from '../../../middleware/validators/body.validator';
 import schemaType from '../../../validation/schemas/priviledge/blueprint';
 
 class Priviledges extends Controller {
-
 	private priviledgeService: PriviledgeService = new PriviledgeService();
 	private routing = '/rest/api/priviledges';
 	private router: Router;
@@ -44,13 +42,13 @@ class Priviledges extends Controller {
 	};
 
 	private create = async (request: any, response: Response): Promise<Response> => {
-		const { result, error } = await this.priviledgeService.createPriviledge(request.data);
+		const { result, error } = await this.priviledgeService.createPriviledge(request.data);
 
 		return this.buildResult(result, error, response, RequestAction.CREATE);
 	};
 
 	private update = async (request: any, response: Response): Promise<Response> => {
-		const { result, error } = await this.priviledgeService.updatePriviledge(request.data);
+		const { result, error } = await this.priviledgeService.updatePriviledge(request.data);
 
 		return this.buildResult(result, error, response, RequestAction.UPDATE);
 	};

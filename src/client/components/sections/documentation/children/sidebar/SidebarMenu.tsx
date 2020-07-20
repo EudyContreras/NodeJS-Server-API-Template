@@ -4,11 +4,11 @@ import MainSection from './sections/MainSection';
 import MiddleSection from './sections/MiddleSection';
 import SideMenuSearch from './SidebarSearch';
 import { connect } from 'react-redux';
-import { shallowEqual } from '../../../../utililties/comparer.utils';
+import { shallowEqual } from '../../../../utililties/comparer.utils';
 import { appendWhen } from '../../../../../appliers/style.applier';
 import { getSidemenu } from '../../../../../selectors/sidemenu.selector';
 import { setHovered, setFixed } from '../../../../../actions/documentation/sidebar.action';
-import { join } from '../../../../utililties/react.utils';
+import { join } from '../../../../utililties/react.utils';
 
 const headers = ['Introduction', 'Endpoints'];
 
@@ -28,7 +28,6 @@ const Dispatchers = { setHovered, setFixed };
 type Props = StateProps & DispatchProps & any;
 
 class SidebarMenu extends React.Component<Props, any> {
-
 	constructor(props: any) {
 		super(props);
 		this.state = {
@@ -37,28 +36,33 @@ class SidebarMenu extends React.Component<Props, any> {
 	}
 
 	private onMouseEnter = (): void => {
-		this.setState({
-			hovering: true
-		}, () => {
-			this.props.setHovered(true);
-		});
+		this.setState(
+			{
+				hovering: true
+			},
+			() => {
+				this.props.setHovered(true);
+			}
+		);
 	};
 
 	private onMouseExit = (): void => {
-		this.setState({
-			hovering: false
-		}, () => {
-			setTimeout(() => {
-				if (!this.state.hovering) {
-					this.props.setHovered(false);
-				}
-			}, 300);
-		});
+		this.setState(
+			{
+				hovering: false
+			},
+			() => {
+				setTimeout(() => {
+					if (!this.state.hovering) {
+						this.props.setHovered(false);
+					}
+				}, 300);
+			}
+		);
 	};
 
-	public shouldComponentUpdate = (nextProps: any, nextState: any): boolean => !shallowEqual(this.props.fixed, nextProps.fixed) ||
-			!shallowEqual(this.props.hovered, nextProps.hovered) ||
-			!shallowEqual(this.props.expanded, nextProps.expanded);
+	public shouldComponentUpdate = (nextProps: any, nextState: any): boolean =>
+		!shallowEqual(this.props.fixed, nextProps.fixed) || !shallowEqual(this.props.hovered, nextProps.hovered) || !shallowEqual(this.props.expanded, nextProps.expanded);
 
 	private getProperties = (style: any): any & any => {
 		const styles = [style.sideMenu];
@@ -88,11 +92,11 @@ class SidebarMenu extends React.Component<Props, any> {
 		const { common, actions } = this.getProperties(style);
 
 		return (
-			<aside {...common} {...actions} >
-				< TopSection styling={style} />
-				< SideMenuSearch styling={style} menuState={this.state} />
-				< MiddleSection styling={style} header={headers[0]} />
-				< MainSection styling={style} header={headers[1]} />
+			<aside {...common} {...actions}>
+				<TopSection styling={style} />
+				<SideMenuSearch styling={style} menuState={this.state} />
+				<MiddleSection styling={style} header={headers[0]} />
+				<MainSection styling={style} header={headers[1]} />
 			</aside>
 		);
 	};

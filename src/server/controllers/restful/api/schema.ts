@@ -1,11 +1,9 @@
-
 import Controller from '../../controller';
 import RequestAction from '../../../definitions/requestAction';
 import schema from '../../../resources/json/schema.json';
 import express, { Router, Response } from 'express';
 
 export default class Search extends Controller {
-
 	private routing = '/rest/api/schema';
 	private router: Router;
 	private roles: string[];

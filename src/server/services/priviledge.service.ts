@@ -1,10 +1,8 @@
-
 import PriviledgeRespository from '../repositories/priviledge.respository';
 
 import { PriviledgeMessages } from '../messages/message.response';
 
 export default class AccessPriviledgeService {
-
 	/**
 	 * @description Retrieves the priviledges for the user matching the given
 	 * user id which also match the specified query criteria.

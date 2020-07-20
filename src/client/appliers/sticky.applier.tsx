@@ -1,4 +1,3 @@
-
 interface IScrollListener {
 	onScroll(style: any, scroll: number): void;
 }
@@ -76,7 +75,14 @@ const applyStickyTop = (sticker: JQuery<HTMLElement | Element>, style: any, scro
 	}
 };
 
-const applyStickyBottom = (sticker: JQuery<HTMLElement | Element>, style: any, scroll: number, bottom: number, margin: number, onFixed: ((fixed: boolean) => void) | undefined): void => {
+const applyStickyBottom = (
+	sticker: JQuery<HTMLElement | Element>,
+	style: any,
+	scroll: number,
+	bottom: number,
+	margin: number,
+	onFixed: ((fixed: boolean) => void) | undefined
+): void => {
 	if (scroll! > bottom && sticker.hasClass(style.fixed)) {
 		sticker.removeClass(style.fixed).addClass(style.bottom).css({ top: bottom });
 		if (onFixed) onFixed(false);

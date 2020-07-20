@@ -1,7 +1,4 @@
-import {
-	APPLICATION,
-	APPLICATION_INSTALLED
-} from '../../actions/common/application/appdata.action';
+import { APPLICATION, APPLICATION_INSTALLED } from '../../actions/common/application/appdata.action';
 
 import IAction from '../../actions/action';
 

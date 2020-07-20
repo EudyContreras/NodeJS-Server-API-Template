@@ -1,7 +1,6 @@
-
 import PasswordRepository from '../repositories/password.repository';
 
-import { PasswordMessages } from '../messages/message.response';
+import { PasswordMessages } from '../messages/message.response';
 export default class PasswordService {
 	/**
 	 * @description Retrieves all the available passwords

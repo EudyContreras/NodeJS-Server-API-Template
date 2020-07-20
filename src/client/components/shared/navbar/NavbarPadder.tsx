@@ -6,10 +6,9 @@ interface Props {
 }
 
 export default class NavbarPadder extends React.PureComponent<Props> {
-
 	public render = (): JSX.Element => {
 		const style = this.props.styling;
 
-		return (<div ref={this.props.self} className={style.navPadder}></div>);
+		return <div ref={this.props.self} className={style.navPadder}></div>;
 	};
 }

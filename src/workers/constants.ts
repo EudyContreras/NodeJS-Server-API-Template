@@ -1,4 +1,3 @@
-
 const baseUrl = '/?source=pwa';
 const appShellPage = '/?appshell=true';
 const offlineFallbackPage = '/offline.html';
@@ -19,10 +18,7 @@ export const clientMessages = {
 	DATA_UPDATE: 'network_data_update'
 };
 
-export const urlsToCache = [
-	'/',
-	'https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js'
-];
+export const urlsToCache = ['/', 'https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js'];
 
 export interface CacheNames {
 	DATA_CACHE: string;
@@ -33,7 +29,7 @@ export interface CacheNames {
 	QUEUE_CACHE: string;
 	GOOGLE_FONTS_SHEETS_CACHE: string;
 	GOOGLE_FONTS_WEB_CACHE: string;
-};
+}
 
 export const cacheNames = (version?: string | undefined): CacheNames => ({
 	DATA_CACHE: `eudcon-universal-data-cache-${version || ''}`,
@@ -71,13 +67,16 @@ export const updateNotification = {
 		body: 'There is update available! Would you like to see it?',
 		icon: './images/icons/icon-152x152.png',
 		badge: './images/icons/icon-152x152.png',
-		actions: [{
-			title: 'yes',
-			action: 'action-1'
-		}, {
-			title: 'no',
-			action: 'action-2'
-		}]
+		actions: [
+			{
+				title: 'yes',
+				action: 'action-1'
+			},
+			{
+				title: 'no',
+				action: 'action-2'
+			}
+		]
 	}
 };
 

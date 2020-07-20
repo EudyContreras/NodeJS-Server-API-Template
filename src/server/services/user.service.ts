@@ -1,4 +1,3 @@
-
 import InvitationService from './invitation.service';
 import EncryptionService from './encryption.service';
 import AuthenticationService from './authentication.service';
@@ -8,7 +7,6 @@ import PasswordRepository from '../repositories/password.repository';
 import { UserMessages } from '../messages/message.response';
 
 export default class UserService {
-
 	/**
 	 * @description Returns a result with all the users which are currently in
 	 * the database.
@@ -144,7 +142,6 @@ export default class UserService {
 	 * was updated or the possible generated error.
 	 */
 	public async updateUserPassword(userId: string, passwordData: any, internal = false): Promise<{ result?: any; error?: any }> {
-
 		const currentPassword = passwordData.oldPassword;
 		const newPassword = passwordData.newPassword;
 
@@ -156,7 +153,7 @@ export default class UserService {
 
 			const user = await userRepository.getUser(userId, { dto: false });
 
-			if (user === null) return { error: UserMessages.NO_SUCH_USER };
+			if (user === null) return { error: UserMessages.NO_SUCH_USER };
 
 			const isMatch = await encryptionService.comparePasswords(currentPassword, user.password);
 
@@ -237,7 +234,7 @@ export default class UserService {
 
 			const user = await repository.insertUser(data);
 
-			if (user === null) return { error: UserMessages.NO_SUCH_USER };
+			if (user === null) return { error: UserMessages.NO_SUCH_USER };
 
 			const tokeResult = await authenticationService.createToken(user);
 

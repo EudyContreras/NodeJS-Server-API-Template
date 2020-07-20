@@ -1,4 +1,3 @@
-
 import httpCode from '../../definitions/httpCode';
 
 import priviledgeValidator from './priviledge.validator';
@@ -9,11 +8,9 @@ import { AccessRoleValidation } from '../../messages/message.validation';
 import { Response, NextFunction } from 'express';
 
 function allow(...allowed: string[]): (request: any, response: Response, next: NextFunction) => Promise<void | Response> {
-
 	const service = new PermissionsService();
 
 	const isUserAllowed = async (roleCode: string, request: any): Promise<any> => {
-
 		const { error, result } = await service.getRoleByCode(roleCode);
 
 		if (error) return { error: AccessRoleValidation.INVALID_CODE };
@@ -23,7 +20,6 @@ function allow(...allowed: string[]): (request: any, response: Response, next: N
 	};
 
 	const doRolesMatch = async (userId: string, roleCode: string): Promise<any> => {
-
 		const { error, result } = await service.getUserRole(userId);
 
 		if (error) return { error: AccessRoleValidation.NONE_FOUND };
@@ -32,7 +28,7 @@ function allow(...allowed: string[]): (request: any, response: Response, next: N
 	};
 
 	return async (request: any, response: Response, next: NextFunction): Promise<void | Response> => {
-		const { userId, roleCode } = request.user;
+		const { userId, roleCode } = request.user;
 
 		const accessResponse = new AccessResponse();
 
@@ -49,7 +45,9 @@ function allow(...allowed: string[]): (request: any, response: Response, next: N
 			accessResponse.errors.push(rolesMatch.error);
 		}
 
-		if (request.user && isAllowed.allowed && rolesMatch.match) { return await priviledgeValidator(request, response, next); } else {
+		if (request.user && isAllowed.allowed && rolesMatch.match) {
+			return await priviledgeValidator(request, response, next);
+		} else {
 			accessResponse.granted = false;
 			accessResponse.errors.push(AccessRoleValidation.DENIED);
 			return response.status(httpCode.FORBIDDEN_ACCESS).json(accessResponse);

@@ -1,4 +1,3 @@
-
 import axios from 'axios';
 
 type Error = any | undefined | null;
@@ -8,7 +7,6 @@ type RequestData = {
 };
 
 export default class RoutingService {
-
 	public performSearch = async (prefix: string): Promise<{ result?: any; error?: Error }> => {
 		try {
 			const data: RequestData = {

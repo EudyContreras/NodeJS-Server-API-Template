@@ -1,4 +1,3 @@
-
 import React from 'react';
 import PropType from 'prop-types';
 
@@ -18,9 +17,12 @@ const Picture: React.FunctionComponent<Props> = (props) => {
 
 	return (
 		<picture className={props.styling.lazyImage}>
-			{extensions.map((x, idx) => <source key={idx} srcSet={path + x} type={'image/' + x}/>)}
+			{extensions.map((x, idx) => (
+				<source key={idx} srcSet={path + x} type={'image/' + x} />
+			))}
 			<img src={path + ext} alt={props.alt} title={props.title} />
-		</picture>);
+		</picture>
+	);
 };
 
 Picture.propTypes = {

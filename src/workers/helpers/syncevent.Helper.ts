@@ -3,7 +3,7 @@ import { requestPermission, Permission, AccessStatus } from './access.helper';
 import { days } from './timespan.helper';
 import { logger } from '../commons';
 
-const DEBUG_MODE = (process.env.NODE_ENV !== 'production');
+const DEBUG_MODE = process.env.NODE_ENV !== 'production';
 
 export const syncEvents = {
 	contentSync: {
@@ -14,9 +14,7 @@ export const syncEvents = {
 	}
 };
 
-const powerStates = {
-
-};
+const powerStates = {};
 
 export async function syncContent(cacheNames: CacheNames): Promise<void> {
 	const objectKeys = Object.values(cacheNames);
@@ -32,7 +30,7 @@ export async function syncContent(cacheNames: CacheNames): Promise<void> {
 					await cache.delete(request);
 				});
 				await caches.delete(key);
-				await caches.open(key).then(cache => cache.addAll(urls));
+				await caches.open(key).then((cache) => cache.addAll(urls));
 			} else {
 				await caches.delete(key);
 			}
@@ -42,13 +40,9 @@ export async function syncContent(cacheNames: CacheNames): Promise<void> {
 	}
 
 	return Promise.resolve();
-};
+}
 
-export async function addPeriodicBackgroundSync(
-	syncEvent: PeriodicSyncEvent,
-	syncCallback?: () => void,
-	onError?: (...messages: any[]) => void
-): Promise<void> {
+export async function addPeriodicBackgroundSync(syncEvent: PeriodicSyncEvent, syncCallback?: () => void, onError?: (...messages: any[]) => void): Promise<void> {
 	const status = await requestPermission(Permission.BACKGROUND_SYNC_PERIODIC);
 
 	if (status === AccessStatus.GRANTED) {
@@ -63,7 +57,7 @@ export async function addPeriodicBackgroundSync(
 			try {
 				await registration.periodicSync.register(syncEvent);
 				if (DEBUG_MODE) {
-					registration.periodicSync.getTags().then(tags => {
+					registration.periodicSync.getTags().then((tags) => {
 						logger.log('Registered tags: ', tags);
 					});
 				}
@@ -76,7 +70,7 @@ export async function addPeriodicBackgroundSync(
 	} else {
 		onError?.('Permision for periodic background sync has not been granted!');
 	}
-};
+}
 
 export async function addBackgroundSync(syncName): Promise<void> {
 	if (!navigator.serviceWorker) return;
@@ -84,8 +78,9 @@ export async function addBackgroundSync(syncName): Promise<void> {
 	const registration = await navigator.serviceWorker.ready;
 
 	if (registration.sync) {
-		registration.sync.register(syncName)
+		registration.sync
+			.register(syncName)
 			.then(() => logger.log('Registered background sync: ', syncName))
-			.catch(error => logger.error('Error registering background sync: ', error));
+			.catch((error) => logger.error('Error registering background sync: ', error));
 	}
-};
+}

@@ -1,4 +1,3 @@
-
 export const SANDBOX_AREA = 'SANDBOX_AREA';
 
 export const SANDBOX_AREA_HOVERED = 'SANDBOX_AREA_HOVERED';

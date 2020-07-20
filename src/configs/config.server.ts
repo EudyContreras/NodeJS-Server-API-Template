@@ -1,4 +1,3 @@
-
 require('dotenv').config();
 
 const config = Object.freeze({
@@ -23,7 +22,7 @@ const config = Object.freeze({
 			}
 		}
 	},
-	resources: {
+	resources: {
 		cachePolicy: {
 			LABEL: 'Cache-Control',
 			VALUE: 'must-revalidate, public, max-age=31536000'
@@ -33,10 +32,12 @@ const config = Object.freeze({
 	compression: {
 		index: false,
 		enableBrotli: true,
-		customCompressions: [{
-			encodingName: 'deflate',
-			fileExtension: 'zz'
-		}],
+		customCompressions: [
+			{
+				encodingName: 'deflate',
+				fileExtension: 'zz'
+			}
+		],
 		serveStatic: {
 			maxAge: 234,
 			cacheControl: false
@@ -114,12 +115,7 @@ const config = Object.freeze({
 		]
 	},
 	priviledges: {
-		CODES: [
-			'4BbJ3kVmUdFHhJST',
-			'NZy3pHHmWDukNT3H',
-			'jstmYaN7HhUsR6pE',
-			'tAM28j4C7YCnka2z'
-		]
+		CODES: ['4BbJ3kVmUdFHhJST', 'NZy3pHHmWDukNT3H', 'jstmYaN7HhUsR6pE', 'tAM28j4C7YCnka2z']
 	},
 	validation: {
 		emails: {

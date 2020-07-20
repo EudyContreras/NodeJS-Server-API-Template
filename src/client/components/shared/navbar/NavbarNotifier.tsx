@@ -88,7 +88,9 @@ class NavBarNotifier extends React.PureComponent<Props, any> {
 			<div className={join(...styling.container.style)}>
 				<i className={join(...styling.icon.style)}>{styling.icon.icon}</i>
 				<p className={styling.text.style}>{props.text}</p>
-				<i className={styling.action.style} onClick={() => this.dimissNotification()}>{styling.action.icon}</i>
+				<i className={styling.action.style} onClick={() => this.dimissNotification()}>
+					{styling.action.icon}
+				</i>
 			</div>
 		);
 	};

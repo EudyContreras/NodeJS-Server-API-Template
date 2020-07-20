@@ -17,7 +17,6 @@ interface StateProps {
 type Props = StateProps & DispatchProps & any;
 
 class SidebarSearch extends React.PureComponent<Props, any> {
-
 	private _isMounted: boolean;
 	private inputRef: RefObject<HTMLInputElement>;
 
@@ -49,15 +48,18 @@ class SidebarSearch extends React.PureComponent<Props, any> {
 		this._isMounted = true;
 		const font = new FontFaceObserver('Material Icons');
 
-		font.load().then(() => {
-			if (this._isMounted) {
-				this.setState({
-					iconLoaded: true
-				});
-			}
-		}).catch((error) => {
-			console.log('Something went wrong!', error);
-		});
+		font
+			.load()
+			.then(() => {
+				if (this._isMounted) {
+					this.setState({
+						iconLoaded: true
+					});
+				}
+			})
+			.catch((error) => {
+				console.log('Something went wrong!', error);
+			});
 	};
 
 	public render = (): JSX.Element => {
@@ -73,10 +75,10 @@ class SidebarSearch extends React.PureComponent<Props, any> {
 		}
 
 		return (
-			<form className={join(...classes)} method='post'>
-				<label htmlFor='search'></label>
-				<input key='search-input' ref={this.inputRef} type='text' name='search' aria-label='search' className={style.searchTextbox} placeholder='Search' />
-				<button id='search' title='Search' value='' className={style.searchButton} onClick={this.performSearch}>
+			<form className={join(...classes)} method="post">
+				<label htmlFor="search"></label>
+				<input key="search-input" ref={this.inputRef} type="text" name="search" aria-label="search" className={style.searchTextbox} placeholder="Search" />
+				<button id="search" title="Search" value="" className={style.searchButton} onClick={this.performSearch}>
 					<i className={join(...iconsClasses)}>search</i>
 				</button>
 			</form>

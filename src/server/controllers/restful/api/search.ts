@@ -1,10 +1,8 @@
-
 import express, { Router, Response, Request } from 'express';
 import Controller from '../../controller';
 import RequestAction from '../../../definitions/requestAction';
 
 export default class Search extends Controller {
-
 	private routing = '/rest/api/search';
 	private router: Router;
 	private roles: string[];

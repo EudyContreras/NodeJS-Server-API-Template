@@ -8,7 +8,7 @@ import { BrowserRouter, StaticRouter } from 'react-router-dom';
 
 export const appLight = (url, css, context) => {
 	const styling = new Set([css]);
-	const insertCss = (...styles) => styles.forEach(style => styling.add(style._getCss()));
+	const insertCss = (...styles) => styles.forEach((style) => styling.add(style._getCss()));
 
 	return (
 		<Provider store={configureStore({})}>
@@ -40,7 +40,7 @@ export const client = (url, store, context, insertCss) => {
 		<Provider store={store} suppressHydrationWarning={true}>
 			<BrowserRouter onUpdate={() => window.scrollTo(0, 0)} location={url} context={context}>
 				<StyleContext.Provider value={{ insertCss }}>
-					<Application location={url} history={history}/>
+					<Application location={url} history={history} />
 				</StyleContext.Provider>
 			</BrowserRouter>
 		</Provider>

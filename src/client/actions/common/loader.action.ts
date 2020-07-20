@@ -1,4 +1,3 @@
-
 export const ROUTE_LOADER = 'ROUTE_LOADER';
 
 export const ROUTE_LOADER_HIDE = 'ROUTE_LOADER_HIDE';

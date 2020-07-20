@@ -16,7 +16,6 @@ const statsFile = path.resolve('build/public/loadable-stats.json');
 const appStyle: any = AppStyle;
 
 class IndexViewRenderer extends ViewRenderer {
-
 	private routing = '/';
 	private router: Router;
 	private store: Store<any, IAction>;
@@ -47,7 +46,9 @@ class IndexViewRenderer extends ViewRenderer {
 			const shell = req.query.shell !== undefined;
 
 			const css = new Set();
-			const cssInjector = (...styles): void => { styles.forEach(style => css.add(style._getCss())); };
+			const cssInjector = (...styles): void => {
+				styles.forEach((style) => css.add(style._getCss()));
+			};
 
 			if (shell) {
 				return await this.renderShell(req, res, cssInjector);
@@ -65,8 +66,8 @@ class IndexViewRenderer extends ViewRenderer {
 
 		const entryPoints = extractor.getMainAssets();
 
-		const styles = entryPoints.filter(x => x.url.endsWith('.css'));
-		const scripts = entryPoints.filter(x => x.url.endsWith('.js'));
+		const styles = entryPoints.filter((x) => x.url.endsWith('.css'));
+		const scripts = entryPoints.filter((x) => x.url.endsWith('.js'));
 
 		const props = {
 			css: this.css,
@@ -82,7 +83,7 @@ class IndexViewRenderer extends ViewRenderer {
 			cache: true
 		};
 
-		config.headers.forEach(header => {
+		config.headers.forEach((header) => {
 			res.setHeader(header.LABEL, header.VALUE);
 		});
 		res.render(config.layout.FULL, props);
@@ -101,7 +102,7 @@ class IndexViewRenderer extends ViewRenderer {
 			cache: true
 		};
 
-		config.headers.forEach(header => {
+		config.headers.forEach((header) => {
 			res.setHeader(header.LABEL, header.VALUE);
 		});
 		res.render(config.layout.SHELL, props);

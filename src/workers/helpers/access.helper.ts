@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/consistent-type-assertions */
 
 export enum Permission {
-    PUSH,
-    NOTIFICATIONS,
-    BACKGROUND_SYNC,
-    BACKGROUND_SYNC_PERIODIC
-};
+	PUSH,
+	NOTIFICATIONS,
+	BACKGROUND_SYNC,
+	BACKGROUND_SYNC_PERIODIC
+}
 
 export const AccessStatus = {
 	GRANTED: 'granted',
@@ -16,34 +16,42 @@ export const AccessStatus = {
 export async function requestPermission(type: Permission): Promise<string> {
 	switch (type) {
 		case Permission.PUSH: {
-			return (await navigator.permissions.query({
-				name: 'push'
-			})).state;
+			return (
+				await navigator.permissions.query({
+					name: 'push'
+				})
+			).state;
 		}
 		case Permission.NOTIFICATIONS: {
-			return (await navigator.permissions.query({
-				name: 'notifications'
-			})).state;
+			return (
+				await navigator.permissions.query({
+					name: 'notifications'
+				})
+			).state;
 		}
 		case Permission.BACKGROUND_SYNC: {
-			return (await navigator.permissions.query({
-				name: 'background-sync'
-			})).state;
+			return (
+				await navigator.permissions.query({
+					name: 'background-sync'
+				})
+			).state;
 		}
 		case Permission.BACKGROUND_SYNC_PERIODIC: {
-			return (await navigator.permissions.query({
-				name: <any>'periodic-background-sync'
-			})).state;
+			return (
+				await navigator.permissions.query({
+					name: <any>'periodic-background-sync'
+				})
+			).state;
 		}
 	}
 }
 
 export function registerNotification(callback: PermissionCallback): void {
-	Notification.requestPermission(permission => {
+	Notification.requestPermission((permission) => {
 		if (permission === AccessStatus.GRANTED) {
 			callback.onGranted();
 		} else {
 			callback.onDenied && callback.onDenied('Permission was not granted.');
-		};
+		}
 	});
 }

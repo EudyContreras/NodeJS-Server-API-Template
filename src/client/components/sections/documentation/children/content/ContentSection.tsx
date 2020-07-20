@@ -1,7 +1,6 @@
 import React from 'react';
 
 class ContentSection extends React.PureComponent<any> {
-
 	public render = (): JSX.Element => {
 		const style = this.props.styling;
 

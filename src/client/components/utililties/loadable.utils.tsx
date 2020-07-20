@@ -1,4 +1,3 @@
-
 import minDelay from 'p-min-delay';
 import { timeout } from 'promise-timeout';
 import { DefaultComponent } from '@loadable/component';
@@ -8,7 +7,7 @@ const DEFAULT_TIMEOUT = 5000;
 
 type DelayOptions = {
 	delay: number;
-	timeout?: number ;
+	timeout?: number;
 };
 
 export function delayBoundary<T>(
@@ -21,4 +20,4 @@ export function delayBoundary<T>(
 	const delay = options.delay;
 	const timeoutTime = options.timeout || DEFAULT_TIMEOUT;
 	return timeout(minDelay(call, delay), timeoutTime);
-};
+}

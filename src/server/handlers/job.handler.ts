@@ -15,7 +15,6 @@ import { SchedulerMessages } from '../messages/message.response';
  * about what job to start.
  */
 async function startJob(scheduler: JobHandler, cronJob: CronJob): Promise<void> {
-
 	await scheduler.agenda.start();
 	await scheduler.agenda.every(cronJob.interval, cronJob.label);
 
@@ -23,7 +22,6 @@ async function startJob(scheduler: JobHandler, cronJob: CronJob): Promise<void> 
 }
 
 export default class JobHandler {
-
 	public agenda: Agenda;
 	public logger: LoggingHandler;
 	private errorHandler: ErrorHandler;

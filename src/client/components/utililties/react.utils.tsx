@@ -1,4 +1,3 @@
-
 export const element = (tag: string, classes: string[]): Element => {
 	const element = document.createElement(tag);
 	classes.forEach((x) => element.classList.add(x));

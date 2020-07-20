@@ -1,4 +1,3 @@
-
 import ReactDOM from 'react-dom';
 import configureStore from './stores/store';
 import { registerWorker } from '../workers/helpers/register.helper';
@@ -14,20 +13,17 @@ delete window.__PRELOADED_STATE__;
 delete window.__RENDER_OPTIONS__;
 
 const insertCss = (...styles) => {
-	const removeCss = styles.map(style => style._insertCss());
-	return () => removeCss.forEach(dispose => dispose());
+	const removeCss = styles.map((style) => style._insertCss());
+	return () => removeCss.forEach((dispose) => dispose());
 };
 
 loadableReady(() => {
-	const renderMethod = (renderOptions.clientSideRendered || module.hot) ? ReactDOM.render : ReactDOM.hydrate;
+	const renderMethod = renderOptions.clientSideRendered || module.hot ? ReactDOM.render : ReactDOM.hydrate;
 
 	const store = configureStore(initialState);
 	const content = document.getElementById('content');
 
-	renderMethod(
-		client(window.location.pathname, store, renderOptions.context, insertCss),
-		content
-	);
+	renderMethod(client(window.location.pathname, store, renderOptions.context, insertCss), content);
 
 	const element = document.getElementById('serverCSS');
 	if (element) {

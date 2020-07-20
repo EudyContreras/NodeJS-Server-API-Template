@@ -14,7 +14,6 @@ interface StateProps {
 type Props = StateProps & DispatchProps & any;
 
 class Action extends React.PureComponent<Props, any> {
-
 	constructor(props: any) {
 		super(props);
 		this.state = {
@@ -25,13 +24,16 @@ class Action extends React.PureComponent<Props, any> {
 	public componentDidMount = (): void => {
 		const font = new FontFaceObserver('Material Icons');
 
-		font.load().then(() => {
-			this.setState({
-				iconLoaded: true
+		font
+			.load()
+			.then(() => {
+				this.setState({
+					iconLoaded: true
+				});
+			})
+			.catch((error) => {
+				console.log('Something went wrong!', error);
 			});
-		}).catch((error) => {
-			console.log('Something went wrong!', error);
-		});
 
 		if (!InstallHelper.hasInstallInfo()) {
 			this.props.setInstalled(true);
@@ -70,7 +72,7 @@ class Action extends React.PureComponent<Props, any> {
 		}
 
 		return (
-			<div onClick={this.initInstallation} className={join(...classes)} title='install'>
+			<div onClick={this.initInstallation} className={join(...classes)} title="install">
 				<i className={join(...iconsClasses)}>{icon}</i>
 			</div>
 		);

@@ -19,7 +19,6 @@ type State = IToggle;
 type Props = StateProps & DispatchProps & any;
 
 class SidebarToggle extends React.PureComponent<Props, State> {
-
 	private toggleSidebar = (event: React.MouseEvent<HTMLElement, MouseEvent>): void => {
 		const style = this.props.styling;
 
@@ -29,7 +28,6 @@ class SidebarToggle extends React.PureComponent<Props, State> {
 	};
 
 	public render = (): JSX.Element => {
-
 		const style = this.props.styling;
 		const elementTitle = this.props.locked ? 'collapse' : 'expand';
 		const iconText = this.props.locked ? MaterialIcons.icons.CHEV_RIGHT : MaterialIcons.icons.MENU;

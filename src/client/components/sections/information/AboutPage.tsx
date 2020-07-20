@@ -13,7 +13,6 @@ interface StateProps {
 type Props = StateProps & DispatchProps;
 
 class AboutPage extends React.Component<Props, any> {
-
 	public shouldComponentUpdate = (nextProps: any, nextState: any): boolean => false;
 
 	public componentDidMount = (): void => {

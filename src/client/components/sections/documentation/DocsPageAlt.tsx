@@ -13,7 +13,6 @@ interface StateProps {
 type Props = StateProps & DispatchProps;
 
 class DocsPageAlt extends React.Component<Props, any> {
-
 	public shouldComponentUpdate = (nextProps: any, nextState: any): boolean => false;
 
 	public componentDidMount = (): void => {
@@ -36,9 +35,11 @@ class DocsPageAlt extends React.Component<Props, any> {
 			classes.push(style.routePageloaded);
 		}
 
-		return <section className={join(...classes)}>
-			<h2>Docs Page</h2>
-		</section>;
+		return (
+			<section className={join(...classes)}>
+				<h2>Docs Page</h2>
+			</section>
+		);
 	};
 }
 

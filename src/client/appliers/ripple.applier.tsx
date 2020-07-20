@@ -33,10 +33,12 @@ export default (event: React.MouseEvent<HTMLElement, MouseEvent>, style: any): v
 	const x = event.pageX - posX - buttonWidth / 2;
 	const y = event.pageY - posY - buttonHeight / 2;
 
-	$(asClass(style.ripple)).css({
-		width: buttonWidth,
-		height: buttonHeight,
-		top: y,
-		left: x
-	}).addClass(style.rippleEffect);
+	$(asClass(style.ripple))
+		.css({
+			width: buttonWidth,
+			height: buttonHeight,
+			top: y,
+			left: x
+		})
+		.addClass(style.rippleEffect);
 };

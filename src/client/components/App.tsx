@@ -1,4 +1,3 @@
-
 import React, { Fragment } from 'react';
 import ErrorBoundary from './shared/ErrorBoundary';
 import NavbarMenu from './shared/navbar/Navbar';
@@ -16,7 +15,6 @@ interface State {
 }
 
 class App extends React.PureComponent<any, State> {
-
 	private padder: React.RefObject<HTMLDivElement>;
 	private styling: any = style;
 
@@ -51,11 +49,7 @@ class App extends React.PureComponent<any, State> {
 					<Loader styling={this.styling} />
 					<Switch> {routings} </Switch>
 				</ErrorBoundary>
-				<NavbarMenu
-					styling={this.styling}
-					location={this.props.location}
-					routings={elements}
-				/>
+				<NavbarMenu styling={this.styling} location={this.props.location} routings={elements} />
 			</Fragment>
 		);
 	};

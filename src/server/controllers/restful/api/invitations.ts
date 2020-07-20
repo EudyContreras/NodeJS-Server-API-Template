@@ -1,4 +1,3 @@
-
 import express, { Router, Request, Response } from 'express';
 import Controller from '../../controller';
 import RequestAction from '../../../definitions/requestAction';
@@ -9,7 +8,6 @@ import validate from '../../../middleware/validators/body.validator';
 import schemaType from '../../../validation/schemas/invitation/blueprint';
 
 class Invitations extends Controller {
-
 	private invitationService: InvitationService = new InvitationService();
 	private routing = '/rest/api/invitations';
 	private router: Router;

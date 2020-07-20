@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { appendWhen } from '../../../../../appliers/style.applier';
 import { getSandbox } from '../../../../../selectors/sandbox.selector';
 import { setTopFixed, setBottomFixed } from '../../../../../actions/documentation/sandbox.action';
-import { join } from '../../../../utililties/react.utils';
+import { join } from '../../../../utililties/react.utils';
 
 interface StateProps {
 	fixedTop: boolean;
@@ -22,7 +22,6 @@ const Dispatchers = { setTopFixed, setBottomFixed };
 type Props = StateProps & DispatchProps & any;
 
 class SandboxArea extends React.PureComponent<Props, any> {
-
 	private getProperties = (style: any): any & any => {
 		const styles = [style.sandboxArea];
 		const cssTop = this.props.fixedTop ? this.props.offsetTop : this.props.fixedBottom ? this.props.offsetBottom : 'auto';
@@ -45,7 +44,7 @@ class SandboxArea extends React.PureComponent<Props, any> {
 
 		return (
 			<aside {...common}>
-				<SandboxSection styling={style}/>
+				<SandboxSection styling={style} />
 			</aside>
 		);
 	};

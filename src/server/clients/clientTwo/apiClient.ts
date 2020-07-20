@@ -1,4 +1,3 @@
-
 import Client from '../client';
 import config from '../../../configs/config.server';
 import Endpoints from './endpoints';
@@ -6,7 +5,6 @@ import ContentTypes from '../../definitions/httpContent';
 import HttpMethod from '../../definitions/httpMethod';
 
 class ApiClient extends Client {
-
 	private baseUrl: Function = config.api.someapi.baseUrl;
 	private userName?: string = config.api.someapi.auth.USER_NAME;
 	private password?: string = config.api.someapi.auth.PASSWORD;

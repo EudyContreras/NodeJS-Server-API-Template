@@ -1,4 +1,3 @@
-
 import config from '../../configs/config.server';
 import webtoken from 'jsonwebtoken';
 import UserService from './user.service';
@@ -13,7 +12,6 @@ import { AuthenticationMessages, NotificationMessages } from '../messages/messag
 import { randomString } from '../utilities/string.utility';
 
 export default class AuthenticationService {
-
 	private redisCacheHandler: RedisCacheHandler = new RedisCacheHandler();
 
 	/**
@@ -23,7 +21,6 @@ export default class AuthenticationService {
 	 * @returns The possible user id and token or an error that has been produced.
 	 */
 	public async authenticate(credentials: { email: string; password: string }): Promise<{ result?: any; error?: any }> {
-
 		try {
 			const { email, password } = credentials;
 
@@ -41,7 +38,6 @@ export default class AuthenticationService {
 				const tempPasswords = await passwordRepository.getAllPasswordsWhere({ userId: user.id });
 
 				if (tempPasswords.length > 0) {
-
 					let noMatch = true;
 
 					for (const tempPassword of tempPasswords) {
@@ -92,7 +88,7 @@ export default class AuthenticationService {
 
 			const { error, hash } = await encryptionService.encryptPassword(randomPassword);
 
-			if (error) return { error };
+			if (error) return { error };
 
 			const passwordData = {
 				userId: user.id,
@@ -113,14 +109,14 @@ export default class AuthenticationService {
 	}
 
 	/**
-	* @description Retrieves the user data for the user with the
-	* matching id.
-	* @param userId The user id of the user to retrieve
-	* credentials for.
-	* @param getDTO Flag for determine if the a dto should
-	* be returned
-	* @returns The possible user or an error that has been produced.
-	*/
+	 * @description Retrieves the user data for the user with the
+	 * matching id.
+	 * @param userId The user id of the user to retrieve
+	 * credentials for.
+	 * @param getDTO Flag for determine if the a dto should
+	 * be returned
+	 * @returns The possible user or an error that has been produced.
+	 */
 	public async getUser(userId: string, getDTO = true): Promise<{ result?: IUser; error?: any }> {
 		try {
 			const repository = new UserRepository();
@@ -149,11 +145,7 @@ export default class AuthenticationService {
 				roleCode: user.roleCode
 			};
 
-			const token = await webtoken.sign(
-				payload,
-				config.jwt.TOKEN_SECRET,
-				{ expiresIn: config.jwt.EXPIRATION_TIME }
-			);
+			const token = await webtoken.sign(payload, config.jwt.TOKEN_SECRET, { expiresIn: config.jwt.EXPIRATION_TIME });
 
 			if (this.redisCacheHandler.available()) {
 				const { error } = await this.redisCacheHandler.saveValues(payload.userId, token);
@@ -188,6 +180,6 @@ export default class AuthenticationService {
 	 * @returns The flag indicating token invalidation an error that has been produced.
 	 */
 	public async invalidateTokens(user: IUser): Promise<{ result?: boolean; error?: any }> {
-		return new Promise<any>(() => { });
+		return new Promise<any>(() => {});
 	}
 }

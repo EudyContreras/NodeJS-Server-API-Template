@@ -1,4 +1,3 @@
-
 /**
  * @description Internal throttle a repeated action so that there is
  * a pause between repetions.

@@ -1,4 +1,3 @@
-
 import httpCodes from '../../definitions/httpCode';
 
 import { ValidationResult } from '@hapi/joi';
@@ -10,13 +9,7 @@ import * as UserSchema from '../../validation/schemas/user/blueprint';
 import * as InviteSchema from '../../validation/schemas/invitation/blueprint';
 import * as PriviledgeSchema from '../../validation/schemas/priviledge/blueprint';
 
-import {
-	GET,
-	POST,
-	PUT,
-	DELETE,
-	PATCH
-} from '../../definitions/httpMethod';
+import { GET, POST, PUT, DELETE, PATCH } from '../../definitions/httpMethod';
 
 function buildResponse(validation: { message: string; result: ValidationResult } | null, request: any, response: Response, next: NextFunction): void | Response {
 	if (validation === null) return next();

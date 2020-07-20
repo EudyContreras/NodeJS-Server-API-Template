@@ -1,4 +1,3 @@
-
 import express, { Router, Request, Response } from 'express';
 import Controller from '../../controller';
 import RequestAction from '../../../definitions/requestAction';
@@ -11,7 +10,6 @@ import schemaType from '../../../validation/schemas/user/blueprint';
 import { ROOT, ADMIN } from '../../../localstore/accessrole.store';
 
 class Users extends Controller {
-
 	private userService = new UserService();
 	private routing = '/rest/api/users';
 	private router: Router;
@@ -66,7 +64,7 @@ class Users extends Controller {
 	private create = async (request: any, response: Response): Promise<Response> => {
 		const data = request.data;
 
-		const { result, error } = await this.userService.registerUser(data);
+		const { result, error } = await this.userService.registerUser(data);
 
 		return this.buildResult(result, error, response, RequestAction.CREATE);
 	};
@@ -82,7 +80,7 @@ class Users extends Controller {
 	private delete = async (request: Request, response: Response): Promise<Response> => {
 		const userId: any = request.query.userId;
 
-		const { result, error } = await this.userService.deleteUser(userId);
+		const { result, error } = await this.userService.deleteUser(userId);
 
 		return this.buildResult(result, error, response, RequestAction.DELETE);
 	};
@@ -94,7 +92,6 @@ class Users extends Controller {
 
 		return this.buildResult(result, error, response, RequestAction.UPDATE);
 	};
-
 }
 
 export default Users;
