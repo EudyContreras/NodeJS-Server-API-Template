@@ -51,6 +51,7 @@ Fast production ready boilerplate backed by the MERN stack. Built to provide the
 * SASS (SCSS)
 * Prettier
 * ESList
+* Standard Style
 * StyleLint
 
 ## Features:
