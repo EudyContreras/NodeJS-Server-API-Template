@@ -10,10 +10,15 @@
         "eslint:recommended",
         "plugin:react/recommended",
         "plugin:@typescript-eslint/recommended",
-        "plugin:@typescript-eslint/eslint-recommended"
+        "plugin:@typescript-eslint/eslint-recommended",
+        "prettier",
+        "prettier/react",
+        "prettier/standard",
+        "prettier/@typescript-eslint"
     ],
     "plugins": [
         "react",
+        "standard",
         "@typescript-eslint"
     ],
     "parser": "@typescript-eslint/parser",
