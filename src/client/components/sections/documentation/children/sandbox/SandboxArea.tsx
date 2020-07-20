@@ -27,8 +27,8 @@ class SandboxArea extends React.PureComponent<Props, any> {
 		const cssTop = this.props.fixedTop
 			? this.props.offsetTop
 			: this.props.fixedBottom
-			? this.props.offsetBottom
-			: 'auto';
+				? this.props.offsetBottom
+				: 'auto';
 
 		appendWhen(styles, this.props.fixedTop, style.fixed);
 

@@ -26,7 +26,7 @@
     "lint-and-fix": "eslint 'src/**/*.{js,jsx,ts,tsx}' --fix && echo 'ESLint done checking!'",
     "lint-and-prettify": "prettier-eslint --write $PWD/'src/**/*.{js,jsx,ts,tsx}' && echo 'ESLint done checking!'",
     "fix-styles": "prettier-stylelint --write $PWD/'src/**/*.{css,scss,less,sass}' ",
-    "fix-all": "npm-run-all fix-code fix-styles",
+    "fix-all": "npm-run-all lint-and-fix lint-and-prettify",
     "compile-ts": "npm run cleanup && tsc -b ./ && cpy --cwd=src --parents '**/*' '!**/*.(ts|js|tsx|jsx)' ../dist/ ",
     "build:client": "webpack --config webpack/configs/webpack.config.client.js",
     "build:client:watch": "webpack --config webpack/configs/webpack.config.client.js --watch",
@@ -77,7 +77,7 @@
   },
   "lint-staged": {
     "src/**/*.{js,jsx,ts,tsx}": [
-      "eslint --fix", "prettier --write"
+      "eslint --fix", "prettier-eslint --write"
     ]
   },
   "dependencies": {

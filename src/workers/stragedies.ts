@@ -57,8 +57,7 @@ Cache.prototype.addToCache = async function (
 			getAllEntries(cacheName).then((entries) => {
 				if (entries.values.length >= maxEntries) {
 					const leastFrequent = entries.reduce((prev: CacheEntryInfo, current: CacheEntryInfo) =>
-						prev.visitFrequency < current.visitFrequency ? prev : current
-					);
+						prev.visitFrequency < current.visitFrequency ? prev : current);
 					this.delete(leastFrequent.url);
 				}
 			});
@@ -145,8 +144,7 @@ export function staleWhileRevalidate(stragedy: RevalidateCacheStragedy): void {
 					});
 					return response || fetchPromise;
 				})
-				.catch((error) => handleFailure(event, request, error))
-		)
+				.catch((error) => handleFailure(event, request, error)))
 	);
 }
 
@@ -173,8 +171,7 @@ export function cacheFirst(stragedy: CacheStragedy): void {
 					return hasExpired(request.url).then((expired) => (!expired ? response : network(cache)));
 				}
 				return response || network(cache);
-			})
-		)
+			}))
 	);
 }
 
@@ -254,8 +251,7 @@ export function cacheThenNetwork(stragedy: CacheStragedy, refreshCallbacks: Refr
 			})
 			.then(() => {
 				refreshCallbacks.onLoading(false);
-			})
-	);
+			}));
 }
 
 export function networkFirst(stragedy: CacheStragedy): void {
