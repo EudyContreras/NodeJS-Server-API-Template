@@ -71,9 +71,9 @@ export const SchedulerMessages = {
 };
 
 export const ResponseMessages = {
-	NOT_CREATED: (name: string): string => `The ${name} could not be created`,
-	NOT_FETCHED: (name: string): string => `The ${name} could not be fetched`,
-	NOT_UPDATED: (name: string): string => `The ${name} could not be updated`,
-	NOT_DELETED: (name: string): string => `The ${name} could not be deleted`,
-	NOT_FETCHED_ALL: (name: string): string => `The ${name}s could not be fetched`
+	notCreated: (name: string): string => `The ${name} could not be created`,
+	notFetched: (name: string): string => `The ${name} could not be fetched`,
+	notUpdated: (name: string): string => `The ${name} could not be updated`,
+	notDeleted: (name: string): string => `The ${name} could not be deleted`,
+	notFetchedAll: (name: string): string => `The ${name}s could not be fetched`
 };

@@ -1,3 +1,5 @@
+import { CacheNames } from './constants';
+
 export const TIMEOUT = 1000;
 
 export const filetypePatterns = {
@@ -11,7 +13,7 @@ export const filetypePatterns = {
 	VIDEO: /.(mp4|webm|ogg)$/
 };
 
-export const filetypeCache = (url, cacheKeys): string => {
+export const filetypeCache = (url: string, cacheKeys: CacheNames): string => {
 	if (filetypePatterns.DATA.test(url)) return cacheKeys.DATA_CACHE;
 	if (filetypePatterns.VIDEO.test(url)) return cacheKeys.MEDIA_CACHE;
 	if (filetypePatterns.AUDIO.test(url)) return cacheKeys.MEDIA_CACHE;
@@ -27,7 +29,7 @@ export const inRangeInclusive = (value: number, min: number, max: number): boole
 
 export const addDelay = (ms: number) => (): any => new Promise((resolve) => setTimeout(() => resolve(), ms));
 
-export const isNullOrEmpty = (path): boolean => !path || path === '' || path === undefined;
+export const isNullOrEmpty = (path: string): boolean => !path || path === '' || path === undefined;
 
 export const handleWebp = async <T>(supportCallbacks: WebpSupportCallback<T>): Promise<any> => {
 	if (!self.createImageBitmap) return false;
@@ -116,19 +118,19 @@ export function sendMessageToClients(message: ClientMessage, includeUncontrolled
 }
 
 export const logger = {
-	log: (...message: any): void => {
+	log: (...message: any[]): void => {
 		const css = 'background: #00b6ffbd; padding: 2px; border-radius: 4px; color: white; font-weight: 600;';
 		console.log('%c ServiceWorker ', css, ...message);
 	},
-	warn: (...message: any): void => {
+	warn: (...message: any[]): void => {
 		const css = 'background: #ffbf00bd; padding: 2px; border-radius: 4px; color: white; font-weight: 600;';
 		console.log('%c ServiceWorker ', css, ...message);
 	},
-	info: (...message: any): void => {
+	info: (...message: any[]): void => {
 		const css = 'background: #3aa178; padding: 2px; border-radius: 4px; color: white; font-weight: 600;';
 		console.log('%c ServiceWorker ', css, ...message);
 	},
-	error: (...message: any): void => {
+	error: (...message: any[]): void => {
 		const css = 'background: #ff0038bd; padding: 2px; border-radius: 4px; color: white; font-weight: 600;';
 		console.log('%c ServiceWorker ', css, ...message);
 	}

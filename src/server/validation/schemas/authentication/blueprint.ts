@@ -20,7 +20,7 @@ export const validateCredentials = (data: any): any => {
 	});
 
 	return {
-		message: SchemaValidation.CREATE_DATA('credentials'),
+		message: SchemaValidation.createData('credentials'),
 		result: schema.validate(data, {
 			abortEarly: false
 		})

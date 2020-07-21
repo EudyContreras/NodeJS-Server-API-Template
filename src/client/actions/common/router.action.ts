@@ -4,7 +4,7 @@ export const LOADING_ROUTINGS = 'LOADING_ROUTINGS';
 export const GET_ALL_ROUTINGS = 'GET_ALL_ROUTINGS';
 export const ERROR_EVENT = 'ROUTINGS_ERROR';
 
-export const getAllRoutings = () => async (dispatch: Function): Promise<void> => {
+export const getAllRoutings = () => async (dispatch: (action?: any) => any): Promise<void> => {
 	dispatch(loading());
 
 	const service = new RoutingService();

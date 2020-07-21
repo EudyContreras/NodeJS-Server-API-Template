@@ -5,7 +5,7 @@ export interface DispatchProps {
 	setInstalled: (installed: boolean) => void;
 }
 
-export const setInstalled = (installed: boolean) => (dispatch: Function): void => {
+export const setInstalled = (installed: boolean) => (dispatch: (action?: any) => any): void => {
 	dispatch({ ...installationAction, payload: installed });
 };
 

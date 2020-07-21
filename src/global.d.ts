@@ -14,6 +14,6 @@ declare global {
 		clients: any;
 		clientConfig: any;
 		registration: any;
-		skipWaiting: Function;
+		skipWaiting: () => any;
 	}
 }

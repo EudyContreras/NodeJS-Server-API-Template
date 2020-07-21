@@ -61,7 +61,7 @@ async function checkValidServiceWorker(swUrl, config): Promise<void> {
 		});
 }
 
-export const registerWorker = (config): void => {
+export const registerWorker = (config: any): void => {
 	if (!DEBUG_MODE || config.clientSideRendered) {
 		if (navigator.serviceWorker) {
 			const publicUrl = new URL(process.env.PUBLIC_URL || '', window.location.href);

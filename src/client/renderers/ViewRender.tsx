@@ -58,7 +58,11 @@ class IndexViewRenderer extends ViewRenderer {
 		}
 	};
 
-	private renderApplication = async (req: Request, res: Response, cssInjector: Function): Promise<void> => {
+	private renderApplication = async (
+		req: Request,
+		res: Response,
+		cssInjector: (action?: any) => any
+	): Promise<void> => {
 		const extractor = new ChunkExtractor({ statsFile: statsFile, entrypoints: ['app'] });
 
 		const context = {};
@@ -89,7 +93,7 @@ class IndexViewRenderer extends ViewRenderer {
 		res.render(config.layout.FULL, props);
 	};
 
-	private renderShell = async (req: Request, res: Response, cssInjector: Function): Promise<void> => {
+	private renderShell = async (req: Request, res: Response, cssInjector: (action?: any) => any): Promise<void> => {
 		const context = {};
 		const content = application(req.url, this.store, context, cssInjector);
 

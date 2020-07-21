@@ -11,19 +11,19 @@ export interface DispatchProps {
 	setActiveTab: (tab: string) => void;
 }
 
-export const setOffsetTop = (offset: number) => (dispatch: Function): void => {
+export const setOffsetTop = (offset: number) => (dispatch: (action?: any) => any): void => {
 	dispatch({ ...offsetTopAction, payload: offset });
 };
 
-export const setMouseInside = (inside: boolean) => (dispatch: Function): void => {
+export const setMouseInside = (inside: boolean) => (dispatch: (action?: any) => any): void => {
 	dispatch({ ...navInsideAction, payload: inside });
 };
 
-export const setAnchored = (anchored: boolean) => (dispatch: Function): void => {
+export const setAnchored = (anchored: boolean) => (dispatch: (action?: any) => any): void => {
 	dispatch({ ...navAnchorAction, payload: anchored });
 };
 
-export const setActiveTab = (tab: any) => (dispatch: Function): void => {
+export const setActiveTab = (tab: any) => (dispatch: (action?: any) => any): void => {
 	dispatch({ ...activeTabAction, payload: tab });
 };
 

@@ -8,11 +8,11 @@ export interface DispatchProps {
 	hideLoader: (loadedRoute?: string) => void;
 }
 
-export const showLoader = () => (dispatch: Function): void => {
+export const showLoader = () => (dispatch: (action?: any) => any): void => {
 	dispatch(showLoaderAction);
 };
 
-export const hideLoader = (loadedRoute?: string) => (dispatch: Function): void => {
+export const hideLoader = (loadedRoute?: string) => (dispatch: (action?: any) => any): void => {
 	dispatch({ ...hideLoaderAction, payload: loadedRoute });
 };
 

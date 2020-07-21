@@ -20,7 +20,7 @@ export const showNotifier = (
 	autoDimiss = true,
 	dismissDelay = 3000,
 	type = NotificationType.MESSAGE
-) => (dispatch: Function): void => {
+) => (dispatch: (action?: any) => any): void => {
 	dispatch({
 		...notifierShowAction,
 		payload: {
@@ -33,7 +33,7 @@ export const showNotifier = (
 	});
 };
 
-export const hideNotifier = () => (dispatch: Function): void => {
+export const hideNotifier = () => (dispatch: (action?: any) => any): void => {
 	dispatch(notifierHideAction);
 };
 

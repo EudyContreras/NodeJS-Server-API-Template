@@ -27,7 +27,7 @@ export const validateUserCreate = (data: any): any => {
 	});
 
 	return {
-		message: SchemaValidation.CREATE_DATA('user'),
+		message: SchemaValidation.createData('user'),
 		result: schema.validate(data, {
 			abortEarly: false
 		})
@@ -50,7 +50,7 @@ export const validateUserUpdate = (data: any): any => {
 	});
 
 	return {
-		message: SchemaValidation.CREATE_DATA('user'),
+		message: SchemaValidation.createData('user'),
 		result: schema.validate(data, {
 			abortEarly: false
 		})
@@ -71,7 +71,7 @@ export const validatePasswordUpdate = (data: any): any => {
 	});
 
 	return {
-		message: SchemaValidation.CREATE_DATA('user'),
+		message: SchemaValidation.createData('user'),
 		result: schema.validate(data, {
 			abortEarly: false
 		})

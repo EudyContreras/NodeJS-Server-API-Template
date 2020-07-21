@@ -87,8 +87,8 @@ const instance = {
 };
 
 export const defaultEntry = (
-	url,
-	cacheName,
+	url: string,
+	cacheName: string,
 	expiryDate = null,
 	visitFrequency = 0,
 	clearOnError = true

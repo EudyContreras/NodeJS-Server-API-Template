@@ -76,7 +76,7 @@ export async function addPeriodicBackgroundSync(
 	}
 }
 
-export async function addBackgroundSync(syncName): Promise<void> {
+export async function addBackgroundSync(syncName: string): Promise<void> {
 	if (!navigator.serviceWorker) return;
 
 	const registration = await navigator.serviceWorker.ready;

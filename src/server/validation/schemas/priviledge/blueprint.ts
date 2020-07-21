@@ -30,7 +30,7 @@ export const validatePriviledgeCreate = (data: any): any => {
 			);
 			if (result.error) {
 				return {
-					message: SchemaValidation.CREATE_DATA('priviledge'),
+					message: SchemaValidation.createData('priviledge'),
 					result: result
 				};
 			}
@@ -44,7 +44,7 @@ export const validatePriviledgeCreate = (data: any): any => {
 	});
 
 	return {
-		message: SchemaValidation.CREATE_DATA('priviledge'),
+		message: SchemaValidation.createData('priviledge'),
 		result: schema.validate(data, {
 			abortEarly: false
 		})
@@ -59,7 +59,7 @@ export const validatePriviledgeUpdate = (data: any): any => {
 	});
 
 	return {
-		message: SchemaValidation.UPDATE_DATA('priviledge'),
+		message: SchemaValidation.updateData('priviledge'),
 		result: schema.validate(data, {
 			abortEarly: false
 		})
@@ -73,7 +73,7 @@ export const validatePriviledgeQuery = (data: any): any => {
 	});
 
 	return {
-		message: SchemaValidation.FETCH_DATA('priviledge'),
+		message: SchemaValidation.fetchData('priviledge'),
 		result: schema.validate(data, {
 			abortEarly: false
 		})

@@ -11,7 +11,7 @@ export interface DispatchProps {
 	performSearch: (prefix: string) => void;
 }
 
-export const performSearch = (prefix: string) => async (dispatch: Function): Promise<void> => {
+export const performSearch = (prefix: string) => async (dispatch: (action?: any) => any): Promise<void> => {
 	dispatch(loading());
 
 	const service = new SearchService();

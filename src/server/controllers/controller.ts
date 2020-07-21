@@ -31,19 +31,19 @@ abstract class Controller {
 		if (error) {
 			switch (requestAction) {
 				case RequestAction.GET:
-					apiResponse.message = ResponseMessages.NOT_FETCHED(this.name);
+					apiResponse.message = ResponseMessages.notFetched(this.name);
 					break;
 				case RequestAction.GET_ALL:
-					apiResponse.message = ResponseMessages.NOT_FETCHED_ALL(this.name);
+					apiResponse.message = ResponseMessages.notFetchedAll(this.name);
 					break;
 				case RequestAction.CREATE:
-					apiResponse.message = ResponseMessages.NOT_CREATED(this.name);
+					apiResponse.message = ResponseMessages.notCreated(this.name);
 					break;
 				case RequestAction.UPDATE:
-					apiResponse.message = ResponseMessages.NOT_UPDATED(this.name);
+					apiResponse.message = ResponseMessages.notUpdated(this.name);
 					break;
 				case RequestAction.DELETE:
-					apiResponse.message = ResponseMessages.NOT_DELETED(this.name);
+					apiResponse.message = ResponseMessages.notDeleted(this.name);
 					break;
 				default:
 			}

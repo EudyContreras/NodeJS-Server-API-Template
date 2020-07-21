@@ -10,7 +10,7 @@
  * track of the number of iterations for the specified
  * action.
  */
-function performThrottle(action: Function, interval: number, max: number, index: number): void {
+function performThrottle(action: (index: number) => void, interval: number, max: number, index: number): void {
 	if (index >= max) {
 		return;
 	}
@@ -34,6 +34,6 @@ function performThrottle(action: Function, interval: number, max: number, index:
  * track of the number of iterations for the specified
  * action.
  */
-export default function throttle(action: Function, interval: number, max: number, start = 0): void {
+export default function throttle(action: (index: number) => void, interval: number, max: number, start = 0): void {
 	performThrottle(action, interval, max, start);
 }

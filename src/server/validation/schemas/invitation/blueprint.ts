@@ -24,7 +24,7 @@ export const validateInviteCreate = (data: any): any => {
 	});
 
 	return {
-		message: SchemaValidation.CREATE_DATA('invitation'),
+		message: SchemaValidation.createData('invitation'),
 		result: schema.validate(data, {
 			abortEarly: false
 		})
@@ -42,7 +42,7 @@ export const validateInviteUpdate = (data: any): any => {
 	});
 
 	return {
-		message: SchemaValidation.UPDATE_DATA('invitation'),
+		message: SchemaValidation.updateData('invitation'),
 		result: schema.validate(data, {
 			abortEarly: false
 		})
@@ -72,7 +72,7 @@ export const validateInviteQuery = (data: any): any => {
 	}).or('_id', 'email');
 
 	return {
-		message: SchemaValidation.FETCH_DATA('invitation'),
+		message: SchemaValidation.fetchData('invitation'),
 		result: schema.validate(data, {
 			abortEarly: false
 		})
