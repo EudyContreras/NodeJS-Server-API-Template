@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
 import { hours, days, months, seconds } from './helpers/timespan.helper';
-import { logger, handleWebp, filetypePatterns, filetypeCache, isNullOrEmpty, inRange } from './commons';
+import { logger, handleWebp, filetypePatterns, filetypeCache, isHomeOrigin, inRange } from './commons';
 import { syncContent } from './helpers/syncevent.Helper';
 import {
 	staleWhileRevalidate,
@@ -75,9 +75,10 @@ self.addEventListener(events.FETCH, (event: any) => {
 
 	DEBUG_MODE && logger.info(request.destination, request.url);
 
-	if (url.origin === self.location.origin && isNullOrEmpty(url.pathname)) {
+	if (isHomeOrigin(url)) {
 		const cacheName = cacheKeys.STATIC_CACHE;
-		staleWhileRevalidate({ event, request, cacheName, theresholdAge: days(1) });
+		DEBUG_MODE && logger.info('Hit for origin', request);
+		staleWhileRevalidate({ url, event, request, cacheName, theresholdAge: days(1) });
 		return;
 	}
 
@@ -88,7 +89,7 @@ self.addEventListener(events.FETCH, (event: any) => {
 			crossOrigin: true,
 			cacheCondition: ({ response }) => (response && inRange(response?.status, 200, 300)) || false
 		};
-		staleWhileRevalidate({ event, request, cacheName, cachePredicate: cachePredicate, theresholdAge: days(1) });
+		staleWhileRevalidate({ url, event, request, cacheName, cachePredicate: cachePredicate, theresholdAge: days(1) });
 		return;
 	}
 
@@ -98,7 +99,7 @@ self.addEventListener(events.FETCH, (event: any) => {
 			crossOrigin: true,
 			acceptedStatus: [0, 200, 203, 202]
 		};
-		cacheFirst({ event, request, cacheName, cachePredicate });
+		cacheFirst({ url, event, request, cacheName, cachePredicate });
 		return;
 	}
 
@@ -110,7 +111,7 @@ self.addEventListener(events.FETCH, (event: any) => {
 			maxEntries: 100
 		};
 
-		cacheFirst({ event, request, cacheName, quotaOptions, cachePredicate: defaultCachePredicate });
+		cacheFirst({ url, event, request, cacheName, quotaOptions, cachePredicate: defaultCachePredicate });
 		return;
 	}
 
@@ -121,7 +122,7 @@ self.addEventListener(events.FETCH, (event: any) => {
 			maxAgeSeconds: months(2),
 			maxEntries: 30
 		};
-		cacheFirst({ event, request, cacheName, quotaOptions, cachePredicate: defaultCachePredicate });
+		cacheFirst({ url, event, request, cacheName, quotaOptions, cachePredicate: defaultCachePredicate });
 		return;
 	}
 
@@ -132,7 +133,7 @@ self.addEventListener(events.FETCH, (event: any) => {
 			maxAgeSeconds: days(30),
 			maxEntries: 10
 		};
-		cacheFirst({ event, request, cacheName, quotaOptions, cachePredicate: defaultCachePredicate });
+		cacheFirst({ url, event, request, cacheName, quotaOptions, cachePredicate: defaultCachePredicate });
 		return;
 	}
 
@@ -147,7 +148,7 @@ self.addEventListener(events.FETCH, (event: any) => {
 			maxAgeSeconds: hours(6),
 			maxEntries: 8
 		};
-		networkFirst({ event, request, cacheName, quotaOptions, cachePredicate: cachePredicate });
+		networkFirst({ url, event, request, cacheName, quotaOptions, cachePredicate: cachePredicate });
 	}
 });
 

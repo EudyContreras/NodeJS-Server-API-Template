@@ -31,6 +31,7 @@ interface CachePredicate {
 }
 
 interface CacheStragedy {
+	url: URL,
 	event: any;
 	request: Request;
 	cacheName: string;

@@ -1,6 +1,6 @@
 import { clientMessages, cachableTypes, cacheNames, fallbacks, responseType, headers } from './constants';
 import { days } from './helpers/timespan.helper';
-import { logger, inRange, sendMessageToClients } from './commons';
+import { logger, inRange, sendMessageToClients, isHomeOrigin } from './commons';
 import { hasExpired, attachExpiration, getAllEntries, getEntry } from './handlers/localstorage';
 
 const TIMEOUT = 5000;
@@ -124,7 +124,7 @@ function isStale(date: Date, quotaOptions: CacheQuotaOptions | undefined, theres
 }
 
 export function staleWhileRevalidate(stragedy: RevalidateCacheStragedy): void {
-	const { event, request, cacheName, cachePredicate, quotaOptions } = stragedy;
+	const { event, url, request, cacheName, cachePredicate, quotaOptions } = stragedy;
 	const cache = caches.open(cacheName);
 	event.respondWith(
 		cache.then((cache) =>
@@ -137,7 +137,7 @@ export function staleWhileRevalidate(stragedy: RevalidateCacheStragedy): void {
 						if (!isStale(dateParsed, quotaOptions, stragedy.theresholdAge)) return response;
 					}
 					const fetchPromise = fromNetwork(request).then((response) => {
-						if (isValidResponse(request, response, cachePredicate)) {
+						if (isHomeOrigin(url) || isValidResponse(request, response, cachePredicate)) {
 							cache.addToCache(request, response.clone(), cacheName, quotaOptions?.maxEntries);
 						}
 						return response || getFallback(request.destination);

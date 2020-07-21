@@ -31,6 +31,8 @@ export const addDelay = (ms: number) => (): any => new Promise((resolve) => setT
 
 export const isNullOrEmpty = (path: string): boolean => !path || path === '' || path === undefined;
 
+export const isHomeOrigin = (url: URL): boolean => url.origin === self.location.origin && isNullOrEmpty(url.pathname);
+
 export const handleWebp = async <T>(supportCallbacks: WebpSupportCallback<T>): Promise<any> => {
 	if (!self.createImageBitmap) return false;
 

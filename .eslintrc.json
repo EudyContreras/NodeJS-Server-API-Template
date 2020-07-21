@@ -73,6 +73,7 @@
 				"skipTemplates": true
 			}
 		],
+		"arrow-body-style": ["error", "as-needed"],
 		"react/display-name": "off",
 		"function-paren-newline": ["warn", "consistent"],
 		"arrow-body-style": ["warn", "as-needed"],
