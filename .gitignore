@@ -105,5 +105,5 @@ build/
 dist/
 pre/
 ssl/
-
+.lighthouseci/
 src/workers/service-worker.ts

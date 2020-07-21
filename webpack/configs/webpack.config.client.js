@@ -51,7 +51,7 @@ const chunkFileName = isProduction ? 'scripts/[name].chunk.[chunkhash].js' : './
 
 const splitChunk = {
 	splitChunks: {
-		...splitchunks(isProduction).singleChunk
+		...splitchunks().singleChunk
 	}
 };
 

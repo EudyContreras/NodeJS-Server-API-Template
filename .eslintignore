@@ -3,4 +3,6 @@ build/*
 assets/*
 dist/*
 ssl/*
+.lighthouseci/*
+.lighthouseci/**/*.html
 **/*.d.ts

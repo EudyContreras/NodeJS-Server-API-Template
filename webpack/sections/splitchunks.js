@@ -40,7 +40,7 @@ const multiChunk = () => ({
 	}
 });
 
-module.exports = (isProduction) => ({
-	singleChunk: singleChunk(isProduction),
-	multiChunk: multiChunk(isProduction)
+module.exports = () => ({
+	singleChunk: singleChunk(),
+	multiChunk: multiChunk()
 });

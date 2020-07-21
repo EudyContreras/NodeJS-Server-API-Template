@@ -22,6 +22,7 @@
   "scripts": {
     "start": "node build/server.js",
     "cleanup": "rimraf pre dist build",
+    "lighthouse": "lhci autorun",
     "lint-and-test": "eslint 'src/**/*.{js,jsx,ts,tsx}' && echo 'ESLint done checking!'",
     "lint-and-fix": "eslint 'src/**/*.{js,jsx,ts,tsx}' --fix && echo 'ESLint done checking!'",
     "lint-and-prettify": "prettier-eslint --write $PWD/'src/**/*.{js,jsx,ts,tsx}' && echo 'ESLint done checking!'",
@@ -239,6 +240,7 @@
     "install": "^0.13.0",
     "less-loader": "^6.2.0",
     "lint-staged": "^10.2.11",
+    "mkdirp": "^1.0.4",
     "node-sass": "^4.14.1",
     "nodemon": "^1.19.4",
     "nodemon-webpack-plugin": "^4.3.2",
