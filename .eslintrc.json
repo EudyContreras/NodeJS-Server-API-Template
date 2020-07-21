@@ -73,7 +73,6 @@
 				"skipTemplates": true
 			}
 		],
-		"arrow-body-style": ["error", "as-needed"],
 		"react/display-name": "off",
 		"function-paren-newline": ["warn", "consistent"],
 		"arrow-body-style": ["warn", "as-needed"],
@@ -82,7 +81,6 @@
 		"no-use-before-define": "off",
 		"indent": ["error", "tab", { "SwitchCase": 1 }],
 		"@typescript-eslint/semi": ["warn"],
-		"@typescript-eslint/camelcase": "off",
 		"@typescript-eslint/no-implicit-any": "off",
 		"@typescript-eslint/naming-convention": "off",
 		"@typescript-eslint/explicit-module-boundary-types": "off",
@@ -99,7 +97,6 @@
 		{
 			"files": ["*.ts", "*.tsx"],
 			"rules": {
-				"@typescript-eslint/camelcase": "off",
 				"@typescript-eslint/no-explicit-any": "off",
 				"@typescript-eslint/no-unused-vars": "off",
 				"@typescript-eslint/naming-convention": [
