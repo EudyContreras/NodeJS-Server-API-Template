@@ -1,4 +1,4 @@
-const singleChunk = (isProduction) => ({
+const singleChunk = () => ({
 	cacheGroups: {
 		commons: {
 			reuseExistingChunk: true,
@@ -10,7 +10,7 @@ const singleChunk = (isProduction) => ({
 	}
 });
 
-const multiChunk = (isProduction) => ({
+const multiChunk = () => ({
 	chunks: 'all',
 	maxInitialRequests: Infinity,
 	minSize: 0,

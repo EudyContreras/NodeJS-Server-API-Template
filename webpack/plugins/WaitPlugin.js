@@ -5,7 +5,7 @@ const fs = require('fs');
 const anyExist = (filename) => {
 	if (Array.isArray(filename)) {
 		for (const file in filename) {
-			if(!fs.existsSync(file)) {
+			if(!fs.existsSync(file)) {
 				return false;
 			}
 		}
