@@ -19,10 +19,7 @@ export default class EncryptionService {
 	 * @param iterations The number of iterations used for creating the hash salt.
 	 * @returns The hashed and salted password or a generated error.
 	 */
-	public async encryptPassword(
-		password?: string,
-		iterations = config.encryption.SALT_ITERATIONS
-	): Promise<{ hash?: string; error?: any }> {
+	public async encryptPassword(password?: string, iterations = config.encryption.SALT_ITERATIONS): Promise<{ hash?: string; error?: any }> {
 		if (!password) return { error: new Error('The given password is empty or null') };
 
 		try {

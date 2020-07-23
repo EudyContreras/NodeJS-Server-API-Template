@@ -141,11 +141,7 @@ export default class UserService {
 	 * @returns the potential result represented as the user whose password
 	 * was updated or the possible generated error.
 	 */
-	public async updateUserPassword(
-		userId: string,
-		passwordData: any,
-		internal = false
-	): Promise<{ result?: any; error?: any }> {
+	public async updateUserPassword(userId: string, passwordData: any, internal = false): Promise<{ result?: any; error?: any }> {
 		const currentPassword = passwordData.oldPassword;
 		const newPassword = passwordData.newPassword;
 
@@ -252,10 +248,7 @@ export default class UserService {
 		}
 	}
 
-	private async updateInviteStatus(
-		inviteId: string,
-		invitationService: InvitationService
-	): Promise<{ result?: any; error?: any }> {
+	private async updateInviteStatus(inviteId: string, invitationService: InvitationService): Promise<{ result?: any; error?: any }> {
 		const data = {
 			pending: false
 		};

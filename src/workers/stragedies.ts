@@ -45,12 +45,7 @@ const errorResponse = (): Response => {
 	return response;
 };
 
-Cache.prototype.addToCache = async function (
-	request: Request,
-	response: Response | any,
-	cacheName: string,
-	maxEntries?: number
-): Promise<Response> {
+Cache.prototype.addToCache = async function (request: Request, response: Response | any, cacheName: string, maxEntries?: number): Promise<Response> {
 	try {
 		await this.put(request, response);
 		if (maxEntries) {
@@ -94,11 +89,7 @@ export async function fromNetwork(request: Request, timeout: number = TIMEOUT): 
 	});
 }
 
-export async function fromCache(
-	request: Request,
-	cacheName?: string | undefined,
-	cache?: Promise<Cache> | Cache | undefined
-): Promise<Response | any> {
+export async function fromCache(request: Request, cacheName?: string | undefined, cache?: Promise<Cache> | Cache | undefined): Promise<Response | any> {
 	const noMatch = 'no-match-found';
 	if (cache) {
 		if (cache instanceof Cache) {
@@ -175,12 +166,7 @@ export function cacheFirst(stragedy: CacheStragedy): void {
 	);
 }
 
-async function update(
-	cache: Cache,
-	request: Request,
-	cachePredicate: CachePredicate | undefined,
-	cacheName: string
-): Promise<Response | undefined> {
+async function update(cache: Cache, request: Request, cachePredicate: CachePredicate | undefined, cacheName: string): Promise<Response | undefined> {
 	return fromNetwork(request).then((response) => {
 		if (isValidResponse(request, response, cachePredicate)) {
 			return cache.addToCache(request, response.json(), cacheName).then(() => response);

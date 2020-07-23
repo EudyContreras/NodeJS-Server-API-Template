@@ -3,10 +3,8 @@ export const EmailValidation = {
 	INVALID_EMAIL: 'The given email is not valid',
 
 	lengthExceeded: (length: number): string => `The email is too long as it exceeds ${length} characters`,
-	userNameToLong: (length: number): string =>
-		`The given email user name length is lesser than ${length} characters long`,
-	domainTooLong: (length: number): string =>
-		`The given email domain name length is lesser than ${length} characters long`
+	userNameToLong: (length: number): string => `The given email user name length is lesser than ${length} characters long`,
+	domainTooLong: (length: number): string => `The given email domain name length is lesser than ${length} characters long`
 };
 
 export const PasswordValidation = {

@@ -9,11 +9,7 @@ class ApiClient extends Client {
 	private userName?: string = config.api.someapi.auth.USER_NAME;
 	private password?: string = config.api.someapi.auth.PASSWORD;
 
-	public getSomeDataOne(
-		onSuccess: (content: any, data: any, extra: any) => any,
-		onError: (error?: Error) => any,
-		extra?: any
-	): void {
+	public getSomeDataOne(onSuccess: (content: any, data: any, extra: any) => any, onError: (error?: Error) => any, extra?: any): void {
 		const endPoint = this.baseUrl(Endpoints.ENDPOINT_ONE);
 
 		const options = {
@@ -31,12 +27,7 @@ class ApiClient extends Client {
 		this.performRequest(HttpMethod.GET, options, onSuccess, onError, extra);
 	}
 
-	public getSomeDataTwo(
-		argument: string,
-		onSuccess: (content: any, data: any, extra: any) => any,
-		onError: (error?: Error) => any,
-		extra?: any
-	): void {
+	public getSomeDataTwo(argument: string, onSuccess: (content: any, data: any, extra: any) => any, onError: (error?: Error) => any, extra?: any): void {
 		const endPoint = this.baseUrl(Endpoints.ENDPOINT_TWO);
 
 		const query = {
@@ -59,12 +50,7 @@ class ApiClient extends Client {
 		this.performRequest(HttpMethod.GET, options, onSuccess, onError, extra);
 	}
 
-	public getSomeDataThree(
-		argument: string,
-		onSuccess: (content: any, data: any, extra: any) => any,
-		onError: (error?: Error) => any,
-		extra?: any
-	): void {
+	public getSomeDataThree(argument: string, onSuccess: (content: any, data: any, extra: any) => any, onError: (error?: Error) => any, extra?: any): void {
 		const endPoint = this.baseUrl(Endpoints.endpointThree(argument));
 
 		const options = {

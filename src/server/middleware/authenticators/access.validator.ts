@@ -7,9 +7,7 @@ import { AccessResponse } from '../../responses/request.response';
 import { AccessRoleValidation } from '../../messages/message.validation';
 import { Response, NextFunction } from 'express';
 
-function allow(
-	...allowed: string[]
-): (request: any, response: Response, next: NextFunction) => Promise<void | Response> {
+function allow(...allowed: string[]): (request: any, response: Response, next: NextFunction) => Promise<void | Response> {
 	const service = new PermissionsService();
 
 	const isUserAllowed = async (roleCode: string, request: any): Promise<any> => {

@@ -6,12 +6,7 @@ export const DOCUMENTATION_SECTION_SANDBOX_FIXED_BOTTOM = 'DOCUMENTATION_SECTION
 export const DOCUMENTATION_SECTION_SANDBOX_OFFSET_BOTTOM = 'DOCUMENTATION_SECTION_SANDBOX_OFFSET_BOTTOM';
 
 export interface DispatchProps {
-	setAll: (
-		sidebarFixed: boolean,
-		sandboxFixedTop: boolean,
-		sandboxFixedBottom: boolean,
-		sandboxOffsetBottom: number
-	) => any;
+	setAll: (sidebarFixed: boolean, sandboxFixedTop: boolean, sandboxFixedBottom: boolean, sandboxOffsetBottom: number) => any;
 	setAllFixed: (sidebarFixed: boolean, sandboxFixed: boolean) => any;
 	setSidebarFixed: (fixed: boolean) => void;
 	setSandboxFixedTop: (fixed: boolean) => void;
@@ -19,21 +14,16 @@ export interface DispatchProps {
 	setSandboxOffsetBottom: (offset: number) => void;
 }
 
-export const setAll = (
-	sidebarFixed: boolean,
-	sandboxFixedTop: boolean,
-	sandboxFixedBottom: boolean,
-	sandboxOffsetBottom: number
-) => (dispatch: (action?: any) => any): void => {
+export const setAll = (sidebarFixed: boolean, sandboxFixedTop: boolean, sandboxFixedBottom: boolean, sandboxOffsetBottom: number) => (
+	dispatch: (action?: any) => any
+): void => {
 	dispatch({
 		type: DOCUMENTATION_SECTION_ALL,
 		payload: { sidebarFixed, sandboxFixedTop, sandboxFixedBottom, sandboxOffsetBottom }
 	});
 };
 
-export const setAllFixed = (sidebarFixed: boolean, sandboxFixed: boolean) => (
-	dispatch: (action?: any) => any
-): void => {
+export const setAllFixed = (sidebarFixed: boolean, sandboxFixed: boolean) => (dispatch: (action?: any) => any): void => {
 	dispatch({
 		type: DOCUMENTATION_SECTION_ALL_FIXED,
 		payload: { sidebarFixed, sandboxFixed }

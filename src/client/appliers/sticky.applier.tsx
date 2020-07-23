@@ -11,12 +11,7 @@ export class ScrollListener implements IScrollListener {
 	public sticker: JQuery<HTMLElement | Element>;
 	public anchor?: JQuery<HTMLElement | Element>;
 
-	constructor(
-		sticker: HTMLElement | Element,
-		anchor?: HTMLElement | Element | null,
-		topMargin = 0,
-		onFixed?: (fixed: boolean) => void
-	) {
+	constructor(sticker: HTMLElement | Element, anchor?: HTMLElement | Element | null, topMargin = 0, onFixed?: (fixed: boolean) => void) {
 		this.sticker = $(sticker);
 		this.top = this.sticker.offset()!.top - topMargin;
 		this.margin = topMargin;

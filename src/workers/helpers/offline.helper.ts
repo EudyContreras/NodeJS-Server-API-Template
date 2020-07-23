@@ -7,8 +7,7 @@ export const watchOnlineStatus = (): void => {
 			if (navigator.onLine) {
 				connectionStatus.innerHTML = 'You are currently online!';
 			} else {
-				connectionStatus.innerHTML =
-					'You are currently offline. Any requests made will be queued and synced as soon as you are connected again.';
+				connectionStatus.innerHTML = 'You are currently offline. Any requests made will be queued and synced as soon as you are connected again.';
 			}
 		}
 	};

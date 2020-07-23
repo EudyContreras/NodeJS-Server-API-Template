@@ -38,10 +38,7 @@ const resources = [
 		from: `${sourceLocation}/client/resources/robots.txt`,
 		to: ''
 	}, {
-		from: `${sourceLocation}/client/resources/styles/material.css`,
-		to: 'styles/'
-	}, {
-		from: `${sourceLocation}/client/resources/styles/roboto.css`,
+		from: `${sourceLocation}/client/resources/styles/fonts.css`,
 		to: 'styles/'
 	}
 ];
@@ -51,7 +48,7 @@ const chunkFileName = isProduction ? 'scripts/[name].chunk.[chunkhash].js' : './
 
 const splitChunk = {
 	splitChunks: {
-		...splitchunks(isProduction).singleChunk
+		...splitchunks().singleChunk
 	}
 };
 
@@ -101,7 +98,7 @@ const plugins = [
 		}
 	}),
 	new DuplicatePackageCheckerPlugin(),
-	new BundleAnalyzerPlugin({ token: process.env.BUNDLE_ANALYZER_TOKEN }),
+	// new BundleAnalyzerPlugin({ token: process.env.BUNDLE_ANALYZER_TOKEN }),
 	new CleanWebpackPlugin({ cleanStaleWebpackAssets: isProduction }),
 	new CopyPlugin(resources),
 	new HtmlWebpackPlugin({
