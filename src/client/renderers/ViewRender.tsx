@@ -58,27 +58,21 @@ class IndexViewRenderer extends ViewRenderer {
 		}
 	};
 
-	private renderApplication = async (
-		req: Request,
-		res: Response,
-		cssInjector: (action?: any) => any
-	): Promise<void> => {
+	private renderApplication = async (req: Request, res: Response, cssInjector: (...styles: any[]) => void): Promise<void> => {
 		const extractor = new ChunkExtractor({ statsFile: statsFile, entrypoints: ['app'] });
 
 		const context = {};
 		const content = extractor.collectChunks(application(req.url, this.store, context, cssInjector));
 
-		const entryPoints = extractor.getMainAssets();
-
-		const styles = entryPoints.filter((x) => x.url.endsWith('.css'));
-		const scripts = entryPoints.filter((x) => x.url.endsWith('.js'));
+		const scriptTags = extractor.getScriptTags();
+		const styleTags = extractor.getStyleTags();
 
 		const props = {
 			css: this.css,
 			html: config.html,
 			state: this.state,
-			styles: styles,
-			scripts: scripts,
+			styles: styleTags,
+			scripts: scriptTags,
 			context: context,
 			enableSW: process.env.USE_SW === 'true',
 			clientSideRendered: process.env.CSR === 'true',
@@ -93,7 +87,7 @@ class IndexViewRenderer extends ViewRenderer {
 		res.render(config.layout.FULL, props);
 	};
 
-	private renderShell = async (req: Request, res: Response, cssInjector: (action?: any) => any): Promise<void> => {
+	private renderShell = async (req: Request, res: Response, cssInjector: (...styles: any[]) => void): Promise<void> => {
 		const context = {};
 		const content = application(req.url, this.store, context, cssInjector);
 

@@ -5,5 +5,5 @@ addons:
 before_install:
   - npm install -g @lhci/cli@0.4.x
 script:
-  - npm run build
+  - npm run build:dev
   - lhci autorun
