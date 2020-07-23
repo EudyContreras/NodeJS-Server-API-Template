@@ -6,9 +6,9 @@ import {
 	NAV_BAR_MENU_MOUSE_INSIDE
 } from '../../actions/common/navigation.action';
 
-export const SOURCE = NAV_BAR_MENU;
-
 import IAction from '../../actions/action';
+
+export const SOURCE = NAV_BAR_MENU;
 
 export interface INavigationTab {
 	hovered: boolean;

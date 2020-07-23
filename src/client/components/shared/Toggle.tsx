@@ -4,7 +4,7 @@ import { join } from '../utililties/react.utils';
 interface Props {
 	styling: any;
 	active: boolean;
-	onToggle: ((active: boolean) => void);
+	onToggle: (active: boolean) => void;
 }
 
 interface State {
@@ -12,7 +12,6 @@ interface State {
 }
 
 export default class Toggle extends React.PureComponent<Props, State> {
-	
 	constructor(props: any) {
 		super(props);
 		this.state = {
@@ -28,6 +27,6 @@ export default class Toggle extends React.PureComponent<Props, State> {
 			classes.push(style.toggleActive);
 		}
 
-		return (<input className={join(...classes)} type='checkbox'></input>);
+		return <input className={join(...classes)} type="checkbox"></input>;
 	};
-} 
+}

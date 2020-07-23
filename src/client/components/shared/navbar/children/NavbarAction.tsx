@@ -4,7 +4,7 @@ import rippleEffect from '../../../../appliers/ripple.applier';
 import FontFaceObserver from 'fontfaceobserver';
 import { connect } from 'react-redux';
 import { join } from '../../../../appliers/style.applier';
-import * as InstallHelper from '../../../../scriptsjs/helpers/intallation.helper';
+import * as InstallHelper from '../../../../../workers/helpers/intallation.helper';
 import { DispatchProps, Dispatchers } from '../../../../actions/common/application/appdata.action';
 
 interface StateProps {
@@ -14,7 +14,6 @@ interface StateProps {
 type Props = StateProps & DispatchProps & any;
 
 class Action extends React.PureComponent<Props, any> {
-
 	constructor(props: any) {
 		super(props);
 		this.state = {
@@ -25,14 +24,17 @@ class Action extends React.PureComponent<Props, any> {
 	public componentDidMount = (): void => {
 		const font = new FontFaceObserver('Material Icons');
 
-		font.load().then( () => {
-			this.setState({
-				iconLoaded: true
+		font
+			.load()
+			.then(() => {
+				this.setState({
+					iconLoaded: true
+				});
+			})
+			.catch((error) => {
+				console.log('Something went wrong!', error);
 			});
-		}).catch((error) => {
-			console.log('Something went wrong!', error);
-		});
-		
+
 		if (!InstallHelper.hasInstallInfo()) {
 			this.props.setInstalled(true);
 		} else {
@@ -70,7 +72,7 @@ class Action extends React.PureComponent<Props, any> {
 		}
 
 		return (
-			<div onClick={this.initInstallation} className={join(...classes)} title='install'>
+			<div onClick={this.initInstallation} className={join(...classes)} title="install">
 				<i className={join(...iconsClasses)}>{icon}</i>
 			</div>
 		);

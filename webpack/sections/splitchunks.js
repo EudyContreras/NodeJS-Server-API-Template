@@ -1,16 +1,16 @@
-const singleShunk = {
+const singleChunk = () => ({
 	cacheGroups: {
 		commons: {
 			reuseExistingChunk: true,
-			enforce: true,
 			chunks: 'all',
+			enforce: true,
 			test: /[\\/]node_modules[\\/]/,
 			name: 'vendors'
 		}
 	}
-};
+});
 
-const multiChunk = {
+const multiChunk = () => ({
 	chunks: 'all',
 	maxInitialRequests: Infinity,
 	minSize: 0,
@@ -38,9 +38,9 @@ const multiChunk = {
 			}
 		}
 	}
-};
+});
 
-module.exports = {
-	singleShunk,
-	multiChunk
-};
+module.exports = () => ({
+	singleChunk: singleChunk(),
+	multiChunk: multiChunk()
+});

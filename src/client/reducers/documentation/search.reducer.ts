@@ -1,15 +1,10 @@
-import {
-	SEARCH_ACTION_SOURCE,
-	LOADING_SEARCH_RESULTS,
-	SEARCH_ERROR,
-	SEARCH_RESULTS
-} from '../../actions/documentation/search.action';
+import { SEARCH_ACTION_SOURCE, LOADING_SEARCH_RESULTS, SEARCH_ERROR, SEARCH_RESULTS } from '../../actions/documentation/search.action';
 
 import IAction from '../../actions/action';
 
 export const SOURCE = SEARCH_ACTION_SOURCE;
 
-export interface ISearchEvent{
+export interface ISearchEvent {
 	searchResults: {
 		prefix: string;
 		results: string[];
@@ -49,6 +44,7 @@ export default function (state = InitialState, action: IAction): ISearchEvent {
 				error: action.payload
 			};
 		}
-		default: return state;
+		default:
+			return state;
 	}
 }

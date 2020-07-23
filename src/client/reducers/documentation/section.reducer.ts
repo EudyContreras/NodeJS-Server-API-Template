@@ -7,9 +7,7 @@ import {
 	DOCUMENTATION_SECTION_SANDBOX_OFFSET_BOTTOM
 } from '../../actions/documentation/section.action';
 
-import {
-	NAV_BAR_MENU_ANCHORED
-} from '../../actions/common/navigation.action';
+import { NAV_BAR_MENU_ANCHORED } from '../../actions/common/navigation.action';
 
 import * as Navbar from '../common/navigation.reducer';
 import * as Sidebar from '../documentation/sidebar.reducer';
@@ -17,11 +15,7 @@ import * as Sandbox from '../documentation/sandbox.reducer';
 
 import IAction from '../../actions/action';
 
-export const children = [
-	Navbar.SOURCE,
-	Sidebar.SOURCE,
-	Sandbox.SOURCE
-];
+export const children = [Navbar.SOURCE, Sidebar.SOURCE, Sandbox.SOURCE];
 
 export interface IDocumentationArea {
 	siblingA: boolean;
@@ -38,7 +32,6 @@ export const InitialState: IDocumentationArea = {
 };
 
 export default (state = InitialState, action: IAction): IDocumentationArea => {
-
 	if (action.from) return handleSubReducers(state, action);
 	switch (action.type) {
 		case DOCUMENTATION_SECTION_ALL: {
@@ -107,7 +100,8 @@ export default (state = InitialState, action: IAction): IDocumentationArea => {
 				}
 			};
 		}
-		default: return state;
+		default:
+			return state;
 	}
 };
 
@@ -116,7 +110,7 @@ const handleSubReducers = (state = InitialState, action: IAction): IDocumentatio
 		case Navbar.SOURCE: {
 			return handleNavbarActions(state, action);
 		}
-		case Sidebar.children.find(x => x === action.from): {
+		case Sidebar.children.find((x) => x === action.from): {
 			return {
 				...state,
 				sidebar: Sidebar.default(state.sidebar, action)
@@ -129,8 +123,9 @@ const handleSubReducers = (state = InitialState, action: IAction): IDocumentatio
 			};
 		}
 
-		default: return state;
-	};
+		default:
+			return state;
+	}
 };
 
 const handleNavbarActions = (state = InitialState, action: IAction): IDocumentationArea => {
@@ -148,6 +143,7 @@ const handleNavbarActions = (state = InitialState, action: IAction): IDocumentat
 				}
 			};
 		}
-		default: return state;
+		default:
+			return state;
 	}
 };

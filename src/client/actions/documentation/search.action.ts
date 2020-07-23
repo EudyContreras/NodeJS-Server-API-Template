@@ -11,7 +11,7 @@ export interface DispatchProps {
 	performSearch: (prefix: string) => void;
 }
 
-export const performSearch = (prefix: string) => async (dispatch: Function): Promise<void> => {
+export const performSearch = (prefix: string) => async (dispatch: (action?: any) => any): Promise<void> => {
 	dispatch(loading());
 
 	const service = new SearchService();
@@ -23,27 +23,21 @@ export const performSearch = (prefix: string) => async (dispatch: Function): Pro
 	dispatch(searchEvent(result));
 };
 
-export const loading = (): IAction => {
-	return {
-		from: SEARCH_ACTION_SOURCE,
-		type: LOADING_SEARCH_RESULTS
-	};
-};
+export const loading = (): IAction => ({
+	from: SEARCH_ACTION_SOURCE,
+	type: LOADING_SEARCH_RESULTS
+});
 
-export const onError = (error: any): IAction => {
-	return {
-		from: SEARCH_ACTION_SOURCE,
-		type: SEARCH_ERROR,
-		payload: error
-	};
-};
+export const onError = (error: any): IAction => ({
+	from: SEARCH_ACTION_SOURCE,
+	type: SEARCH_ERROR,
+	payload: error
+});
 
-export const searchEvent = (result: any): IAction => {
-	return {
-		from: SEARCH_ACTION_SOURCE,
-		type: SEARCH_RESULTS,
-		payload: result
-	};
-};
+export const searchEvent = (result: any): IAction => ({
+	from: SEARCH_ACTION_SOURCE,
+	type: SEARCH_RESULTS,
+	payload: result
+});
 
 export const Dispatchers = { performSearch };

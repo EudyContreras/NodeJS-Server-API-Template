@@ -1,139 +1,76 @@
 {
   "files": {
     "ico": [
-      {
-        "name": "favicon.ico",
-        "path": "images/favicon.ico"
-      }
+      "images/favicon.ico"
     ],
     "png": [
-      {
-        "name": "touch-icon.png",
-        "path": "images/icons/touch-icon-120x120.png"
-      },
-      {
-        "name": "touch-icon.png",
-        "path": "images/icons/touch-icon-128x128.png"
-      },
-      {
-        "name": "touch-icon.png",
-        "path": "images/icons/touch-icon-144x144.png"
-      },
-      {
-        "name": "touch-icon.png",
-        "path": "images/icons/touch-icon-152x152.png"
-      },
-      {
-        "name": "touch-icon.png",
-        "path": "images/icons/touch-icon-180x180.png"
-      },
-      {
-        "name": "touch-icon.png",
-        "path": "images/icons/touch-icon-192x192.png"
-      },
-      {
-        "name": "touch-icon.png",
-        "path": "images/icons/touch-icon-257x257.png"
-      },
-      {
-        "name": "touch-icon.png",
-        "path": "images/icons/touch-icon-384x384.png"
-      },
-      {
-        "name": "touch-icon.png",
-        "path": "images/icons/touch-icon-512x512.png"
-      },
-      {
-        "name": "touch-icon.png",
-        "path": "images/icons/touch-icon-72x72.png"
-      },
-      {
-        "name": "touch-icon.png",
-        "path": "images/icons/touch-icon-76x76.png"
-      },
-      {
-        "name": "touch-icon.png",
-        "path": "images/icons/touch-icon-96x96.png"
-      }
+      "images/icons/touch-icon-120x120.png",
+      "images/icons/touch-icon-128x128.png",
+      "images/icons/touch-icon-144x144.png",
+      "images/icons/touch-icon-152x152.png",
+      "images/icons/touch-icon-180x180.png",
+      "images/icons/touch-icon-192x192.png",
+      "images/icons/touch-icon-257x257.png",
+      "images/icons/touch-icon-384x384.png",
+      "images/icons/touch-icon-512x512.png",
+      "images/icons/touch-icon-72x72.png",
+      "images/icons/touch-icon-76x76.png",
+      "images/icons/touch-icon-96x96.png"
     ],
     "webp": [
-      {
-        "name": "touch-icon-120x120.webp",
-        "path": "images/icons/touch-icon-120x120.webp"
-      },
-      {
-        "name": "touch-icon-128x128.webp",
-        "path": "images/icons/touch-icon-128x128.webp"
-      },
-      {
-        "name": "touch-icon-144x144.webp",
-        "path": "images/icons/touch-icon-144x144.webp"
-      },
-      {
-        "name": "touch-icon-152x152.webp",
-        "path": "images/icons/touch-icon-152x152.webp"
-      },
-      {
-        "name": "touch-icon-180x180.webp",
-        "path": "images/icons/touch-icon-180x180.webp"
-      },
-      {
-        "name": "touch-icon-192x192.webp",
-        "path": "images/icons/touch-icon-192x192.webp"
-      },
-      {
-        "name": "touch-icon-257x257.webp",
-        "path": "images/icons/touch-icon-257x257.webp"
-      },
-      {
-        "name": "touch-icon-384x384.webp",
-        "path": "images/icons/touch-icon-384x384.webp"
-      },
-      {
-        "name": "touch-icon-512x512.webp",
-        "path": "images/icons/touch-icon-512x512.webp"
-      },
-      {
-        "name": "touch-icon-72x72.webp",
-        "path": "images/icons/touch-icon-72x72.webp"
-      },
-      {
-        "name": "touch-icon-76x76.webp",
-        "path": "images/icons/touch-icon-76x76.webp"
-      },
-      {
-        "name": "touch-icon-96x96.webp",
-        "path": "images/icons/touch-icon-96x96.webp"
-      }
+      "images/icons/touch-icon-120x120.webp",
+      "images/icons/touch-icon-128x128.webp",
+      "images/icons/touch-icon-144x144.webp",
+      "images/icons/touch-icon-152x152.webp",
+      "images/icons/touch-icon-180x180.webp",
+      "images/icons/touch-icon-192x192.webp",
+      "images/icons/touch-icon-257x257.webp",
+      "images/icons/touch-icon-384x384.webp",
+      "images/icons/touch-icon-512x512.webp",
+      "images/icons/touch-icon-72x72.webp",
+      "images/icons/touch-icon-76x76.webp",
+      "images/icons/touch-icon-96x96.webp"
+    ],
+    "br": [
+      "loadable-stats.json.br",
+      "scripts/app.bundle.0c95a499de41faa7a40b.js.br",
+      "scripts/vendors.chunk.55a8cf11aa16c4e12710.js.br"
+    ],
+    "gz": [
+      "loadable-stats.json.gz",
+      "scripts/app.bundle.0c95a499de41faa7a40b.js.gz",
+      "scripts/vendors.chunk.55a8cf11aa16c4e12710.js.gz"
     ],
     "json": [
-      {
-        "name": "manifest.json",
-        "path": "manifest.json"
-      }
+      "manifest.json"
     ],
     "html": [
-      {
-        "name": "offline.html",
-        "path": "offline.html"
-      }
+      "offline.html"
     ],
     "txt": [
-      {
-        "name": "robots.txt",
-        "path": "robots.txt"
-      }
+      "robots.txt"
     ],
     "css": [
-      {
-        "name": "material.css",
-        "path": "styles/material.css"
-      }
+      "styles/fonts.css"
     ]
   },
-  "styles": [],
-  "scripts": [
-    "scripts/vendors.3111b383724245c29563.chunk.js",
-    "scripts/main.fe75177c528eb0773c7e.js"
-  ]
+  "styles": {
+    "uncompressed": [],
+    "brotliCompressed": [],
+    "gzipCompressed": []
+  },
+  "scripts": {
+    "uncompressed": [
+      "scripts/vendors.chunk.55a8cf11aa16c4e12710.js",
+      "scripts/app.bundle.0c95a499de41faa7a40b.js"
+    ],
+    "brotliCompressed": [
+      "scripts/app.bundle.0c95a499de41faa7a40b.js.br",
+      "scripts/vendors.chunk.55a8cf11aa16c4e12710.js.br"
+    ],
+    "gzipCompressed": [
+      "scripts/app.bundle.0c95a499de41faa7a40b.js.gz",
+      "scripts/vendors.chunk.55a8cf11aa16c4e12710.js.gz"
+    ]
+  }
 }

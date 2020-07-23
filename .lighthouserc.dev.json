@@ -1,0 +1,42 @@
+  
+  {
+  "ci": {
+    "collect": {
+      "url": [
+        "http://localhost:8080/"
+      ],
+      "headful": false,
+      "numberOfRuns": 3,
+      "startServerCommand": "npm run build:dev:start",
+      "startServerReadyPattern": "ready on",
+      "skipAudits": ["redirects-http", "uses-http2", "unused-javascript", "content-width", "first-meaningful-paint"],
+      "settings": {
+        "chromeFlags": "--no-sandbox",
+        "emulatedFormFactor": "desktop"
+      }
+    },
+    "upload": {
+      "target": "temporary-public-storage"
+    },
+    "assert": {
+      "preset": "lighthouse:recommended",
+      "assertions": {
+        "categories:performance": "off",
+        "categories:accessibility": ["error", {"minScore": 0.9}],
+        "categories:best-practices": ["error", {"minScore": 0.9}],
+        "categories:seo": ["error", {"minScore": 0.9}],
+        "categories:pwa": ["error", {"minScore": 0.9}],
+        "first-contentful-paint": ["error", {"maxNumericValue": 3000}],
+        "interactive": ["error", {"maxNumericValue": 8000}],
+        "performance-budget": "off",
+        "largest-contentful-paint": "off",
+        "render-blocking-resources": "off",
+        "uses-rel-preconnect": "off",
+        "unused-javascript": "off",
+        "redirects-http": "off",
+        "uses-http2": "off",
+        "content-width": "off"
+      }
+    }
+  }
+}

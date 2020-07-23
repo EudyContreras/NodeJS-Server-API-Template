@@ -2,17 +2,25 @@
   "errors": [],
   "warnings": [],
   "version": "4.43.0",
-  "hash": "ce40777d1f4f96c18c7a",
+  "hash": "b152d125d2ba3a1fc598",
   "publicPath": "/",
   "outputPath": "/Users/personal/Documents/Repositories/NodeJS-Server-API-Template/build/public",
   "assetsByChunkName": {
-    "sections-administration-AdminPage": "scripts/sections-administration-AdminPage.59fabf4120d565686400.chunk.js",
-    "sections-applications-ApplicationsPage": "scripts/sections-applications-ApplicationsPage.f138f757f462372aeea1.chunk.js",
-    "sections-information-AboutPage": "scripts/sections-information-AboutPage.6a7125ecedd674e909ed.chunk.js",
-    "main": "scripts/main.fe75177c528eb0773c7e.js",
-    "vendors": "scripts/vendors.3111b383724245c29563.chunk.js"
+    "sections-administration-AdminPage": "scripts/sections-administration-AdminPage.chunk.6d5e465bde31f5ee2079.js",
+    "sections-applications-ApplicationsPage": "scripts/sections-applications-ApplicationsPage.chunk.5910a063d0b618d0daf2.js",
+    "sections-information-AboutPage": "scripts/sections-information-AboutPage.chunk.8a89eeb534ee7a48b1b9.js",
+    "app": "scripts/app.bundle.0c95a499de41faa7a40b.js",
+    "vendors": "scripts/vendors.chunk.55a8cf11aa16c4e12710.js"
   },
   "assets": [
+    {
+      "name": "../../build/public/service-worker.js",
+      "size": 19019,
+      "chunks": [],
+      "chunkNames": [],
+      "info": {},
+      "emitted": false
+    },
     {
       "name": "images/favicon.ico",
       "size": 16958,
@@ -215,7 +223,7 @@
     },
     {
       "name": "manifest.json",
-      "size": 1938,
+      "size": 1976,
       "chunks": [],
       "chunkNames": [],
       "info": {},
@@ -223,7 +231,7 @@
     },
     {
       "name": "offline.html",
-      "size": 712,
+      "size": 718,
       "chunks": [],
       "chunkNames": [],
       "info": {},
@@ -238,13 +246,13 @@
       "emitted": false
     },
     {
-      "name": "scripts/main.fe75177c528eb0773c7e.js",
-      "size": 66127,
+      "name": "scripts/app.bundle.0c95a499de41faa7a40b.js",
+      "size": 70706,
       "chunks": [
         3
       ],
       "chunkNames": [
-        "main"
+        "app"
       ],
       "info": {
         "immutable": true
@@ -252,24 +260,8 @@
       "emitted": false
     },
     {
-      "name": "scripts/main.fe75177c528eb0773c7e.js.br",
-      "size": 17673,
-      "chunks": [],
-      "chunkNames": [],
-      "info": {},
-      "emitted": false
-    },
-    {
-      "name": "scripts/main.fe75177c528eb0773c7e.js.gz",
-      "size": 20512,
-      "chunks": [],
-      "chunkNames": [],
-      "info": {},
-      "emitted": false
-    },
-    {
-      "name": "scripts/sections-administration-AdminPage.59fabf4120d565686400.chunk.js",
-      "size": 840,
+      "name": "scripts/sections-administration-AdminPage.chunk.6d5e465bde31f5ee2079.js",
+      "size": 850,
       "chunks": [
         0
       ],
@@ -282,8 +274,8 @@
       "emitted": false
     },
     {
-      "name": "scripts/sections-applications-ApplicationsPage.f138f757f462372aeea1.chunk.js",
-      "size": 845,
+      "name": "scripts/sections-applications-ApplicationsPage.chunk.5910a063d0b618d0daf2.js",
+      "size": 855,
       "chunks": [
         1
       ],
@@ -296,8 +288,8 @@
       "emitted": false
     },
     {
-      "name": "scripts/sections-information-AboutPage.6a7125ecedd674e909ed.chunk.js",
-      "size": 839,
+      "name": "scripts/sections-information-AboutPage.chunk.8a89eeb534ee7a48b1b9.js",
+      "size": 849,
       "chunks": [
         2
       ],
@@ -310,8 +302,8 @@
       "emitted": false
     },
     {
-      "name": "scripts/vendors.3111b383724245c29563.chunk.js",
-      "size": 207776,
+      "name": "scripts/vendors.chunk.55a8cf11aa16c4e12710.js",
+      "size": 208311,
       "chunks": [
         4
       ],
@@ -324,24 +316,8 @@
       "emitted": false
     },
     {
-      "name": "scripts/vendors.3111b383724245c29563.chunk.js.br",
-      "size": 56111,
-      "chunks": [],
-      "chunkNames": [],
-      "info": {},
-      "emitted": false
-    },
-    {
-      "name": "scripts/vendors.3111b383724245c29563.chunk.js.gz",
-      "size": 64892,
-      "chunks": [],
-      "chunkNames": [],
-      "info": {},
-      "emitted": false
-    },
-    {
-      "name": "styles/material.css",
-      "size": 612,
+      "name": "styles/fonts.css",
+      "size": 3054,
       "chunks": [],
       "chunkNames": [],
       "info": {},
@@ -350,14 +326,14 @@
   ],
   "filteredAssets": 0,
   "entrypoints": {
-    "main": {
+    "app": {
       "chunks": [
         4,
         3
       ],
       "assets": [
-        "scripts/vendors.3111b383724245c29563.chunk.js",
-        "scripts/main.fe75177c528eb0773c7e.js"
+        "scripts/vendors.chunk.55a8cf11aa16c4e12710.js",
+        "scripts/app.bundle.0c95a499de41faa7a40b.js"
       ],
       "children": {
         "prefetch": [
@@ -367,7 +343,7 @@
               0
             ],
             "assets": [
-              "scripts/sections-administration-AdminPage.59fabf4120d565686400.chunk.js"
+              "scripts/sections-administration-AdminPage.chunk.6d5e465bde31f5ee2079.js"
             ]
           },
           {
@@ -376,7 +352,7 @@
               1
             ],
             "assets": [
-              "scripts/sections-applications-ApplicationsPage.f138f757f462372aeea1.chunk.js"
+              "scripts/sections-applications-ApplicationsPage.chunk.5910a063d0b618d0daf2.js"
             ]
           },
           {
@@ -385,29 +361,29 @@
               2
             ],
             "assets": [
-              "scripts/sections-information-AboutPage.6a7125ecedd674e909ed.chunk.js"
+              "scripts/sections-information-AboutPage.chunk.8a89eeb534ee7a48b1b9.js"
             ]
           }
         ]
       },
       "childAssets": {
         "prefetch": [
-          "scripts/sections-administration-AdminPage.59fabf4120d565686400.chunk.js",
-          "scripts/sections-applications-ApplicationsPage.f138f757f462372aeea1.chunk.js",
-          "scripts/sections-information-AboutPage.6a7125ecedd674e909ed.chunk.js"
+          "scripts/sections-administration-AdminPage.chunk.6d5e465bde31f5ee2079.js",
+          "scripts/sections-applications-ApplicationsPage.chunk.5910a063d0b618d0daf2.js",
+          "scripts/sections-information-AboutPage.chunk.8a89eeb534ee7a48b1b9.js"
         ]
       }
     }
   },
   "namedChunkGroups": {
-    "main": {
+    "app": {
       "chunks": [
         4,
         3
       ],
       "assets": [
-        "scripts/vendors.3111b383724245c29563.chunk.js",
-        "scripts/main.fe75177c528eb0773c7e.js"
+        "scripts/vendors.chunk.55a8cf11aa16c4e12710.js",
+        "scripts/app.bundle.0c95a499de41faa7a40b.js"
       ],
       "children": {
         "prefetch": [
@@ -417,7 +393,7 @@
               0
             ],
             "assets": [
-              "scripts/sections-administration-AdminPage.59fabf4120d565686400.chunk.js"
+              "scripts/sections-administration-AdminPage.chunk.6d5e465bde31f5ee2079.js"
             ]
           },
           {
@@ -426,7 +402,7 @@
               1
             ],
             "assets": [
-              "scripts/sections-applications-ApplicationsPage.f138f757f462372aeea1.chunk.js"
+              "scripts/sections-applications-ApplicationsPage.chunk.5910a063d0b618d0daf2.js"
             ]
           },
           {
@@ -435,16 +411,16 @@
               2
             ],
             "assets": [
-              "scripts/sections-information-AboutPage.6a7125ecedd674e909ed.chunk.js"
+              "scripts/sections-information-AboutPage.chunk.8a89eeb534ee7a48b1b9.js"
             ]
           }
         ]
       },
       "childAssets": {
         "prefetch": [
-          "scripts/sections-administration-AdminPage.59fabf4120d565686400.chunk.js",
-          "scripts/sections-applications-ApplicationsPage.f138f757f462372aeea1.chunk.js",
-          "scripts/sections-information-AboutPage.6a7125ecedd674e909ed.chunk.js"
+          "scripts/sections-administration-AdminPage.chunk.6d5e465bde31f5ee2079.js",
+          "scripts/sections-applications-ApplicationsPage.chunk.5910a063d0b618d0daf2.js",
+          "scripts/sections-information-AboutPage.chunk.8a89eeb534ee7a48b1b9.js"
         ]
       }
     },
@@ -453,7 +429,7 @@
         1
       ],
       "assets": [
-        "scripts/sections-applications-ApplicationsPage.f138f757f462372aeea1.chunk.js"
+        "scripts/sections-applications-ApplicationsPage.chunk.5910a063d0b618d0daf2.js"
       ],
       "children": {},
       "childAssets": {}
@@ -463,7 +439,7 @@
         2
       ],
       "assets": [
-        "scripts/sections-information-AboutPage.6a7125ecedd674e909ed.chunk.js"
+        "scripts/sections-information-AboutPage.chunk.8a89eeb534ee7a48b1b9.js"
       ],
       "children": {},
       "childAssets": {}
@@ -473,7 +449,7 @@
         0
       ],
       "assets": [
-        "scripts/sections-administration-AdminPage.59fabf4120d565686400.chunk.js"
+        "scripts/sections-administration-AdminPage.chunk.6d5e465bde31f5ee2079.js"
       ],
       "children": {},
       "childAssets": {}
@@ -543,6 +519,63 @@
       },
       "children": [],
       "name": "HtmlWebpackCompiler"
+    },
+    {
+      "errors": [],
+      "warnings": [],
+      "publicPath": "/",
+      "outputPath": "/Users/personal/Documents/Repositories/NodeJS-Server-API-Template/build/public",
+      "assetsByChunkName": {
+        "InjectManifest": "../../build/public/service-worker.js"
+      },
+      "assets": [
+        {
+          "name": "../../build/public/service-worker.js",
+          "size": 19019,
+          "chunks": [
+            0
+          ],
+          "chunkNames": [
+            "InjectManifest"
+          ],
+          "info": {},
+          "emitted": false
+        }
+      ],
+      "filteredAssets": 0,
+      "entrypoints": {
+        "InjectManifest": {
+          "chunks": [
+            0
+          ],
+          "assets": [
+            "../../build/public/service-worker.js"
+          ],
+          "children": {},
+          "childAssets": {}
+        }
+      },
+      "namedChunkGroups": {
+        "InjectManifest": {
+          "chunks": [
+            0
+          ],
+          "assets": [
+            "../../build/public/service-worker.js"
+          ],
+          "children": {},
+          "childAssets": {}
+        }
+      },
+      "logging": {
+        "webpack.buildChunkGraph.visitModules": {
+          "entries": [],
+          "filteredEntries": 2,
+          "debug": false
+        }
+      },
+      "children": [],
+      "name": "InjectManifest"
     }
   ]
 }

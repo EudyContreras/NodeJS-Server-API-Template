@@ -1,4 +1,3 @@
-
 export function randomString(length: number): string {
 	const chars = 'abcdefghijklmnopqrstuvwxyz!@#$%^&*()-+<>ABCDEFGHIJKLMNOP1234567890';
 	let pass = '';

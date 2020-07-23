@@ -1,7 +1,7 @@
 import Joi from '@hapi/joi';
 
-import { ALL } from '../../../localstore/accessrole.store';
-import { SchemaValidation  } from '../../../messages/message.validation';
+import { ALL } from '../../../localstore/accessrole.store';
+import { SchemaValidation } from '../../../messages/message.validation';
 
 export const INVITATION_CREATE = Symbol('invitation_create');
 export const INVITATION_UPDATE = Symbol('invitation_update');
@@ -14,24 +14,17 @@ export const schamaType = {
 };
 
 export const validateInviteCreate = (data: any): any => {
-
 	const schema = Joi.object({
-		email: Joi
-			.string()
-			.required()
-			.email(),
-		role: Joi
-			.string()
+		email: Joi.string().required().email(),
+		role: Joi.string()
 			.required()
 			.allow(...ALL)
 			.only(),
-		expirationTime: Joi
-			.number()
-			.optional()
+		expirationTime: Joi.number().optional()
 	});
-	
+
 	return {
-		message: SchemaValidation.CREATE_DATA('invitation'),
+		message: SchemaValidation.createData('invitation'),
 		result: schema.validate(data, {
 			abortEarly: false
 		})
@@ -39,24 +32,17 @@ export const validateInviteCreate = (data: any): any => {
 };
 
 export const validateInviteUpdate = (data: any): any => {
-
 	const schema = Joi.object({
-		email: Joi
-			.string()
-			.optional()
-			.email(),
-		role: Joi
-			.string()
+		email: Joi.string().optional().email(),
+		role: Joi.string()
 			.optional()
 			.allow(...ALL)
 			.only(),
-		expirationTime: Joi
-			.number()
-			.optional()
+		expirationTime: Joi.number().optional()
 	});
-	
+
 	return {
-		message: SchemaValidation.UPDATE_DATA('invitation'),
+		message: SchemaValidation.updateData('invitation'),
 		result: schema.validate(data, {
 			abortEarly: false
 		})
@@ -64,37 +50,29 @@ export const validateInviteUpdate = (data: any): any => {
 };
 
 export const validateInviteQuery = (data: any): any => {
-	const { id, inviteId } = data;
+	const { id, inviteId } = data;
 
 	if (id) {
 		data._id = id;
 		delete data.id;
 	}
-	if (inviteId) {
+	if (inviteId) {
 		data._id = inviteId;
 		delete data.inviteId;
 	}
 
 	const schema = Joi.object({
-		_id: Joi
-			.string()
-			.optional(),
-		inviteId: Joi
-			.string()
-			.optional(),
-		email: Joi
-			.string()
-			.optional()
-			.email(),
-		role: Joi
-			.string()
+		_id: Joi.string().optional(),
+		inviteId: Joi.string().optional(),
+		email: Joi.string().optional().email(),
+		role: Joi.string()
 			.optional()
 			.allow(...ALL)
-			.only(),
+			.only()
 	}).or('_id', 'email');
-	
+
 	return {
-		message: SchemaValidation.FETCH_DATA('invitation'),
+		message: SchemaValidation.fetchData('invitation'),
 		result: schema.validate(data, {
 			abortEarly: false
 		})

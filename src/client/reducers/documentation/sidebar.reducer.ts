@@ -1,9 +1,4 @@
-import {
-	SIDE_MENU,
-	SIDE_MENU_FIXED,
-	SIDE_MENU_TOGGLE,
-	SIDE_MENU_HOVERED
-} from '../../actions/documentation/sidebar.action';
+import { SIDE_MENU, SIDE_MENU_FIXED, SIDE_MENU_TOGGLE, SIDE_MENU_HOVERED } from '../../actions/documentation/sidebar.action';
 
 import * as SearchBar from '../documentation/search.reducer';
 
@@ -11,10 +6,7 @@ import IAction from '../../actions/action';
 
 export const SOURCE = SIDE_MENU;
 
-export const children = [
-	SOURCE,
-	SearchBar.SOURCE
-];
+export const children = [SOURCE, SearchBar.SOURCE];
 
 export interface IRoute {
 	hovered: boolean;
@@ -32,7 +24,7 @@ export interface IToggle {
 	locked: boolean;
 }
 
-export interface ISideMenu{
+export interface ISideMenu {
 	expanded: boolean;
 	hovered: boolean;
 	fixed: boolean;
@@ -54,7 +46,7 @@ export const InitialState: ISideMenu = {
 };
 
 export default function (state = InitialState, action: IAction): ISideMenu {
-	if (action.from != SOURCE) return handleSubReducers(state, action);
+	if (action.from !== SOURCE) return handleSubReducers(state, action);
 	switch (action.type) {
 		case SIDE_MENU_TOGGLE: {
 			return {
@@ -97,7 +89,7 @@ export default function (state = InitialState, action: IAction): ISideMenu {
 }
 
 const handleSubReducers = (state = InitialState, action: IAction): ISideMenu => {
-	switch(action.from) {
+	switch (action.from) {
 		case SearchBar.SOURCE: {
 			return {
 				...state,
@@ -105,6 +97,6 @@ const handleSubReducers = (state = InitialState, action: IAction): ISideMenu => 
 			};
 		}
 		default:
-			return state; 
-	};
+			return state;
+	}
 };

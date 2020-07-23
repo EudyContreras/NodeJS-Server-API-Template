@@ -1,26 +1,22 @@
-
 /**
  * Joins css classes into a single string
  */
-export const join = (...names: string[]): string => {
-	return names.join(' ');
-};
+export const join = (...names: string[]): string => names.join(' ');
 
 export default class Styler {
-
 	private styles: string[];
 	private latest = true;
 
 	constructor(...baseStyles: string[]) {
 		this.styles = [...baseStyles];
 	}
-	
-	reset = (style?: string): Styler => { 
+
+	reset = (style?: string): Styler => {
 		this.styles = [...this.styles, style!];
 		return this;
 	};
 
-	add = (style: string): Styler => { 
+	add = (style: string): Styler => {
 		this.styles = [...this.styles, style];
 		return this;
 	};
@@ -31,7 +27,7 @@ export default class Styler {
 	};
 
 	appendAndOr = (condition: boolean, styleA: string, styleB: string): Styler => {
-		if (condition) {
+		if (condition) {
 			this.styles = [...this.styles, styleA];
 		} else {
 			this.styles = [...this.styles, styleB];
@@ -51,8 +47,9 @@ export default class Styler {
 	 * @returns The instance of this updater.
 	 */
 	appendWhen = (condition: boolean, style: string, updateState = true): Styler => {
-		if (condition && this.latest) 
+		if (condition && this.latest) {
 			this.styles = [...this.styles, style];
+		}
 		if (updateState) {
 			this.latest = condition;
 		}
@@ -63,7 +60,7 @@ export default class Styler {
 }
 
 export const appendAndOr = (styles: string[], condition: boolean, styleA: string, styleB: string): void => {
-	if (condition) {
+	if (condition) {
 		styles.push(styleA);
 	} else {
 		styles.push(styleB);

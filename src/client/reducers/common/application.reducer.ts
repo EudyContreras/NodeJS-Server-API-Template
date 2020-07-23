@@ -1,11 +1,8 @@
-import {
-	APPLICATION,
-	APPLICATION_INSTALLED
-} from '../../actions/common/application/appdata.action';
-
-export const SOURCE = APPLICATION;
+import { APPLICATION, APPLICATION_INSTALLED } from '../../actions/common/application/appdata.action';
 
 import IAction from '../../actions/action';
+
+export const SOURCE = APPLICATION;
 
 export interface IApplicationData {
 	installed: boolean;

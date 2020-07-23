@@ -1,484 +1,307 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 
-self.__WB_MANIFEST;
+import { hours, days, months, seconds } from './helpers/timespan.helper';
+import { logger, handleWebp, filetypePatterns, filetypeCache, isHomeOrigin, inRange } from './commons';
+import { syncContent } from './helpers/syncevent.Helper';
+import { staleWhileRevalidate, cacheThenRefresh, cacheFirst, networkFirst, addToCache, cacheResponse, fromNetwork } from './stragedies';
+import { httpMethods, updateNotification, cachableTypes, commonOrigins, fallbacks, cacheNames, constants, syncEvents, messages, events } from './constants';
 
-import { contentTypes, cacheKeys, syncEvents, updateNotification, constants } from './constants';
+const DEBUG_MODE = process.env.NODE_ENV !== 'production';
 
-const TIMEOUT = 1000;
+const cacheKeys = cacheNames(__VERSION_NUMBER__);
+const precacheManifest = [...self.__WB_MANIFEST];
 
-const worker = {
-	log: (...message: any): void => {
-		const css = 'background: #00b6ffbd; padding: 2px; border-radius: 4px; color: white; font-weight: 600;';
-		console.log('%c ServiceWorker ', css, ...message);
-	},
-	warn: (...message: any): void => {
-		const css = 'background: #ffbf00bd; padding: 2px; border-radius: 4px; color: white; font-weight: 600;';
-		console.log('%c ServiceWorker ', css, ...message);
-	},
-	error: (...message: any): void => {
-		const css = 'background: #ff0038bd; padding: 2px; border-radius: 4px; color: white; font-weight: 600;';
-		console.log('%c ServiceWorker ', css, ...message);
+const precacheableFallbacks = [
+	{ url: fallbacks.FALLBACK_HTML_URL, revision: null },
+	{ url: fallbacks.FALLBACK_IMAGE_URL, revision: null },
+	{ url: fallbacks.FALLBACK_ERROR_URL, revision: null },
+	{ url: fallbacks.FALLBACK_FONT_URL, revision: null }
+];
+
+const notifyClient = (event: Event | any, message: ClientMessage): void => {
+	event.waitUntil(async () => {
+		if (!event.clientId) return;
+
+		const client = await self.clients.get(event.clientId);
+
+		if (!client) return;
+
+		client.postMessage(message);
+	});
+};
+
+const defaultCachePredicate: CachePredicate = {
+	crossOrigin: true,
+	cacheCondition: ({ response }) => (response && inRange(response?.status, 200, 300)) || false
+};
+
+const isSideEffectRequest = (request: Request): boolean =>
+	[...Object.values(constants.sideEffects)].includes(request.method) || request.method !== httpMethods.GET;
+
+const isWebFontRequest = (request: Request, url: any): boolean => request.destination === cachableTypes.FONT || url.origin === commonOrigins.STATIC_WEB_FONTS;
+
+const isAcceptedApiRequest = (request: Request): boolean => request.url.includes('/api/') && request.method === httpMethods.GET;
+
+const any = (request: Request, ...types: string[]): boolean => types.includes(request.destination);
+
+DEBUG_MODE && logger.log('Your service worker is loaded 🎉');
+
+self.addEventListener(events.FETCH, (event: any) => {
+	const request: Request = event.request.clone();
+	const url: URL = new URL(request.url);
+
+	if (!url.origin.startsWith('http')) return;
+
+	DEBUG_MODE && logger.info(request.destination, request.url);
+
+	if (isHomeOrigin(url)) {
+		const cacheName = cacheKeys.STATIC_CACHE;
+		DEBUG_MODE && logger.info('Hit for origin', request);
+		staleWhileRevalidate({ url, event, request, cacheName, theresholdAge: days(1) });
+		return;
 	}
-};
 
-const initialSync = (): Promise<boolean> => {
-	return new Promise((resolve)=> {
-		return resolve(true);
-	});
-};
-
-const contentSync = (): Promise<boolean> => {
-	return new Promise((resolve)=> {
-		return resolve(true);
-	});
-};
-
-const addDelay = (ms: number) => (): any => new Promise(resolve => setTimeout(() => resolve(), ms));
-
-const getFallback = async (contentType: string = contentTypes.HTML): Promise<any> => {
-	switch(contentType) {
-		case contentTypes.HTML: {
-			const cache = await caches.open(cacheKeys.FALLBACK_CACHE);
-			return cache.match('/offline.html');
-		}
+	if (any(request, cachableTypes.STYLE, cachableTypes.SCRIPT, cachableTypes.DOCUMENT)) {
+		const cacheName = url.origin === commonOrigins.STYLESHEET_FONTS ? cacheKeys.GOOGLE_FONTS_SHEETS_CACHE : cacheKeys.STATIC_CACHE;
+		const cachePredicate: CachePredicate = {
+			crossOrigin: true,
+			cacheCondition: ({ response }) => (response && inRange(response?.status, 200, 300)) || false
+		};
+		staleWhileRevalidate({ url, event, request, cacheName, cachePredicate: cachePredicate, theresholdAge: days(1) });
+		return;
 	}
-};
 
-const useFallback = (contentType: string = contentTypes.HTML): any => {
-	switch(contentType) {
-		case contentTypes.IMAGE: {
-			return Promise.resolve(new Response(cacheKeys.FALLBACK_CACHE, {
-				headers: {
-					'Content-Type': 'image/svg+xml'
-				}
-			}));
-		}
+	if (isWebFontRequest(request, url)) {
+		const cacheName = cacheKeys.GOOGLE_FONTS_WEB_CACHE;
+		const cachePredicate: CachePredicate = {
+			crossOrigin: true,
+			acceptedStatus: [0, 200, 203, 202]
+		};
+		cacheFirst({ url, event, request, cacheName, cachePredicate });
+		return;
 	}
-};
 
-const throwOnError = (response: Response): Response => {
-	if (response.status >= 200 && response.status < 300 || response.status === 0) {
-		return response;
+	if (request.destination === cachableTypes.IMAGE) {
+		const cacheName = cacheKeys.IMAGE_CACHE;
+		const quotaOptions: CacheQuotaOptions = {
+			clearOnError: true,
+			maxAgeSeconds: months(3),
+			maxEntries: 100
+		};
+
+		cacheFirst({ url, event, request, cacheName, quotaOptions, cachePredicate: defaultCachePredicate });
+		return;
 	}
-	worker.error(response.statusText);
-	return new Response(null);
-};
 
-const isRequestForStaticHtml = (request: Request): boolean => {
-	return /.(html)$/.test(request.url);
-};
-
-const isRequestForStaticAsset = (request: Request): boolean => {
-	return /.(png|svg|json|jpg|jpeg|gif|ico|css|js)$/.test(request.url);
-};
-
-const isSideEffectRequest = (request: Request): boolean => {
-	return [...Object.values(constants.http)].includes(request.method) || request.method != 'GET';
-};
-
-const isApiRequest = (request: Request): boolean => {
-	return request.url.includes('/api/');
-};
-
-const fromNetwork = (request: Request): Promise<any> => {
-	return new Promise((resolve, reject) => {
-		const timeoutId = setTimeout(reject, TIMEOUT);
-
-		fetch(request).then(response => {
-			clearTimeout(timeoutId);
-			resolve(response);
-		}, reject);
-	});
-};
-
-const fromCache = (request: Request, cacheName: string): Promise<Response> => {
-	return caches.open(cacheName)
-		.then(cache => cache.match(request))
-		.then(match => match || Promise.reject('no-request-match'));
-};
-
-const updateCache = (request: Request, cacheName: string): Promise<void> => {
-	return caches.open(cacheName).then((cache) => {
-		return fetch(request).then((response) => {
-			return cache.put(request, response.clone());
-		});
-	});
-};
-
-const refreshClient = (response: Response): void => {
-	return self.clients.matchAll()
-		.then((clients: any[]) => clients.forEach(client => {
-			client.postMessage(JSON.stringify({
-				type: constants.messages.REFRESH,
-				url: response.url
-			}));
-		}));
-};
-
-const update = (request: RequestInfo, cacheName: string = cacheKeys.DATA_CACHE): Promise<any> => {
-	return fetch(request).then(response => {
-		if (!response.ok) throw new Error('Network error');
-
-		return caches.open(cacheName).then(cache => {
-			cache.put(request, response.clone());
-			return response;
-		}).then(response => response);
-	});
-};
-
-const refresh = (response: Response): Promise<any> => {
-	return response.json()
-		.then(jsonResponse => {		
-			self.clients.matchAll().then((clients: any[]) => {
-				clients.forEach(client => {
-					client.postMessage(JSON.stringify({
-						type: constants.messages.APP_UPDATE,
-						data: {
-							url: response.url,
-							payload: jsonResponse.content
-						}
-					}));
-				});
-			});
-			return jsonResponse.content;
-		});
-};
-
-const updateSync = (baseUrl: string): Promise<any> => {
-	return update(baseUrl + '/rest/api/schema', cacheKeys.DATA_CACHE)
-		.then(refresh)
-		.then((data: any) => {
-			self.registration.showNotification(`New api version ${data.version}`);
-			return 'Notification sent';
-		});
-};
-
-const networkOrCache = (request: Request, cacheName: string): Promise<Response> => {
-	return fromNetwork(request).then(response => {
-		return response.ok ? response : fromCache(request, cacheName);
-	}).catch(() => {
-		return fromCache(request, cacheName);
-	});
-};
-
-const cacheOrNetwork = (request: Request, cacheName: string): Promise<Response> => {
-	return fromCache(request, cacheName).then(response => {
-		return response.ok ? response : fromNetwork(request);
-	}).catch(() => {
-		return fromNetwork(request);
-	});
-};
-
-const staleWhileRevalidate = (event: any, cacheName: string): void => {
-	const request = event.request.clone();
-	event.respondWith(
-		caches.open(cacheName).then(cache => {
-			return cache.match(request).then(response => {
-				const fetchPromise = fetch(request).then(networkResponse => {
-					cache.put(request, networkResponse.clone());
-					return networkResponse;
-				});
-				return response || fetchPromise;
-			});
-		})
-	);
-};
-
-const supportsWebp = async (): Promise<boolean> => {
-	if (!self.createImageBitmap) return false;
-
-	const webpData = 'data:image/webp;base64,UklGRh4AAABXRUJQVlA4TBEAAAAvAAAAAAfQ//73v/+BiOh/AAA=';
-	const blob = await fetch(webpData).then(r => r.blob());
-
-	return createImageBitmap(blob).then(() => true, () => false);
-};
-
-type StragedyArgs = {
-	event: Event | any;
-	request: Request;
-	cache?: CacheStorage | undefined | any;
-	stragedy?: string | undefined | any;
-	contentType?: string | undefined | any;
-};
-
-const useStragedy = ({ event, request, cache, stragedy = constants.stragedies.CACHE_FIRST, contentType = contentTypes.HTML }: StragedyArgs): any => {
-	switch(stragedy) {
-		case constants.stragedies.CACHE_ONLY: {
-			return cache.match(request).then(() => useFallback(contentType));
-		}
-		case constants.stragedies.NETWORK_ONLY: {
-			return fetch(request).then(() => useFallback(contentType));
-		}
-		case constants.stragedies.CACHE_FIRST: {
-			return cache.match(request).then((response: Response | any) => {
-				return response || fetch(request).then(response => {
-					event.waitUntil(cache.put(request, response.clone()));
-					return response;
-				}).catch(() => {
-					return cache.match('/offline.html');
-				});
-			});
-		}
-		case constants.stragedies.NETWORK_FIRST: {
-			return fetch(request).then(throwOnError).then(response => {
-				cache.put(request, response.clone());
-				return response;
-			}).catch(() => {
-				return cache.match(request).then((response: Response) => {
-					return response || getFallback();
-				});
-			});
-		}
-		case constants.stragedies.STALE_REVALIDATE: {
-			return cache.match(request).then((response: Response) => {
-				const fetchPromise = fetch(request).then(response => {
-					cache.put(request, response.clone());
-					return response;
-				});
-				return response || fetchPromise || useFallback();
-			});
-		}
-		case constants.stragedies.UPDATE_REFRESH: {
-			return cache.match(request).then((response: Response) => {
-				return new Response(response.body);
-			}).catch(() => {
-				return fetch(request)
-					.then(response => {
-						cache.put(request, response.clone());
-						return response;
-					})
-					.catch(() => {
-						const body = JSON.stringify({ error: 'ServiceWorker: Sorry, you are offline. Please, try later.' });
-						const headers = { 'Content-Type': 'application/json' };
-						const response = new Response(body, { status: 404, statusText: 'Not Found', headers });
-						return response;
-					});
-			});
-		}
-		case constants.stragedies.CACHE_THEN_PRELOAD: {
-			return caches.match(request).then(response => {
-				return response || event.preloadResponse.then((response: Response) => {
-					return response || fetch(request).then(response => {
-						cache.put(request, response.clone());
-						return response;
-					}).catch(() => {
-						return useFallback();
-					});
-				});
-			});
-		}
-		case constants.stragedies.NON_FOUND: {
-			return fetch(request)
-				.catch(() => {
-					const body = JSON.stringify({ error: 'ServiceWorker: Sorry, you are offline. Please, try later.' });
-					const headers = { 'Content-Type': 'application/json' };
-					const response = new Response(body, { status: 404, statusText: 'Not Found', headers });
-					return response;
-				});
-		}
+	if (request.destination === cachableTypes.AUDIO) {
+		const cacheName = cacheKeys.MEDIA_CACHE;
+		const quotaOptions: CacheQuotaOptions = {
+			clearOnError: true,
+			maxAgeSeconds: months(2),
+			maxEntries: 30
+		};
+		cacheFirst({ url, event, request, cacheName, quotaOptions, cachePredicate: defaultCachePredicate });
+		return;
 	}
-};
 
-/**
- * Get stuff nice and ready on this event. Make 
- * the preparations for the SW to work as desired.
- * Store all static assets necessary to render the site
- * as if it were a functional native application here. 
- * Can be used to cache emidiate and non-emidiate resources.
- */
-self.addEventListener(constants.events.INSTALL, (event: Event | any) => {
-	worker.log('Installed:', event);
-	event.waitUntil(
-		caches.open(cacheKeys.STATIC_CACHE)
-			.then(cache => {
-				const cacheRes = (self.__WB_MANIFEST || self.__precacheManifest).map((x: any) => x.url);
-				return cache.addAll([...constants.urlsToCache, ...cacheRes]);
-			})
-			.then(() => self.skipWaiting())
-			.catch(error => worker.log(error))
-	);
+	if (request.destination === cachableTypes.VIDEO) {
+		const cacheName = cacheKeys.MEDIA_CACHE;
+		const quotaOptions: CacheQuotaOptions = {
+			clearOnError: true,
+			maxAgeSeconds: days(30),
+			maxEntries: 10
+		};
+		cacheFirst({ url, event, request, cacheName, quotaOptions, cachePredicate: defaultCachePredicate });
+		return;
+	}
+
+	if (isAcceptedApiRequest(request)) {
+		const cacheName = cacheKeys.DATA_CACHE;
+		const cachePredicate: CachePredicate = {
+			crossOrigin: true,
+			acceptedStatus: [0, 200, 203, 202]
+		};
+		const quotaOptions: CacheQuotaOptions = {
+			clearOnError: true,
+			maxAgeSeconds: hours(6),
+			maxEntries: 8
+		};
+		networkFirst({ url, event, request, cacheName, quotaOptions, cachePredicate: cachePredicate });
+	}
 });
 
-/**
- * Do clean up here but keep lightweight to avoid
- * a potential render block
- */
-self.addEventListener(constants.events.ACTIVATE, (event: Event | any) => {
-	worker.log('Activated:', event);
+self.addEventListener(events.INSTALL, async (event: any) => {
+	DEBUG_MODE && logger.log(events.INSTALL, `Version : ${__VERSION_NUMBER__}`, event);
 
-	const expectedCaches = [cacheKeys.STATIC_CACHE, cacheKeys.DATA_CACHE, cacheKeys.IMAGE_CACHE];
+	const allResources = Array.from(new Set([...precacheManifest.map((x: any) => x.url), ...constants.urlsToCache]));
+
+	const precacheCallback = async (cacheName: string, requests: string[]): Promise<void> => {
+		try {
+			const cache = await caches.open(cacheName);
+			await cache.addAll(requests);
+		} catch (error) {
+			DEBUG_MODE && logger.error('Could not save urls: ', requests, error);
+		}
+	};
+
+	if (allResources.length > 0) {
+		event.waitUntil(
+			handleInstallation(allResources, precacheCallback)
+				.then(() => self.skipWaiting())
+				.catch((error) => logger.log(error))
+		);
+	}
+});
+
+const handleInstallation = async (urls: string[], callback: (cacheName: string, urls: string[]) => void): Promise<void> => {
+	try {
+		const imageAssets = urls.filter((x) => filetypePatterns.IMAGE.test(x) || filetypePatterns.PROGRESSIVE_IMAGE.test(x));
+		const mediaAssets = urls.filter((x) => filetypePatterns.VIDEO.test(x) || filetypePatterns.AUDIO.test(x));
+		const fontAssests = urls.filter((x) => filetypePatterns.FONT.test(x));
+		const staticAssets = urls.filter((x) => filetypePatterns.STATIC.test(x));
+		const dataAssets = urls.filter((x) => filetypePatterns.DATA.test(x));
+
+		if (imageAssets.length > 0) {
+			await callback(cacheKeys.IMAGE_CACHE, imageAssets);
+		}
+		if (fontAssests.length > 0) {
+			await callback(cacheKeys.GOOGLE_FONTS_WEB_CACHE, fontAssests);
+		}
+		if (staticAssets.length > 0) {
+			await callback(cacheKeys.STATIC_CACHE, staticAssets);
+		}
+		if (mediaAssets.length > 0) {
+			await callback(cacheKeys.MEDIA_CACHE, mediaAssets);
+		}
+		if (dataAssets.length > 0) {
+			await callback(cacheKeys.DATA_CACHE, dataAssets);
+		}
+	} catch (error) {
+		DEBUG_MODE && logger.error('Something went wrong!', error);
+	}
+};
+
+self.addEventListener(events.ACTIVATE, async (event: any) => {
+	DEBUG_MODE && logger.log(events.ACTIVATE, `Version : ${__VERSION_NUMBER__}`, event);
 
 	event.waitUntil(
-		caches.keys()
-			.then(keys => keys.filter(key => !expectedCaches.includes(key)))
-			.then(keys => Promise.all(keys.map(key => {
-				worker.log(`Deleting cache ${key}`);
-				return caches.delete(key);
-			})))
+		caches
+			.keys()
+			.then((currentCaches) => {
+				const expectedCaches = Object.values(cacheKeys);
+				return Promise.all(
+					currentCaches
+						.filter((key) => !expectedCaches.includes(key))
+						.map((key) => {
+							DEBUG_MODE && logger.log(`Deleting cache name: ${key}`);
+							return caches.delete(key);
+						})
+				);
+			})
+			.catch((error) => logger.log(error))
 	);
-
 	return self.clients.claim();
 });
 
-self.addEventListener(constants.events.FETCH, (event: Event | any) => {
-	const request = event.request.clone();
-
-	if(!(request.url.indexOf('http') === 0)){
-		return;
-	}
-
-	if (isSideEffectRequest(request)) {
-		event.respondWith(useStragedy({ event, request, stragedy: constants.stragedies.NON_FOUND }));
-		return;
-	}
-
-	if (isApiRequest(request)) {
-		const cache = caches.open(cacheKeys.DATA_CACHE);
-		event.respondWith(cache.then(cache => useStragedy({ event, request, cache, stragedy: constants.stragedies.UPDATE_REFRESH })));
-		event.waitUntil(update(request).then(refresh)); 
-		return;
-	}
-
-	if (isRequestForStaticAsset(request)) {
-		const cache = caches.open(cacheKeys.STATIC_CACHE);
-		event.respondWith(cache.then(cache => useStragedy({ event, request, cache, stragedy: constants.stragedies.CACHE_FIRST })));
-		return;
-	}
-	
-	if (isRequestForStaticHtml(request)) {
-		worker.log('Static html request:', request);
-		// Responsd with an app-shell otherwise
-		if (request.mode === 'navigate') {
-			worker.log('Navigation fetch event:', request);
-			event.respondWith(async () => {
-				try {
-					const preloadedResponse = await event.preloadResponse;
-
-					if (preloadedResponse) {
-						return preloadedResponse;
-					}
-
-					const response = await fetch(event.request);
-					const clone = response.clone();
-
-					caches.open(cacheKeys.STATIC_CACHE).then(cache => {
-						cache.put(request, clone);
-					});
-
-					return response;
-				} catch (error) {
-					const cache = await caches.open(cacheKeys.STATIC_CACHE);
-					const cachedResponse = await cache.match(constants.offlineFallbackPage);
-					return cachedResponse;
-				}
-			});
-		} else {
-			worker.log('Regular fetch event:', request);
-			const cache = caches.open(cacheKeys.STATIC_CACHE);
-			event.respondWith(cache.then(cache => useStragedy({ event, request, cache, stragedy: constants.stragedies.CACHE_FIRST })));
-		}
-		return;
-	}
-
-	const cache = caches.open(cacheKeys.STATIC_CACHE);
-	event.respondWith(cache.then(cache => useStragedy({ event, request, cache, stragedy: constants.stragedies.CACHE_FIRST })));
+self.addEventListener(events.CONTROLLING, async (event: any) => {
+	DEBUG_MODE && logger.log(events.CONTROLLING, event);
+	window.location.reload();
 });
 
-self.addEventListener(constants.events.PUSH, (event: Event | any) => {
-	worker.log('Push event received:', event.data);
-	
+self.addEventListener(events.WAITING, async (event: any) => {
+	DEBUG_MODE && logger.log(events.WAITING, event);
+	notifyClient(event, {
+		type: constants.clientMessages.UPDATE_AVAILABLE
+	});
+});
+
+self.addEventListener(events.PUSH, (event: Event | any) => {
+	DEBUG_MODE && logger.log('Push event received:', event.data);
+
 	const { title, options } = updateNotification;
 
 	const notificationPromise = self.registration.showNotification(title, options);
 	event.waitUntil(notificationPromise);
 });
- 
-self.addEventListener(constants.events.NOTIFY_CLICK, (event: Event | any) => {
-	worker.log('Notification has been clicked');
-	
+
+self.addEventListener(events.NOTIFY_CLICK, (event: Event | any) => {
+	DEBUG_MODE && logger.log('Notification has been clicked');
+
 	event.notification.close();
 
 	const tag = event.notification.tag;
 
-	switch(tag) {
+	switch (tag) {
 		case constants.push.NEW_UPDATE: {
-			event.waitUntil(
-				self.clients.openWindow(constants.baseUrl)
-			);
+			event.waitUntil(self.clients.openWindow(constants.baseUrl));
 			break;
 		}
 		default: {
-			event.waitUntil(
-				self.clients.openWindow(constants.baseUrl)
-			);
+			event.waitUntil(self.clients.openWindow(constants.baseUrl));
 		}
 	}
 });
 
+self.addEventListener(events.SYNC, (event: Event | any) => {
+	DEBUG_MODE && logger.log(events.SYNC, 'Triggered sync event:', event);
+});
 
-/**
- * Attempt to sync non-urgent content silently on the background
- */
-self.addEventListener(constants.events.SYNC, (event: Event | any) => {
-	worker.log('Received sync event:', event.tag);
-	switch(event.tag) {
-		case syncEvents.INITIAL_SYNC: {
-			event.waitUntil(initialSync().then(x => {
-				worker.log('Sync event result:', x);
-			}));
-			break;
-		}
-		case syncEvents.UPDATE_SYNC: {
-			event.waitUntil(updateSync(constants.baseUrl).then(x => {
-				worker.log('Sync event result:', x);
-			}));
+self.addEventListener(events.PERIODIC_SYNC, (event: Event | any) => {
+	DEBUG_MODE && logger.log(events.PERIODIC_SYNC, 'Triggered periodic sync event:', event);
+
+	switch (event.tag) {
+		case syncEvents.periodic.CONTENT_SYNC: {
+			event.waitUntil(syncContent(cacheKeys));
 			break;
 		}
 		default: {
-			worker.log('Received sync event:', event.tag);
-			break;
+			event.registration.unregister();
 		}
 	}
 });
 
-self.addEventListener(constants.events.PERIODIC_SYNC, (event: Event | any) => {
-	worker.log('Triggered periodic sync:', event);
+self.addEventListener(events.MESSAGE, async (event: any) => {
+	DEBUG_MODE && logger.log(events.MESSAGE, event.data?.type, event);
 
-	switch(event.tag) {
-		case syncEvents.CONTENT_SYNC: {
-			event.waitUntil(contentSync().then(x => {
-				worker.log('Sync event result:', x);
-			}));
-			break;
-		}
-		default: {
-			worker.log('Received sync event:', event.tag);
-			break;
-		}
-	}
-});
+	const data: WorkerMessage = event.data;
 
-self.addEventListener(constants.events.MESSAGE, (event: Event | any) => {
-	worker.log('Received message', event);
+	if (!data) return;
 
-	const command = event.data;
-
-	switch (command.type) {
-		case constants.messages.SKIP_WAITING: {
+	switch (data.type) {
+		case messages.SKIP_WAITING: {
 			self.skipWaiting();
 			break;
 		}
-		case constants.messages.ADD_TO_CACHE: {
-			const request = new Request(command.payload);
-
-			fetch(request)
-				.then(throwOnError)
-				.then(response => {
-					caches.open(cacheKeys.STATIC_CACHE).then(cache => cache.put(request, response));
-				}).catch((error) => {
-					worker.error('Something went wrong!', error);
-				});
+		case messages.CACHE_URLS: {
+			const payload = data.payload;
+			addToCache(payload.cacheName, ...payload.urlsToCache);
+			break;
+		}
+		case messages.UNREGISTER_SYNC: {
+			const payload = data.payload;
+			try {
+				const registration = await navigator.serviceWorker.ready;
+				await registration.periodicSync.unregister(payload);
+				if (DEBUG_MODE) {
+					registration.periodicSync.getTags().then((tags) => {
+						logger.log('Registered tags: ', tags);
+					});
+				}
+			} catch (error) {
+				logger.error('Error under sync unregistration!', error);
+			}
+			break;
+		}
+		case messages.ADD_TO_CACHE: {
+			const request = new Request(data.payload);
+			const cacheName = filetypeCache(data.payload, cacheKeys);
+			try {
+				const response = await fromNetwork(request, seconds(10));
+				cacheResponse(cacheName, request, response);
+			} catch (error) {
+				DEBUG_MODE && logger.error('Something went wrong!', error);
+			}
+			break;
 		}
 	}
 });
-
-export default constants;

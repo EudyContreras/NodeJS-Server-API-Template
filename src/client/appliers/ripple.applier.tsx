@@ -1,6 +1,6 @@
 import React from 'react';
 
-const asClass = (name: string): string => '.'+name;
+const asClass = (name: string): string => '.' + name;
 
 const spanElement = (name: string): Element => {
 	const element = document.createElement('span');
@@ -21,7 +21,7 @@ export default (event: React.MouseEvent<HTMLElement, MouseEvent>, style: any): v
 	let buttonHeight = offset.height;
 
 	const ripple = spanElement(style.ripple);
- 
+
 	element.prepend(ripple);
 
 	if (buttonWidth >= buttonHeight) {
@@ -33,10 +33,12 @@ export default (event: React.MouseEvent<HTMLElement, MouseEvent>, style: any): v
 	const x = event.pageX - posX - buttonWidth / 2;
 	const y = event.pageY - posY - buttonHeight / 2;
 
-	$(asClass(style.ripple)).css({
-		width: buttonWidth,
-		height: buttonHeight,
-		top: y,
-		left: x
-	}).addClass(style.rippleEffect);
+	$(asClass(style.ripple))
+		.css({
+			width: buttonWidth,
+			height: buttonHeight,
+			top: y,
+			left: x
+		})
+		.addClass(style.rippleEffect);
 };

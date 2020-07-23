@@ -7,15 +7,14 @@ const WaitPlugin = require('../plugins/WaitPlugin');
 const NodeExternals = require('webpack-node-externals');
 const optimization = require('../sections/optimization');
 const imageLoader = require('../loaders/loader.image');
-const fileLoader = require('../loaders/loader.file');
 const styleLoader = require('../loaders/loader.stylings');
 const LoadablePlugin = require('@loadable/webpack-plugin');
 const NodemonPlugin = require('nodemon-webpack-plugin');
 
 const enviroment = process.env.NODE_ENV;
-const precompile = process.env.PRECOMPILE == 'true';
-const usesHMR = process.env.REACT_HMR == 'true';
-const usesCSR = process.env.CSR == 'true';
+const precompile = process.env.PRECOMPILE === 'true';
+const usesHMR = process.env.REACT_HMR === 'true';
+const usesCSR = process.env.CSR === 'true';
 
 const isProduction = enviroment === 'production';
 const sourceLocation = precompile ? 'dist' : 'src';
@@ -26,7 +25,7 @@ const plugins = [];
 
 const stats = usesHMR ? { stats: 'minimal' } : { };
 
-if (process.env.CSR != 'true') {
+if (process.env.CSR !== 'true') {
 	plugins.push(new WaitPlugin({ filename: 'build/public/loadable-stats.json' }));
 }
 if (isProduction) {

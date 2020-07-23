@@ -1,4 +1,3 @@
-
 import httpCode from '../../definitions/httpCode';
 import roles from '../../localstore/accessrole.store';
 import actions from '../../localstore/priviledge.store';
@@ -8,14 +7,7 @@ import { PriviledgeMessages } from '../../messages/message.response';
 import { PriviledgeResponse } from '../../responses/request.response';
 
 import { Response, NextFunction } from 'express';
-import HttpMethod from '../../definitions/httpMethod';
-
-import {
-	GET,
-	POST,
-	PUT,
-	DELETE
-} from '../../definitions/httpMethod';
+import HttpMethod, { GET, POST, PUT, DELETE } from '../../definitions/httpMethod';
 
 function createQuery(method: HttpMethod, controller: string): any {
 	switch (method) {
@@ -59,7 +51,7 @@ async function controlAccess(request: any, response: Response, next: NextFunctio
 			priviledgeResponse.permission = query.permission;
 			priviledgeResponse.message = PriviledgeMessages.NOT_GRANTED;
 			priviledgeResponse.errors.push(error);
-			
+
 			return response.status(httpCode.UNAUTHORIZED).json(response);
 		}
 
@@ -68,7 +60,7 @@ async function controlAccess(request: any, response: Response, next: NextFunctio
 			priviledgeResponse.permission = query.permission;
 			priviledgeResponse.message = PriviledgeMessages.NOT_GRANTED;
 			priviledgeResponse.errors.push(PriviledgeMessages.ACCESS_DENIED);
-			
+
 			return response.status(httpCode.UNAUTHORIZED).json(response);
 		}
 	}

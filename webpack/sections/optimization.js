@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/camelcase */
+
 /* eslint-disable @typescript-eslint/no-var-requires */
 const TerserPlugin = require('terser-webpack-plugin');
 
@@ -24,7 +24,7 @@ const productionOptimization = (splitChunk, dropConsole) => ({
 			extractComments: false,
 			chunkFilter: (chunk) => {
 				if (chunk.name != null) {
-					if (chunk.name.startsWith('vendor')) {
+					if (chunk.name.startsWith('vendors')) {
 						return true;
 					}
 				}

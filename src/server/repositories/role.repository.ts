@@ -12,7 +12,6 @@ function dataTransferDocument(role: IRole): any {
  * for interfacing with the role data.
  */
 export default class RoleRepository {
-
 	private exclude: any;
 	private options: any;
 
@@ -28,26 +27,19 @@ export default class RoleRepository {
 	}
 
 	public async hasRole(roleId: string): Promise<boolean> {
-		const count = await Role
-			.countDocuments({ _id: roleId })
-			.exec();
+		const count = await Role.countDocuments({ _id: roleId }).exec();
 
 		return count > 0;
 	}
 
 	public async hasRoleWhere(query: any): Promise<boolean> {
-		const count = await Role
-			.countDocuments(query)
-			.exec();
+		const count = await Role.countDocuments(query).exec();
 
 		return count > 0;
 	}
 
 	public async getAllRoles(options = { dto: true }): Promise<IRole[] | any[]> {
-		const roles = await Role
-			.find()
-			.select(this.exclude)
-			.exec();
+		const roles = await Role.find().select(this.exclude).exec();
 
 		if (options.dto === true) {
 			return roles.map((x) => dataTransferDocument(x));
@@ -57,10 +49,7 @@ export default class RoleRepository {
 	}
 
 	public async getAllRolesWhere(query: any, options = { dto: true }): Promise<IRole[] | any[]> {
-		const roles = await Role
-			.find(query)
-			.select(this.exclude)
-			.exec();
+		const roles = await Role.find(query).select(this.exclude).exec();
 
 		if (options.dto === true) {
 			return roles.map((x) => dataTransferDocument(x));
@@ -70,12 +59,9 @@ export default class RoleRepository {
 	}
 
 	public async getRole(roleId: string, options = { dto: true }): Promise<IRole | any> {
-		const role = await Role
-			.findById(roleId)
-			.select(this.exclude)
-			.exec();
+		const role = await Role.findById(roleId).select(this.exclude).exec();
 
-		const result = role ? role : null;
+		const result = role || null;
 
 		if (options.dto === true && result != null) {
 			return dataTransferDocument(result);
@@ -85,12 +71,9 @@ export default class RoleRepository {
 	}
 
 	public async getRoleWhere(criteria: any, options = { dto: true }): Promise<IRole | any> {
-		const role = await Role
-			.findOne(criteria)
-			.select(this.exclude)
-			.exec();
+		const role = await Role.findOne(criteria).select(this.exclude).exec();
 
-		const result = role ? role : null;
+		const result = role || null;
 
 		if (options.dto === true && result != null) {
 			return dataTransferDocument(result);
@@ -100,12 +83,9 @@ export default class RoleRepository {
 	}
 
 	public async getFromRole(roleId: string, select: any): Promise<IRole | any> {
-		const role = await Role
-			.findById(roleId)
-			.select(select)
-			.exec();
+		const role = await Role.findById(roleId).select(select).exec();
 
-		const result = role ? role : null;
+		const result = role || null;
 
 		return result;
 	}
@@ -117,7 +97,7 @@ export default class RoleRepository {
 
 		const saved = await role.save(this.options);
 
-		const result = saved ? saved : null;
+		const result = saved || null;
 
 		if (options.dto === true && result != null) {
 			return dataTransferDocument(result);
@@ -127,12 +107,9 @@ export default class RoleRepository {
 	}
 
 	public async updateRole(roleId: string, update: any, options = { dto: true }): Promise<IRole | any> {
-		const role = await Role
-			.findByIdAndUpdate(roleId, update, this.options)
-			.select(this.exclude)
-			.exec();
+		const role = await Role.findByIdAndUpdate(roleId, update, this.options).select(this.exclude).exec();
 
-		const result = role ? role : null;
+		const result = role || null;
 
 		if (options.dto === true && result != null) {
 			return dataTransferDocument(result);
@@ -142,12 +119,9 @@ export default class RoleRepository {
 	}
 
 	public async updateRoleWhere(query: any, update: any, options = { dto: true }): Promise<IRole | any> {
-		const role = await Role
-			.findOneAndUpdate(query, update, this.options)
-			.select(this.exclude)
-			.exec();
+		const role = await Role.findOneAndUpdate(query, update, this.options).select(this.exclude).exec();
 
-		const result = role ? role : null;
+		const result = role || null;
 
 		if (options.dto === true && result != null) {
 			return dataTransferDocument(result);
@@ -157,11 +131,9 @@ export default class RoleRepository {
 	}
 
 	public async deleteRole(roleId: string, options = { dto: true }): Promise<IRole | any> {
-		const role = await Role
-			.findByIdAndDelete(roleId)
-			.exec();
+		const role = await Role.findByIdAndDelete(roleId).exec();
 
-		const result = role ? role : null;
+		const result = role || null;
 
 		if (options.dto === true && result != null) {
 			return dataTransferDocument(result);
@@ -171,11 +143,9 @@ export default class RoleRepository {
 	}
 
 	public async deleteRoleWhere(query: any, options = { dto: true }): Promise<IRole | any> {
-		const role = await Role
-			.findOneAndDelete(query)
-			.exec();
+		const role = await Role.findOneAndDelete(query).exec();
 
-		const result = role ? role : null;
+		const result = role || null;
 
 		if (options.dto === true && result != null) {
 			return dataTransferDocument(result);
@@ -185,14 +155,10 @@ export default class RoleRepository {
 	}
 
 	public async clearAllWhere(query: any): Promise<any> {
-		return await Role
-			.deleteMany(query)
-			.exec();
+		return await Role.deleteMany(query).exec();
 	}
 
 	public async clearAll(): Promise<any> {
-		return await Role
-			.deleteMany({})
-			.exec();
+		return await Role.deleteMany({}).exec();
 	}
 }

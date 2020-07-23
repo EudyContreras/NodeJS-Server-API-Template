@@ -1,7 +1,6 @@
-
 enum DataSource {
-   BODY = 'body',
-   QUERY = 'query',
+	BODY = 'body',
+	QUERY = 'query'
 }
 
 export default DataSource;
