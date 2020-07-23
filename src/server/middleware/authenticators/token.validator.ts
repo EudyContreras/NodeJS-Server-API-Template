@@ -1,5 +1,4 @@
-
-import config from '../../server.config';
+import config from '../../../configs/config.server';
 import webtoken from 'jsonwebtoken';
 import httpCode from '../../definitions/httpCode';
 import AuthenticationService from '../../services/authentication.service';
@@ -48,7 +47,7 @@ async function authenticate(req: any, res: Response, next: NextFunction): Promis
 
 	try {
 		req.user = webtoken.verify(token, config.jwt.TOKEN_SECRET);
-		
+
 		const blackListed = await isBlackListed(token);
 
 		if (blackListed) {

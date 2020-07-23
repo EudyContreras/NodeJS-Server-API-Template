@@ -1,19 +1,19 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
-/* eslint-disable @typescript-eslint/no-var-requires */
 
-require('dotenv').config();
+/* eslint-disable @typescript-eslint/no-var-requires */
 
 const path = require('path');
 const webpack = require('webpack');
 const loaders = require('../loaders');
+const packageJson = require('../../package.json');
+const EnvDefiner = require('../sections/envdefiner');
 const CopyPlugin = require('copy-webpack-plugin');
 const WorkboxPlugin = require('workbox-webpack-plugin');
 const ManifestPlugin = require('webpack-manifest-plugin');
 const CompressPlugin = require('compression-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const CircularDependencyPlugin = require('circular-dependency-plugin');
 const LoadablePlugin = require('@loadable/webpack-plugin');
 const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+// const BundleAnalyzerPlugin = require('@bundle-analyzer/webpack-plugin');
 const DuplicatePackageCheckerPlugin = require('duplicate-package-checker-webpack-plugin');
 const BrotliPlugin = require('brotli-webpack-plugin');
 const optimization = require('../sections/optimization');
@@ -21,8 +21,8 @@ const splitchunks = require('../sections/splitchunks');
 const ImageminPlugin= require('imagemin-webp-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
-const precompile = process.env.PRECOMPILE == 'true';
-const usesCSR = process.env.CSR == 'true';
+const precompile = process.env.PRECOMPILE === 'true';
+const usesCSR = process.env.CSR === 'true';
 const enviroment = process.env.NODE_ENV;
 
 const isProduction = enviroment === 'production';
@@ -38,38 +38,22 @@ const resources = [
 		from: `${sourceLocation}/client/resources/robots.txt`,
 		to: ''
 	}, {
-		from: `${sourceLocation}/client/resources/styles/material.css`,
+		from: `${sourceLocation}/client/resources/styles/fonts.css`,
 		to: 'styles/'
 	}
 ];
 
-const fileName = isProduction ? 'scripts/[name].[chunkhash].js' : './scripts/[name].js';
-const chunkFileName = isProduction ? 'scripts/[name].[chunkhash].chunk.js' : './scripts/[name].chunk.js';
+const fileName = isProduction ? 'scripts/[name].bundle.[chunkhash].js' : './scripts/[name].bundle.js';
+const chunkFileName = isProduction ? 'scripts/[name].chunk.[chunkhash].js' : './scripts/[name].chunk.js';
 
 const splitChunk = {
 	splitChunks: {
-		...splitchunks.singleShunk
+		...splitchunks().singleChunk
 	}
 };
 
-const manifestExclude = ['stats.json', '.DS_Store', '.js.br', '.js.gz', '.js', 'service-worker.ts', 'loadable-stats.json'];
+const manifestExclude = ['stats.json', '.DS_Store', '.js', 'service-worker.ts', 'service-worker.js', 'service-worker.js.gz', 'service-worker.js.br', 'loadable-stats.json'];
 const plugins = [
-	new CircularDependencyPlugin({
-		exclude: /a\.js|node_modules/,
-		include: /src/,
-		failOnError: true,
-		allowAsyncCycles: false,
-		cwd: process.cwd()
-	}),
-	new DuplicatePackageCheckerPlugin(),
-	new CleanWebpackPlugin({ cleanStaleWebpackAssets: isProduction }),
-	new CopyPlugin(resources),
-	new HtmlWebpackPlugin({
-		excludeChunks: [/main.bundle.*.js/, /vendors.bundle.*.js/],
-		template: `${sourceLocation}/client/resources/html/offline.hbs`,
-		filename: 'offline.html',
-		minify: true
-	}),
 	new ManifestPlugin({
 		fileName: 'manifest-assets.json',
 		publicPath: '',
@@ -85,21 +69,48 @@ const plugins = [
 					if (!(extension in manifest)) {
 						manifest[extension] = [];
 					}
-					manifest[extension].push({ name: name, path: file.path });
+					manifest[extension].push(file.path);
 				}
 				return manifest;
 			}, seed);
+			
+			const scripts = entrypoints.app.filter(x => x.endsWith('.js'));
+			const broliScripts = isProduction ? manifestFiles.br.filter(x => x.endsWith('.js.br')).map(x => x) : null;
+			const gzipScripts = isProduction ? manifestFiles.gz.filter(x => x.endsWith('.js.gz')).map(x => x) : null;
 
-			const scripts = entrypoints.main.filter(x => x.endsWith('.js'));
-			const styles = entrypoints.main.filter(x => x.endsWith('.css'));
-	
+			const styles = entrypoints.app.filter(x => x.endsWith('.css'));
+			const broliStyles = isProduction ? manifestFiles.br.filter(x => x.endsWith('.css.br')).map(x => x) : null;
+			const gzipStyles = isProduction ? manifestFiles.gz.filter(x => x.endsWith('.css.gz')).map(x => x) : null;
+
 			return {
 				files: manifestFiles,
-				styles:  styles,
-				scripts: scripts
+				styles: {
+					uncompressed: styles,
+					brotliCompressed: broliStyles,
+					gzipCompressed: gzipStyles
+				},
+				scripts: {
+					uncompressed: scripts,
+					brotliCompressed: broliScripts,
+					gzipCompressed: gzipScripts
+				}
 			};
 		}
-	})
+	}),
+	new DuplicatePackageCheckerPlugin(),
+	// new BundleAnalyzerPlugin({ token: process.env.BUNDLE_ANALYZER_TOKEN }),
+	new CleanWebpackPlugin({ cleanStaleWebpackAssets: isProduction }),
+	new CopyPlugin(resources),
+	new HtmlWebpackPlugin({
+		excludeChunks: [/main.bundle.*.js/, /vendors.bundle.*.js/],
+		template: `${sourceLocation}/client/resources/html/offline.hbs`,
+		filename: 'offline.html',
+		minify: true
+	}),
+	new webpack.WatchIgnorePlugin([
+		/css\.d\.ts$/
+	]),
+	new webpack.DefinePlugin(EnvDefiner(packageJson.version))
 ];
 
 if (usesCSR) {
@@ -111,32 +122,10 @@ if (usesCSR) {
 			filename: 'index.html',
 			scriptLoading: 'defer',
 			title: 'Template Engine',
-			clientSideRendered: process.env.CSR == 'true',
-			enableSW: process.env.USE_SW == 'true',
+			clientSideRendered: process.env.CSR === 'true',
+			enableSW: process.env.USE_SW === 'true',
 			html: clientConfig.html,
 			minify: true
-		})
-	);
-}
-if (isProduction) {
-	plugins.push(
-		new webpack.optimize.ModuleConcatenationPlugin(),
-		new webpack.optimize.OccurrenceOrderPlugin(),
-		new OptimizeCssAssetsPlugin(),
-		new CompressPlugin({
-			filename: '[path].gz[query]',
-			algorithm: 'gzip',
-			test: /\.(js|css|html|json|svg)$/,
-			compressionOptions: { level: 9 },
-			threshold: 10240,
-			minRatio: 0.8,
-			deleteOriginalAssets: false
-		}),
-		new BrotliPlugin({
-			filename: '[path].br[query]',
-			test: /\.(js|css|html|json|svg)$/,
-			threshold: 10240,
-			minRatio: 0.8
 		})
 	);
 }
@@ -151,22 +140,48 @@ plugins.push(
 			}
 		}]
 	}),
-	new LoadablePlugin(),
-	new WorkboxPlugin.InjectManifest({
-		swSrc: path.join(process.cwd(), `${sourceLocation}/workers/serviceWorker.${precompile ? 'js' : 'ts'}`),
-		swDest: `../../${sourceLocation}/workers/service-worker.${precompile ? 'js' : 'ts'}`,
-		exclude: [/\.(js.br|js.gz|DS_Store)$/, /manifest-assets.*\.json$/, /loadable-stats.*\.json$/],
-		precacheManifestFilename: 'manifest-precache.[manifestHash].js'
-	})
+	new LoadablePlugin()
 );
+
+if (isProduction) {
+	plugins.push(
+		new webpack.optimize.ModuleConcatenationPlugin(),
+		new webpack.optimize.OccurrenceOrderPlugin(),
+		new OptimizeCssAssetsPlugin(),
+		new CompressPlugin({
+			filename: '[path].gz[query]',
+			algorithm: 'gzip',
+			test: /\.(js|css|html|json|svg)$/,
+			compressionOptions: { level: 9 },
+			threshold: 5120,
+			minRatio: 0.8,
+			deleteOriginalAssets: false
+		}),
+		new BrotliPlugin({
+			filename: '[path].br[query]',
+			test: /\.(js|css|html|json|svg)$/,
+			threshold: 5120,
+			minRatio: 0.8
+		})
+	);
+}
+
+plugins.push(new WorkboxPlugin.InjectManifest({
+	maximumFileSizeToCacheInBytes: 5000000,
+	swSrc: path.join(process.cwd(), `${sourceLocation}/workers/serviceWorker.${precompile ? 'js' : 'ts'}`),
+	swDest: `${publicPath}/service-worker.js`,
+	compileSrc: true,
+	exclude: [/\.(DS_Store)$/, /manifest-assets.*\.json$/, /service-worker.*\.js$/, /service-worker.js/, /loadable-stats.*\.json$/],
+	webpackCompilationPlugins: []
+}));
 
 module.exports = {
 	name: 'client',
 	target: 'web',
 	mode: enviroment,
 	bail: isProduction,
-	devtool: isProduction ? 'source-map' : 'eval-cheap-module-source-map',
-	entry: entryPoint,
+	devtool: isProduction ? '' : 'eval-cheap-module-source-map',
+	entry: { app: entryPoint },
 	cache: !isProduction,
 	performance: {
 		hints: isProduction ? 'warning' : false,

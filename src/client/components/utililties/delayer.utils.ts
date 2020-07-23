@@ -1,7 +1,3 @@
-
-
-
-
 // export const delayExecution = (func: Function, delay: number): () => void => {
 // 	let timeout = null;
 

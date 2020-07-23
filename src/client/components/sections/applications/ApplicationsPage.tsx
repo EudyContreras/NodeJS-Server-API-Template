@@ -13,14 +13,7 @@ interface StateProps {
 type Props = StateProps & DispatchProps;
 
 class ApplicationPage extends React.Component<Props, any> {
-
-	constructor(props: Props) {
-		super(props);
-	}
-
-	public shouldComponentUpdate = (nextProps: any, nextState: any): boolean => {
-		return false;
-	};
+	public shouldComponentUpdate = (nextProps: any, nextState: any): boolean => false;
 
 	public componentDidMount = (): void => {
 		const route = this.props.path;
@@ -34,17 +27,19 @@ class ApplicationPage extends React.Component<Props, any> {
 		const route = this.props.path;
 		const style = this.props.styling;
 		const classes = [style.routePage];
-		
+
 		const empty = this.props.loadedRoutes.length <= 0;
 		if (empty || !this.props.loadedRoutes.includes(route)) {
 			classes.push(style.routePageLoading);
 		} else {
 			classes.push(style.routePageloaded);
 		}
-		
-		return <section className={join(...classes)}>
-			<h2>Application Page</h2>
-		</section>;
+
+		return (
+			<section className={join(...classes)}>
+				<h2>Application Page</h2>
+			</section>
+		);
 	};
 }
 

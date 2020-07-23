@@ -1,4 +1,3 @@
-
 import Application from './application';
 import Interceptor from './middleware/interceptor';
 import RoleController from './controllers/restful/api/roles';
@@ -21,9 +20,7 @@ const args = {
 		new PriviledgeController(ROOT, ADMIN),
 		new AuthenticationController(...ALL)
 	],
-	viewRenderer: [
-		new IndexViewRender()
-	],
+	viewRenderer: [new IndexViewRender()],
 	interceptor: new Interceptor()
 };
 

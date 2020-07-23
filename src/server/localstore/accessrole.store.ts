@@ -1,4 +1,4 @@
-import config from '../server.config';
+import config from '../../configs/config.server';
 
 class RoleData {
 	public type: string;
@@ -26,20 +26,14 @@ const ACCESS_ROLES = [
 	new RoleData(GUEST, CODES[3], config.roles.CLEARANCE.LOW)
 ];
 
-const ALL = [ ROOT, ADMIN, GUEST, USER ];
+const ALL = [ROOT, ADMIN, GUEST, USER];
 
-export {
-	ACCESS_ROLES,
-	NONE,
+export { ACCESS_ROLES, NONE, ROOT, CODES, ADMIN, GUEST, USER, ALL };
+
+export default {
 	ROOT,
-	CODES,
 	ADMIN,
 	GUEST,
 	USER,
-	ALL
+	ACCESS_ROLES
 };
-
-export default {
-	ROOT, ADMIN, GUEST, USER, ACCESS_ROLES
-};
-

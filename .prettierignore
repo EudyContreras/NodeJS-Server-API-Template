@@ -1,0 +1,9 @@
+pre/*
+build/*
+assets/*
+dist/*
+ssl/*
+node_modules/
+.lighthouseci/*
+.lighthouseci/**/*.html
+**/*.d.ts

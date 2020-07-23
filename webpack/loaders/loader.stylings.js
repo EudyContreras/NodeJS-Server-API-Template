@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 module.exports = (path, isProduction) => [
 	{
-		test: /\.(css|scss)$/,
+		test: /\.(c|le|sa|sc)ss$/,
 		use: [
 			{ loader: 'isomorphic-style-loader' },
 			{ loader: 'css-modules-typescript-loader' },
@@ -12,11 +13,30 @@ module.exports = (path, isProduction) => [
 						localIdentName: isProduction ? '[hash:base64:10]' : '[local]',
 						context: path.resolve(__dirname, '../../src/client/components')
 					},
-					localsConvention: 'camelCase',
+					localsConvention: 'camelCaseOnly',
 					importLoaders: 1
 				}
 			},
-			{ loader: 'sass-loader' }
+			// { loader: 'postcss-loader' },
+			{
+				loader: 'less-loader',
+				options: {
+					sourceMap: !isProduction,
+					lessOptions: {
+						strictMath: true
+						
+					}
+				}
+			},
+			{ 
+				loader: 'sass-loader',
+				options: {
+					sourceMap: !isProduction,
+					sassOptions: {
+						outputStyle: 'compressed'
+					}
+				}
+			}
 		]
 	}
 ];

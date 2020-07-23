@@ -1,4 +1,4 @@
-import config from '../server.config';
+import config from '../../configs/config.server';
 
 class PriviledgeData {
 	public type: string;
@@ -23,21 +23,9 @@ const PRIVILEDGES = [
 	new PriviledgeData(DELETE, CODES[3])
 ];
 
-const ALL = [
-	READ,
-	CREATE,
-	UPDATE,
-	DELETE
-];
+const ALL = [READ, CREATE, UPDATE, DELETE];
 
-export{
-	PRIVILEDGES,
-	READ,
-	CREATE,
-	UPDATE,
-	DELETE,
-	ALL
-};
+export { PRIVILEDGES, READ, CREATE, UPDATE, DELETE, ALL };
 
 export default {
 	READ,

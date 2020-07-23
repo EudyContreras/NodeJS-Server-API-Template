@@ -1,4 +1,3 @@
-
 interface IScrollListener {
 	onScroll(style: any, scroll: number): void;
 }
@@ -51,7 +50,7 @@ export const updateEffect = (style: any, listener: IScrollListener): void => {
 export const addAnchor = (style: any, listener: ScrollListener, stickyCallBack: (stuck: boolean) => void): void => {
 	$(window).on('scroll', () => {
 		const scroll = $(window).scrollTop();
-  
+
 		const sticker = listener.sticker;
 
 		if (scroll! >= listener.top && !sticker.hasClass(style.navSticky)) {
@@ -66,7 +65,14 @@ export const addAnchor = (style: any, listener: ScrollListener, stickyCallBack: 
 	});
 };
 
-const applyStickyTop = (sticker: JQuery<HTMLElement | Element>, style: any, scroll: number, top: number, margin: number, onFixed: ((fixed: boolean) => void) | undefined): void => {
+const applyStickyTop = (
+	sticker: JQuery<HTMLElement | Element>,
+	style: any,
+	scroll: number,
+	top: number,
+	margin: number,
+	onFixed: ((fixed: boolean) => void) | undefined
+): void => {
 	if (scroll! > top && sticker.hasClass(style.natural)) {
 		sticker.removeClass(style.natural).addClass(style.fixed).css({ top: margin });
 		if (onFixed) onFixed(true);
@@ -76,7 +82,14 @@ const applyStickyTop = (sticker: JQuery<HTMLElement | Element>, style: any, scro
 	}
 };
 
-const applyStickyBottom = (sticker: JQuery<HTMLElement | Element>, style: any, scroll: number, bottom: number, margin: number, onFixed: ((fixed: boolean) => void) | undefined): void => {
+const applyStickyBottom = (
+	sticker: JQuery<HTMLElement | Element>,
+	style: any,
+	scroll: number,
+	bottom: number,
+	margin: number,
+	onFixed: ((fixed: boolean) => void) | undefined
+): void => {
 	if (scroll! > bottom && sticker.hasClass(style.fixed)) {
 		sticker.removeClass(style.fixed).addClass(style.bottom).css({ top: bottom });
 		if (onFixed) onFixed(false);

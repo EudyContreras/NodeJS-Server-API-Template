@@ -1,7 +1,7 @@
 import Joi from '@hapi/joi';
-import config from '../../../server.config';
+import config from '../../../../configs/config.server';
 
-import { SchemaValidation  } from '../../../messages/message.validation';
+import { SchemaValidation } from '../../../messages/message.validation';
 import { ALL } from '../../../localstore/accessrole.store';
 
 export const USER_CREATE = Symbol('user_create');
@@ -17,24 +17,14 @@ export const schamaType = {
 };
 
 export const validateUserCreate = (data: any): any => {
-
 	const schema = Joi.object({
-		name: Joi
-			.string()
-			.required(),
-		email: Joi
-			.string()
-			.required()
-			.email(),
-		password: Joi
-			.string()
-			.required()
-			.min(config.validation.passwords.MIN_LENGTH)
-			.max(config.validation.passwords.MAX_LEGHTH)
+		name: Joi.string().required(),
+		email: Joi.string().required().email(),
+		password: Joi.string().required().min(config.validation.passwords.MIN_LENGTH).max(config.validation.passwords.MAX_LEGHTH)
 	});
-	
+
 	return {
-		message: SchemaValidation.CREATE_DATA('user'),
+		message: SchemaValidation.createData('user'),
 		result: schema.validate(data, {
 			abortEarly: false
 		})
@@ -42,65 +32,38 @@ export const validateUserCreate = (data: any): any => {
 };
 
 export const validateUserUpdate = (data: any): any => {
-
 	const schema = Joi.object({
-		name: Joi
-			.string()
-			.optional(),
-		email: Joi
-			.string()
-			.optional()
-			.email(),
-		active: Joi
-			.boolean()
-			.optional()
-			.required(),
-		role: Joi
-			.string()
+		name: Joi.string().optional(),
+		email: Joi.string().optional().email(),
+		active: Joi.boolean().optional().required(),
+		role: Joi.string()
 			.optional()
 			.allow(...ALL)
 			.only(),
-		password: Joi
-			.string()
-			.optional()
-			.min(config.validation.passwords.MIN_LENGTH)
-			.max(config.validation.passwords.MAX_LEGHTH)
+		password: Joi.string().optional().min(config.validation.passwords.MIN_LENGTH).max(config.validation.passwords.MAX_LEGHTH)
 	});
-	
+
 	return {
-		message: SchemaValidation.CREATE_DATA('user'),
+		message: SchemaValidation.createData('user'),
 		result: schema.validate(data, {
 			abortEarly: false
 		})
 	};
 };
-
 
 export const validatePasswordUpdate = (data: any): any => {
-
 	const schema = Joi.object({
-		userId: Joi
-			.string()
-			.required(),
-		oldPassword: Joi
-			.string()
-			.required()
-			.min(config.validation.passwords.MIN_LENGTH)
-			.max(config.validation.passwords.MAX_LEGHTH),
-		newPassword: Joi
-			.string()
-			.required()
-			.min(config.validation.passwords.MIN_LENGTH)
-			.max(config.validation.passwords.MAX_LEGHTH)
+		userId: Joi.string().required(),
+		oldPassword: Joi.string().required().min(config.validation.passwords.MIN_LENGTH).max(config.validation.passwords.MAX_LEGHTH),
+		newPassword: Joi.string().required().min(config.validation.passwords.MIN_LENGTH).max(config.validation.passwords.MAX_LEGHTH)
 	});
-	
+
 	return {
-		message: SchemaValidation.CREATE_DATA('user'),
+		message: SchemaValidation.createData('user'),
 		result: schema.validate(data, {
 			abortEarly: false
 		})
 	};
 };
-
 
 export default schamaType;

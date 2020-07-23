@@ -1,4 +1,3 @@
-
 export const ROUTE_LOADER = 'ROUTE_LOADER';
 
 export const ROUTE_LOADER_HIDE = 'ROUTE_LOADER_HIDE';
@@ -9,12 +8,12 @@ export interface DispatchProps {
 	hideLoader: (loadedRoute?: string) => void;
 }
 
-export const showLoader = () => (dispatch: Function): void => {
-	dispatch(showLoaderAction); 
+export const showLoader = () => (dispatch: (action?: any) => any): void => {
+	dispatch(showLoaderAction);
 };
 
-export const hideLoader = (loadedRoute?: string) => (dispatch: Function): void => {
-	dispatch({ ...hideLoaderAction, payload:loadedRoute }); 
+export const hideLoader = (loadedRoute?: string) => (dispatch: (action?: any) => any): void => {
+	dispatch({ ...hideLoaderAction, payload: loadedRoute });
 };
 
 export const showLoaderAction = {
@@ -27,7 +26,7 @@ export const hideLoaderAction = {
 	type: ROUTE_LOADER_HIDE
 };
 
-export const Dispatchers = { 
-	showLoader, 
+export const Dispatchers = {
+	showLoader,
 	hideLoader
 };

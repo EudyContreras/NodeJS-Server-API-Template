@@ -16,10 +16,8 @@ const statsFile = path.resolve('build/public/loadable-stats.json');
 const appStyle: any = AppStyle;
 
 class IndexViewRenderer extends ViewRenderer {
-
 	private routing = '/';
 	private router: Router;
-	private context = {};
 	private store: Store<any, IAction>;
 	private state: any;
 	private css: any;
@@ -33,28 +31,25 @@ class IndexViewRenderer extends ViewRenderer {
 		this.setupRoutes(this.router);
 	}
 
-	public getRoute = (): string => {
-		return this.routing;
-	};
+	public getRoute = (): string => this.routing;
 
-	public getRouter = (): Router => {
-		return this.router;
-	};
+	public getRouter = (): Router => this.router;
 
 	public setupRoutes = (router: Router): void => {
 		routes.map((x) => router.get(x.path, this.renderRoutes));
 	};
 
 	private renderRoutes = async (req: Request, res: Response): Promise<void> => {
-
-		if (process.env.CSR == 'true') {
+		if (process.env.CSR === 'true') {
 			res.status(200).send();
 		} else {
 			const shell = req.query.shell !== undefined;
 
 			const css = new Set();
-			const cssInjector = (...styles): void => { styles.forEach(style => css.add(style._getCss())); };
-	
+			const cssInjector = (...styles): void => {
+				styles.forEach((style) => css.add(style._getCss()));
+			};
+
 			if (shell) {
 				return await this.renderShell(req, res, cssInjector);
 			} else {
@@ -63,48 +58,49 @@ class IndexViewRenderer extends ViewRenderer {
 		}
 	};
 
-	private renderApplication = async (req: Request, res: Response, cssInjector: Function): Promise<void> => {
-		const extractor = new ChunkExtractor({ statsFile });
+	private renderApplication = async (req: Request, res: Response, cssInjector: (...styles: any[]) => void): Promise<void> => {
+		const extractor = new ChunkExtractor({ statsFile: statsFile, entrypoints: ['app'] });
 
-		const content = extractor.collectChunks(application(req.url, this.store, this.context, cssInjector));
+		const context = {};
+		const content = extractor.collectChunks(application(req.url, this.store, context, cssInjector));
 
-		const entryPoints = extractor.getMainAssets();
-
-		const styles = entryPoints.filter(x => x.url.endsWith('.css'));
-		const scripts = entryPoints.filter(x => x.url.endsWith('.js'));
+		const scriptTags = extractor.getScriptTags();
+		const styleTags = extractor.getStyleTags();
 
 		const props = {
 			css: this.css,
 			html: config.html,
 			state: this.state,
-			styles: styles,
-			scripts: scripts,
-			enableSW: process.env.USE_SW == 'true',
-			clientSideRendered: process.env.CSR == 'true',
+			styles: styleTags,
+			scripts: scriptTags,
+			context: context,
+			enableSW: process.env.USE_SW === 'true',
+			clientSideRendered: process.env.CSR === 'true',
 			watchConnection: true,
 			content: content,
 			cache: true
 		};
 
-		config.headers.forEach(header => {
+		config.headers.forEach((header) => {
 			res.setHeader(header.LABEL, header.VALUE);
 		});
 		res.render(config.layout.FULL, props);
 	};
 
-	private renderShell = async (req: Request, res: Response, cssInjector: Function): Promise<void> => {
-	
-		const content = application(req.url, this.store, this.context, cssInjector);
+	private renderShell = async (req: Request, res: Response, cssInjector: (...styles: any[]) => void): Promise<void> => {
+		const context = {};
+		const content = application(req.url, this.store, context, cssInjector);
 
 		const props = {
 			css: this.css,
 			html: config.html,
-			enableSW: process.env.USE_SW == 'true',
+			enableSW: process.env.USE_SW === 'true',
+			context: context,
 			content: content,
 			cache: true
 		};
 
-		config.headers.forEach(header => {
+		config.headers.forEach((header) => {
 			res.setHeader(header.LABEL, header.VALUE);
 		});
 		res.render(config.layout.SHELL, props);

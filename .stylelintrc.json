@@ -1,0 +1,18 @@
+{
+    "extends": [
+        "stylelint-config-recommended",
+        "stylelint-config-sass-guidelines"
+    ],
+    "defaultSeverity": "warning",
+    "plugins": [
+        "stylelint-scss",
+		"stylelint-order"
+	],
+    "rules": {
+        "indentation": "tab",
+        "function-url-quotes": null,
+        "number-leading-zero": null,
+        "order/properties-alphabetical-order": null,
+        "unit-whitelist": ["em", "rem", "%", "s"]
+    }
+}

@@ -16,19 +16,21 @@ export const schamaType = {
 export const validatePriviledgeCreate = (data: any): any => {
 	if (data.permissions) {
 		const permissionSchema = Joi.object({
-			permission: Joi
-				.string()
+			permission: Joi.string()
 				.required()
 				.allow(...ALL)
 				.only()
 		});
 		for (const permission of data.permissions) {
-			const result = permissionSchema.validate({ permission }, {
-				abortEarly: false
-			});
+			const result = permissionSchema.validate(
+				{ permission },
+				{
+					abortEarly: false
+				}
+			);
 			if (result.error) {
 				return {
-					message: SchemaValidation.CREATE_DATA('priviledge'),
+					message: SchemaValidation.createData('priviledge'),
 					result: result
 				};
 			}
@@ -36,19 +38,13 @@ export const validatePriviledgeCreate = (data: any): any => {
 	}
 
 	const schema = Joi.object({
-		userId: Joi
-			.string()
-			.required(),
-		permissions: Joi
-			.array()
-			.required(),
-		controller: Joi
-			.string()
-			.required()
+		userId: Joi.string().required(),
+		permissions: Joi.array().required(),
+		controller: Joi.string().required()
 	});
 
 	return {
-		message: SchemaValidation.CREATE_DATA('priviledge'),
+		message: SchemaValidation.createData('priviledge'),
 		result: schema.validate(data, {
 			abortEarly: false
 		})
@@ -56,21 +52,14 @@ export const validatePriviledgeCreate = (data: any): any => {
 };
 
 export const validatePriviledgeUpdate = (data: any): any => {
-
 	const schema = Joi.object({
-		userId: Joi
-			.string()
-			.required(),
-		permissions: Joi
-			.array()
-			.required(),
-		controller: Joi
-			.string()
-			.required()
+		userId: Joi.string().required(),
+		permissions: Joi.array().required(),
+		controller: Joi.string().required()
 	});
 
 	return {
-		message: SchemaValidation.UPDATE_DATA('priviledge'),
+		message: SchemaValidation.updateData('priviledge'),
 		result: schema.validate(data, {
 			abortEarly: false
 		})
@@ -78,18 +67,13 @@ export const validatePriviledgeUpdate = (data: any): any => {
 };
 
 export const validatePriviledgeQuery = (data: any): any => {
-  
 	const schema = Joi.object({
-		userId: Joi
-			.string()
-			.required(),
-		controller: Joi
-			.string()
-			.optional()
+		userId: Joi.string().required(),
+		controller: Joi.string().optional()
 	});
 
 	return {
-		message: SchemaValidation.FETCH_DATA('priviledge'),
+		message: SchemaValidation.fetchData('priviledge'),
 		result: schema.validate(data, {
 			abortEarly: false
 		})

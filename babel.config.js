@@ -1,9 +1,9 @@
 module.exports = function (api) {
 	api.cache.using(() => process.env.NODE_ENV);
-	
+
 	const presets = [
 		['@babel/preset-env', {
-			'targets': {
+			targets: {
 				esmodules: false,
 				node: 'current'
 			}
@@ -12,6 +12,7 @@ module.exports = function (api) {
 		'@babel/preset-typescript'
 	];
 	const plugins = [
+		'react-css-modules',
 		'@loadable/babel-plugin',
 		'@babel/plugin-proposal-class-properties',
 		'@babel/plugin-proposal-object-rest-spread',
@@ -19,7 +20,7 @@ module.exports = function (api) {
 		'@babel/plugin-proposal-export-namespace-from',
 		'@babel/plugin-proposal-numeric-separator',
 		'@babel/plugin-proposal-throw-expressions',
-		['@babel/plugin-proposal-decorators', { 'legacy': true }],
+		['@babel/plugin-proposal-decorators', { legacy: true }],
 		[
 			'@babel/plugin-proposal-pipeline-operator',
 			{

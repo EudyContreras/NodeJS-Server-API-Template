@@ -1,4 +1,3 @@
-
 import React from 'react';
 
 interface StateProps {
@@ -10,7 +9,6 @@ interface StateProps {
 type Props = StateProps & any;
 
 export default class ErrorBoundary extends React.PureComponent<Props, any> {
-
 	constructor(props: Props) {
 		super(props);
 		this.state = { hasError: false };
@@ -26,7 +24,7 @@ export default class ErrorBoundary extends React.PureComponent<Props, any> {
 		}
 		return this.props.children;
 	};
-	
+
 	public componentDidCatch = (error: any, errorInfo: any): void => {
 		this.setState({
 			hasError: error != null,

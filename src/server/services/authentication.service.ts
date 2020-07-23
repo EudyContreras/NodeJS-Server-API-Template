@@ -1,6 +1,4 @@
-
-
-import config from '../server.config';
+import config from '../../configs/config.server';
 import webtoken from 'jsonwebtoken';
 import UserService from './user.service';
 import PasswordRepository from '../repositories/password.repository';
@@ -14,17 +12,15 @@ import { AuthenticationMessages, NotificationMessages } from '../messages/messag
 import { randomString } from '../utilities/string.utility';
 
 export default class AuthenticationService {
-
 	private redisCacheHandler: RedisCacheHandler = new RedisCacheHandler();
 
 	/**
-	 * @description Authenticates the user by verifying that 
+	 * @description Authenticates the user by verifying that
 	 * the credetials match our internal records.
 	 * @param credentials The email and password used for athentication
 	 * @returns The possible user id and token or an error that has been produced.
 	 */
 	public async authenticate(credentials: { email: string; password: string }): Promise<{ result?: any; error?: any }> {
-
 		try {
 			const { email, password } = credentials;
 
@@ -42,15 +38,14 @@ export default class AuthenticationService {
 				const tempPasswords = await passwordRepository.getAllPasswordsWhere({ userId: user.id });
 
 				if (tempPasswords.length > 0) {
-
 					let noMatch = true;
 
-					for(const tempPassword of tempPasswords) {
+					for (const tempPassword of tempPasswords) {
 						const isMatch = await encryptionService.comparePasswords(password, tempPassword.password);
-						
-						if (isMatch) noMatch = false; 
+
+						if (isMatch) noMatch = false;
 					}
-					if(noMatch) return { error: AuthenticationMessages.WRONG_PASSWORD };         
+					if (noMatch) return { error: AuthenticationMessages.WRONG_PASSWORD };
 				}
 			}
 
@@ -93,7 +88,7 @@ export default class AuthenticationService {
 
 			const { error, hash } = await encryptionService.encryptPassword(randomPassword);
 
-			if (error) return { error };
+			if (error) return { error };
 
 			const passwordData = {
 				userId: user.id,
@@ -104,9 +99,9 @@ export default class AuthenticationService {
 			const password = await passwordRepository.insertPassword(passwordData);
 
 			if (!password) return { error: AuthenticationMessages.FAILURE };
-			
+
 			await notificationService.sendPasswordRecoveryEmail(email, randomPassword);
-			
+
 			return { result: NotificationMessages.RECOVERY_EMAIL };
 		} catch (error) {
 			return { error };
@@ -114,14 +109,14 @@ export default class AuthenticationService {
 	}
 
 	/**
-	* @description Retrieves the user data for the user with the
-	* matching id.
-	* @param userId The user id of the user to retrieve
-	* credentials for.
-	* @param getDTO Flag for determine if the a dto should
-	* be returned
-	* @returns The possible user or an error that has been produced.
-	*/
+	 * @description Retrieves the user data for the user with the
+	 * matching id.
+	 * @param userId The user id of the user to retrieve
+	 * credentials for.
+	 * @param getDTO Flag for determine if the a dto should
+	 * be returned
+	 * @returns The possible user or an error that has been produced.
+	 */
 	public async getUser(userId: string, getDTO = true): Promise<{ result?: IUser; error?: any }> {
 		try {
 			const repository = new UserRepository();
@@ -150,11 +145,7 @@ export default class AuthenticationService {
 				roleCode: user.roleCode
 			};
 
-			const token = await webtoken.sign(
-				payload,
-				config.jwt.TOKEN_SECRET,
-				{ expiresIn: config.jwt.EXPIRATION_TIME }
-			);
+			const token = await webtoken.sign(payload, config.jwt.TOKEN_SECRET, { expiresIn: config.jwt.EXPIRATION_TIME });
 
 			if (this.redisCacheHandler.available()) {
 				const { error } = await this.redisCacheHandler.saveValues(payload.userId, token);
@@ -189,6 +180,6 @@ export default class AuthenticationService {
 	 * @returns The flag indicating token invalidation an error that has been produced.
 	 */
 	public async invalidateTokens(user: IUser): Promise<{ result?: boolean; error?: any }> {
-		return new Promise<any>(() => { });
+		return new Promise<any>(() => {});
 	}
 }

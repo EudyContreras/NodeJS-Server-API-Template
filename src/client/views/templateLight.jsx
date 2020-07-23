@@ -1,14 +1,10 @@
-
-
 import React from 'react';
 import PropType from 'prop-types';
 
-export default (props) => {
-	return <DefaultLayout {...props} />;
-};
+export default (props) => <DefaultLayout {...props} />;
 
-const DefaultLayout = (props) => {
-	return <html lang="en-US">
+const DefaultLayout = (props) => (
+	<html lang="en-US">
 		<head>
 			<title>{props.html.title}</title>
 
@@ -20,7 +16,7 @@ const DefaultLayout = (props) => {
 			<meta name="description" content={props.html.description} />
 			<meta name="application-name" content={props.html.title} />
 
-			{/*!-- Android  --> */}
+			{/*! -- Android  --> */}
 			<meta name="theme-color" content={props.html.themeColor} />
 
 			{/* <!-- Apple IOS --> */}
@@ -52,19 +48,18 @@ const DefaultLayout = (props) => {
 			<meta httpEquiv="Content-Type" content="text/html; charset=utf-8" />
 			<meta httpEquiv="X-UA-Compatible" content="IE=edge" />
 
-
 			{/* <!-- Pinned Tab  --> */}
 			<link rel="mask-icon" href={props.favicon} size="any" color="#23282d" defer />
 		</head>
-		<body >
+		<body>
 			<noscript>You need to enable JavaScript to fully be able to use this this web-app.</noscript>
-			{/* <section id="content">{renderToString(appLight(props.url))}</section>*/}
+			{/* <section id="content">{renderToString(appLight(props.url))}</section> */}
 			<section id="content">
 				<h1>{props.text}</h1>
 			</section>
 		</body>
-	</html>;
-};
+	</html>
+);
 
 DefaultLayout.propTypes = {
 	favicon: PropType.any,

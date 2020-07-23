@@ -5,10 +5,7 @@ import FooterArea from './children/footer/FooterArea';
 import SideMenu from './children/sidebar/SidebarMenu';
 import SandBox from './children/sandbox/SandboxArea';
 
-import {
-	DispatchProps,
-	Dispatchers
-} from '../../../actions/documentation/section.action';
+import { DispatchProps, Dispatchers } from '../../../actions/documentation/section.action';
 
 interface StateProps {
 	offsetTop: number;
@@ -19,7 +16,6 @@ interface StateProps {
 type Props = StateProps & DispatchProps & any;
 
 class DocsPage extends React.Component<Props> {
-
 	private readonly footer: RefObject<HTMLElement>;
 	private readonly sidebar: RefObject<HTMLElement>;
 	private readonly sandbox: RefObject<HTMLElement>;
@@ -43,7 +39,7 @@ class DocsPage extends React.Component<Props> {
 		const scroll = body.getBoundingClientRect().top;
 		const scrollBottom = footer.getBoundingClientRect().top - sandbox.getBoundingClientRect().height;
 
-		return Math.abs(scroll) + (scrollBottom);
+		return Math.abs(scroll) + scrollBottom;
 	};
 
 	private handleResize = (): void => {

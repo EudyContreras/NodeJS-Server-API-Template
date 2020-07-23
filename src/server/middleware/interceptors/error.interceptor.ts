@@ -1,4 +1,3 @@
-
 import HttpCodes from '../../definitions/httpCode';
 
 import { HttpException } from '../../exceptions/http.exceptions';
@@ -18,6 +17,4 @@ function intercept(error: HttpException, request: Request, response: Response, n
 	response.status(status).json(apiResponse);
 }
 
-
 export default intercept;
-

@@ -10,7 +10,7 @@ import { appendWhen, join } from '../../../appliers/style.applier';
 import { getNavigationBar } from '../../../selectors/navbar.selector';
 import { showLoader, hideLoader } from '../../../actions/common/loader.action';
 import { DispatchProps, Dispatchers } from '../../../actions/common/navigation.action';
-import constants from '../../../../workers/constants';
+import { events, messages } from '../../../../workers/constants';
 
 interface StateProps {
 	anchored: boolean;
@@ -39,7 +39,6 @@ type State = {
 };
 
 class Navbar extends React.Component<Props, State> {
-
 	private navbar: React.RefObject<HTMLElement>;
 
 	constructor(props: any) {
@@ -50,11 +49,10 @@ class Navbar extends React.Component<Props, State> {
 		};
 	}
 
-	public shouldComponentUpdate = (nextProps: any): boolean => {
-		return !shallowEqual(this.props.anchored, nextProps.anchored)
-			|| !shallowEqual(this.props.mouseInside, nextProps.mouseInside)
-			|| !shallowEqual(this.props.activeTab, nextProps.activeTab);
-	};
+	public shouldComponentUpdate = (nextProps: any): boolean =>
+		!shallowEqual(this.props.anchored, nextProps.anchored) ||
+		!shallowEqual(this.props.mouseInside, nextProps.mouseInside) ||
+		!shallowEqual(this.props.activeTab, nextProps.activeTab);
 
 	public componentDidMount = (): void => {
 		this.applyAnchor(this.navbar.current!);
@@ -94,17 +92,20 @@ class Navbar extends React.Component<Props, State> {
 		if (!this.props.anchored) {
 			return;
 		}
-		this.setState({
-			hovering: true
-		}, () => {
-			setTimeout(() => {
-				if (this.state.hovering) {
-					if (this.props.anchored) {
-						this.props.setMouseInside(true);
+		this.setState(
+			{
+				hovering: true
+			},
+			() => {
+				setTimeout(() => {
+					if (this.state.hovering) {
+						if (this.props.anchored) {
+							this.props.setMouseInside(true);
+						}
 					}
-				}
-			}, 100);
-		});
+				}, 100);
+			}
+		);
 	};
 
 	private onMouseExit = (): void => {
@@ -131,8 +132,6 @@ class Navbar extends React.Component<Props, State> {
 	};
 
 	private handleLinkClick = (tab: any): void => {
-		const { events, messages } = constants;
-
 		this.manageLoader(tab);
 
 		if (tab == null) {
@@ -158,7 +157,7 @@ class Navbar extends React.Component<Props, State> {
 
 		const properties = {
 			className: join(...classes),
-			onClick: ((): void => this.handleLinkClick({ ...element, index: idx })),
+			onClick: (): void => this.handleLinkClick({ ...element, index: idx }),
 			to: element.link
 		};
 
@@ -186,17 +185,17 @@ class Navbar extends React.Component<Props, State> {
 
 		return (
 			<header {...properties}>
-				<Link to='/' onClick={(): void => this.handleLinkClick(null)}>
+				<Link to="/" onClick={(): void => this.handleLinkClick(null)}>
 					<div className={style.navLogo} title="Home">
 						<div className={style.status}></div>
 					</div>
 				</Link>
 				<ul>
-					{routes.map((element: any, idx: number) =>
+					{routes.map((element: any, idx: number) => (
 						<li key={idx}>
 							<Link {...memoize(this.getLinkProps)(style, element, idx)}>{element.label}</Link>
 						</li>
-					)}
+					))}
 				</ul>
 				<Action styling={style} />
 			</header>
@@ -210,4 +209,8 @@ const mapStateToProps = (state: IStateTree | any): any => ({
 	isLoaderActive: state.generalData.routeLoader.isActive
 });
 
-export default connect<StateProps, DispatchProps | DispatchPropsLoader, any>(mapStateToProps, { ...Dispatchers, showLoader, hideLoader })(Navbar);
+export default connect<StateProps, DispatchProps | DispatchPropsLoader, any>(mapStateToProps, {
+	...Dispatchers,
+	showLoader,
+	hideLoader
+})(Navbar);

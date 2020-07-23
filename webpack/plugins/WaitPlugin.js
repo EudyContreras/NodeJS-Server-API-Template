@@ -5,7 +5,7 @@ const fs = require('fs');
 const anyExist = (filename) => {
 	if (Array.isArray(filename)) {
 		for (const file in filename) {
-			if(!fs.existsSync(file)) {
+			if(!fs.existsSync(file)) {
 				return false;
 			}
 		}
@@ -17,7 +17,7 @@ const anyExist = (filename) => {
 
 class WaitPlugin extends WebpackBeforeBuildPlugin {
 	constructor({ filename, interval = 100, timeout = 10000 }) {
-		super(function(stats, callback) {
+		super(function (stats, callback) {
 			const start = Date.now();
 			function poll() {
 				if (anyExist(filename)) {

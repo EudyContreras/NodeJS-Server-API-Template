@@ -5,7 +5,7 @@ module.exports = (publicPath) => ({
 	options: {
 		outputPath: publicPath,
 		publicPath: publicPath,
-		name(file) {
+		name() {
 			return 'static/[ext]/[name].[ext]';
 		}
 	}

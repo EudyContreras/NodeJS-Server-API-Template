@@ -1,4 +1,3 @@
-
 export const NAV_BAR_MENU = 'NAV_BAR_MENU';
 export const NAV_BAR_MENU_ANCHORED = 'NAV_BAR_MENU_ANCHORED';
 export const NAV_BAR_MENU_OFFSET_TOP = 'NAV_BAR_MENU_OFFSET_TOP';
@@ -12,20 +11,20 @@ export interface DispatchProps {
 	setActiveTab: (tab: string) => void;
 }
 
-export const setOffsetTop = (offset: number) => (dispatch: Function): void => {
-	dispatch({ ...offsetTopAction, payload: offset }); 
+export const setOffsetTop = (offset: number) => (dispatch: (action?: any) => any): void => {
+	dispatch({ ...offsetTopAction, payload: offset });
 };
 
-export const setMouseInside = (inside: boolean) => (dispatch: Function): void => {
-	dispatch({ ...navInsideAction, payload: inside }); 
+export const setMouseInside = (inside: boolean) => (dispatch: (action?: any) => any): void => {
+	dispatch({ ...navInsideAction, payload: inside });
 };
 
-export const setAnchored = (anchored: boolean) => (dispatch: Function): void => {
-	dispatch({ ...navAnchorAction, payload: anchored }); 
+export const setAnchored = (anchored: boolean) => (dispatch: (action?: any) => any): void => {
+	dispatch({ ...navAnchorAction, payload: anchored });
 };
 
-export const setActiveTab = (tab: any) => (dispatch: Function): void => {
-	dispatch({ ...activeTabAction, payload: tab }); 
+export const setActiveTab = (tab: any) => (dispatch: (action?: any) => any): void => {
+	dispatch({ ...activeTabAction, payload: tab });
 };
 
 export const activeTabAction = {
@@ -48,9 +47,9 @@ export const offsetTopAction = {
 	type: NAV_BAR_MENU_OFFSET_TOP
 };
 
-export const Dispatchers = { 
-	setAnchored, 
+export const Dispatchers = {
+	setAnchored,
 	setMouseInside,
-	setActiveTab, 
-	setOffsetTop 
+	setActiveTab,
+	setOffsetTop
 };
