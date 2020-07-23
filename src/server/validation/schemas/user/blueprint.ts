@@ -20,10 +20,7 @@ export const validateUserCreate = (data: any): any => {
 	const schema = Joi.object({
 		name: Joi.string().required(),
 		email: Joi.string().required().email(),
-		password: Joi.string()
-			.required()
-			.min(config.validation.passwords.MIN_LENGTH)
-			.max(config.validation.passwords.MAX_LEGHTH)
+		password: Joi.string().required().min(config.validation.passwords.MIN_LENGTH).max(config.validation.passwords.MAX_LEGHTH)
 	});
 
 	return {
@@ -43,10 +40,7 @@ export const validateUserUpdate = (data: any): any => {
 			.optional()
 			.allow(...ALL)
 			.only(),
-		password: Joi.string()
-			.optional()
-			.min(config.validation.passwords.MIN_LENGTH)
-			.max(config.validation.passwords.MAX_LEGHTH)
+		password: Joi.string().optional().min(config.validation.passwords.MIN_LENGTH).max(config.validation.passwords.MAX_LEGHTH)
 	});
 
 	return {
@@ -60,14 +54,8 @@ export const validateUserUpdate = (data: any): any => {
 export const validatePasswordUpdate = (data: any): any => {
 	const schema = Joi.object({
 		userId: Joi.string().required(),
-		oldPassword: Joi.string()
-			.required()
-			.min(config.validation.passwords.MIN_LENGTH)
-			.max(config.validation.passwords.MAX_LEGHTH),
-		newPassword: Joi.string()
-			.required()
-			.min(config.validation.passwords.MIN_LENGTH)
-			.max(config.validation.passwords.MAX_LEGHTH)
+		oldPassword: Joi.string().required().min(config.validation.passwords.MIN_LENGTH).max(config.validation.passwords.MAX_LEGHTH),
+		newPassword: Joi.string().required().min(config.validation.passwords.MIN_LENGTH).max(config.validation.passwords.MAX_LEGHTH)
 	});
 
 	return {

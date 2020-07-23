@@ -4,7 +4,7 @@
 
 
 <br>
-Fast production ready boilerplate backed by the MERN stack. Built to provide the best possible developer experience with scaleability, performance and best practices in mind.
+Fast production ready boilerplate backed by the MERN stack. Built to provide the best possible developer experience with scaleability, performance and best practices in mind. Lighthouse CI is used to prevent degradation.
 
 <br>
 <br>

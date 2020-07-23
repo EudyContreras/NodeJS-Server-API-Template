@@ -78,19 +78,13 @@ class SidebarSubMenu extends React.PureComponent<any, State> {
 		const expand = this.props.expanded;
 
 		const classes = [style.subMenu];
-		const listItems = links.map((x, index) => (
-			<SidebarSubItem key={index} hash={'#' + x} label={x.label} styling={style} method={x.method.label} />
-		));
+		const listItems = links.map((x, index) => <SidebarSubItem key={index} hash={'#' + x} label={x.label} styling={style} method={x.method.label} />);
 
 		if (this.state.loaded) {
 			classes.push(style.smExpanded);
 			if (expand) {
 				return (
-					<ul
-						ref={this.menu}
-						onTransitionEnd={this.onShown}
-						className={join(...classes)}
-						style={this.getStyle(this.state.height)}>
+					<ul ref={this.menu} onTransitionEnd={this.onShown} className={join(...classes)} style={this.getStyle(this.state.height)}>
 						{listItems}
 					</ul>
 				);

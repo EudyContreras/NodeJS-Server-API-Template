@@ -13,10 +13,7 @@ export const schamaType = {
 export const validateCredentials = (data: any): any => {
 	const schema = Joi.object({
 		email: Joi.string().required().email(),
-		password: Joi.string()
-			.required()
-			.min(config.validation.passwords.MIN_LENGTH)
-			.max(config.validation.passwords.MAX_LEGHTH)
+		password: Joi.string().required().min(config.validation.passwords.MIN_LENGTH).max(config.validation.passwords.MAX_LEGHTH)
 	});
 
 	return {

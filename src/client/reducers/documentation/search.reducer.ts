@@ -1,9 +1,4 @@
-import {
-	SEARCH_ACTION_SOURCE,
-	LOADING_SEARCH_RESULTS,
-	SEARCH_ERROR,
-	SEARCH_RESULTS
-} from '../../actions/documentation/search.action';
+import { SEARCH_ACTION_SOURCE, LOADING_SEARCH_RESULTS, SEARCH_ERROR, SEARCH_RESULTS } from '../../actions/documentation/search.action';
 
 import IAction from '../../actions/action';
 

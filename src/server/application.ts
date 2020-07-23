@@ -30,11 +30,7 @@ const cachePolicy = (): ((Response, Request, NextFunction) => void) => {
 	};
 };
 
-const ignoreFavicon = (): ((Response, Request, NextFunction) => void) => (
-	request: Request,
-	response: Response,
-	next: NextFunction
-): void => {
+const ignoreFavicon = (): ((Response, Request, NextFunction) => void) => (request: Request, response: Response, next: NextFunction): void => {
 	if (config.resources.ignored.indexOf(request.originalUrl) !== -1) {
 		response.status(204).json({});
 	} else {
