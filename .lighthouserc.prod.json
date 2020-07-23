@@ -7,9 +7,11 @@
       ],
       "headful": false,
       "numberOfRuns": 3,
-     
+      "startServerCommand": "npm run build:prod:start",
+      "startServerReadyPattern": "ready on",
       "skipAudits": ["first-meaningful-paint"],
       "settings": {
+        "chromeFlags": "--no-sandbox",
         "emulatedFormFactor": "desktop"
       }
     },
@@ -17,7 +19,7 @@
       "target": "temporary-public-storage"
     },
     "assert": {
-      "preset": "lighthouse:all",
+      "preset": "lighthouse:recommended",
       "assertions": {
         "categories:performance": ["error", {"minScore": 0.9}],
         "categories:accessibility": ["error", {"minScore": 0.9}],
@@ -28,7 +30,7 @@
         "first-contentful-paint": ["error", {"maxNumericValue": 2000, "aggregationMethod": "optimistic"}],
         "interactive": ["error", {"maxNumericValue": 5000, "aggregationMethod": "optimistic"}],
         "first-meaningful-paint": "off",
-        "performance-budget": "error",
+        "performance-budget": "off",
         "render-blocking-resources": "off",
         "uses-rel-preconnect": "off",
         "unused-javascript": "off",

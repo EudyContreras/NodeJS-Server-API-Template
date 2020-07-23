@@ -22,8 +22,8 @@
   "scripts": {
     "start": "node build/server.js && echo 'ready on'",
     "cleanup": "rimraf pre dist build",
-    "lighthouse:check:dev": "lhci autorun --config=./.lighthouserc.dev.json",
-    "lighthouse:check:prod": "lhci autorun --config=./.lighthouserc.prod.json",
+    "lighthouse:test:dev": "lhci autorun --config=./.lighthouserc.dev.json",
+    "lighthouse:test:prod": "lhci autorun --config=./.lighthouserc.prod.json",
     "lighthouse:assert": "lhci assert --no-lighthouserc --budgetsFile=budgets.json",
     "lint:test": "eslint 'src/**/*.{js,jsx,ts,tsx}' && echo 'ESLint done checking!'",
     "lint:fix": "eslint 'src/**/*.{js,jsx,ts,tsx}' --fix && echo 'ESLint done checking!'",
