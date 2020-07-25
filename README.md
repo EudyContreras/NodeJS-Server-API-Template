@@ -11,7 +11,7 @@ Fast production ready boilerplate backed by the MERN stack. Built to provide the
 </br>
 <div align="center">
 <img alt="License MIT" src="https://img.shields.io/github/license/EudyContreras/NodeJS-Server-API-Template?color=blue&logo=github&style=for-the-badge">
-<img alt="GitHub language count" src="https://img.shields.io/github/languages/count/EudyContreras/NodeJS-Server-API-Template?style=for-the-badge&logo=github">
+<img alt="David" src="https://img.shields.io/david/EudyContreras/NodeJS-Server-API-Template?style=for-the-badge&color=gree&logo=Dependabot">
 <img alt="Build Status" src="https://img.shields.io/travis/com/EudyContreras/NodeJS-Server-API-Template/development?style=for-the-badge&logo=travis">
 <img alt="Package Version" src="https://img.shields.io/github/package-json/v/EudyContreras/NodeJS-Server-API-Template?logo=github&style=for-the-badge">
 <img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/EudyContreras/NodeJS-Server-API-Template?style=for-the-badge&logo=github">
@@ -21,7 +21,7 @@ Fast production ready boilerplate backed by the MERN stack. Built to provide the
 <br>
 <div align="center">
 <a target="_blank" rel="noopener noreferrer" href="https://www.codefactor.io/repository/github/eudycontreras/nodejs-server-api-template/overview/development"><img alt="CodeFactor Grade" src="https://img.shields.io/codefactor/grade/github/EudyContreras/NodeJS-Server-API-Template/development?style=for-the-badge&logo=codefactor"></a>
-<img alt="David" src="https://img.shields.io/david/EudyContreras/NodeJS-Server-API-Template?style=for-the-badge&color=gree&logo=Dependabot">
+<img alt="GitHub language count" src="https://img.shields.io/github/languages/count/EudyContreras/NodeJS-Server-API-Template?style=for-the-badge&logo=github">
 <img alt="GitHub top language" src="https://img.shields.io/github/languages/top/EudyContreras/NodeJS-Server-API-Template?style=for-the-badge&logo=github">
 <a target="_blank" rel="noopener noreferrer" href="https://github.com/prettier/prettier"><img alt="code style: prettier" src="https://img.shields.io/badge/formatter-prettier-ff69b4.svg?style=for-the-badge&logo=prettier"></a>
 </div>
