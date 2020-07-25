@@ -59,8 +59,11 @@ Fast production ready boilerplate backed by the MERN stack. Built to provide the
 ## Features:
 
 <dl>
+  <dt>Quality assured</dt>
+  <dd>Uses lighthouse ci for monitoring the application quality and keeping strict performance budgets</dd>
+  
   <dt>Predictable state managemen</dt>
-  <dd>Read-only predictable, flexible and easy to debug data state using redux..</dd>
+  <dd>Read-only predictable, flexible and easy to debug data state management using redux.</dd>
 
   <dt>Next generation JavaScript</dt>
   <dd>Write next gen type safe JS using features such as Spread and Rest Operator, Imports and Exports, Arrow functions, JSX/TSX syntax, template strings, object destructuring and more.</dd>
@@ -78,7 +81,7 @@ Fast production ready boilerplate backed by the MERN stack. Built to provide the
   <dd>Allows component based code splitting using loadable components for a consistently fast application that dynamically loads the chunks needed at runtime. 
   
   <dt>Typescript</dt>
-  <dd>Write highly scalable, maintainable and self-documented code which is easy-to-debug in large applications and codebases with a highly productive development experience.</dd>
+  <dd>Highly scalable, maintainable and self-documented code which is easy-to-debug in large applications and codebases with a highly productive development experience.</dd>
   
   <dt>Efficient Compression</dt>
   <dd>Uses lightweight and highly efficient compression methods to provides smallest bundles possible made possible with: Gzip and Brotli compression</dd>
@@ -86,7 +89,7 @@ Fast production ready boilerplate backed by the MERN stack. Built to provide the
   <dt>Universal/Isomorphic React</dt>
   <dd>Render the content on both the server and the client for a full isomorphic experience. The app allows you to seamlessly switch between CSR and SSR. An Isomorphic approach can for example allow the initial page to be rendered on the server while subsequent pages load directly from the client.</dd>
   <ul>
-  <li><b>Fast initial paga</b>  - Prevents flashing a blank page to the user and improves the user experience. Perfect for SPAs
+  <li><b>Fast initial page</b>  - Prevents flashing a blank page to the user and improves the user experience. Perfect for SPAs
   <li><b>Improved SEO</b> - Provides consistent SEO performance. Google favors sites with faster load times.
   </ul>
   <dt>Progressive Web App</dt>
