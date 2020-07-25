@@ -1,5 +1,5 @@
 <div align="center">
-  <h1>React Isomorphic PWA</h1> <a target="_blank" rel="noopener noreferrer" href="http://standardjs.com"><img alt="js-standard-style" src="https://cdn.rawgit.com/standard/standard/master/badge.svg"></a>
+  <h1>React Isomorphic PWA ⚡️</h1> <a target="_blank" rel="noopener noreferrer" href="http://standardjs.com"><img alt="js-standard-style" src="https://cdn.rawgit.com/standard/standard/master/badge.svg"></a>
 </div>
 
 
