@@ -1,6 +1,6 @@
 import React from 'react';
 import Section from './ContentSection';
-import Wrapper from '../../../../shared/Wrapper';
+import Wrapper from '../../../../common/Wrapper';
 
 class ContentArea extends React.PureComponent<any, any> {
 	public render = (): JSX.Element => {

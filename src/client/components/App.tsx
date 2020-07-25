@@ -1,10 +1,10 @@
 import React, { Fragment } from 'react';
-import ErrorBoundary from './shared/ErrorBoundary';
-import NavbarMenu from './shared/navbar/Navbar';
-import NavbarPadder from './shared/navbar/NavbarPadder';
-import Notifier from '../components/shared/navbar/NavbarNotifier';
+import ErrorBoundary from './common/ErrorBoundary';
+import NavbarMenu from './common/navbar/Navbar';
+import NavbarPadder from './common/navbar/NavbarPadder';
+import Notifier from './common/navbar/NavbarNotifier';
 import withStyles from 'isomorphic-style-loader/withStyles';
-import Loader from './shared/Loader';
+import Loader from './common/Loader';
 import style from '../styles/app.scss';
 import router from './Routes';
 

@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
 import loadable from '@loadable/component';
 import { delayBoundary } from './utililties/loadable.utils';
-import Lost from './shared/states/LostState';
+import Lost from './common/states/LostState';
 import Docs from './sections/documentation/DocsPage';
 
 const options = { ssr: true, fallback: <Fragment />, timing: { delay: 250 } };

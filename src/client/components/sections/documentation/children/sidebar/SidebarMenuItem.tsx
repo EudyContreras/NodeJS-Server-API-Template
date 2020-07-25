@@ -1,5 +1,5 @@
 import React from 'react';
-import Wrapper from '../../../../shared/Wrapper';
+import Wrapper from '../../../../common/Wrapper';
 import SidebarSubMenu from './SidebarSubMenu';
 import FontFaceObserver from 'fontfaceobserver';
 import { MaterialIcons } from '../../../../../stores/icon.library';

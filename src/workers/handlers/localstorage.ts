@@ -5,6 +5,8 @@ import { logger } from '../commons';
 const READ_WRITE = 'readwrite';
 const READ_ONLY = 'readonly';
 
+const DEBUG_MODE = process.env.NODE_ENV !== 'production';
+
 const indexes = {
 	ENTRY_ID: 'by-id',
 	ENTRY_URL: 'by-url',
@@ -121,6 +123,10 @@ export async function getAllEntries(cacheName: string): Promise<CacheEntryInfo[]
 	});
 }
 
+export async function deleteEntry(key: string): Promise<void> {
+	return await instance.deleteItem(key);
+}
+
 export async function updateEntry(
 	key: string,
 	cacheName: string,
@@ -139,7 +145,7 @@ export async function updateEntry(
 		};
 		await instance.setItem(key, updatedEntry);
 	} catch (error) {
-		logger.error('Something went wrong', error);
+		DEBUG_MODE && logger.error('Something went wrong', error);
 	}
 }
 
@@ -148,7 +154,7 @@ export async function hasExpired(key: string): Promise<boolean> {
 		const entry = await instance.getItem(key);
 		return entry ? (entry.expiryDate ? Date.now() > entry.expiryDate : false) : true;
 	} catch (error) {
-		logger.error('Something went wrong', error);
+		DEBUG_MODE && logger.error('Something went wrong', error);
 		return true;
 	}
 }
