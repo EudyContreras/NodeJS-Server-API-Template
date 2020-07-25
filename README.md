@@ -11,7 +11,7 @@ Fast production ready boilerplate backed by the MERN stack. Built to provide the
 </br>
 <div align="center">
 <img alt="License MIT" src="https://img.shields.io/github/license/EudyContreras/NodeJS-Server-API-Template?color=blue&logo=github&style=for-the-badge">
-<img alt="David" src="https://img.shields.io/david/EudyContreras/NodeJS-Server-API-Template?style=for-the-badge&color=gree&logo=Dependabot">
+<img alt="David" src="https://img.shields.io/david/EudyContreras/NodeJS-Server-API-Template?style=for-the-badge&color=gree&logo=npm">
 <img alt="Build Status" src="https://img.shields.io/travis/com/EudyContreras/NodeJS-Server-API-Template/development?style=for-the-badge&logo=travis">
 <img alt="Package Version" src="https://img.shields.io/github/package-json/v/EudyContreras/NodeJS-Server-API-Template?logo=github&style=for-the-badge">
 </div>
