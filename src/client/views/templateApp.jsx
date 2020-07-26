@@ -13,7 +13,7 @@ const DefaultLayout = (props) => {
 	};
 
 	return (
-		<html amp lang="en-US">
+		<html lang="en-US">
 			<head>
 				<title>{props.html.title}</title>
 
@@ -61,8 +61,6 @@ const DefaultLayout = (props) => {
 
 				<meta httpEquiv="Content-Type" content="text/html; charset=utf-8" />
 				<meta httpEquiv="X-UA-Compatible" content="IE=edge" />
-
-				<link rel="canonical" href="/" />
 
 				{/* <!-- Pinned Tab  --> */}
 				<link rel="mask-icon" href={props.favicon} size="any" color="#23282d" defer />

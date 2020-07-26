@@ -7,7 +7,7 @@ export const element = (tag: string, classes: string[]): Element => {
 /**
  * Joins css classes into a single string
  */
-export const join = (...names: string[]): string => names.join(' ');
+export const join = (...names: string[] | any[]): string => names.join(' ');
 
 /**
  * Creates a css styling string from the given

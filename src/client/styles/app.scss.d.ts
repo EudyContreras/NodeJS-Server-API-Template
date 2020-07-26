@@ -21,13 +21,17 @@ interface CssExports {
   'httpPatch': string;
   'httpPost': string;
   'httpPut': string;
+  'image': string;
   'installButton': string;
   'installButtonIcon': string;
   'invisible': string;
+  'lazyImage': string;
   'lazyImageCover': string;
   'lazyImageLoaded': string;
   'lazyImageLoading': string;
   'lazyImagePlaceholder': string;
+  'lazyImageSource': string;
+  'lazyImageWrapper': string;
   'loadable': string;
   'loaded': string;
   'loading': string;

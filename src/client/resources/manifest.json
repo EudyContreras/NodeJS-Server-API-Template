@@ -35,10 +35,6 @@
 			"sizes": "152x152",
 			"type": "image/webp"
 		}, {
-			"src": "images/icons/touch-icon-180x180.webp",
-			"sizes": "180x180",
-			"type": "image/webp"
-		}, {
 			"src": "images/icons/touch-icon-192x192.webp",
 			"sizes": "192x192",
 			"type": "image/webp"

@@ -29,7 +29,7 @@ useResponsive ? {
 	options: {
 		name: 'icons/[name]-[width]x[width].[ext]',
 		outputPath: path,
-		sizes: [30, 76, 96, 128, 144, 152, 192, 257, 384, 512],
+		quality: 85,
 		placeholder: true,
 		placeholderSize: 50,
 		adapter: require('responsive-loader/sharp')
@@ -43,18 +43,20 @@ useResponsive ? {
 },
 {
 	test: /\.(jpe?g|png|ico)$/i,
-	loader: 'file-loader',
-	options: {
-		outputPath: path,
-		publicPath: path,
-		name(file) {
-			const parts = file.split('/');
-			const isIcon = parts[parts.length - 1].startsWith('icon');
+	loaders: [{
+		loader: 'file-loader',
+		options: {
+			outputPath: path,
+			publicPath: path,
+			name(file) {
+				const parts = file.split('/');
+				const isIcon = parts[parts.length - 1].startsWith('icon');
 
-			if (process.env.NODE_ENV === 'development') {
+				if (process.env.NODE_ENV === 'development') {
+					return isIcon ? 'icons/[name].[ext]' : '[name].[ext]';
+				}
 				return isIcon ? 'icons/[name].[ext]' : '[name].[ext]';
 			}
-			return isIcon ? 'icons/[name].[ext]' : '[name].[ext]';
-		}
-	}
+		}	
+	}]
 }];

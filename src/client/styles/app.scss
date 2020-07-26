@@ -60,11 +60,40 @@ body::-webkit-scrollbar {
 	display: none;
 }
 
+.image {
+	width: 100%;
+	border-radius: 8px;
+	box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
 .lazy-image {
+
+	img {
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		top: 0;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		object-fit: cover;
+		object-position: center;
+	}
+
+	&-wrapper {
+		position: relative;
+		overflow: hidden;
+	}
+
+	&-source {
+		opacity: 0;
+		transition: opacity 5200ms;
+	}
+
 	&-placeholder {
 		background-size: cover;
 		background-repeat: no-repeat;
-		filter: blur(25px);
+		filter: blur(25px) saturate(1.1);
 		transition: opacity ease-in 1000ms;
 		clip-path: inset(0);
 	}

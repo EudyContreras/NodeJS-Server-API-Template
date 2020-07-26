@@ -69,7 +69,7 @@ module.exports = {
 	module: {
 		rules: [
 			{ test: /\.(jsx|tsx|ts|js)$/, exclude: /(node_modules)/, use:  'babel-loader' }, 
-			...imageLoader('public/images', true),
+			...imageLoader('images', true),
 			...styleLoader(path, isProduction)
 		]
 	},

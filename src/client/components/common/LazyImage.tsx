@@ -11,6 +11,7 @@ interface Props {
 	title?: string;
 	styling?: any;
 	srcSet?: string;
+	aspectRatio: number;
 	placeholder?: string;
 	className?: string;
 }
@@ -23,46 +24,31 @@ const LazyImage: React.FC<Props> = (props: Props): JSX.Element => {
 	const [isLoaded, setLoaded] = useState(false);
 	const [hasFailed, setFailed] = useState(false);
 
-	const { src, alt, w, h, srcSet, styling, className, placeholder } = props;
-
-	const imgRef: RefObject<HTMLImageElement | any> = useRef<HTMLImageElement | any>();
-
-	useEffect(() => {
-		if (imgRef.current && imgRef.current.complete) {
-			setLoaded(true);
-		}
-	}, []);
+	const { src, alt, srcSet, aspectRatio, styling, className, placeholder } = props;
 
 	const targeImageClasses = [className, isLoaded ? styling.lazyImageLoaded : styling.lazyImageLoading];
 	const placeHolderClasses = [className, styling.lazyImagePlaceholder];
 
 	return (
-		<React.Fragment>
-			{!hasFailed && (
-				<img
-					src={src}
-					alt={alt}
-					ref={imgRef}
-					srcSet={srcSet}
-					width={w}
-					{...(h && { height: h })}
-					loading="lazy"
-					className={join(...targeImageClasses)}
-					onLoad={(): void => setLoaded(true)}
-					onError={(): void => setFailed(true)}
-				/>
-			)}
-
+		<div className={join(styling.lazyImage, styling.lazyImageWrapper, className)}>
 			<img
-				width={w}
-				{...(h && { height: h })}
+				loading="lazy"
+				src={src}
+				alt={alt}
+				srcSet={srcSet}
+				decoding="async"
+				onLoad={(): void => setLoaded(true)}
+				className={join(styling.lazyImageSource, isLoaded && styling.lazyImageLoaded)}
+			/>
+			<img
+				decoding="sync"
+				className={styling.lazyImagePlaceholder}
 				src={placeholder}
 				alt={alt}
-				aria-hidden={true}
-				className={join(...placeHolderClasses)}
-				{...(isLoaded && { style: { opacity: '0' } })}
+				aria-hidden="true"
+				{...(isLoaded && { style: { opacity: 0 } })}
 			/>
-		</React.Fragment>
+		</div>
 	);
 };
 

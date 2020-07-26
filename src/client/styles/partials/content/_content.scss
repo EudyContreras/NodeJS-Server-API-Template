@@ -32,10 +32,10 @@
    display: flex;
    flex-direction: column;
    will-change: margin-right, margin-left;
-   margin-left: calc(17% - 1.5em);
+   margin-left: calc(17% - 1%);
+   padding-left: 1em;
    margin-right: 35%;
-   padding-left: 1.5em;
-   background-color: rgb(48,53,57);
+   background-color: rgb(48, 53, 57);
    transition: all 0.3s $standardInterpolator;
 }
 
@@ -47,7 +47,7 @@
    padding-top: 3em;
    padding-bottom: 0em;
    padding-left: 3em;
-   padding-right: 3em;
+   padding-right: 2em;
    min-height: 400px;
    height: 400px;
    width: auto;

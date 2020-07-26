@@ -155,15 +155,15 @@ self.addEventListener(events.INSTALL, async (event: any) => {
 
 const handleInstallation = async (urls: string[], callback: (cacheName: string, urls: string[]) => void): Promise<void> => {
 	try {
-		const imageAssets = urls.filter((x) => filetypePatterns.IMAGE.test(x) || filetypePatterns.PROGRESSIVE_IMAGE.test(x));
+		// const imageAssets = urls.filter((x) => filetypePatterns.IMAGE.test(x) || filetypePatterns.PROGRESSIVE_IMAGE.test(x));
 		const mediaAssets = urls.filter((x) => filetypePatterns.VIDEO.test(x) || filetypePatterns.AUDIO.test(x));
 		const fontAssests = urls.filter((x) => filetypePatterns.FONT.test(x));
 		const staticAssets = urls.filter((x) => filetypePatterns.STATIC.test(x));
 		const dataAssets = urls.filter((x) => filetypePatterns.DATA.test(x));
 
-		if (imageAssets.length > 0) {
-			await callback(cacheKeys.IMAGE_CACHE, imageAssets);
-		}
+		// if (imageAssets.length > 0) {
+		// 	await callback(cacheKeys.IMAGE_CACHE, imageAssets);
+		// }
 		if (fontAssests.length > 0) {
 			await callback(cacheKeys.GOOGLE_FONTS_WEB_CACHE, fontAssests);
 		}
