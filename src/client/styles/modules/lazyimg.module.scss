@@ -1,0 +1,20 @@
+.lazy-image {
+	position: absolute;
+	opacity: 0;
+	top: 0;
+	left: 0;
+	width: 100%;
+	transition: opacity 1s linear;
+
+	&-placeholder {
+		background-size: cover;
+		background-repeat: no-repeat;
+		filter: blur(25px);
+		transition: opacity ease-in 1000ms;
+		clip-path: inset(0);
+	}
+
+	&-cover {
+		position: absolute;
+	}
+}

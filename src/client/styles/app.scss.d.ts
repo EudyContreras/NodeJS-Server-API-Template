@@ -24,6 +24,10 @@ interface CssExports {
   'installButton': string;
   'installButtonIcon': string;
   'invisible': string;
+  'lazyImageCover': string;
+  'lazyImageLoaded': string;
+  'lazyImageLoading': string;
+  'lazyImagePlaceholder': string;
   'loadable': string;
   'loaded': string;
   'loading': string;

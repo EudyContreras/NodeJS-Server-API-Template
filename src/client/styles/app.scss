@@ -60,6 +60,29 @@ body::-webkit-scrollbar {
 	display: none;
 }
 
+.lazy-image {
+	&-placeholder {
+		background-size: cover;
+		background-repeat: no-repeat;
+		filter: blur(25px);
+		transition: opacity ease-in 1000ms;
+		clip-path: inset(0);
+	}
+
+	&-cover {
+		position: absolute;
+	}
+
+	&-loaded {
+		opacity: 1;
+		transition: opacity 1s linear;
+	}
+
+	&-loading {
+		opacity: 0;
+	}
+}
+
 ::-moz-selection { /* Code for Firefox */
 	background: transparent;
   }

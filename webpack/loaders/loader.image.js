@@ -29,7 +29,7 @@ useResponsive ? {
 	options: {
 		name: 'icons/[name]-[width]x[width].[ext]',
 		outputPath: path,
-		sizes: [72, 76, 96, 120, 128, 144, 152, 180, 192, 257, 384, 512],
+		sizes: [30, 76, 96, 128, 144, 152, 192, 257, 384, 512],
 		placeholder: true,
 		placeholderSize: 50,
 		adapter: require('responsive-loader/sharp')
@@ -42,7 +42,7 @@ useResponsive ? {
 	}
 },
 {
-	test: /\.(ico)$/i,
+	test: /\.(jpe?g|png|ico)$/i,
 	loader: 'file-loader',
 	options: {
 		outputPath: path,
