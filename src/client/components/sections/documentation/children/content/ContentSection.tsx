@@ -10,7 +10,7 @@ class ContentSection extends React.PureComponent<any> {
 				<div>
 					<LazyImage
 						styling={style}
-						className={style.image}
+						className={style.imageContainer}
 						alt={'Some alt text'}
 						src={demoImage.src}
 						aspectRatio={16 / 9}

@@ -21,7 +21,7 @@ interface CssExports {
   'httpPatch': string;
   'httpPost': string;
   'httpPut': string;
-  'image': string;
+  'imageContainer': string;
   'installButton': string;
   'installButtonIcon': string;
   'invisible': string;
