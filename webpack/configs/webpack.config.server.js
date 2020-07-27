@@ -18,7 +18,7 @@ const usesCSR = process.env.CSR === 'true';
 
 const isProduction = enviroment === 'production';
 const sourceLocation = precompile ? 'dist' : 'src';
-const publicPath = '../../build';
+const publicPath = '../../build/public';
 const entryPoint = `./${sourceLocation}/server/server.${usesCSR ? 'csr' : 'ssr' }.${precompile ? 'js' : 'ts'}`;
 
 const plugins = [];
@@ -42,7 +42,9 @@ plugins.push(
 	new webpack.optimize.LimitChunkCountPlugin({
 		maxChunks: 1
 	}),
-	new LoadablePlugin()
+	new LoadablePlugin({
+		filename: '../loadable-stats.json'
+	})
 );
 
 module.exports = {
@@ -60,7 +62,7 @@ module.exports = {
 		path: path.join(__dirname, publicPath),
 		publicPath: '/',
 		pathinfo: false,
-		filename: 'server.js',
+		filename: '../server.js',
 		globalObject: 'this'
 	},
 	plugins: plugins,

@@ -12,6 +12,8 @@ const DefaultLayout = (props) => {
 		clientSideRendered: props.clientSideRendered
 	};
 
+	const fileType = props.webpSupport ? 'webp' : 'png';
+
 	return (
 		<html lang="en-US">
 			<head>
@@ -37,7 +39,7 @@ const DefaultLayout = (props) => {
 				{/* <!-- Windows  --> */}
 				<meta name="msapplication-navbutton-color" content={props.html.windows.navButtonColor} />
 				<meta name="msapplication-TileColor" content={props.html.windows.tileColor} />
-				<meta name="msapplication-TileImage" content={props.html.windows.tileImage} defer />
+				<meta name="msapplication-TileImage" content={`${props.html.touchIconsPath}144x144.${fileType}`} defer />
 				<meta name="msapplication-config" content={props.html.windows.confi} />
 				<meta name="msapplication-tooltip" content={props.html.windows.tooltip} />
 				<meta name="msapplication-starturl" content={props.html.startupUrl} />
@@ -57,7 +59,7 @@ const DefaultLayout = (props) => {
 
 				{/* <!-- Twitter social card  --> */}
 				<meta name="twitter:card" content="summary" />
-				<meta name="twitter:image" content="images/icons/touch-icon-512x512.png" defer />
+				<meta name="twitter:image" content={`${props.html.touchIconsPath}512x512.${fileType}`} defer />
 
 				<meta httpEquiv="Content-Type" content="text/html; charset=utf-8" />
 				<meta httpEquiv="X-UA-Compatible" content="IE=edge" />
@@ -66,16 +68,15 @@ const DefaultLayout = (props) => {
 				<link rel="mask-icon" href={props.favicon} size="any" color="#23282d" defer />
 
 				{/* <!-- Others --> */}
-				<link rel="shortcut icon" type="image/x-icon" href="images/icons/touch-icon-120x120.png" defer />
-				<link rel="shortcut icon" type="image/png" href="images/icons/touch-icon-120x120.png" defer />
+				<link rel="shortcut icon" sizes="120x120" type="image/x-icon" href={`${props.html.touchIconsPath}120x120.${fileType}`} defer />
+				<link rel="shortcut icon" sizes="120x120" type="image/png" href={`${props.html.touchIconsPath}120x120.${fileType}`} defer />
+
+				<link rel="apple-touch-startup-image" type="image/png" sizes="348x348" href={`${props.html.touchIconsPath}348x348.${fileType}`} defer />
 
 				{/* <!-- Apple touch icons  --> */}
 				{props.html.touchIcons.map((x, i) => (
-					<link rel="apple-touch-icon" type="image/png" sizes={x} key={i} href={`images/icons/touch-icon-${x}.png`} defer />
+					<link rel="apple-touch-icon" type="image/png" sizes={x} key={i} href={`${props.html.touchIconsPath}${x}.${fileType}`} defer />
 				))}
-
-				<link rel="apple-touch-startup-image" type="image/png" sizes="348x348" href="images/icons/touch-icon-348x348.png" defer />
-
 				<link rel="stylesheet" crossOrigin="anonymous" href="styles/fonts.css" as="font" media="all" id="fonts" async disabled />
 
 				{props.html.preconnect.map((x, i) => (
@@ -111,6 +112,7 @@ const DefaultLayout = (props) => {
 DefaultLayout.propTypes = {
 	cache: PropType.any,
 	favicon: PropType.any,
+	webpSupport: PropType.bool,
 	clientSideRendered: PropType.bool,
 	watchConnection: PropType.bool,
 	scripts: PropType.arrayOf(PropType.any),

@@ -2,7 +2,7 @@
 	"html": {
 		"title": "Template Engine",
 		"author": "Eudy Contreras",
-		"copyright": "Property of Eudy Contreras © 2020",
+		"copyright": "Authored by Eudy Contreras © 2020",
 		"nightMode": "disable",
 		"fullscreen": "yes",
 		"startupUrl": "/",
@@ -16,6 +16,8 @@
 		"apple": {
 			"statusBarStyle": "default"
 		},
+		"favIcon": "images/favicon.ico",
+		"touchIconsPath": "images/touch_icon/touch_icon_",
 		"touchIcons": [
 			"64x64", "76x76", "128x128", "144x144", "152x152", "192x192", "256x256", "348x348", "512x512"
 		],
@@ -26,7 +28,6 @@
 		"windows": {
 			"navButtonColor": "#23282d",
 			"tileColor": "#23282d",
-			"tileImage": "images/icons/touch-icon-144x144.png",
 			"tooltip": "Tooltip Text",
 			"config": "none"
 		}

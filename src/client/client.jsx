@@ -2,8 +2,8 @@ import ReactDOM from 'react-dom';
 import configureStore from './stores/store';
 import { registerWorker } from '../workers/helpers/register.helper';
 import { loadableReady } from '@loadable/component';
-import './resources/images/favicon.ico';
-import './resources/images/icons/touch-icon.png?sizes[]=72,sizes[]=96,sizes[]=120,sizes[]=128,sizes[]=144,sizes[]=152,sizes[]=192,sizes[]=257,sizes[]=384,sizes[]=512';
+import './resources/images/icons/favicon.ico';
+import './resources/images/touch_icon.png?sizes[]=72,sizes[]=96,sizes[]=120,sizes[]=128,sizes[]=144,sizes[]=152,sizes[]=192,sizes[]=257,sizes[]=384,sizes[]=512';
 import { client } from './views';
 
 const initialState = window.__PRELOADED_STATE__ || {};

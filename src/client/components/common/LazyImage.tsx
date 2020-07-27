@@ -1,33 +1,60 @@
 /* eslint-disable standard/no-callback-literal */
-import React, { useState, useEffect, useRef, RefObject } from 'react';
+import React, { useState, useEffect } from 'react';
 import { join } from '../utililties/react.utils';
-import PropType from 'prop-types';
+import memoize from 'fast-memoize';
+import webpSupport from 'supports-webp';
+
+interface Query {
+	maxWidth: number;
+	targetWidth: number;
+}
+interface MediaQuery {
+	queries: Query[];
+	fallback: number;
+}
 
 interface Props {
-	src: string;
-	alt?: string;
 	w?: number;
 	h?: number;
+	src: string;
+	alt?: string;
 	title?: string;
 	styling?: any;
 	srcSet?: string;
+	mediaQuery?: MediaQuery;
 	aspectRatio: number;
 	placeholder?: string;
 	className?: string;
 }
 
-const extensions = ['webp', 'jpg'];
+const buildSizes = memoize((mediaQuery?: MediaQuery): string => {
+	const queries: string[] = [];
+	mediaQuery?.queries.forEach((query) => {
+		queries.push(`(max-width: ${query.maxWidth}px) ${query.targetWidth}px`);
+	});
+	return `${queries.join(', ')}, ${mediaQuery?.fallback}px`;
+});
 
-const sizeOptions = [];
+export function useWebPSupport(): boolean {
+	const [{ webp: supportsWebp }, setWebPSupport] = useState({ webp: false });
+	useEffect(() => {
+		const checkForSupport = async (): Promise<void> => {
+			const supportsWebp = await webpSupport;
+			setWebPSupport({ webp: supportsWebp });
+		};
+
+		checkForSupport();
+	}, [webpSupport]);
+
+	return supportsWebp;
+}
 
 const LazyImage: React.FC<Props> = (props: Props): JSX.Element => {
 	const [isLoaded, setLoaded] = useState(false);
 	const [hasFailed, setFailed] = useState(false);
+	// const supportsWebp = useWebPSupport();
 
-	const { src, alt, srcSet, aspectRatio, styling, className, placeholder } = props;
-
-	const targeImageClasses = [className, isLoaded ? styling.lazyImageLoaded : styling.lazyImageLoading];
-	const placeHolderClasses = [className, styling.lazyImagePlaceholder];
+	const { src, alt, srcSet, mediaQuery, styling, className, placeholder } = props;
 
 	return (
 		<div className={join(styling.lazyImage, styling.lazyImageWrapper, className)}>
@@ -35,9 +62,11 @@ const LazyImage: React.FC<Props> = (props: Props): JSX.Element => {
 				loading="lazy"
 				src={src}
 				alt={alt}
+				sizes={buildSizes(mediaQuery)}
 				srcSet={srcSet}
 				decoding="async"
 				onLoad={(): void => setLoaded(true)}
+				onError={(): void => setFailed(true)}
 				className={join(styling.lazyImageSource, isLoaded && styling.lazyImageLoaded)}
 			/>
 			<img
@@ -52,13 +81,4 @@ const LazyImage: React.FC<Props> = (props: Props): JSX.Element => {
 	);
 };
 
-LazyImage.propTypes = {
-	src: PropType.string.isRequired,
-	alt: PropType.string,
-	title: PropType.string,
-	className: PropType.string,
-	placeholder: PropType.string,
-	styling: PropType.any
-};
-
-export default LazyImage;
+export default React.memo(LazyImage);

@@ -2,6 +2,7 @@
 
 import path from 'path';
 import config from '../../configs/config.client.json';
+import webpSupport from 'supports-webp';
 import configureStore from '../stores/store';
 import ViewRenderer from '../../server/middleware/renderer';
 import AppStyle from '../styles/app.scss';
@@ -74,6 +75,7 @@ class IndexViewRenderer extends ViewRenderer {
 			styles: styleTags,
 			scripts: scriptTags,
 			context: context,
+			webpSupport: await webpSupport,
 			enableSW: process.env.USE_SW === 'true',
 			clientSideRendered: process.env.CSR === 'true',
 			watchConnection: true,

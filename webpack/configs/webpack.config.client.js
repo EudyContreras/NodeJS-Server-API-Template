@@ -64,8 +64,8 @@ const plugins = [
 					const parts = file.name.split('/');
 					const name = parts[parts.length - 1];
 					const nameSections = name.split('.');
-					const extension = nameSections[nameSections.length - 1];
-
+					const extensionPart = nameSections[nameSections.length - 1];
+					const extension = (extensionPart.indexOf('?') !== -1) ? extensionPart.split('?')[0] : extensionPart;
 					if (!(extension in manifest)) {
 						manifest[extension] = [];
 					}
