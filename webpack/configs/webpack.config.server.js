@@ -18,7 +18,7 @@ const usesCSR = process.env.CSR === 'true';
 
 const isProduction = enviroment === 'production';
 const sourceLocation = precompile ? 'dist' : 'src';
-const publicPath = '../../build/public';
+const publicPath = '../../build';
 const entryPoint = `./${sourceLocation}/server/server.${usesCSR ? 'csr' : 'ssr' }.${precompile ? 'js' : 'ts'}`;
 
 const plugins = [];
@@ -35,7 +35,11 @@ if (isProduction) {
 	);
 } else {
 	plugins.push(
-		new NodemonPlugin()
+		new NodemonPlugin({
+			watch: path.resolve(publicPath),
+			script: 'build/server.js',
+			ext: 'js,json'
+		})
 	);
 }
 plugins.push(
@@ -43,7 +47,7 @@ plugins.push(
 		maxChunks: 1
 	}),
 	new LoadablePlugin({
-		filename: '../loadable-stats.json'
+		filename: 'loadable-stats.json'
 	})
 );
 
@@ -62,7 +66,7 @@ module.exports = {
 		path: path.join(__dirname, publicPath),
 		publicPath: '/',
 		pathinfo: false,
-		filename: '../server.js',
+		filename: 'server.js',
 		globalObject: 'this'
 	},
 	plugins: plugins,

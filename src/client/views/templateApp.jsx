@@ -1,10 +1,10 @@
 import React from 'react';
 import parse from 'html-react-parser';
-import PropType from 'prop-types';
+import PropTypes from 'prop-types';
 
 export default (props) => <DefaultLayout {...props} />;
 
-const DefaultLayout = (props) => {
+export const DefaultLayout = (props) => {
 	const options = {
 		context: props.context,
 		enableSW: props.enableSW,
@@ -84,7 +84,10 @@ const DefaultLayout = (props) => {
 				))}
 				{/* <!-- Manifest.json  --> */}
 				<link rel="manifest" href={props.html.manifest} />
-				<style id="serverCSS" dangerouslySetInnerHTML={{ __html: props.css.cssText }} />
+
+				{props.css.map((style) => (
+					<style key={style.id} id={style.id} dangerouslySetInnerHTML={{ __html: style.cssText }} />
+				))}
 				<noscript>You need to enable JavaScript to fully be able to use this this web-app.</noscript>
 				<script async crossOrigin="anonymous" rel="preconnect" src={props.html.jquery} />
 			</head>
@@ -110,17 +113,22 @@ const DefaultLayout = (props) => {
 };
 
 DefaultLayout.propTypes = {
-	cache: PropType.any,
-	favicon: PropType.any,
-	webpSupport: PropType.bool,
-	clientSideRendered: PropType.bool,
-	watchConnection: PropType.bool,
-	scripts: PropType.arrayOf(PropType.any),
-	styles: PropType.arrayOf(PropType.any),
-	enableSW: PropType.bool,
-	content: PropType.any,
-	context: PropType.any,
-	state: PropType.any,
-	html: PropType.any,
-	css: PropType.any
+	cache: PropTypes.any,
+	favicon: PropTypes.any,
+	webpSupport: PropTypes.bool,
+	clientSideRendered: PropTypes.bool,
+	watchConnection: PropTypes.bool,
+	scripts: PropTypes.string,
+	styles: PropTypes.string,
+	enableSW: PropTypes.bool,
+	content: PropTypes.any,
+	context: PropTypes.any,
+	state: PropTypes.any,
+	html: PropTypes.any,
+	css: PropTypes.arrayOf(
+		PropTypes.shape({
+			id: PropTypes.string.isRequired,
+			cssText: PropTypes.string.isRequired
+		}).isRequired
+	)
 };

@@ -1,10 +1,10 @@
 
 const fileLoader = (path) => ({
-	test: /\.(jpe?g|png|ico)$/i,
+	test: /\.(jpe?g|png|gif|svg|ico)$/,
 	loader: 'file-loader',
 	options: {
 		outputPath: path,
-		publicPath: path,
+		publicPath: 'public',
 		name(file) {
 			const parts = file.split('/');
 			const isIcon = parts[parts.length - 1].startsWith('icon');
@@ -25,13 +25,13 @@ const responsiveLoader = (path) => ({
 		outputPath: path,
 		quality: 85,
 		placeholder: true,
-		placeholderSize: 50,
+		placeholderSize: 40,
 		adapter: require('responsive-loader/sharp')
 	}
 });
 
 const imageLoader = () => ({
-	test: /\.(jpe?g|png|svg|ico)$/,
+	test: /\.(jpe?g|png|gif|svg|ico)$/,
 	loader: 'image-webpack-loader',
 	enforce: 'pre',
 	options: {
@@ -55,7 +55,19 @@ const imageLoader = () => ({
 	}
 });
 
+const lqipLoader = () => ({
+	test: /\.(jpe?g|png)$/,
+	loader: 'lqip-loader',
+	options: {
+	  path: '/media', // your image going to be in media folder in the output dir
+	  name: '[name].[ext]', // you can use [hash].[ext] too if you wish,
+	  base64: false, // default: true, gives the base64 encoded image
+	  palette: true // default: false, gives the dominant colours palette
+	}
+});
+
 module.exports = (path, useResponsive) => [
+	lqipLoader(),
 	responsiveLoader(path),
 	fileLoader(path),
 	imageLoader()

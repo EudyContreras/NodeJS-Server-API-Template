@@ -28,11 +28,12 @@ loadableReady(() => {
 
 	registerLazyImageLoading();
 
-	const element = document.getElementById('serverCSS');
+	const element = document.getElementById('style');
 
 	if (element) {
-		element.remove();
+		element.parentNode.removeChild(element);
 	}
+
 	if (renderOptions.enableSW === true) {
 		registerWorker({
 			clientSideRendered: renderOptions.clientSideRendered,

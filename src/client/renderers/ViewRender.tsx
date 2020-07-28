@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 
+import React from 'react';
 import path from 'path';
 import config from '../../configs/config.client.json';
-import webpSupport from 'supports-webp';
 import configureStore from '../stores/store';
+import ReactDOM from 'react-dom/server';
 import ViewRenderer from '../../server/middleware/renderer';
 import AppStyle from '../styles/app.scss';
 import { routes } from '../components/Routes';
@@ -11,6 +12,7 @@ import { Store } from 'redux';
 import { application } from '../views';
 import { Router, Request, Response } from 'express';
 import IAction from '../actions/action';
+import { DefaultLayout } from '../../client/views/templateApp';
 import { ChunkExtractor } from '@loadable/server';
 
 const statsFile = path.resolve('build/public/loadable-stats.json');
@@ -46,51 +48,58 @@ class IndexViewRenderer extends ViewRenderer {
 		} else {
 			const shell = req.query.shell !== undefined;
 
-			const css = new Set();
-			const cssInjector = (...styles): void => {
-				styles.forEach((style) => css.add(style._getCss()));
-			};
-
 			if (shell) {
-				return await this.renderShell(req, res, cssInjector);
+				return await this.renderShell(req, res);
 			} else {
-				return await this.renderApplication(req, res, cssInjector);
+				return await this.renderApplication(req, res);
 			}
 		}
 	};
 
-	private renderApplication = async (req: Request, res: Response, cssInjector: (...styles: any[]) => void): Promise<void> => {
+	private renderApplication = async (req: Request, res: Response): Promise<void> => {
 		const extractor = new ChunkExtractor({ statsFile: statsFile, entrypoints: ['app'] });
 
 		const context = {};
-		const content = extractor.collectChunks(application(req.url, this.store, context, cssInjector));
+		const css = new Set();
+		const cssInjector = (...styles): void => {
+			styles.forEach((style) => css.add(style._getCss()));
+		};
+		const reactApp = application(req.url, this.store, context, cssInjector);
+		const contentChunks = extractor.collectChunks(reactApp);
 
 		const scriptTags = extractor.getScriptTags();
 		const styleTags = extractor.getStyleTags();
 
+		ReactDOM.renderToString(reactApp);
+
 		const props = {
-			css: this.css,
+			css: [{ id: 'style', cssText: [...css].join('') }],
 			html: config.html,
 			state: this.state,
 			styles: styleTags,
 			scripts: scriptTags,
 			context: context,
-			webpSupport: await webpSupport,
+			webpSupport: true,
 			enableSW: process.env.USE_SW === 'true',
 			clientSideRendered: process.env.CSR === 'true',
 			watchConnection: true,
-			content: content,
+			content: contentChunks,
 			cache: true
 		};
 
 		config.headers.forEach((header) => {
 			res.setHeader(header.LABEL, header.VALUE);
 		});
-		res.render(config.layout.FULL, props);
+		const html = ReactDOM.renderToStaticMarkup(<DefaultLayout {...props} />);
+		res.send(`<!doctype html>${html}`);
 	};
 
-	private renderShell = async (req: Request, res: Response, cssInjector: (...styles: any[]) => void): Promise<void> => {
+	private renderShell = async (req: Request, res: Response): Promise<void> => {
 		const context = {};
+		const css = new Set();
+		const cssInjector = (...styles): void => {
+			styles.forEach((style) => css.add(style._getCss()));
+		};
 		const content = application(req.url, this.store, context, cssInjector);
 
 		const props = {
