@@ -1,10 +1,10 @@
 
-const fileLoader = (path) => ({
-	test: /\.(jpe?g|png|gif|svg|ico)$/,
+const fileLoader = (public = 'public', path) => ({
+	test: /\.(gif|svg|ico)$/,
 	loader: 'file-loader',
 	options: {
 		outputPath: path,
-		publicPath: 'public',
+		publicPath: public,
 		name(file) {
 			const parts = file.split('/');
 			const isIcon = parts[parts.length - 1].startsWith('icon');
@@ -66,9 +66,9 @@ const lqipLoader = () => ({
 	}
 });
 
-module.exports = (path, useResponsive) => [
+module.exports = (public, path) => [
 	lqipLoader(),
 	responsiveLoader(path),
-	fileLoader(path),
+	fileLoader(public, path),
 	imageLoader()
 ];

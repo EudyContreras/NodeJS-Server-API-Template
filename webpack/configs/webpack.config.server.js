@@ -64,7 +64,7 @@ module.exports = {
 	entry: entryPoint,
 	output: {
 		path: path.join(__dirname, publicPath),
-		publicPath: '/',
+		publicPath: '',
 		pathinfo: false,
 		filename: 'server.js',
 		globalObject: 'this'
@@ -75,11 +75,11 @@ module.exports = {
 	module: {
 		rules: [
 			{ test: /\.(jsx|tsx|ts|js)$/, exclude: /(node_modules)/, use:  'babel-loader' }, 
-			...imageLoader('images', true),
+			...imageLoader('', 'images'),
 			...styleLoader(path, isProduction)
 		]
 	},
 	resolve: {
-		extensions: ['*', '.js', '.jsx', '.tsx', '.ts', '.scss', '.css']
+		extensions: ['.js', '.jsx', '.tsx', '.ts', '.scss', '.css']
 	}
 };

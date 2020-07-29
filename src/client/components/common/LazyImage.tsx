@@ -6,6 +6,7 @@ import ImageStyle from '../../styles/modules/lazyimg.module.scss';
 import withStyles from 'isomorphic-style-loader/withStyles';
 import memoize from 'fast-memoize';
 import webpSupport from 'supports-webp';
+import { instanceOf } from 'prop-types';
 
 const styling: any = ImageStyle;
 
@@ -25,17 +26,15 @@ const MediaType = {
 	JPG: 'image/jpg'
 };
 
-const imageType = [{ '.jpeg': 'image/jpeg' }, { '.webp': 'image/webp' }, { '.svg': 'image/svg' }, { '.png': 'image/png' }, { '.jpg': 'image/jpg' }];
-
-interface QueryMax {
+type QueryMax = {
 	maxWidth: number;
 	targetWidth: number;
-}
+};
 
-interface QueryMin {
+type QueryMin = {
 	minWidth: number;
 	targetWidth: number;
-}
+};
 
 interface MediaQuery {
 	queries: QueryMin[] | QueryMax[];
@@ -70,12 +69,6 @@ interface LazyImageProps {
 	className?: string;
 }
 
-const getType = (src: string): string => {
-	const parts = src.split('.');
-	const ext = parts[parts.length - 1];
-	return imageType[ext];
-};
-
 const getSrc = memoize((src: string, type: string): string => {
 	const path = src.substring(0, src.indexOf('.'));
 	return `${path}.${type}`;
@@ -87,13 +80,17 @@ const buildSet = memoize((images: SrcSet[], fileType = FileType.WBP): string => 
 		const path = getSrc(image.path, fileType);
 		srcSet.push(`${path} ${image.width}w`);
 	});
-	return srcSet.join(',');
+	return srcSet.join(', ');
 });
 
 const buildSizes = memoize((mediaQuery?: MediaQuery): string => {
 	const queries: string[] = [];
 	mediaQuery?.queries.forEach((query) => {
-		queries.push(`(max-width: ${query.maxWidth || query.minWidth}px) ${query.targetWidth}px`);
+		if (query.minWidth) {
+			queries.push(`(min-width: ${query.minWidth}px) ${query.targetWidth}px`);
+		} else {
+			queries.push(`(max-width: ${query.maxWidth}px) ${query.targetWidth}px`);
+		}
 	});
 	return `${queries.join(', ')}, ${mediaQuery?.fallback}px`;
 });
@@ -166,43 +163,40 @@ const ReactImage: React.FC<ImageProps> = ({ placeholder, alt, srcSet }: ImagePro
 );
 
 const LazyImage: React.FC<LazyImageProps> = (props: LazyImageProps): JSX.Element => {
-	const [isLoaded, setLoaded] = useState(false);
-	const [hasFailed, setFailed] = useState(false);
-	// const [isLoading, setLoading] = useState(false);
-	// const supportsWebp = useWebPSupport();
-	const { src, alt, srcSet, images, mediaQuery, className, placeholder } = props;
+	const [{ isLoaded, hasFailed }, setLoadState] = useState({ isLoaded: false, hasFailed: false });
 
-	// **
+	const { src, alt, srcSet, images, className, placeholder } = props;
+
+	const onSuccess = (): void => {
+		setLoadState({ isLoaded: true, hasFailed: false });
+	};
+	const onFailed = (): void => {
+		setLoadState({ isLoaded: false, hasFailed: true });
+	};
+
 	return (
 		<div className={join(styling.lazyImage, styling.lazyImageWrapper, className)}>
-			<img
-				className={styling.lazyImagePlaceholder}
-				sizes={buildSizes(mediaQuery)}
-				src={placeholder}
-				alt={alt}
-				aria-hidden="true"
-				{...(isLoaded && { style: { opacity: 0 } })}
-			/>
-			<picture>
-				<source
-					type={MediaType.WBP}
-					data-srcset={buildSet(images)}
-					onLoad={(): void => setLoaded(true)}
-					onError={(): void => setFailed(true)}
-					sizes={buildSizes(mediaQuery)}
-					className={join(styling.lazyImageSource, isLoaded ? styling.lazyImageLoaded : lazyClass)}
-				/>
-				<img
-					alt={alt}
-					decoding="async"
-					data-src={src}
-					data-srcset={srcSet}
-					sizes={buildSizes(mediaQuery)}
-					onLoad={(): void => setLoaded(true)}
-					onError={(): void => setFailed(true)}
-					className={join(styling.lazyImageSource, isLoaded ? styling.lazyImageLoaded : lazyClass)}
-				/>
-			</picture>
+			<img className={styling.lazyImagePlaceholder} src={placeholder} alt={alt} aria-hidden="true" {...(isLoaded && { style: { opacity: 0 } })} />
+			{!hasFailed && (
+				<picture>
+					<source
+						type={MediaType.WBP}
+						data-srcset={buildSet(images)}
+						onLoad={onSuccess}
+						onError={onFailed}
+						className={join(styling.lazyImageSource, isLoaded ? styling.lazyImageLoaded : lazyClass)}
+					/>
+					<img
+						alt={alt}
+						decoding="async"
+						data-src={src}
+						data-srcset={srcSet}
+						onLoad={onSuccess}
+						onError={onFailed}
+						className={join(styling.lazyImageSource, isLoaded ? styling.lazyImageLoaded : lazyClass)}
+					/>
+				</picture>
+			)}
 		</div>
 	);
 };

@@ -6,7 +6,7 @@ class ContentSection extends React.PureComponent<any> {
 	public render = (): JSX.Element => {
 		const style = this.props.styling;
 		const { src, palette } = demoImage;
-		const { images, placeholder, srcSet, width, height } = src;
+		const { images, placeholder, srcSet } = src;
 
 		return (
 			<article className={style.content}>
@@ -20,14 +20,6 @@ class ContentSection extends React.PureComponent<any> {
 						placeholder={placeholder}
 						srcSet={srcSet}
 						images={images}
-						mediaQuery={{
-							queries: [
-								{ maxWidth: 480, targetWidth: 300 },
-								{ maxWidth: 600, targetWidth: 500 },
-								{ maxWidth: 900, targetWidth: 800 }
-							],
-							fallback: 800
-						}}
 					/>
 				</div>
 			</article>

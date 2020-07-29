@@ -43,8 +43,8 @@ const resources = [
 	}
 ];
 
-const fileName = isProduction ? 'scripts/[name].bundle.[chunkhash].js' : './scripts/[name].bundle.js';
-const chunkFileName = isProduction ? 'scripts/[name].chunk.[chunkhash].js' : './scripts/[name].chunk.js';
+const fileName = isProduction ? 'scripts/[name].bundle.[chunkhash].js' : 'scripts/[name].bundle.js';
+const chunkFileName = isProduction ? 'scripts/[name].chunk.[chunkhash].js' : 'scripts/[name].chunk.js';
 
 const splitChunk = {
 	splitChunks: {
@@ -194,7 +194,7 @@ module.exports = {
 		pathinfo: false,
 		filename: fileName,
 		chunkFilename: chunkFileName,
-		publicPath: '/',
+		publicPath: '',
 		globalObject: 'this'
 	},
 	externals: {

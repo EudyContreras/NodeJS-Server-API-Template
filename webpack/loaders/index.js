@@ -12,7 +12,7 @@ module.exports = (path, isProduction) => [
 	{ test: /\.hbs$/, loader: 'handlebars-loader' },
 	{ test: /\.html$/i, loader: 'html-loader' },
 	fileLoader(''),
-	...imageLoader('images', true),
+	...imageLoader('', 'images'),
 	...styleLoader(path, isProduction),
 	svgLoader
 ];

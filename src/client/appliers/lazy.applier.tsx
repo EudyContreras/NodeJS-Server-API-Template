@@ -1,8 +1,8 @@
 const offset = 500;
 
 const options = {
-	rootMargin: `0px 0px ${offset}px 0px`,
-	threshold: 0.1
+	threshold: 0.01,
+	rootMargin: '75%'
 };
 
 const inBounds = (image: any): boolean =>
@@ -20,11 +20,11 @@ export function registerLazyImageLoading(throttleThreshold = 20): void {
 			entries.forEach((entry) => {
 				if (entry.isIntersecting || entry.intersectionRatio > 0) {
 					const image: any = entry.target;
-					if (image.dataset.src) image.src = image.dataset.src;
-					if (image.dataset.srcset) image.srcset = image.dataset.srcset;
 
+					if (image.dataset.srcset) image.srcset = image.dataset.srcset;
+					if (image.dataset.srcset) image.srcset = image.dataset.srcset;
 					image.classList.remove(lazyClass);
-					// image.dataset.onloading();
+
 					observer.unobserve(image);
 				}
 			});

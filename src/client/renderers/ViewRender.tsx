@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 
-import React from 'react';
 import path from 'path';
 import config from '../../configs/config.client.json';
 import configureStore from '../stores/store';
@@ -12,7 +11,6 @@ import { Store } from 'redux';
 import { application } from '../views';
 import { Router, Request, Response } from 'express';
 import IAction from '../actions/action';
-import { DefaultLayout } from '../../client/views/templateApp';
 import { ChunkExtractor } from '@loadable/server';
 
 const statsFile = path.resolve('build/public/loadable-stats.json');
@@ -90,8 +88,7 @@ class IndexViewRenderer extends ViewRenderer {
 		config.headers.forEach((header) => {
 			res.setHeader(header.LABEL, header.VALUE);
 		});
-		const html = ReactDOM.renderToStaticMarkup(<DefaultLayout {...props} />);
-		res.send(`<!doctype html>${html}`);
+		res.render(config.layout.FULL, props);
 	};
 
 	private renderShell = async (req: Request, res: Response): Promise<void> => {
