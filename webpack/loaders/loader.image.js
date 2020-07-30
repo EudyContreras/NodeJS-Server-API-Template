@@ -57,19 +57,7 @@ const imageLoader = () => ({
 	}
 });
 
-const lqipLoader = () => ({
-	test: /\.(jpe?g|png)$/,
-	loader: 'lqip-loader',
-	options: {
-	  path: '/media', // your image going to be in media folder in the output dir
-	  name: '[name].[ext]', // you can use [hash].[ext] too if you wish,
-	  base64: false, // default: true, gives the base64 encoded image
-	  palette: true // default: false, gives the dominant colours palette
-	}
-});
-
 module.exports = (public, path) => [
-	lqipLoader(),
 	responsiveLoader(path),
 	fileLoader(public, path),
 	imageLoader()

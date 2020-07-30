@@ -1,13 +1,45 @@
-$standardInterpolator: cubic-bezier(.25, .8, .25, 1);
+$standard-interpolator: cubic-bezier(0.25, 0.8, 0.25, 1);
 
+@keyframes spin {
+	from {
+		transform: rotate(0);
+	}
+
+	to {
+		transform: rotate(359deg);
+	}
+}
 
 .image-container {
 	width: 100%;
 	border-radius: 8px;
-	box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),0 4px 6px -2px rgba(0, 0, 0, 0.05);
+	box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.image-loader {
+	width: 40px;
+    height: 40px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top: 3px solid transparent;
+	border-radius: 50%;
+	transition: opacity 1s $standard-interpolator;
+
+	&-animate {
+		opacity: 1;
+		animation: spin .9s linear infinite;
+	}
+
+	&-hide {
+		opacity: 0;
+	}
 }
 
 .lazy-image {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background-color: transparent;
+	
 	source {
 		position: absolute;
 		width: 100%;
@@ -18,7 +50,7 @@ $standardInterpolator: cubic-bezier(.25, .8, .25, 1);
 		right: 0;
 		object-fit: cover;
 		object-position: center;
-		transition: opacity 1s $standardInterpolator;
+		transition: opacity 1s $standard-interpolator;
 	}
 
 	img {
@@ -31,7 +63,7 @@ $standardInterpolator: cubic-bezier(.25, .8, .25, 1);
 		right: 0;
 		object-fit: cover;
 		object-position: center;
-		transition: opacity 1s $standardInterpolator;
+		transition: opacity 1s $standard-interpolator;
 	}
 
 	&-wrapper {

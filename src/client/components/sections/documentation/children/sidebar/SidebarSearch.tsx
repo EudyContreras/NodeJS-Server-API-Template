@@ -46,10 +46,8 @@ class SidebarSearch extends React.PureComponent<Props, any> {
 
 	public componentDidMount = (): void => {
 		this._isMounted = true;
-		const font = new FontFaceObserver('Material Icons');
-
-		font
-			.load()
+		new FontFaceObserver('Material Icons')
+			.load(null, 5000)
 			.then(() => {
 				if (this._isMounted) {
 					this.setState({

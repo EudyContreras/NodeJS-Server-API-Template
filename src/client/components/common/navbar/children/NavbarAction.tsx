@@ -22,10 +22,8 @@ class Action extends React.PureComponent<Props, any> {
 	}
 
 	public componentDidMount = (): void => {
-		const font = new FontFaceObserver('Material Icons');
-
-		font
-			.load()
+		new FontFaceObserver('Material Icons')
+			.load(null, 5000)
 			.then(() => {
 				this.setState({
 					iconLoaded: true

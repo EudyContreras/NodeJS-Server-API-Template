@@ -1,15 +1,11 @@
-interface QueryMax {
-	maxWidth: number;
-	targetWidth: number;
-}
-
-interface QueryMin {
-	minWidth: number;
+interface QueryInfo {
+	minWidth?: number;
+	maxWidth?: number;
 	targetWidth: number;
 }
 
 interface MediaQuery {
-	queries: QueryMin[] | QueryMax[];
+	queries: QueryInfo[];
 	fallback: number;
 }
 
@@ -42,15 +38,15 @@ enum ImageState {
 interface LazyImageProps {
 	w?: number;
 	h?: number;
-	index: number;
 	src: string;
 	alt?: string;
 	title?: string;
-	srcSet: string;
-	images: SrcSet[];
+	srcSet?: string;
+	images?: SrcSet[];
 	fallback?: Fallback;
 	lazyLoad?: boolean;
 	palette?: string[];
+	tryWebp?: boolean;
 	mediaQuery?: MediaQuery;
 	aspectRatio: number;
 	placeholder?: string;

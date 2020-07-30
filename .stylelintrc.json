@@ -13,6 +13,6 @@
         "function-url-quotes": null,
         "number-leading-zero": null,
         "order/properties-alphabetical-order": null,
-        "unit-whitelist": ["px", "ms", "em", "rem", "%", "s"]
+        "unit-whitelist": ["px", "ms", "em", "deg", "rem", "%", "s"]
     }
 }
