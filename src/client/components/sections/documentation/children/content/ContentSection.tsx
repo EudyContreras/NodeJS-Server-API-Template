@@ -1,6 +1,6 @@
 import React from 'react';
-import demoImage from '../../../../../resources/images/demo_img.jpeg?sizes[]=300,sizes[]=500,sizes[]=800,sizes[]=1000';
-import LazyImage from '../../../../common/LazyImage';
+import demoImage from '../../../../../resources/images/demo_img.jpeg?sizes[]=1800,sizes[]=300,sizes[]=500,sizes[]=800,sizes[]=1000';
+import { LazyImage } from '../../../../common/LazyImage';
 
 class ContentSection extends React.PureComponent<any> {
 	public render = (): JSX.Element => {
@@ -12,6 +12,8 @@ class ContentSection extends React.PureComponent<any> {
 			<article className={style.content}>
 				<div className={style.contentInner}>
 					<LazyImage
+						index={this.props.index}
+						lazyLoad={true}
 						className={style.imageContainer}
 						alt={'Some alt text'}
 						src={src.src}

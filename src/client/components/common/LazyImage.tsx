@@ -1,24 +1,28 @@
 /* eslint-disable standard/no-callback-literal */
-import React, { useState, useEffect, useReducer } from 'react';
 import { join } from '../utililties/react.utils';
 import { lazyClass } from '../../appliers/lazy.applier';
-import ImageStyle from '../../styles/modules/lazyimg.module.scss';
-import withStyles from 'isomorphic-style-loader/withStyles';
-import memoize from 'fast-memoize';
 import webpSupport from 'supports-webp';
-import { instanceOf } from 'prop-types';
+import React, { useState, useEffect, useReducer } from 'react';
+import ImageStyle from '../../styles/modules/lazyimg.module.scss';
+import useStyles from 'isomorphic-style-loader/useStyles';
+import memoize from 'fast-memoize';
 
 const styling: any = ImageStyle;
 
-const FileType = {
-	JPEG: 'png',
-	WBP: 'webp',
+const observerOptions = {
+	threshold: 1.0,
+	rootMargin: '75%'
+};
+
+const fileType = {
+	JPEG: 'jpeg',
+	WEBP: 'webp',
 	SVG: 'svg',
 	PNG: 'png',
 	JPG: 'jpg'
 };
 
-const MediaType = {
+const mediaType = {
 	JPEG: 'image/jpeg',
 	WBP: 'image/webp',
 	SVG: 'image/svg',
@@ -26,58 +30,18 @@ const MediaType = {
 	JPG: 'image/jpg'
 };
 
-type QueryMax = {
-	maxWidth: number;
-	targetWidth: number;
+const getSrc = (src: string, type: string | undefined): string => {
+	if (type) {
+		const path = src.substring(0, src.indexOf('.'));
+		return `${path}.${type}`;
+	}
+	return src;
 };
 
-type QueryMin = {
-	minWidth: number;
-	targetWidth: number;
-};
-
-interface MediaQuery {
-	queries: QueryMin[] | QueryMax[];
-	fallback: number;
-}
-
-interface SrcSet {
-	path: string;
-	width: number;
-	height: number;
-}
-
-interface ImageProps {
-	src: string;
-	alt: string;
-	srcSet: any[];
-	placeholder?: any;
-}
-
-interface LazyImageProps {
-	w?: number;
-	h?: number;
-	src: string;
-	alt?: string;
-	title?: string;
-	srcSet?: string;
-	images: SrcSet[];
-	palette?: string[];
-	mediaQuery?: MediaQuery;
-	aspectRatio: number;
-	placeholder?: string;
-	className?: string;
-}
-
-const getSrc = memoize((src: string, type: string): string => {
-	const path = src.substring(0, src.indexOf('.'));
-	return `${path}.${type}`;
-});
-
-const buildSet = memoize((images: SrcSet[], fileType = FileType.WBP): string => {
+const buildSet = memoize((images: SrcSet[], type?: string | undefined): string => {
 	const srcSet: string[] = [];
 	images.forEach((image) => {
-		const path = getSrc(image.path, fileType);
+		const path = getSrc(image.path, type);
 		srcSet.push(`${path} ${image.width}w`);
 	});
 	return srcSet.join(', ');
@@ -95,19 +59,19 @@ const buildSizes = memoize((mediaQuery?: MediaQuery): string => {
 	return `${queries.join(', ')}, ${mediaQuery?.fallback}px`;
 });
 
-export function useWebPSupport(): boolean {
-	const [{ webp: supportsWebp }, setWebPSupport] = useState({ webp: false });
-	useEffect(() => {
-		const checkForSupport = async (): Promise<void> => {
-			const supportsWebp = await webpSupport;
-			setWebPSupport({ webp: supportsWebp });
-		};
-
-		checkForSupport();
-	}, [webpSupport]);
-
-	return supportsWebp;
-}
+// export function useWebPSupport(): boolean {
+// 	const [{ webp: supportsWebp }, setWebPSupport] = useState({ webp: false });
+// 	useEffect(() => {
+// 		const checkForSupport = async (): Promise<void> => {
+// 			const supportsWebp = await webpSupport;
+// 			setWebPSupport({ webp: supportsWebp });
+// 		};
+//
+// 		checkForSupport();
+// 	}, [webpSupport]);
+//
+// 	return supportsWebp;
+// }
 
 function reducer(currentSrc, action): any {
 	if (action.type === 'FALLBACK_IMAGE_LOADED') {
@@ -116,21 +80,6 @@ function reducer(currentSrc, action): any {
 	if (!currentSrc) {
 		return action.src;
 	}
-	return currentSrc;
-}
-
-function useFallbackImage({ fallbackSrc }): any {
-	const [currentSrc, dispatch] = useReducer(reducer, null);
-
-	useEffect(() => {
-		const fallbackImage = new Image();
-
-		fallbackImage.onload = (): void => {
-			dispatch({ type: 'FALLBACK_IMAGE_LOADED', src: fallbackSrc });
-		};
-		fallbackImage.src = fallbackSrc;
-	}, [fallbackSrc]);
-
 	return currentSrc;
 }
 
@@ -158,47 +107,207 @@ function useProgressiveImage({ src, fallbackSrc }): any {
 	return currentSrc;
 }
 
-const ReactImage: React.FC<ImageProps> = ({ placeholder, alt, srcSet }: ImageProps): JSX.Element => (
-	<img className="lazyload" alt={alt} src={placeholder.trace} data-srcset={srcSet.map((img, inx) => `${img.src} ${inx + 1}x`).join(', ')} data-sizes="auto" />
-);
+const loadImage = ({ src, srcSet, alt, sizes }: ImageProps, decode = true): Promise<{ imageUrl; imageSet }> => {
+	const image = new Image();
+	if (srcSet) image.srcset = srcSet;
+	if (sizes) image.sizes = sizes;
+	if (alt) image.alt = alt;
+	if (src) image.src = src;
+	if (decode)
+		return image
+			.decode()
+			.then(() => Promise.resolve({ imageUrl: src, imageSet: srcSet }))
+			.catch((encodingError: Error) => Promise.reject(encodingError));
 
-const LazyImage: React.FC<LazyImageProps> = (props: LazyImageProps): JSX.Element => {
-	const [{ isLoaded, hasFailed }, setLoadState] = useState({ isLoaded: false, hasFailed: false });
-
-	const { src, alt, srcSet, images, className, placeholder } = props;
-
-	const onSuccess = (): void => {
-		setLoadState({ isLoaded: true, hasFailed: false });
-	};
-	const onFailed = (): void => {
-		setLoadState({ isLoaded: false, hasFailed: true });
-	};
-
-	return (
-		<div className={join(styling.lazyImage, styling.lazyImageWrapper, className)}>
-			<img className={styling.lazyImagePlaceholder} src={placeholder} alt={alt} aria-hidden="true" {...(isLoaded && { style: { opacity: 0 } })} />
-			{!hasFailed && (
-				<picture>
-					<source
-						type={MediaType.WBP}
-						data-srcset={buildSet(images)}
-						onLoad={onSuccess}
-						onError={onFailed}
-						className={join(styling.lazyImageSource, isLoaded ? styling.lazyImageLoaded : lazyClass)}
-					/>
-					<img
-						alt={alt}
-						decoding="async"
-						data-src={src}
-						data-srcset={srcSet}
-						onLoad={onSuccess}
-						onError={onFailed}
-						className={join(styling.lazyImageSource, isLoaded ? styling.lazyImageLoaded : lazyClass)}
-					/>
-				</picture>
-			)}
-		</div>
-	);
+	return new Promise((resolve, reject) => {
+		image.onload = (): void => {
+			resolve({ imageUrl: src, imageSet: srcSet });
+		};
+		image.onerror = (): void => {
+			reject(Error(''));
+		};
+	});
 };
 
-export default React.memo(withStyles(ImageStyle)(LazyImage));
+function useImage(props: ImageProps): string | null {
+	const [loadedSrc, setLoadedSrc] = useState<string | null>(null);
+
+	useEffect(() => {
+		const fetchImage = async (): Promise<void> => {
+			const { imageUrl, imageSet } = await loadImage({ ...props });
+			setLoadedSrc(imageUrl);
+		};
+
+		fetchImage();
+	}, []);
+
+	return loadedSrc;
+}
+
+const inBounds = (image: any, offset: number): boolean =>
+	image.getBoundingClientRect().top <= window.innerHeight + offset && image.getBoundingClientRect().bottom >= 0 && getComputedStyle(image).display !== 'none';
+
+const ErrorPlaceHolder: React.FC<any> = ({ errorMessage }: any): JSX.Element => <div>{errorMessage}</div>;
+
+export const ReactImage: React.FC<React.ImgHTMLAttributes<HTMLImageElement>> = (props: React.ImgHTMLAttributes<HTMLImageElement>): JSX.Element => (
+	<img {...props} />
+);
+
+export const ResponsiveImage: React.FC<LazyImageProps> = React.memo(
+	(props: LazyImageProps): JSX.Element => {
+		const [{ hasLoaded, hasFailed }, setLoadState] = useState({ hasLoaded: false, hasFailed: false });
+
+		const { src, alt, srcSet, images, lazyLoad, className, placeholder } = props;
+
+		const onSuccess = (): void => {
+			setLoadState({ hasLoaded: true, hasFailed: false });
+		};
+		const onFailed = (): void => {
+			setLoadState({ hasLoaded: false, hasFailed: true });
+		};
+
+		useStyles(styling);
+
+		return (
+			<div className={join(styling.lazyImage, styling.lazyImageWrapper, className)}>
+				<ReactImage className={styling.lazyImagePlaceholder} src={placeholder} alt={alt} aria-hidden="true" {...(hasLoaded && { style: { opacity: 0 } })} />
+				{!hasFailed && (
+					<picture>
+						<source
+							type={mediaType.WBP}
+							data-srcset={buildSet(images)}
+							onLoad={onSuccess}
+							onError={onFailed}
+							className={join(styling.lazyImageSource, hasLoaded ? styling.lazyImageLoaded : lazyLoad && lazyClass)}
+						/>
+						<img
+							alt={alt}
+							loading="lazy"
+							decoding="async"
+							data-src={src}
+							data-srcset={srcSet}
+							onLoad={onSuccess}
+							onError={onFailed}
+							className={join(styling.lazyImageSource, hasLoaded ? styling.lazyImageLoaded : lazyLoad && lazyClass)}
+						/>
+					</picture>
+				)}
+			</div>
+		);
+	}
+);
+
+/**
+ * Clarify and clean up logic
+ * Add loaded images to redux state and prevent showing placeholder for them.
+ * Add logic for putting a pallete in the container using the pallete colors
+ * Handle the load error case for the image
+ * Standarize the media query sizes with { Small, Medium, Large, Very Large} settings
+ * Find a way to optimize further
+ * Check the re-renders for this component
+ * Allow use of LQIP TRACE OR QLIP for placeholders
+ */
+export const LazyImage: React.FC<LazyImageProps> = React.memo(
+	(props: LazyImageProps): JSX.Element => {
+		const { src, alt, index, srcSet, images, className, placeholder, fallback } = props;
+
+		const [hasLoaded, setLoaded] = useState(false);
+		const [hasFailed, setFailed] = useState(false);
+		const [imageRef, setImageRef] = useState<any>();
+		const [{ webp, imageSrc, imageSrcSet, imagesSet }, setImageSrc] = useState<any>({
+			webp: false,
+			imageSrc: '',
+			imageSrcSet: '',
+			imagesSet: []
+		});
+
+		const onSuccess = (event: React.SyntheticEvent<HTMLImageElement, Event>): void => {
+			setLoaded(true);
+		};
+
+		const onFailed = (event: React.SyntheticEvent<HTMLImageElement>): void => {
+			// setFailed(true);
+			const image: HTMLImageElement = event.currentTarget;
+			if (fallback) {
+				if (fallback.srcSet) {
+					image.srcset = fallback.srcSet;
+				}
+				if (fallback.images) {
+					image.srcset = buildSet(fallback.images);
+				}
+				image.onerror = null;
+				image.src = fallback.src;
+			}
+		};
+
+		useEffect(() => {
+			let hasCanceled = false;
+			let observer: IntersectionObserver | null;
+
+			if (imageRef && imageSrc !== src) {
+				if (IntersectionObserver) {
+					observer = new IntersectionObserver((entries) => {
+						const entry = entries.length > 0 ? entries[0] : null;
+						if (entry && !hasCanceled && entry.intersectionRatio > 0) {
+							const fetchImage = async (): Promise<void> => {
+								const webp = await webpSupport;
+								const { imageUrl, imageSet } = await loadImage({
+									src: webp ? getSrc(src, fileType.WEBP) : src,
+									srcSet: webp ? buildSet(images, fileType.WEBP) : srcSet
+								});
+								setImageSrc({ imageSrc: imageUrl, imageSrcSet: imageSet, imagesSet: images, webp: webp });
+							};
+
+							fetchImage();
+							observer && observer.unobserve(imageRef);
+						}
+					}, observerOptions);
+					observer.observe(imageRef);
+				} else {
+					setImageSrc({ imageSrc: src, imageSrcSet: srcSet, imagesSet: images });
+				}
+			}
+			return (): any => {
+				hasCanceled = true;
+				if (observer && observer.unobserve) {
+					observer.unobserve(imageRef);
+					observer.disconnect();
+				}
+			};
+		}, [src, imageSrc, imageRef]);
+
+		useStyles(styling);
+
+		if (hasFailed) {
+			return <ErrorPlaceHolder errorMessage={''} />;
+		}
+
+		const targetSrc = webp ? getSrc(src, fileType.WEBP) : src;
+		return (
+			<div className={join(styling.lazyImage, styling.lazyImageWrapper, className)} ref={setImageRef}>
+				<img className={styling.lazyImagePlaceholder} src={placeholder} alt={alt} aria-hidden={true} {...(hasLoaded && { style: { opacity: 0 } })} />
+				<picture className={lazyClass}>
+					{!webp && (
+						<source
+							type={mediaType.WBP}
+							{...(imageSrc === src && { srcSet: buildSet(imagesSet, fileType.WEBP) })}
+							className={join(styling.lazyImageSource, hasLoaded && styling.lazyImageLoaded)}
+						/>
+					)}
+					<img
+						loading="lazy"
+						decoding="async"
+						alt={alt}
+						{...(imageSrc === targetSrc && {
+							src: targetSrc,
+							srcSet: webp ? buildSet(imagesSet, fileType.WEBP) : imageSrcSet,
+							onLoad: onSuccess,
+							onError: onFailed
+						})}
+						className={join(styling.lazyImageSource, hasLoaded && styling.lazyImageLoaded)}
+					/>
+				</picture>
+			</div>
+		);
+	}
+);

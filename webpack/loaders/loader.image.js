@@ -18,14 +18,16 @@ const fileLoader = (public = 'public', path) => ({
 });
 
 const responsiveLoader = (path) => ({
-	test: /\.(jpe?g|png)$/i,
+	test: /\.(jpe?g|png|webp)$/i,
 	loader: 'responsive-loader',
 	options: {
 		name: '[name]/[name]_[width]x[width].[ext]',
 		outputPath: path,
+		size: 2200,
+		esModule: true,
 		quality: 85,
 		placeholder: true,
-		placeholderSize: 40,
+		placeholderSize: 30,
 		adapter: require('responsive-loader/sharp')
 	}
 });

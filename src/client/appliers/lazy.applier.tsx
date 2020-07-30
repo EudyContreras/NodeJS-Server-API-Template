@@ -24,7 +24,6 @@ export function registerLazyImageLoading(throttleThreshold = 20): void {
 					if (image.dataset.srcset) image.srcset = image.dataset.srcset;
 					if (image.dataset.srcset) image.srcset = image.dataset.srcset;
 					image.classList.remove(lazyClass);
-
 					observer.unobserve(image);
 				}
 			});
