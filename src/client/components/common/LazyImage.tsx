@@ -1,7 +1,7 @@
 import { join } from '../utililties/react.utils';
 import { lazyClass } from '../../appliers/lazy.applier';
+import React, { useState, useEffect, useReducer, RefObject } from 'react';
 import webpSupport from 'supports-webp';
-import React, { useState, useEffect, useReducer } from 'react';
 import ImageStyle from '../../styles/modules/lazyimg.module.scss';
 import useStyles from 'isomorphic-style-loader/useStyles';
 import memoize from 'fast-memoize';
@@ -9,8 +9,8 @@ import memoize from 'fast-memoize';
 const styling: any = ImageStyle;
 
 const observerOptions = {
-	threshold: 0.01,
-	rootMargin: '0px 0px 500px 0px'
+	threshold: 1,
+	rootMargin: '75%'
 };
 
 const typeRegex = /\.(jpe?g|png|webp|svg)$/i;
@@ -30,6 +30,12 @@ const mediaType = {
 	SVG: 'image/svg',
 	PNG: 'image/png',
 	JPG: 'image/jpg'
+};
+
+const elements = {
+	TARGET: 'target',
+	SOURCE: 'source',
+	PLACEHOLDER: 'placeholder'
 };
 
 const IMG_ACTION_TAG = 'TARGET_IMAGE_LOADED';
@@ -146,13 +152,9 @@ function useImage(props: ImageProps): string | null {
 	return loadedSrc;
 }
 
-type LoaderProps = { show: boolean };
-
 export const ImageLoader: React.FC<LoaderProps> = ({ show }: LoaderProps): JSX.Element => (
 	<div className={join(styling.imageLoader, show ? styling.imageLoaderAnimate : styling.imageLoaderHide)}></div>
 );
-
-type ErrorProps = { errorMessage: string };
 
 export const ErrorPlaceHolder: React.FC<ErrorProps> = ({ errorMessage }: ErrorProps): JSX.Element => <div>{errorMessage}</div>;
 
@@ -213,10 +215,7 @@ function equalProps(prevProps: LazyImageProps, nextProps: LazyImageProps): boole
  * Add loaded images to redux state and prevent re-showing placeholder for them.
  * Add logic for putting a pallete in the container using the pallete colors
  * Handle the load error case for the image
- * Standarize the media query sizes with { Small, Medium, Large, Very Large } settings
  * Find a way to optimize further get rid of bottlenecks
- * Allow use of LQIP, TRACE OR QLIP for placeholders
- * Optimize memo props
  */
 export const LazyImage: React.FC<LazyImageProps> = ({
 	src,
@@ -229,9 +228,7 @@ export const LazyImage: React.FC<LazyImageProps> = ({
 	tryWebp = true
 }: LazyImageProps): JSX.Element => {
 	const [hasLoaded, setLoaded] = useState<boolean>(false);
-	const [hasFailed, setFailed] = useState<boolean>(false);
-	const [inBounds, setInBounds] = useState<boolean>(false);
-	const [imageRef, setImageRef] = useState<any>();
+	const [imageRef, setImageRef] = useState<HTMLDivElement | null>();
 	const [{ webp, imageSrc, imageSrcSet, imagesSet }, setImageSrc] = useState<any>({
 		webp: false,
 		imageSrc: '',
@@ -239,15 +236,24 @@ export const LazyImage: React.FC<LazyImageProps> = ({
 		imagesSet: []
 	});
 
-	const onSuccess = (event: React.SyntheticEvent<HTMLImageElement, Event>): void => {
+	const onSuccess = (event: React.SyntheticEvent<HTMLImageElement | HTMLSourceElement, Event>): void => {
+		// onst id = event.currentTarget.id;
+		// witch (id) {
+		// 	case elements.SOURCE: {
+		// 		event.currentTarget.classList.add(styling.lazyImageLoaded);
+		// 		if (imageRef) imageRef.style.opacity = '0';
+		// 		break;
+		// 	}
+		// 	case elements.TARGET:
+		// 		event.currentTarget.classList.add(styling.lazyImageLoaded);
+		// 		if (imageRef) imageRef.style.opacity = '0';
+		// 		break;
+		// 	default:
+		//
 		setLoaded(true);
-		if (hasFailed) {
-			setFailed(false);
-		}
 	};
 
 	const onFailed = (event: React.SyntheticEvent<HTMLImageElement>): void => {
-		// setFailed(true);
 		const image: HTMLImageElement = event.currentTarget;
 		if (fallback) {
 			if (fallback.srcSet) {
@@ -270,7 +276,6 @@ export const LazyImage: React.FC<LazyImageProps> = ({
 				observer = new IntersectionObserver((entries) => {
 					const entry = entries.length > 0 ? entries[0] : null;
 					if (entry && !hasCanceled && entry.intersectionRatio > 0) {
-						setInBounds(true);
 						const fetchImage = async (): Promise<void> => {
 							try {
 								const webp = tryWebp && (await webpSupport);
@@ -278,7 +283,7 @@ export const LazyImage: React.FC<LazyImageProps> = ({
 									src: webp ? getSrc(src, fileType.WEBP) : src,
 									srcSet: webp && images ? buildSet(images, fileType.WEBP) : srcSet || ''
 								});
-								console.log(webp, imageUrl, imageSet);
+
 								setImageSrc({ imageSrc: imageUrl, imageSrcSet: imageSet, imagesSet: images, webp: webp });
 							} catch (error) {
 								setImageSrc({ imageSrc: src, imageSrcSet: srcSet, imagesSet: images });
@@ -297,7 +302,7 @@ export const LazyImage: React.FC<LazyImageProps> = ({
 		return (): any => {
 			hasCanceled = true;
 			if (observer && observer.unobserve) {
-				observer.unobserve(imageRef);
+				imageRef && observer.unobserve(imageRef);
 				observer.disconnect();
 			}
 		};
@@ -305,26 +310,27 @@ export const LazyImage: React.FC<LazyImageProps> = ({
 
 	useStyles(styling);
 
-	if (hasFailed) {
-		return <ErrorPlaceHolder errorMessage={''} />;
-	}
-
 	const targetSrc = webp ? getSrc(src, fileType.WEBP) : src;
+
 	return (
-		<div className={join(styling.lazyImage, styling.lazyImageWrapper, className)} ref={setImageRef}>
+		<div ref={setImageRef} className={join(styling.lazyImage, styling.lazyImageWrapper, className)}>
 			<img
-				{...(!inBounds ? { loading: 'lazy', decoding: 'async' } : {})}
+				{...(hasLoaded ? { style: { opacity: 0 } } : {})}
 				className={styling.lazyImagePlaceholder}
+				loading="eager"
+				decoding="async"
 				src={placeholder}
 				alt={alt}
 				aria-hidden={true}
-				{...(hasLoaded ? { style: { opacity: 0 } } : {})}
 			/>
 			<picture className={lazyClass}>
 				{!webp && (
 					<source
 						type={mediaType.WBP}
-						{...(imageSrc === src && { srcSet: buildSet(imagesSet, fileType.WEBP) })}
+						{...(imageSrc === src && {
+							srcSet: buildSet(imagesSet, fileType.WEBP),
+							onLoad: onSuccess
+						})}
 						className={join(styling.lazyImageSource, hasLoaded && styling.lazyImageLoaded)}
 					/>
 				)}
@@ -341,7 +347,6 @@ export const LazyImage: React.FC<LazyImageProps> = ({
 					className={join(styling.lazyImageSource, hasLoaded && styling.lazyImageLoaded)}
 				/>
 			</picture>
-			{inBounds && <ImageLoader show={!hasLoaded} />}
 		</div>
 	);
 };

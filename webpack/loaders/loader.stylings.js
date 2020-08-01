@@ -10,14 +10,13 @@ module.exports = (path, isProduction) => [
 				options: {
 					modules: {
 						mode: 'local',
-						localIdentName: isProduction ? '[hash:base64:10]' : '[local]',
+						localIdentName: isProduction ? '[hash:base64:10]' : '[name]-[local]-[hash:base64:5]',
 						context: path.resolve(__dirname, '../../src/client/components')
 					},
 					localsConvention: 'camelCaseOnly',
 					importLoaders: 1
 				}
 			},
-			// { loader: 'postcss-loader' },
 			{
 				loader: 'less-loader',
 				options: {

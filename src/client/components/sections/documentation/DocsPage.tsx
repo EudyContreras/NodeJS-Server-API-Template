@@ -19,7 +19,7 @@ class DocsPage extends React.Component<Props> {
 	private readonly footer: RefObject<HTMLElement>;
 	private readonly sidebar: RefObject<HTMLElement>;
 	private readonly sandbox: RefObject<HTMLElement>;
-	private readonly content: RefObject<HTMLElement>;
+	private readonly content: RefObject<HTMLDivElement>;
 
 	constructor(props: any) {
 		super(props);

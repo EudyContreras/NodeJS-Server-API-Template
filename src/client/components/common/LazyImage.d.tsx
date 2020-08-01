@@ -52,3 +52,7 @@ interface LazyImageProps {
 	placeholder?: string;
 	className?: string;
 }
+
+type LoaderProps = { show: boolean };
+
+type ErrorProps = { errorMessage: string };
