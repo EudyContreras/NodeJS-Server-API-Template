@@ -50,7 +50,7 @@ self.addEventListener(events.FETCH, (event: any) => {
 	const request: Request = event.request.clone();
 	const url: URL = new URL(request.url);
 
-	if (!url.origin.startsWith('http')) return;
+	// if (!url.origin.startsWith('http') && !url.origin.startsWith('data:image')) return;
 
 	DEBUG_MODE && logger.info(request.destination, request.url);
 
@@ -81,7 +81,7 @@ self.addEventListener(events.FETCH, (event: any) => {
 		return;
 	}
 
-	if (request.destination === cachableTypes.IMAGE) {
+	if (request.destination === cachableTypes.IMAGE || request.url.startsWith('data:image')) {
 		const cacheName = cacheKeys.IMAGE_CACHE;
 		const quotaOptions: CacheQuotaOptions = {
 			clearOnError: true,

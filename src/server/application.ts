@@ -115,7 +115,7 @@ export default class Application {
 
 		this.app.use(cors());
 		this.app.use(helmet());
-		// this.app.use(cachePolicy());
+		this.app.use(cachePolicy());
 		this.app.use(cookieParser());
 		this.app.use(shrinkRay());
 		this.app.use(hsts(config.host.secureTransport));

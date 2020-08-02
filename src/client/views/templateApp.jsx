@@ -100,7 +100,7 @@ export const DefaultLayout = (props) => {
 							window.__PRELOADED_STATE__= ${JSON.stringify(props.state).replace(/</g, '\\u003c')};
 							
 							window.addEventListener("load", () => {
-								document.getElementById("fonts")?.removeAttribute("disabled");
+								document.getElementById("fonts").removeAttribute("disabled");
 							});	
 						`
 					}}

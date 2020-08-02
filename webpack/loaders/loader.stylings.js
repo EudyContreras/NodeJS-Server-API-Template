@@ -9,7 +9,6 @@ module.exports = (path, isProduction) => [
 				loader: 'css-loader',
 				options: {
 					modules: {
-						mode: 'local',
 						localIdentName: isProduction ? '[hash:base64:10]' : '[name]-[local]-[hash:base64:5]',
 						context: path.resolve(__dirname, '../../src/client/components')
 					},
