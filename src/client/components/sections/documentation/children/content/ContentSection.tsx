@@ -1,6 +1,6 @@
 import React from 'react';
-import demoImage from '../../../../../resources/images/demo_img.jpeg?sizes[]=100,sizes[]=200,sizes[]=300,sizes[]=500,sizes[]=800,sizes[]=1000';
-import LazyImage from '../../../../common/LazyImage';
+import demoImage from '../../../../../resources/images/demo_img.jpeg?sizes[]=250,sizes[]=400,sizes[]=600,sizes[]=800,sizes[]=1000,sizes[]=1200';
+import { LazyImage } from '../../../../common/LazyImage';
 
 class ContentSection extends React.PureComponent<any> {
 	public render = (): JSX.Element => {
@@ -18,8 +18,10 @@ class ContentSection extends React.PureComponent<any> {
 						srcSet={demoImage.srcSet}
 						mediaQuery={{
 							queries: [
-								{ maxWidth: 480, targetWidth: 100 },
-								{ maxWidth: 600, targetWidth: 300 }
+								{ maxWidth: 600 * 2, targetWidth: 250 },
+								{ maxWidth: 800 * 2, targetWidth: 400 },
+								{ maxWidth: 1000 * 2, targetWidth: 600 },
+								{ maxWidth: 1200 * 2, targetWidth: 800 }
 							],
 							fallback: 800
 						}}

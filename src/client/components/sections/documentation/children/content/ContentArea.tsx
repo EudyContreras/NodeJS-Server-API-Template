@@ -8,7 +8,7 @@ class ContentArea extends React.PureComponent<any, any> {
 
 		return (
 			<div className={style.contentWrapper}>
-				<Wrapper className={style.contentPadder}>
+				<div className={style.contentPadder}>
 					<Section styling={style} />
 					<Section styling={style} />
 					<Section styling={style} />
@@ -41,7 +41,7 @@ class ContentArea extends React.PureComponent<any, any> {
 					<Section styling={style} />
 					<Section styling={style} />
 					<Section styling={style} />
-				</Wrapper>
+				</div>
 			</div>
 		);
 	};

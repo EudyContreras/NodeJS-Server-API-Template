@@ -84,34 +84,34 @@ function useProgressiveImage({ src, fallbackSrc }): any {
 	return currentSrc;
 }
 
-const LazyImage: React.FC<Props> = (props: Props): JSX.Element => {
-	const [isLoaded, setLoaded] = useState(false);
-	const [hasFailed, setFailed] = useState(false);
-	// const supportsWebp = useWebPSupport();
+export const LazyImage: React.FC<Props> = React.memo(
+	(props: Props): JSX.Element => {
+		const [isLoaded, setLoaded] = useState(false);
+		const [hasFailed, setFailed] = useState(false);
+		// const supportsWebp = useWebPSupport();
 
-	const { src, alt, srcSet, styling, mediaQuery, className, placeholder } = props;
+		const { src, alt, srcSet, styling, mediaQuery, className, placeholder } = props;
 
-	return (
-		<div className={join(styling.lazyImage, styling.lazyImageWrapper, className)}>
-			<img
-				alt={alt}
-				sizes={buildSizes(mediaQuery)}
-				data-src={src}
-				data-srcset={srcSet}
-				onLoad={(): void => setLoaded(true)}
-				onError={(): void => setFailed(true)}
-				className={join(styling.lazyImageSource, isLoaded ? styling.lazyImageLoaded : lazyClass)}
-			/>
-			<img
-				loading="lazy"
-				className={styling.lazyImagePlaceholder}
-				src={placeholder}
-				alt={alt}
-				aria-hidden="true"
-				{...(isLoaded && { style: { opacity: 0 } })}
-			/>
-		</div>
-	);
-};
-
-export default React.memo(LazyImage);
+		return (
+			<div className={join(styling.lazyImage, styling.lazyImageWrapper, className)}>
+				<img
+					loading="lazy"
+					className={styling.lazyImagePlaceholder}
+					src={placeholder}
+					alt={alt}
+					aria-hidden={'true'}
+					{...(isLoaded && { style: { opacity: 0 } })}
+				/>
+				<img
+					alt={alt}
+					sizes={buildSizes(mediaQuery)}
+					data-src={src}
+					data-srcset={srcSet}
+					onLoad={(): void => setLoaded(true)}
+					onError={(): void => setFailed(true)}
+					className={join(styling.lazyImageSource, isLoaded ? styling.lazyImageLoaded : lazyClass)}
+				/>
+			</div>
+		);
+	}
+);

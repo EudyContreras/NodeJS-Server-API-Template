@@ -24,14 +24,13 @@
 
 	&-source {
 		opacity: 0;
-		transition: opacity 5200ms;
+		transition: opacity 1000ms ease-out;
 	}
 
 	&-placeholder {
 		background-size: cover;
 		background-repeat: no-repeat;
 		filter: blur(25px);
-		transition: opacity linear 1000ms;
 		clip-path: inset(0);
 	}
 
