@@ -96,7 +96,6 @@ const LazyImage: React.FC<Props> = (props: Props): JSX.Element => {
 			<img
 				alt={alt}
 				sizes={buildSizes(mediaQuery)}
-				decoding="async"
 				data-src={src}
 				data-srcset={srcSet}
 				onLoad={(): void => setLoaded(true)}
@@ -104,7 +103,7 @@ const LazyImage: React.FC<Props> = (props: Props): JSX.Element => {
 				className={join(styling.lazyImageSource, isLoaded ? styling.lazyImageLoaded : lazyClass)}
 			/>
 			<img
-				decoding="sync"
+				loading="lazy"
 				className={styling.lazyImagePlaceholder}
 				src={placeholder}
 				alt={alt}

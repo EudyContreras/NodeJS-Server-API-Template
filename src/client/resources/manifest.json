@@ -15,21 +15,13 @@
 			"sizes": "96x96",
 			"type": "image/webp"
 		}, {
-			"src": "images/touch_icon/touch_icon_120x120.webp",
-			"sizes": "120x120",
-			"type": "image/webp"
-		}, {
-			"src": "images/img/touch-icon-128x128.webp",
+			"src": "images/touch_icon/touch-icon-128x128.webp",
 			"sizes": "128x128",
 			"type": "image/webp"
 		}, {
 			"src": "images/touch_icon/touch_icon_144x144.webp",
 			"sizes": "144x144",
 			"type": "image/webp"
-		}, {
-			"src": "images/touch_icon/touch_icon_144x144.png",
-			"sizes": "144x144",
-			"type": "image/png"
 		}, {
 			"src": "images/touch_icon/touch_icon_152x152.webp",
 			"sizes": "152x152",

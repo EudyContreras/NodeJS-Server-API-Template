@@ -1,4 +1,4 @@
-const offset = 500;
+const offset = 1000;
 
 const options = {
 	rootMargin: `0px 0px ${offset}px 0px`,
@@ -18,7 +18,7 @@ export function registerLazyImageLoading(throttleThreshold = 20): void {
 	if (window.IntersectionObserver) {
 		const observer = new IntersectionObserver((entries) => {
 			entries.forEach((entry) => {
-				if (entry.isIntersecting || entry.intersectionRatio > 0) {
+				if (entry.intersectionRatio > 0) {
 					const image: any = entry.target;
 					image.src = image.dataset.src;
 					image.srcset = image.dataset.srcset;

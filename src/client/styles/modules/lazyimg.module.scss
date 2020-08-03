@@ -30,8 +30,8 @@
 	&-placeholder {
 		background-size: cover;
 		background-repeat: no-repeat;
-		filter: blur(25px) saturate(1.1);
-		transition: opacity ease-in 1000ms;
+		filter: blur(25px);
+		transition: opacity linear 1000ms;
 		clip-path: inset(0);
 	}
 
