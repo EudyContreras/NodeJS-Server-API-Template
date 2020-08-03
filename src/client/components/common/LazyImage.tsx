@@ -217,44 +217,15 @@ const initialInterceptionState = {
 	imageSrcSet: '',
 	imagesSet: []
 };
-const useInterception = (
-	src: string,
-	srcSet?: string,
-	images?: SrcSet[],
-	imageRef?: RefObject<HTMLDivElement | null>,
-	tryWebp?: boolean
-): [boolean, string, string, SrcSet[]] => {
-	const [{ webp, imageSrc, imageSrcSet, imagesSet }, setImageSrc] = useState<any>(initialInterceptionState);
-
+const useInterception = (imageRef: RefObject<HTMLDivElement | null>, callback: IntersectionObserverCallback): void => {
 	useEffect(() => {
 		let hasCanceled = false;
 		let observer: IntersectionObserver | null;
 		const target = imageRef?.current;
-		if (target && imageSrc !== src) {
+		if (target) {
 			if (IntersectionObserver) {
-				observer = new IntersectionObserver(([{ isIntersecting }], entry) => {
-					if (entry && !hasCanceled && isIntersecting) {
-						observer && observer.unobserve(target);
-						const fetchImage = async (): Promise<void> => {
-							try {
-								const webp = tryWebp && (await webpSupport);
-								const { imageUrl, imageSet } = await loadImage({
-									src: webp ? getSrc(src, fileType.WEBP) : src,
-									srcSet: webp && images ? buildSet(images, fileType.WEBP) : srcSet || ''
-								});
-
-								setImageSrc({ imageSrc: imageUrl, imageSrcSet: imageSet, imagesSet: images, webp: webp });
-							} catch (error) {
-								setImageSrc({ imageSrc: src, imageSrcSet: srcSet, imagesSet: images });
-							}
-						};
-
-						fetchImage();
-					}
-				}, observerOptions);
+				observer = new IntersectionObserver(callback, observerOptions);
 				target && observer.observe(target);
-			} else {
-				setImageSrc({ imageSrc: src, imageSrcSet: srcSet, imagesSet: images, webp: false });
 			}
 		}
 		return (): any => {
@@ -264,9 +235,23 @@ const useInterception = (
 				observer.disconnect();
 			}
 		};
-	}, [src, imageSrc, imageRef]);
+	}, [imageRef]);
+};
 
-	return [webp, imageSrc, imageSrcSet, imagesSet];
+const onSuccess = (
+	source: HTMLSourceElement | null,
+	image: HTMLImageElement | null,
+	{ imageSrc, imageSrcSet }: { imageSrc: string; imageSrcSet: string }
+): void => {
+	if (source) {
+		source.srcset = imageSrcSet;
+		source.classList.add(styling.lazyImageLoaded);
+	}
+	if (image) {
+		image.src = imageSrc;
+		image.srcset = imageSrcSet;
+		image.classList.add(styling.lazyImageLoaded);
+	}
 };
 
 const failedState = { hasLoaded: false, hasFailed: true };
@@ -290,9 +275,38 @@ export const LazyImage: React.FC<LazyImageProps> = ({
 	fallback,
 	tryWebp = true
 }: LazyImageProps): JSX.Element => {
-	const imageRef = React.useRef<HTMLDivElement>(null);
+	const targetRef = React.useRef<HTMLDivElement>(null);
+	const placeholderRef = React.useRef<HTMLImageElement>(null);
+	const sourceRef = React.useRef<HTMLSourceElement>(null);
+	const imageRef = React.useRef<HTMLImageElement>(null);
+
 	// const [{ hasLoaded, hasFailed }, setLoadState] = useState(initialState);
-	const [webp, imageSrc, imageSrcSet, imagesSet] = useInterception(src, srcSet, images, imageRef, tryWebp);
+
+	useInterception(targetRef, ([{ isIntersecting }], observer) => {
+		const target = imageRef.current;
+		if (isIntersecting && target) {
+			observer && observer.unobserve(target);
+			const fetchImage = async (): Promise<void> => {
+				try {
+					const webp = tryWebp && (await webpSupport);
+					const { imageUrl, imageSet } = await loadImage({
+						src: webp ? getSrc(src, fileType.WEBP) : src,
+						srcSet: webp && images ? buildSet(images, fileType.WEBP) : srcSet || ''
+					});
+
+					const image = imageRef.current;
+					const source = sourceRef.current;
+					onSuccess(source, image, { imageSrc: imageUrl, imageSrcSet: imageSet || srcSet || '' });
+				} catch (error) {
+					const image = imageRef.current;
+					const source = sourceRef.current;
+					onSuccess(source, image, { imageSrc: src, imageSrcSet: images ? buildSet(images) : srcSet || '' });
+				}
+			};
+
+			fetchImage();
+		}
+	});
 
 	const onFailed = (event: React.SyntheticEvent<HTMLImageElement>): void => {
 		const image: HTMLImageElement = event.currentTarget;
@@ -315,39 +329,12 @@ export const LazyImage: React.FC<LazyImageProps> = ({
 
 	useStyles(styling);
 
-	const targetSrc = webp ? getSrc(src, fileType.WEBP) : src;
-
-	const builtSet = buildSet(imagesSet, fileType.WEBP);
-
-	console.log('RENDERING: ', index);
 	return (
-		<div ref={imageRef} className={join(styling.lazyImage, styling.lazyImageWrapper, className)}>
-			<img src={placeholder} alt={alt} aria-hidden={true} className={styling.lazyImagePlaceholder} />
+		<div ref={targetRef} className={join(styling.lazyImage, styling.lazyImageWrapper, className)}>
+			<img ref={placeholderRef} src={placeholder} alt={alt} aria-hidden={true} className={styling.lazyImagePlaceholder} />
 			<picture>
-				{!webp && (
-					<source
-						type={mediaType.WBP}
-						{...(imageSrc === targetSrc
-							? {
-								src: targetSrc,
-								srcSet: imagesSet ? builtSet : imageSrcSet,
-								className: join(styling.lazyImageSource, styling.lazyImageLoaded)
-							  }
-							: { className: styling.lazyImageSource })}
-					/>
-				)}
-				<img
-					decoding="async"
-					alt={alt}
-					{...(imageSrc === targetSrc
-						? {
-							src: targetSrc,
-							srcSet: webp ? builtSet : imageSrcSet,
-							onError: onFailed,
-							className: join(styling.lazyImageSource, styling.lazyImageLoaded)
-						  }
-						: { className: styling.lazyImageSource })}
-				/>
+				<source type={mediaType.WBP} className={styling.lazyImageSource} />
+				<img alt={alt} ref={imageRef} className={styling.lazyImageSource} />
 			</picture>
 		</div>
 	);
