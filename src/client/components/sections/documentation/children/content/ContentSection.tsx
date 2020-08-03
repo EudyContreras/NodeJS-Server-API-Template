@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 
 // @ts-ignore-line
-import demoImage from '../../../../../resources/images/demo_img.jpeg?sizes[]=1800,sizes[]=300,sizes[]=500,sizes[]=800,sizes[]=1000';
+import demoImage from '../../../../../resources/images/demo_img.jpeg?sizes[]=1200,sizes[]=400,sizes[]=600,sizes[]=800,sizes[]=1000';
 import { LazyImage } from '../../../../common/LazyImage';
 import React from 'react';
 
@@ -16,6 +16,7 @@ class ContentSection extends React.PureComponent<any> {
 					<LazyImage
 						className={style.imageContainer}
 						alt={'Some alt text'}
+						index={this.props.index}
 						src={src}
 						aspectRatio={16 / 9}
 						placeholder={placeholder}

@@ -7,9 +7,12 @@ const Sections = (style): JSX.Element[] => range(30).map((index) => <Section ind
 
 class ContentArea extends React.PureComponent<any, any> {
 	public render = (): JSX.Element => {
-		const style = this.props.styling;
-
-		return <div className={style.contentWrapper}>{Sections(style)}</div>;
+		const { styling } = this.props;
+		return (
+			<div className={styling.contentWrapper}>
+				<div className={styling.contentPadder}>{Sections(styling)}</div>;
+			</div>
+		);
 	};
 }
 

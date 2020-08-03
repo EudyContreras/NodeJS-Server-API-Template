@@ -2,9 +2,6 @@
 // Please do not change this file!
 interface CssExports {
   'imageContainer': string;
-  'imageLoader': string;
-  'imageLoaderAnimate': string;
-  'imageLoaderHide': string;
   'lazyImage': string;
   'lazyImageCover': string;
   'lazyImageLoaded': string;
@@ -12,7 +9,6 @@ interface CssExports {
   'lazyImagePlaceholder': string;
   'lazyImageSource': string;
   'lazyImageWrapper': string;
-  'spin': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

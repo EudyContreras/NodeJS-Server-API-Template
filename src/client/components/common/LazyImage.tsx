@@ -1,16 +1,17 @@
 import { join } from '../utililties/react.utils';
 import { lazyClass } from '../../appliers/lazy.applier';
-import React, { useState, useEffect, useReducer } from 'react';
+import React, { useState, useEffect, useReducer, Dispatch, SetStateAction, RefObject } from 'react';
 import webpSupport from 'supports-webp';
 import ImageStyle from '../../styles/modules/lazyimg.module.scss';
 import useStyles from 'isomorphic-style-loader/useStyles';
 import memoize from 'fast-memoize';
+import { bool, boolean } from '@hapi/joi';
 
 const styling: any = ImageStyle;
 
 const observerOptions = {
 	threshold: 0.1,
-	rootMargin: '500px 0px 500px 0px'
+	rootMargin: '100%'
 };
 
 const typeRegex = /\.(jpe?g|png|webp|svg)$/i;
@@ -115,11 +116,9 @@ function useProgressiveImage({ src, fallbackSrc }): any {
 	return currentSrc;
 }
 
-const loadImage = ({ src, srcSet, alt, sizes }: ImageProps, decode = true): Promise<{ imageUrl; imageSet }> => {
+const loadImage = ({ src, srcSet }: ImageProps, decode = true): Promise<{ imageUrl; imageSet }> => {
 	const image = new Image();
 	if (srcSet) image.srcset = srcSet;
-	if (sizes) image.sizes = sizes;
-	if (alt) image.alt = alt;
 	if (src) image.src = src;
 	if (decode)
 		return image
@@ -179,26 +178,30 @@ export const ResponsiveImage: React.FC<LazyImageProps> = React.memo(
 
 		return (
 			<div className={join(styling.lazyImage, styling.lazyImageWrapper, className)}>
-				<ReactImage className={styling.lazyImagePlaceholder} src={placeholder} alt={alt} aria-hidden="true" {...(hasLoaded && { style: { opacity: 0 } })} />
-				{!hasFailed && (
-					<picture>
-						<source
-							type={mediaType.WBP}
-							data-srcset={images && buildSet(images)}
-							className={join(styling.lazyImageSource, hasLoaded ? styling.lazyImageLoaded : lazyLoad && lazyClass)}
-						/>
-						<img
-							alt={alt}
-							loading="lazy"
-							decoding="async"
-							data-src={src}
-							data-srcset={srcSet}
-							onLoad={onSuccess}
-							onError={onFailed}
-							className={join(styling.lazyImageSource, hasLoaded ? styling.lazyImageLoaded : lazyLoad && lazyClass)}
-						/>
-					</picture>
-				)}
+				<img
+					decoding="async"
+					className={styling.lazyImagePlaceholder}
+					src={placeholder}
+					alt={alt}
+					aria-hidden={true}
+					{...(hasLoaded && { style: { opacity: 0 } })}
+				/>
+				<picture>
+					<source
+						type={mediaType.WBP}
+						data-srcset={images ? buildSet(images, fileType.WEBP) : srcSet || ''}
+						className={join(styling.lazyImageSource, hasLoaded ? styling.lazyImageLoaded : lazyLoad && lazyClass)}
+					/>
+					<img
+						alt={alt}
+						loading="lazy"
+						data-src={src}
+						data-srcset={srcSet}
+						onLoad={onSuccess}
+						onError={onFailed}
+						className={join(styling.lazyImageSource, hasLoaded ? styling.lazyImageLoaded : lazyLoad && lazyClass)}
+					/>
+				</picture>
 			</div>
 		);
 	}
@@ -218,7 +221,7 @@ const useInterception = (
 	src: string,
 	srcSet?: string,
 	images?: SrcSet[],
-	imageRef?: HTMLDivElement | null,
+	imageRef?: RefObject<HTMLDivElement | null>,
 	tryWebp?: boolean
 ): [boolean, string, string, SrcSet[]] => {
 	const [{ webp, imageSrc, imageSrcSet, imagesSet }, setImageSrc] = useState<any>(initialInterceptionState);
@@ -226,12 +229,12 @@ const useInterception = (
 	useEffect(() => {
 		let hasCanceled = false;
 		let observer: IntersectionObserver | null;
-
-		if (imageRef && imageSrc !== src) {
+		const target = imageRef?.current;
+		if (target && imageSrc !== src) {
 			if (IntersectionObserver) {
-				observer = new IntersectionObserver((entries) => {
-					const entry = entries.length > 0 ? entries[0] : null;
-					if (entry && !hasCanceled && entry.intersectionRatio > 0) {
+				observer = new IntersectionObserver(([{ isIntersecting }], entry) => {
+					if (entry && !hasCanceled && isIntersecting) {
+						observer && observer.unobserve(target);
 						const fetchImage = async (): Promise<void> => {
 							try {
 								const webp = tryWebp && (await webpSupport);
@@ -246,15 +249,10 @@ const useInterception = (
 							}
 						};
 
-						if (tryWebp) {
-							fetchImage();
-						} else {
-							setImageSrc({ imageSrc: src, imageSrcSet: srcSet, imagesSet: images });
-						}
-						observer && observer.unobserve(imageRef);
+						fetchImage();
 					}
 				}, observerOptions);
-				observer.observe(imageRef);
+				target && observer.observe(target);
 			} else {
 				setImageSrc({ imageSrc: src, imageSrcSet: srcSet, imagesSet: images, webp: false });
 			}
@@ -262,7 +260,7 @@ const useInterception = (
 		return (): any => {
 			hasCanceled = true;
 			if (observer && observer.unobserve) {
-				imageRef && observer.unobserve(imageRef);
+				target && observer.unobserve(target);
 				observer.disconnect();
 			}
 		};
@@ -284,6 +282,7 @@ const initialState = { hasLoaded: false, hasFailed: false };
 export const LazyImage: React.FC<LazyImageProps> = ({
 	src,
 	alt,
+	index,
 	srcSet,
 	images,
 	className,
@@ -291,8 +290,8 @@ export const LazyImage: React.FC<LazyImageProps> = ({
 	fallback,
 	tryWebp = true
 }: LazyImageProps): JSX.Element => {
-	const [imageRef, setImageRef] = useState<HTMLDivElement | null>();
-	const [{ hasLoaded, hasFailed }, setLoadState] = useState(initialState);
+	const imageRef = React.useRef<HTMLDivElement>(null);
+	// const [{ hasLoaded, hasFailed }, setLoadState] = useState(initialState);
 	const [webp, imageSrc, imageSrcSet, imagesSet] = useInterception(src, srcSet, images, imageRef, tryWebp);
 
 	const onFailed = (event: React.SyntheticEvent<HTMLImageElement>): void => {
@@ -306,11 +305,11 @@ export const LazyImage: React.FC<LazyImageProps> = ({
 			}
 			image.onerror = null;
 			image.onerror = (): void => {
-				setLoadState(failedState);
+				// setLoadState(failedState);
 			};
 			image.src = fallback.src;
 		} else {
-			setLoadState(failedState);
+			// setLoadState(failedState);
 		}
 	};
 
@@ -318,29 +317,32 @@ export const LazyImage: React.FC<LazyImageProps> = ({
 
 	const targetSrc = webp ? getSrc(src, fileType.WEBP) : src;
 
-	const classes = join(styling.lazyImageSource, hasLoaded && styling.lazyImageLoaded);
+	const builtSet = buildSet(imagesSet, fileType.WEBP);
 
+	console.log('RENDERING: ', index);
 	return (
-		<div ref={setImageRef} className={join(styling.lazyImage, styling.lazyImageWrapper, className)}>
+		<div ref={imageRef} className={join(styling.lazyImage, styling.lazyImageWrapper, className)}>
 			<img src={placeholder} alt={alt} aria-hidden={true} className={styling.lazyImagePlaceholder} />
-			<picture className={lazyClass}>
+			<picture>
 				{!webp && (
 					<source
 						type={mediaType.WBP}
-						{...(imageSrc === src && {
-							srcSet: imagesSet ? buildSet(imagesSet, fileType.WEBP) : imageSrcSet
-						})}
-						className={classes}
+						{...(imageSrc === targetSrc
+							? {
+								src: targetSrc,
+								srcSet: imagesSet ? builtSet : imageSrcSet,
+								className: join(styling.lazyImageSource, styling.lazyImageLoaded)
+							  }
+							: { className: styling.lazyImageSource })}
 					/>
 				)}
 				<img
-					loading="lazy"
 					decoding="async"
 					alt={alt}
 					{...(imageSrc === targetSrc
 						? {
 							src: targetSrc,
-							srcSet: webp ? buildSet(imagesSet, fileType.WEBP) : imageSrcSet,
+							srcSet: webp ? builtSet : imageSrcSet,
 							onError: onFailed,
 							className: join(styling.lazyImageSource, styling.lazyImageLoaded)
 						  }
