@@ -18,7 +18,7 @@ const usesCSR = process.env.CSR === 'true';
 
 const isProduction = enviroment === 'production';
 const sourceLocation = precompile ? 'dist' : 'src';
-const publicPath = '../../build/public';
+const publicPath = '../../build';
 const entryPoint = `./${sourceLocation}/server/server.${usesCSR ? 'csr' : 'ssr' }.${precompile ? 'js' : 'ts'}`;
 
 const plugins = [];
@@ -43,7 +43,7 @@ plugins.push(
 		maxChunks: 1
 	}),
 	new LoadablePlugin({
-		filename: '../loadable-stats.json'
+		filename: 'loadable-stats.json'
 	})
 );
 
@@ -60,9 +60,9 @@ module.exports = {
 	entry: entryPoint,
 	output: {
 		path: path.join(__dirname, publicPath),
-		publicPath: '/',
+		publicPath: '',
 		pathinfo: false,
-		filename: '../server.js',
+		filename: 'server.js',
 		globalObject: 'this'
 	},
 	plugins: plugins,
@@ -71,11 +71,11 @@ module.exports = {
 	module: {
 		rules: [
 			{ test: /\.(jsx|tsx|ts|js)$/, exclude: /(node_modules)/, use:  'babel-loader' }, 
-			...imageLoader('images', true),
+			...imageLoader('', 'images'),
 			...styleLoader(path, isProduction)
 		]
 	},
 	resolve: {
-		extensions: ['*', '.js', '.jsx', '.tsx', '.ts', '.scss', '.css']
+		extensions: ['.js', '.jsx', '.tsx', '.ts', '.scss', '.css']
 	}
 };

@@ -1,7 +1,7 @@
 const offset = 1000;
 
 const options = {
-	rootMargin: `0px 0px ${offset}px 0px`,
+	rootMargin: `${offset}px 0px ${offset}px 0px`,
 	threshold: 0.1
 };
 
@@ -10,6 +10,26 @@ const inBounds = (image: any): boolean =>
 
 export const lazyClass = 'lazily-loaded-image';
 
+const loadImage = ({ src, srcSet }: ImageProps, decode = true): Promise<{ imageUrl; imageSet }> => {
+	const image = new Image();
+	if (srcSet) image.srcset = srcSet;
+	if (src) image.src = src;
+	if (decode)
+		return image
+			.decode()
+			.then(() => Promise.resolve({ imageUrl: src, imageSet: srcSet }))
+			.catch((encodingError: Error) => Promise.reject(encodingError));
+
+	return new Promise((resolve, reject) => {
+		image.onload = (): void => {
+			resolve({ imageUrl: src, imageSet: srcSet });
+		};
+		image.onerror = (): void => {
+			reject(Error(''));
+		};
+	});
+};
+
 export function registerLazyImageLoading(throttleThreshold = 20): void {
 	const selectorName = `.${lazyClass}`;
 
@@ -17,15 +37,25 @@ export function registerLazyImageLoading(throttleThreshold = 20): void {
 
 	if (window.IntersectionObserver) {
 		const observer = new IntersectionObserver((entries) => {
-			entries.forEach((entry) => {
+			for (let i = 0, len = entries.length; i < len; i++) {
+				const entry = entries[i];
 				if (entry.intersectionRatio > 0) {
 					const image: any = entry.target;
-					image.src = image.dataset.src;
-					image.srcset = image.dataset.srcset;
+					const src = image.dataset.src;
+					const srcSet = image.dataset.srcset;
+
+					loadImage({ src, srcSet })
+						.then(() => {
+							image.src = image.dataset.src;
+							image.srcset = image.dataset.srcset;
+							image.dataset.src = null;
+							image.dataset.srcset = null;
+						})
+						.catch(() => {});
 					image.classList.remove(lazyClass);
 					observer.unobserve(image);
 				}
-			});
+			}
 		}, options);
 
 		lazyImages.forEach((image) => {
@@ -46,6 +76,8 @@ export function registerLazyImageLoading(throttleThreshold = 20): void {
 					if (image.offsetTop < window.innerHeight + (scrollTop + offset) || inBounds(image)) {
 						image.src = image.dataset.src;
 						image.srcset = image.dataset.srcset;
+						image.dataset.src = null;
+						image.dataset.srcset = null;
 						image.classList.remove(lazyClass);
 						lazyImages = [].slice.call(document.querySelectorAll(selectorName));
 					}

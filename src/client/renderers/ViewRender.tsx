@@ -6,6 +6,7 @@ import webpSupport from 'supports-webp';
 import configureStore from '../stores/store';
 import ViewRenderer from '../../server/middleware/renderer';
 import AppStyle from '../styles/app.scss';
+import ReactDOM from 'react-dom/server';
 import { routes } from '../components/Routes';
 import { Store } from 'redux';
 import { application } from '../views';
@@ -46,30 +47,32 @@ class IndexViewRenderer extends ViewRenderer {
 		} else {
 			const shell = req.query.shell !== undefined;
 
-			const css = new Set();
-			const cssInjector = (...styles): void => {
-				styles.forEach((style) => css.add(style._getCss()));
-			};
-
 			if (shell) {
-				return await this.renderShell(req, res, cssInjector);
+				return await this.renderShell(req, res);
 			} else {
-				return await this.renderApplication(req, res, cssInjector);
+				return await this.renderApplication(req, res);
 			}
 		}
 	};
 
-	private renderApplication = async (req: Request, res: Response, cssInjector: (...styles: any[]) => void): Promise<void> => {
+	private renderApplication = async (req: Request, res: Response): Promise<void> => {
 		const extractor = new ChunkExtractor({ statsFile: statsFile, entrypoints: ['app'] });
 
 		const context = {};
-		const content = extractor.collectChunks(application(req.url, this.store, context, cssInjector));
+		const css = new Set();
+		const cssInjector = (...styles): void => {
+			styles.forEach((style) => css.add(style._getCss()));
+		};
+		const reactApp = application(req.url, this.store, context, cssInjector);
+		const contentChunks = extractor.collectChunks(reactApp);
 
 		const scriptTags = extractor.getScriptTags();
 		const styleTags = extractor.getStyleTags();
 
+		ReactDOM.renderToString(reactApp);
+
 		const props = {
-			css: this.css,
+			css: [{ id: 'serverCSS', cssText: [...css].join('') }],
 			html: config.html,
 			state: this.state,
 			styles: styleTags,
@@ -79,7 +82,7 @@ class IndexViewRenderer extends ViewRenderer {
 			enableSW: process.env.USE_SW === 'true',
 			clientSideRendered: process.env.CSR === 'true',
 			watchConnection: true,
-			content: content,
+			content: contentChunks,
 			cache: true
 		};
 
@@ -89,8 +92,12 @@ class IndexViewRenderer extends ViewRenderer {
 		res.render(config.layout.FULL, props);
 	};
 
-	private renderShell = async (req: Request, res: Response, cssInjector: (...styles: any[]) => void): Promise<void> => {
+	private renderShell = async (req: Request, res: Response): Promise<void> => {
 		const context = {};
+		const css = new Set();
+		const cssInjector = (...styles): void => {
+			styles.forEach((style) => css.add(style._getCss()));
+		};
 		const content = application(req.url, this.store, context, cssInjector);
 
 		const props = {

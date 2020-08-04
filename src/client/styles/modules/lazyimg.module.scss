@@ -1,10 +1,16 @@
+
 .image-container {
 	width: 100%;
 	border-radius: 8px;
-	box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),0 4px 6px -2px rgba(0, 0, 0, 0.05);
+	box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
 }
 
 .lazy-image {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	
+	source, 
 	img {
 		position: absolute;
 		width: 100%;
@@ -15,6 +21,7 @@
 		right: 0;
 		object-fit: cover;
 		object-position: center;
+		transition: opacity 1s ease;
 	}
 
 	&-wrapper {
@@ -24,13 +31,11 @@
 
 	&-source {
 		opacity: 0;
-		transition: opacity 1000ms ease-out;
 	}
 
 	&-placeholder {
 		background-size: cover;
 		background-repeat: no-repeat;
-		filter: blur(25px);
 		clip-path: inset(0);
 	}
 
@@ -40,10 +45,5 @@
 
 	&-loaded {
 		opacity: 1;
-		transition: opacity 1s linear;
-	}
-
-	&-loading {
-		opacity: 0;
 	}
 }

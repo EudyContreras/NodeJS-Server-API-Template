@@ -31,7 +31,7 @@ loadableReady(() => {
 	const element = document.getElementById('serverCSS');
 
 	if (element) {
-		element.remove();
+		element.parentNode.removeChild(element);
 	}
 	if (renderOptions.enableSW === true) {
 		registerWorker({

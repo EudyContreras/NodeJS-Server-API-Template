@@ -2,36 +2,60 @@
 import React, { useState, useEffect, useReducer } from 'react';
 import { join } from '../utililties/react.utils';
 import { lazyClass } from '../../appliers/lazy.applier';
+import ImageStyle from '../../styles/modules/lazyimg.module.scss';
+import useStyles from 'isomorphic-style-loader/useStyles';
 import memoize from 'fast-memoize';
 import webpSupport from 'supports-webp';
 
-interface Query {
-	maxWidth: number;
-	targetWidth: number;
-}
-interface MediaQuery {
-	queries: Query[];
-	fallback: number;
-}
+const styling: any = ImageStyle;
 
-interface Props {
-	w?: number;
-	h?: number;
-	src: string;
-	alt?: string;
-	title?: string;
-	styling?: any;
-	srcSet?: string;
-	mediaQuery?: MediaQuery;
-	aspectRatio: number;
-	placeholder?: string;
-	className?: string;
-}
+const typeRegex = /\.(jpe?g|png|webp|svg)$/i;
+
+const fileType = {
+	JPEG: 'jpeg',
+	WEBP: 'webp',
+	SVG: 'svg',
+	PNG: 'png',
+	JPG: 'jpg'
+};
+
+const mediaType = {
+	SVGXML: 'image/svg+xml',
+	JPEG: 'image/jpeg',
+	WBP: 'image/webp',
+	SVG: 'image/svg',
+	PNG: 'image/png',
+	JPG: 'image/jpg'
+};
+
+const elements = {
+	TARGET: 'target',
+	SOURCE: 'source',
+	PLACEHOLDER: 'placeholder'
+};
+
+const IMG_ACTION_TAG = 'TARGET_IMAGE_LOADED';
+const IMG_FALLBACK_ACTION_TAG = 'FALLBACK_IMAGE_LOADED';
+
+const getSrc = (src: string, type: string | undefined): string => (type ? src.replace(typeRegex, `.${type}`) : src);
+
+const buildSet = memoize((images: SrcSet[], type?: string | undefined): string => {
+	const srcSet: string[] = [];
+	images.forEach((image) => {
+		const path = getSrc(image.path, type);
+		srcSet.push(`${path} ${image.width}w`);
+	});
+	return srcSet.join(', ');
+});
 
 const buildSizes = memoize((mediaQuery?: MediaQuery): string => {
 	const queries: string[] = [];
 	mediaQuery?.queries.forEach((query) => {
-		queries.push(`(max-width: ${query.maxWidth}px) ${query.targetWidth}px`);
+		if (query.minWidth) {
+			queries.push(`(min-width: ${query.minWidth}px) ${query.targetWidth}px`);
+		} else if (query.maxWidth) {
+			queries.push(`(max-width: ${query.maxWidth}px) ${query.targetWidth}px`);
+		}
 	});
 	return `${queries.join(', ')}, ${mediaQuery?.fallback}px`;
 });
@@ -40,10 +64,13 @@ export function useWebPSupport(): boolean {
 	const [{ webp: supportsWebp }, setWebPSupport] = useState({ webp: false });
 	useEffect(() => {
 		const checkForSupport = async (): Promise<void> => {
-			const supportsWebp = await webpSupport;
-			setWebPSupport({ webp: supportsWebp });
+			try {
+				const supportsWebp = await webpSupport;
+				setWebPSupport({ webp: supportsWebp });
+			} catch (error) {
+				setWebPSupport({ webp: false });
+			}
 		};
-
 		checkForSupport();
 	}, [webpSupport]);
 
@@ -84,13 +111,48 @@ function useProgressiveImage({ src, fallbackSrc }): any {
 	return currentSrc;
 }
 
-export const LazyImage: React.FC<Props> = React.memo(
-	(props: Props): JSX.Element => {
+const loadImage = ({ src, srcSet }: ImageProps, decode = true): Promise<{ imageUrl; imageSet }> => {
+	const image = new Image();
+	if (srcSet) image.srcset = srcSet;
+	if (src) image.src = src;
+	if (decode)
+		return image
+			.decode()
+			.then(() => Promise.resolve({ imageUrl: src, imageSet: srcSet }))
+			.catch((encodingError: Error) => Promise.reject(encodingError));
+
+	return new Promise((resolve, reject) => {
+		image.onload = (): void => {
+			resolve({ imageUrl: src, imageSet: srcSet });
+		};
+		image.onerror = (): void => {
+			reject(Error(''));
+		};
+	});
+};
+
+function useImage(props: ImageProps): string | null {
+	const [loadedSrc, setLoadedSrc] = useState<string | null>(null);
+
+	useEffect(() => {
+		const fetchImage = async (): Promise<void> => {
+			const { imageUrl } = await loadImage({ ...props });
+			setLoadedSrc(imageUrl);
+		};
+		fetchImage();
+	}, []);
+
+	return loadedSrc;
+}
+
+export const LazyImage: React.FC<LazyImageProps> = React.memo(
+	(props: LazyImageProps): JSX.Element => {
+		const { src, alt, srcSet, mediaQuery, className, placeholder } = props;
+
 		const [isLoaded, setLoaded] = useState(false);
 		const [hasFailed, setFailed] = useState(false);
-		// const supportsWebp = useWebPSupport();
 
-		const { src, alt, srcSet, styling, mediaQuery, className, placeholder } = props;
+		useStyles(styling);
 
 		return (
 			<div className={join(styling.lazyImage, styling.lazyImageWrapper, className)}>

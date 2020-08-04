@@ -5,6 +5,7 @@ interface CssExports {
   'backgroundAnim': string;
   'bottom': string;
   'content': string;
+  'contentInner': string;
   'contentPadder': string;
   'contentWrapper': string;
   'expand': string;
@@ -25,13 +26,6 @@ interface CssExports {
   'installButton': string;
   'installButtonIcon': string;
   'invisible': string;
-  'lazyImage': string;
-  'lazyImageCover': string;
-  'lazyImageLoaded': string;
-  'lazyImageLoading': string;
-  'lazyImagePlaceholder': string;
-  'lazyImageSource': string;
-  'lazyImageWrapper': string;
   'loadable': string;
   'loaded': string;
   'loading': string;
