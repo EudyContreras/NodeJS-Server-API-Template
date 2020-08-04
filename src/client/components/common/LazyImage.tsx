@@ -145,34 +145,48 @@ function useImage(props: ImageProps): string | null {
 	return loadedSrc;
 }
 
+const usNativeLazy = (): boolean => 'loading' in HTMLImageElement.prototype;
+
 export const LazyImage: React.FC<LazyImageProps> = React.memo(
 	(props: LazyImageProps): JSX.Element => {
-		const { src, alt, srcSet, mediaQuery, className, placeholder } = props;
+		const { src, alt, srcSet, index, images, mediaQuery, className, placeholder, lazyLoad } = props;
 
 		const [isLoaded, setLoaded] = useState(false);
 		const [hasFailed, setFailed] = useState(false);
+
+		const onLoaded = (event: React.SyntheticEvent<HTMLImageElement>): void => {
+			setLoaded(true);
+		};
+
+		const onFailed = (event: React.SyntheticEvent<HTMLImageElement>): void => {
+			setFailed(true);
+		};
+
+		const sizes = buildSizes(mediaQuery);
+		const imgSets = images && buildSet(images, fileType.WEBP);
 
 		useStyles(styling);
 
 		return (
 			<div className={join(styling.lazyImage, styling.lazyImageWrapper, className)}>
-				<img
-					loading="lazy"
-					className={styling.lazyImagePlaceholder}
-					src={placeholder}
-					alt={alt}
-					aria-hidden={'true'}
-					{...(isLoaded && { style: { opacity: 0 } })}
-				/>
-				<img
-					alt={alt}
-					sizes={buildSizes(mediaQuery)}
-					data-src={src}
-					data-srcset={srcSet}
-					onLoad={(): void => setLoaded(true)}
-					onError={(): void => setFailed(true)}
-					className={join(styling.lazyImageSource, isLoaded ? styling.lazyImageLoaded : lazyClass)}
-				/>
+				<img loading="lazy" src={placeholder} alt={alt} aria-hidden={true} className={styling.lazyImagePlaceholder} />
+				<picture data-index={index} className={!isLoaded ? lazyClass : ''}>
+					<source
+						type={mediaType.WBP}
+						sizes={sizes}
+						data-srcset={imgSets || srcSet}
+						className={join(styling.lazyImageSource, isLoaded ? styling.lazyImageLoaded : '')}
+					/>
+					<img
+						alt={alt}
+						sizes={sizes}
+						data-src={src}
+						data-srcset={srcSet}
+						onLoad={onLoaded}
+						onError={onFailed}
+						className={join(styling.lazyImageSource, isLoaded ? styling.lazyImageLoaded : '')}
+					/>
+				</picture>
 			</div>
 		);
 	}

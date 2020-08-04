@@ -5,7 +5,6 @@ interface CssExports {
   'lazyImage': string;
   'lazyImageCover': string;
   'lazyImageLoaded': string;
-  'lazyImageLoading': string;
   'lazyImagePlaceholder': string;
   'lazyImageSource': string;
   'lazyImageWrapper': string;

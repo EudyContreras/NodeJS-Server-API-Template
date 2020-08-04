@@ -1,3 +1,4 @@
+/* eslint-disable standard/no-callback-literal */
 /**
  * @description Internal throttle a repeated action so that there is
  * a pause between repetions.
@@ -38,15 +39,14 @@ export default function throttle(action: (index: number) => void, interval: numb
 	performThrottle(action, interval, max, start);
 }
 
-/* eslint-disable */
-export const debounce = (a, b, c): any => {
-	var d, e;
-	return function () {
-		function h() {
-			(d = null), c || (e = a.apply(f, g));
-		}
-		var f = self,
-			g = arguments;
-		return clearTimeout(d), (d = setTimeout(h, b)), c && !d && (e = a.apply(f, g)), e;
+// eslint-disable-next-line @typescript-eslint/ban-types
+export function debounce(callback: (...args) => any, delay = 100): Function {
+	let timeoutId;
+	return (...args): void => {
+		clearTimeout(timeoutId);
+		timeoutId = setTimeout(() => {
+			timeoutId = null;
+			callback(...args);
+		}, delay);
 	};
-};
+}

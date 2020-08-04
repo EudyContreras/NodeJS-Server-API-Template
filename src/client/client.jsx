@@ -26,7 +26,11 @@ loadableReady(() => {
 
 	renderMethod(client(window.location.pathname, store, renderOptions.context, insertCss), content);
 
-	registerLazyImageLoading();
+	registerLazyImageLoading({
+		useNativeLoading: false,
+		loadBelowFold: true,
+		decodeImages: true
+	});
 
 	const element = document.getElementById('serverCSS');
 

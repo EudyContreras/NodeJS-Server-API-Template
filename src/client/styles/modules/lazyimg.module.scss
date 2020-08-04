@@ -1,3 +1,4 @@
+$standardinterpolator: cubic-bezier(.25, .8, .25, 1);
 
 .image-container {
 	width: 100%;
@@ -10,8 +11,7 @@
 	align-items: center;
 	justify-content: center;
 	
-	source, 
-	img {
+	source, img {
 		position: absolute;
 		width: 100%;
 		height: 100%;
@@ -21,7 +21,7 @@
 		right: 0;
 		object-fit: cover;
 		object-position: center;
-		transition: opacity 1s ease;
+		transition: opacity 1s $standardinterpolator;
 	}
 
 	&-wrapper {
@@ -37,6 +37,7 @@
 		background-size: cover;
 		background-repeat: no-repeat;
 		clip-path: inset(0);
+		filter: blur(25px);
 	}
 
 	&-cover {

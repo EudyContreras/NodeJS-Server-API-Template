@@ -165,8 +165,15 @@ export default class Application {
 
 		const connectionString = `${prepend}${userName}:${password}${dbURIPath}`;
 
-		mongoose.connect(connectionString, this.dbOptions);
+		try {
+			mongoose.connect(connectionString, this.dbOptions);
+		} catch (error) {
+			console.log('Could not connect ot MongoDB!');
+		}
 
+		mongoose.connection.on('error', () => {
+			console.log('Could not connect ot MongoDB!');
+		});
 		mongoose.connection.once('open', async () => {
 			console.log('MongoDB connected successfully');
 			if (createInitialData) {
