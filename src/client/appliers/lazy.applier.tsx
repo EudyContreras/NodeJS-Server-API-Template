@@ -1,7 +1,7 @@
 const config = {
 	offset: 1000,
-	foldLoadDelay: 2500,
-	foldLoadInterval: 200
+	foldLoadDelay: 1200,
+	foldLoadInterval: 100
 };
 
 const attributes = {
@@ -12,6 +12,13 @@ const attributes = {
 const options = {
 	rootMargin: `${config.offset}px 0px ${config.offset}px 0px`,
 	threshold: 0.1
+};
+
+type LazyConfigOptions = {
+	throttleThreshold: number;
+	useNativeLoading: boolean;
+	loadBelowFold: boolean;
+	decodeImages: boolean;
 };
 
 export const lazyClass = 'lazily-loaded-image';
@@ -27,9 +34,10 @@ const applyOnSource = (source: HTMLSourceElement): void => {
 	source.srcset = source.dataset.srcset || '';
 	source.removeAttribute(attributes.SRC_SET);
 };
+
 const applyOnImage = (image: HTMLImageElement): void => {
-	image.src = image.dataset.src || '';
 	image.srcset = image.dataset.srcset || '';
+	image.src = image.dataset.src || '';
 	image.removeAttribute(attributes.SRC);
 	image.removeAttribute(attributes.SRC_SET);
 };
@@ -54,6 +62,23 @@ const loadImage = ({ src, srcSet }: ImageProps, decode = true): Promise<{ imageU
 	});
 };
 
+const restart = (delay?: number | undefined): void => {
+	const lazyImages: HTMLImageElement[] = [].slice.call(document.querySelectorAll(selectorName));
+
+	if (lazyImages.length > 0) {
+		const nextImage = lazyImages.shift();
+		if (nextImage) {
+			if (delay) {
+				setTimeout(() => {
+					loadImagesBelowFold(nextImage, delay);
+				}, delay);
+			} else {
+				loadImagesBelowFold(nextImage, config.foldLoadInterval);
+			}
+		}
+	}
+};
+
 /**
  *
  * @param element The current element to extract images and sources from
@@ -67,45 +92,46 @@ const loadImagesBelowFold = (element: HTMLElement | null, delay: number): void =
 	let src = element.dataset.src || '';
 	let srcSet = element.dataset.srcset || '';
 
+	element.classList.remove(lazyClass);
+
 	if (element instanceof HTMLPictureElement) {
 		const sources: HTMLSourceElement[] | null = [].slice.call(element.querySelectorAll('source'));
 		const images: HTMLImageElement[] | null = [].slice.call(element.querySelectorAll('img'));
 
 		src = images[0].dataset.src || '';
 		srcSet = sources[0].dataset.srcset || images[0].dataset.srcset || '';
-	}
 
-	loadImage({ src, srcSet })
-		.then(() => {
-			const lazyImages: HTMLImageElement[] = [].slice.call(document.querySelectorAll(selectorName));
-			const currentImage = lazyImages.length > 0 && lazyImages.shift();
-			if (currentImage) {
-				currentImage.classList.remove(lazyClass);
-				applyOnImage(currentImage);
-			}
-			if (lazyImages.length > 0) {
-				const nextImage = lazyImages.shift();
-				if (nextImage) {
-					setTimeout(() => {
-						loadImagesBelowFold(nextImage, delay);
-					}, delay);
-				}
-			}
-		})
-		.catch((error) => console.log(error));
+		if (element.dataset.decoded === 'true' || src.length <= 0) {
+			restart();
+		}
+
+		loadImage({ src, srcSet })
+			.then(() => {
+				if (sources && sources.length > 0) applyOnSource(sources[0]);
+				if (images && images.length > 0) applyOnImage(images[0]);
+
+				restart(delay);
+			})
+			.catch((error) => console.log(error, src));
+	} else if (element instanceof HTMLImageElement) {
+		if (element.dataset.decoded === 'true' || src.length <= 0) {
+			restart();
+		}
+		loadImage({ src, srcSet })
+			.then(() => {
+				applyOnImage(element);
+				restart(delay);
+			})
+			.catch((error) => console.log(error, src));
+	}
 };
 
 export function registerLazyImageLoading({
 	throttleThreshold = 20,
-	useNativeLoading = false,
+	useNativeLoading = true,
 	loadBelowFold = true,
 	decodeImages = true
-}: {
-	throttleThreshold: number;
-	useNativeLoading: boolean;
-	loadBelowFold: boolean;
-	decodeImages: boolean;
-}): void {
+}: LazyConfigOptions): void {
 	const lazyImages: HTMLImageElement[] = [].slice.call(document.querySelectorAll(selectorName));
 
 	if ('loading' in HTMLImageElement.prototype && useNativeLoading) {
@@ -114,50 +140,31 @@ export function registerLazyImageLoading({
 			if (element instanceof HTMLPictureElement) {
 				const sources: HTMLSourceElement[] | null = [].slice.call(element.querySelectorAll('source'));
 				const images: HTMLImageElement[] | null = [].slice.call(element.querySelectorAll('img'));
-				if (sources) {
-					sources.forEach(applyOnSource);
-				}
-				if (images) {
-					images.forEach((image) => {
-						image.setAttribute('loading', 'lazy');
-						applyOnImage(image);
-					});
+				if (sources && sources.length > 0) applyOnSource(sources[0]);
+				if (images && images.length > 0) {
+					const image = images[0];
+					image.setAttribute('loading', 'lazy');
+					element.setAttribute('decoded', 'true');
+					applyOnImage(image);
 				}
 			} else {
 				if (element instanceof HTMLImageElement) {
+					element.setAttribute('loading', 'lazy');
+					element.setAttribute('decoded', 'true');
 					applyOnImage(element);
 				}
 			}
 		});
-		return;
-	}
-	if (window.IntersectionObserver) {
+	} else if (window.IntersectionObserver) {
 		const observer = new IntersectionObserver((entries) => {
 			for (let i = 0, len = entries.length; i < len; i++) {
 				const entry = entries[i];
 				if (entry.intersectionRatio > 0) {
-					const element: any = entry.target;
-
-					element.classList.remove(lazyClass);
-
-					if (element instanceof HTMLPictureElement) {
-						const sources: HTMLSourceElement[] | null = [].slice.call(element.querySelectorAll('source'));
-						const images: HTMLImageElement[] | null = [].slice.call(element.querySelectorAll('img'));
-						sources && sources.forEach(applyOnSource);
-						images && images.forEach(applyOnImage);
-					} else if (element instanceof HTMLImageElement) {
-						if (decodeImages) {
-							const src = element.dataset.src || '';
-							const srcSet = element.dataset.srcset || '';
-
-							loadImage({ src, srcSet }, decodeImages)
-								.then(() => {
-									applyOnImage(element);
-								})
-								.catch((error) => console.log(error));
-						} else {
-							applyOnImage(element);
-						}
+					const element: any | HTMLElement = entry.target;
+					const decoded = element.dataset.decoded === 'true';
+					if (element.classList.contains(lazyClass) || decoded) {
+						element.classList.remove(lazyClass);
+						lazyLoadElement(element, decodeImages);
 					}
 
 					observer.unobserve(element);
@@ -168,16 +175,6 @@ export function registerLazyImageLoading({
 		lazyImages.forEach((image) => {
 			observer.observe(image);
 		});
-
-		if (loadBelowFold) {
-			setTimeout(() => {
-				const lazyImages: HTMLImageElement[] = [].slice.call(document.querySelectorAll(selectorName));
-				if (lazyImages.length > 0) {
-					const image = lazyImages.shift();
-					image && loadImagesBelowFold(image, config.foldLoadInterval);
-				}
-			}, config.foldLoadDelay);
-		}
 	} else {
 		let throttleTimeout;
 		let lazyImages = [].slice.call(document.querySelectorAll(selectorName));
@@ -189,9 +186,13 @@ export function registerLazyImageLoading({
 
 			throttleTimeout = setTimeout(() => {
 				const scrollTop = window.pageYOffset;
-				lazyImages.forEach((image: any) => {
-					if (image.offsetTop < window.innerHeight + (scrollTop + config.offset) || inBounds(image)) {
-						applyOnImage(image);
+				lazyImages.forEach((element: HTMLElement) => {
+					if (element.offsetTop < window.innerHeight + (scrollTop + config.offset) || inBounds(element)) {
+						if (element.classList.contains(lazyClass)) {
+							element.classList.remove(lazyClass);
+							lazyLoadElement(element, decodeImages);
+						}
+
 						lazyImages = [].slice.call(document.querySelectorAll(selectorName));
 					}
 				});
@@ -206,5 +207,42 @@ export function registerLazyImageLoading({
 		document.addEventListener('scroll', lazyload);
 		window.addEventListener('resize', lazyload);
 		window.addEventListener('orientationChange', lazyload);
+	}
+
+	if (loadBelowFold) {
+		setTimeout(() => {
+			if (lazyImages.length > 0) {
+				const image = lazyImages.shift();
+				image && loadImagesBelowFold(image, config.foldLoadInterval);
+			}
+		}, config.foldLoadDelay);
+	}
+}
+
+function lazyLoadElement(element: HTMLElement, decodeImages: boolean): void {
+	let src = element.dataset.src || '';
+	let srcSet = element.dataset.srcset || '';
+
+	if (element instanceof HTMLPictureElement) {
+		const sources: HTMLSourceElement[] | null = [].slice.call(element.querySelectorAll('source'));
+		const images: HTMLImageElement[] | null = [].slice.call(element.querySelectorAll('img'));
+
+		src = images[0].dataset.src || '';
+		srcSet = sources[0].dataset.srcset || images[0].dataset.srcset || '';
+
+		loadImage({ src, srcSet }, decodeImages)
+			.then(() => {
+				if (sources && sources.length > 0) applyOnSource(sources[0]);
+				if (images && images.length > 0) applyOnImage(images[0]);
+			})
+			.catch((error) => console.log(error, src));
+	} else if (element instanceof HTMLImageElement) {
+		if (decodeImages) {
+			loadImage({ src, srcSet }, decodeImages)
+				.then(() => applyOnImage(element))
+				.catch((error) => console.log(error, src));
+		} else {
+			applyOnImage(element);
+		}
 	}
 }

@@ -26,7 +26,7 @@ const plugins = [];
 const stats = usesHMR ? { stats: 'minimal' } : { };
 
 if (process.env.CSR !== 'true') {
-	plugins.push(new WaitPlugin({ filename: 'build/public/loadable-stats.json' }));
+	plugins.push(new WaitPlugin({ filename: 'build/public/loadable-stats.json' }, 40000));
 }
 if (isProduction) {
 	plugins.push(
@@ -35,7 +35,11 @@ if (isProduction) {
 	);
 } else {
 	plugins.push(
-		new NodemonPlugin()
+		new NodemonPlugin({
+			watch: path.resolve(publicPath),
+			script: 'build/server.js',
+			ext: 'js,json'
+		})
 	);
 }
 plugins.push(

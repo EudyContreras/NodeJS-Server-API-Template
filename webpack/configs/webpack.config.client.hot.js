@@ -25,19 +25,25 @@ const proxyOptions = !usesCSR ? {
 		'/': {
 			target: serverURL,
 			changeOrigin: true,
-			secure: false
+			secure: false,
+			headers: {
+				'Connection': 'keep-alive'
+			}
 		},
 		'/rest/api': {
 			target: serverURL,
 			changeOrigin: true,
-			secure: false
+			secure: false,
+			headers: {
+				'Connection': 'keep-alive'
+			}
 		}
 	}
 } : { };
 
 const pluggins = [
 	new webpack.DefinePlugin(EnvDefiner()),
-	new WaitPlugin({ filename: 'build/public/loadable-stats.json', timeout: 40000 }),
+	new WaitPlugin({ filename: 'build/loadable-stats.json', timeout: 40000 }),
 	new ReactRefreshWebpackPlugin(),
 	new LoadablePlugin()
 ];

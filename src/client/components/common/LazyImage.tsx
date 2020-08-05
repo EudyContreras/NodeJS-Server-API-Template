@@ -145,11 +145,9 @@ function useImage(props: ImageProps): string | null {
 	return loadedSrc;
 }
 
-const usNativeLazy = (): boolean => 'loading' in HTMLImageElement.prototype;
-
 export const LazyImage: React.FC<LazyImageProps> = React.memo(
 	(props: LazyImageProps): JSX.Element => {
-		const { src, alt, srcSet, index, images, mediaQuery, className, placeholder, lazyLoad } = props;
+		const { src, alt, srcSet, index, images, mediaQuery, className, placeholder } = props;
 
 		const [isLoaded, setLoaded] = useState(false);
 		const [hasFailed, setFailed] = useState(false);
@@ -164,28 +162,17 @@ export const LazyImage: React.FC<LazyImageProps> = React.memo(
 
 		const sizes = buildSizes(mediaQuery);
 		const imgSets = images && buildSet(images, fileType.WEBP);
+		const containerClasses = join(styling.lazyImage, styling.lazyImageWrapper, className);
+		const elementClasses = join(styling.lazyImageSource, isLoaded ? styling.lazyImageLoaded : '');
 
 		useStyles(styling);
 
 		return (
-			<div className={join(styling.lazyImage, styling.lazyImageWrapper, className)}>
+			<div className={containerClasses}>
 				<img loading="lazy" src={placeholder} alt={alt} aria-hidden={true} className={styling.lazyImagePlaceholder} />
 				<picture data-index={index} className={!isLoaded ? lazyClass : ''}>
-					<source
-						type={mediaType.WBP}
-						sizes={sizes}
-						data-srcset={imgSets || srcSet}
-						className={join(styling.lazyImageSource, isLoaded ? styling.lazyImageLoaded : '')}
-					/>
-					<img
-						alt={alt}
-						sizes={sizes}
-						data-src={src}
-						data-srcset={srcSet}
-						onLoad={onLoaded}
-						onError={onFailed}
-						className={join(styling.lazyImageSource, isLoaded ? styling.lazyImageLoaded : '')}
-					/>
+					<source type={mediaType.WBP} sizes={sizes} data-srcset={imgSets || srcSet} className={elementClasses} />
+					<img alt={alt} sizes={sizes} data-src={src} data-srcset={srcSet} data-index={index} onLoad={onLoaded} onError={onFailed} className={elementClasses} />
 				</picture>
 			</div>
 		);

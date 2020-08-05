@@ -38,18 +38,6 @@ const ignoreFavicon = (): ((Response, Request, NextFunction) => void) => (reques
 	}
 };
 
-const serveCompressed = (app: express.Application): ((Response, Request, NextFunction) => void) => (
-	request: Request,
-	response: Response,
-	next: NextFunction
-): void => {
-	app.get('*.js', (req, res, next) => {
-		req.url = req.url + '.br';
-		res.set('Content-Encoding', 'br');
-		next();
-	});
-};
-
 export default class Application {
 	public app: express.Application;
 
@@ -99,6 +87,7 @@ export default class Application {
 	}
 
 	private setupExpress(): void {
+		const pattern = /\.(jpe?g|png)$/;
 		const render = config.presentation;
 		const clientRender = render.viewEngine.client;
 
@@ -119,6 +108,10 @@ export default class Application {
 		this.app.use(cookieParser());
 		this.app.use(shrinkRay());
 		this.app.use(hsts(config.host.secureTransport));
+		this.app.get(pattern, (req, res, next) => {
+			req.url = req.url.replace(pattern, '.webp');
+			next();
+		});
 		this.app.use(expressStatic(config.application.FILE_DIRECTORY, config.compression));
 		this.app.use(express.json());
 		this.app.use(express.urlencoded({ extended: false }));
@@ -165,14 +158,8 @@ export default class Application {
 
 		const connectionString = `${prepend}${userName}:${password}${dbURIPath}`;
 
-		try {
-			mongoose.connect(connectionString, this.dbOptions);
-		} catch (error) {
-			console.log('Could not connect ot MongoDB!');
-		}
-
-		mongoose.connection.on('error', () => {
-			console.log('Could not connect ot MongoDB!');
+		mongoose.connect(connectionString, this.dbOptions, (error) => {
+			console.log('Could not connect ot MongoDB!', error);
 		});
 		mongoose.connection.once('open', async () => {
 			console.log('MongoDB connected successfully');
