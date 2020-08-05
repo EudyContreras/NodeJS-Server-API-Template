@@ -28,7 +28,7 @@ loadableReady(() => {
 
 	registerLazyImageLoading({
 		useNativeLoading: false,
-		loadBelowFold: true,
+		loadBelowFold: false,
 		decodeImages: true
 	});
 

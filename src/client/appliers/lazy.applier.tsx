@@ -1,7 +1,7 @@
 const config = {
 	offset: 1000,
 	foldLoadDelay: 1200,
-	foldLoadInterval: 100
+	foldLoadInterval: 70
 };
 
 const attributes = {
@@ -27,7 +27,7 @@ const selectorName = `.${lazyClass}`;
 
 const inBounds = (image: any): boolean =>
 	image.getBoundingClientRect().top <= window.innerHeight + config.offset &&
-	image.getBoundingClientRect().bottom >= 0 &&
+	image.getBoundingClientRect().bottom >= -config.offset &&
 	getComputedStyle(image).display !== 'none';
 
 const applyOnSource = (source: HTMLSourceElement): void => {
@@ -102,7 +102,7 @@ const loadImagesBelowFold = (element: HTMLElement | null, delay: number): void =
 		srcSet = sources[0].dataset.srcset || images[0].dataset.srcset || '';
 
 		if (element.dataset.decoded === 'true' || src.length <= 0) {
-			restart();
+			return restart();
 		}
 
 		loadImage({ src, srcSet })
@@ -115,7 +115,7 @@ const loadImagesBelowFold = (element: HTMLElement | null, delay: number): void =
 			.catch((error) => console.log(error, src));
 	} else if (element instanceof HTMLImageElement) {
 		if (element.dataset.decoded === 'true' || src.length <= 0) {
-			restart();
+			return restart();
 		}
 		loadImage({ src, srcSet })
 			.then(() => {
@@ -155,7 +155,7 @@ export function registerLazyImageLoading({
 				}
 			}
 		});
-	} else if (window.IntersectionObserver) {
+	} else if (!window.IntersectionObserver) {
 		const observer = new IntersectionObserver((entries) => {
 			for (let i = 0, len = entries.length; i < len; i++) {
 				const entry = entries[i];
@@ -179,15 +179,24 @@ export function registerLazyImageLoading({
 		let throttleTimeout;
 		let lazyImages = [].slice.call(document.querySelectorAll(selectorName));
 
+		lazyImages.forEach((element: HTMLElement) => {
+			if (inBounds(element)) {
+				if (element.classList.contains(lazyClass)) {
+					element.classList.remove(lazyClass);
+					lazyLoadElement(element, decodeImages);
+				}
+
+				lazyImages = [].slice.call(document.querySelectorAll(selectorName));
+			}
+		});
 		const lazyload = (): void => {
 			if (throttleTimeout) {
 				clearTimeout(throttleTimeout);
 			}
 
 			throttleTimeout = setTimeout(() => {
-				const scrollTop = window.pageYOffset;
 				lazyImages.forEach((element: HTMLElement) => {
-					if (element.offsetTop < window.innerHeight + (scrollTop + config.offset) || inBounds(element)) {
+					if (inBounds(element)) {
 						if (element.classList.contains(lazyClass)) {
 							element.classList.remove(lazyClass);
 							lazyLoadElement(element, decodeImages);
