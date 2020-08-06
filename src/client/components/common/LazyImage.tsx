@@ -1,4 +1,3 @@
-/* eslint-disable standard/no-callback-literal */
 import React, { useState, useEffect, useReducer } from 'react';
 import { join } from '../utililties/react.utils';
 import { lazyClass } from '../../appliers/lazy.applier';
@@ -73,12 +72,11 @@ export function useWebPSupport(): boolean {
 		};
 		checkForSupport();
 	}, [webpSupport]);
-
 	return supportsWebp;
 }
 
 function reducer(currentSrc, action): any {
-	if (action.type === 'main image loaded') {
+	if (action.type === IMG_ACTION_TAG) {
 		return action.src;
 	}
 	if (!currentSrc) {
@@ -97,11 +95,11 @@ function useProgressiveImage({ src, fallbackSrc }): any {
 
 		mainImage.onload = (): void => {
 			setLoaded(true);
-			dispatch({ type: 'MAIN_IMAGE_LOADED', src, loaded: isLoaded });
+			dispatch({ type: IMG_ACTION_TAG, src, loaded: isLoaded });
 		};
 		fallbackImage.onload = (): void => {
 			setLoaded(true);
-			dispatch({ type: 'FALLBACK_IMAGE_LOADED', src: fallbackSrc, loaded: isLoaded });
+			dispatch({ type: IMG_FALLBACK_ACTION_TAG, src: fallbackSrc, loaded: isLoaded });
 		};
 
 		mainImage.src = src;
@@ -140,41 +138,85 @@ function useImage(props: ImageProps): string | null {
 			setLoadedSrc(imageUrl);
 		};
 		fetchImage();
-	}, []);
+	}, [props.src, props.srcSet]);
 
 	return loadedSrc;
 }
 
-export const LazyImage: React.FC<LazyImageProps> = React.memo(
-	(props: LazyImageProps): JSX.Element => {
-		const { src, alt, srcSet, index, images, mediaQuery, className, placeholder } = props;
-
-		const [isLoaded, setLoaded] = useState(false);
-		const [hasFailed, setFailed] = useState(false);
-
-		const onLoaded = (event: React.SyntheticEvent<HTMLImageElement>): void => {
-			setLoaded(true);
-		};
-
-		const onFailed = (event: React.SyntheticEvent<HTMLImageElement>): void => {
-			setFailed(true);
-		};
-
-		const sizes = buildSizes(mediaQuery);
-		const imgSets = images && buildSet(images, fileType.WEBP);
-		const containerClasses = join(styling.lazyImage, styling.lazyImageWrapper, className);
-		const elementClasses = join(styling.lazyImageSource, isLoaded ? styling.lazyImageLoaded : '');
-
-		useStyles(styling);
-
-		return (
-			<div className={containerClasses}>
-				<img loading="lazy" src={placeholder} alt={alt} aria-hidden={true} className={styling.lazyImagePlaceholder} />
-				<picture data-index={index} className={!isLoaded ? lazyClass : ''}>
-					<source type={mediaType.WBP} sizes={sizes} data-srcset={imgSets || srcSet} className={elementClasses} />
-					<img alt={alt} sizes={sizes} data-src={src} data-srcset={srcSet} data-index={index} onLoad={onLoaded} onError={onFailed} className={elementClasses} />
-				</picture>
-			</div>
-		);
+const onSuccess = (
+	source: HTMLSourceElement | null,
+	image: HTMLImageElement | null,
+	{ imageSrc, imageSrcSet }: { imageSrc: string; imageSrcSet: string }
+): void => {
+	if (source) {
+		source.srcset = imageSrcSet;
+		source.classList.add(styling.lazyImageLoaded);
 	}
-);
+	if (image) {
+		image.src = imageSrc;
+		image.srcset = imageSrcSet;
+		image.classList.remove(lazyClass);
+		image.classList.add(styling.lazyImageLoaded);
+	}
+};
+
+const failedState = { hasLoaded: false, hasFailed: true };
+const successState = { hasLoaded: true, hasFailed: false };
+const initialState = { hasLoaded: false, hasFailed: false };
+
+const onFoldState: ImgAttribute = { decoding: 'async' };
+const offFoldState: ImgAttribute = { loading: 'eager' };
+const remotePropsState: ImgAttribute = { crossOrigin: 'anonymous' };
+
+export const LazyImage: React.FC<LazyImageProps> = (props: LazyImageProps): JSX.Element => {
+	const { src, alt, srcSet, index, images, fallback, mediaQuery, className, placeholder } = props;
+
+	const [{ hasLoaded, hasFailed }, setLoadState] = useState(initialState);
+
+	useStyles(styling);
+
+	const onLoaded = (event: React.SyntheticEvent<HTMLImageElement>): void => {
+		setLoadState(successState);
+	};
+
+	const onFailed = (event: React.SyntheticEvent<HTMLImageElement>): void => {
+		const image: HTMLImageElement = event.currentTarget;
+		if (fallback) {
+			if (fallback.srcSet) {
+				image.srcset = fallback.srcSet;
+			}
+			if (fallback.images) {
+				image.srcset = buildSet(fallback.images);
+			}
+			image.onerror = null;
+			image.onerror = (): void => {
+				setLoadState(failedState);
+			};
+			image.src = fallback.src;
+		} else {
+			setLoadState(failedState);
+		}
+	};
+
+	const sizes = buildSizes(mediaQuery);
+	const imgSets = images && buildSet(images, fileType.WEBP);
+	const containerClasses = join(styling.lazyImage, styling.lazyImageWrapper, className);
+	const elementClasses = join(styling.lazyImageSource, hasLoaded ? styling.lazyImageLoaded : srcSet ? '' : lazyClass);
+
+	const lazyProps: ImgAttribute = (index || 0) > 6 ? onFoldState : offFoldState;
+	const remoteProps: ImgAttribute = srcSet ? {} : remotePropsState;
+
+	return (
+		<div className={containerClasses}>
+			<img {...lazyProps} {...remoteProps} src={placeholder} alt={alt} aria-hidden={true} className={styling.lazyImagePlaceholder} />
+			{srcSet ? (
+				<picture data-index={index} className={!hasLoaded ? lazyClass : ''}>
+					<source type={mediaType.WBP} data-srcset={imgSets || srcSet} sizes={sizes} className={elementClasses} />
+					<img alt={alt} data-src={src} data-srcset={srcSet} sizes={sizes} data-index={index} onLoad={onLoaded} onError={onFailed} className={elementClasses} />
+				</picture>
+			) : (
+				<img alt={alt} crossOrigin="anonymous" data-src={src} data-index={index} onLoad={onLoaded} onError={onFailed} className={elementClasses} />
+			)}
+		</div>
+	);
+};

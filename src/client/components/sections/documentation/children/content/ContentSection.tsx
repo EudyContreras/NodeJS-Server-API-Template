@@ -26,7 +26,9 @@ class ContentSection extends React.PureComponent<any> {
 								{ maxWidth: 600 * 2, targetWidth: 250 },
 								{ maxWidth: 800 * 2, targetWidth: 400 },
 								{ maxWidth: 1000 * 2, targetWidth: 600 },
-								{ maxWidth: 1200 * 2, targetWidth: 800 }
+								{ maxWidth: 1200 * 2, targetWidth: 800 },
+								{ maxWidth: 1400 * 2, targetWidth: 1000 },
+								{ minWidth: 1401 * 2, targetWidth: 1200 }
 							],
 							fallback: 800
 						}}
@@ -39,19 +41,19 @@ class ContentSection extends React.PureComponent<any> {
 
 class ContentSectionAlt extends React.PureComponent<any> {
 	public render = (): JSX.Element => {
-		const style = this.props.styling;
-		const { index } = this.props;
+		const { styling, index } = this.props;
 		return (
-			<article className={style.content}>
-				<div className={style.contentInner}>
+			<article className={styling.content}>
+				<div className={styling.contentInner}>
 					<LazyImage
 						tryWebp={true}
 						lazyLoad={true}
-						className={style.imageContainer}
+						index={index}
+						className={styling.imageContainer}
 						alt={'Some alt text'}
-						src={`https://picsum.photos/1200/900.webp?image=${index}`}
+						src={`https://picsum.photos/1200/900/?image=${index}`}
 						aspectRatio={16 / 9}
-						placeholder={`https://picsum.photos/30/30.webp?image=${index}&blur=4`}
+						placeholder={`https://picsum.photos/15/15/?image=${index}&blur=3`}
 					/>
 				</div>
 			</article>

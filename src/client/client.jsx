@@ -24,6 +24,8 @@ loadableReady(() => {
 	const store = configureStore(initialState);
 	const content = document.getElementById('content');
 
+	document.getElementById('fonts').removeAttribute('disabled');
+
 	renderMethod(client(window.location.pathname, store, renderOptions.context, insertCss), content);
 
 	registerLazyImageLoading({

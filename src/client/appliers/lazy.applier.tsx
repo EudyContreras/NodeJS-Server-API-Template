@@ -62,7 +62,7 @@ const loadImage = ({ src, srcSet }: ImageProps, decode = true): Promise<{ imageU
 	});
 };
 
-const restart = (delay?: number | undefined): void => {
+const restartLoading = (delay?: number | undefined): void => {
 	const lazyImages: HTMLImageElement[] = [].slice.call(document.querySelectorAll(selectorName));
 
 	if (lazyImages.length > 0) {
@@ -79,15 +79,8 @@ const restart = (delay?: number | undefined): void => {
 	}
 };
 
-/**
- *
- * @param element The current element to extract images and sources from
- * @param delay
- */
 const loadImagesBelowFold = (element: HTMLElement | null, delay: number): void => {
-	if (!element) {
-		return;
-	}
+	if (!element) return;
 
 	let src = element.dataset.src || '';
 	let srcSet = element.dataset.srcset || '';
@@ -102,7 +95,7 @@ const loadImagesBelowFold = (element: HTMLElement | null, delay: number): void =
 		srcSet = sources[0].dataset.srcset || images[0].dataset.srcset || '';
 
 		if (element.dataset.decoded === 'true' || src.length <= 0) {
-			return restart();
+			return restartLoading();
 		}
 
 		loadImage({ src, srcSet })
@@ -110,17 +103,17 @@ const loadImagesBelowFold = (element: HTMLElement | null, delay: number): void =
 				if (sources && sources.length > 0) applyOnSource(sources[0]);
 				if (images && images.length > 0) applyOnImage(images[0]);
 
-				restart(delay);
+				restartLoading(delay);
 			})
 			.catch((error) => console.log(error, src));
 	} else if (element instanceof HTMLImageElement) {
 		if (element.dataset.decoded === 'true' || src.length <= 0) {
-			return restart();
+			return restartLoading();
 		}
 		loadImage({ src, srcSet })
 			.then(() => {
 				applyOnImage(element);
-				restart(delay);
+				restartLoading(delay);
 			})
 			.catch((error) => console.log(error, src));
 	}
@@ -155,7 +148,7 @@ export function registerLazyImageLoading({
 				}
 			}
 		});
-	} else if (!window.IntersectionObserver) {
+	} else if (window.IntersectionObserver) {
 		const observer = new IntersectionObserver((entries) => {
 			for (let i = 0, len = entries.length; i < len; i++) {
 				const entry = entries[i];
@@ -228,7 +221,7 @@ export function registerLazyImageLoading({
 	}
 }
 
-function lazyLoadElement(element: HTMLElement, decodeImages: boolean): void {
+function lazyLoadElement(element: HTMLElement, decodeImages: boolean, onLoaded?: () => void): void {
 	let src = element.dataset.src || '';
 	let srcSet = element.dataset.srcset || '';
 
@@ -243,12 +236,16 @@ function lazyLoadElement(element: HTMLElement, decodeImages: boolean): void {
 			.then(() => {
 				if (sources && sources.length > 0) applyOnSource(sources[0]);
 				if (images && images.length > 0) applyOnImage(images[0]);
+				onLoaded && onLoaded();
 			})
 			.catch((error) => console.log(error, src));
 	} else if (element instanceof HTMLImageElement) {
 		if (decodeImages) {
 			loadImage({ src, srcSet }, decodeImages)
-				.then(() => applyOnImage(element))
+				.then(() => {
+					applyOnImage(element);
+					onLoaded && onLoaded();
+				})
 				.catch((error) => console.log(error, src));
 		} else {
 			applyOnImage(element);

@@ -27,7 +27,7 @@ const responsiveLoader = (path) => ({
 		esModule: true,
 		quality: 85,
 		placeholder: true,
-		placeholderSize: 30,
+		placeholderSize: 15,
 		adapter: require('responsive-loader/sharp')
 	}
 });
@@ -52,7 +52,7 @@ const imageLoader = () => ({
 			interlaced: false
 		},
 		webp: {
-			quality: 90
+			quality: 93
 		}
 	}
 });

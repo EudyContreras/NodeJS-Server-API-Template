@@ -1,3 +1,6 @@
+type Loading = 'lazy' | 'eager';
+type Decoding = 'async' | 'sync';
+
 interface QueryInfo {
 	minWidth?: number;
 	maxWidth?: number;
@@ -26,6 +29,12 @@ interface Fallback {
 	src: string;
 	srcSet?: string;
 	images: SrcSet[];
+}
+
+interface ImgAttribute {
+	loading?: Loading;
+	decoding?: Decoding;
+	crossOrigin?: 'anonymous';
 }
 
 interface LazyImageProps {

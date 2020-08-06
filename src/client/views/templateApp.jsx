@@ -98,14 +98,10 @@ export const DefaultLayout = (props) => {
 						__html: `
 							window.__RENDER_OPTIONS__=${JSON.stringify(options).replace(/</g, '\\u003c')};
 							window.__PRELOADED_STATE__= ${JSON.stringify(props.state).replace(/</g, '\\u003c')};
-							
-							window.addEventListener("load", () => {
-								document.getElementById("fonts")?.removeAttribute("disabled");
-							});	
+					
 						`
 					}}
 				/>
-
 				{parse(props.scripts)}
 			</body>
 		</html>
