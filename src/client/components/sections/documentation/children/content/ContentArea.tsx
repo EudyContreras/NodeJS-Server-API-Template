@@ -9,16 +9,6 @@ class ContentArea extends React.PureComponent<any, any> {
 		return (
 			<div className={styling.contentWrapper}>
 				<div className={styling.contentPadder}>
-					<Section index={0} styling={styling} />
-					<Section index={1} styling={styling} />
-					<Section index={2} styling={styling} />
-					<Section index={3} styling={styling} />
-					<Section index={4} styling={styling} />
-					<Section index={5} styling={styling} />
-					<Section index={6} styling={styling} />
-					<Section index={7} styling={styling} />
-					<Section index={8} styling={styling} />
-					<Section index={9} styling={styling} />
 					<Section index={10} styling={styling} />
 					<Section index={11} styling={styling} />
 					<Section index={12} styling={styling} />
@@ -41,6 +31,26 @@ class ContentArea extends React.PureComponent<any, any> {
 					<Section index={29} styling={styling} />
 					<Section index={30} styling={styling} />
 					<Section index={31} styling={styling} />
+					<Section index={32} styling={styling} />
+					<Section index={33} styling={styling} />
+					<Section index={34} styling={styling} />
+					<Section index={35} styling={styling} />
+					<Section index={36} styling={styling} />
+					<Section index={37} styling={styling} />
+					<Section index={38} styling={styling} />
+					<Section index={39} styling={styling} />
+					<Section index={40} styling={styling} />
+					<Section index={41} styling={styling} />
+					<Section index={42} styling={styling} />
+					<Section index={43} styling={styling} />
+					<Section index={44} styling={styling} />
+					<Section index={45} styling={styling} />
+					<Section index={46} styling={styling} />
+					<Section index={47} styling={styling} />
+					<Section index={48} styling={styling} />
+					<Section index={49} styling={styling} />
+					<Section index={40} styling={styling} />
+					<Section index={41} styling={styling} />
 				</div>
 			</div>
 		);

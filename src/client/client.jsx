@@ -4,7 +4,7 @@ import { registerWorker } from '../workers/helpers/register.helper';
 import { registerLazyImageLoading } from './appliers/lazy.applier';
 import { loadableReady } from '@loadable/component';
 import './resources/images/icons/favicon.ico';
-import './resources/images/touch_icon.png?sizes[]=72,sizes[]=96,sizes[]=120,sizes[]=128,sizes[]=144,sizes[]=152,sizes[]=192,sizes[]=257,sizes[]=384,sizes[]=512';
+import './resources/images/touch_icon.png?sizes[]=72,sizes[]=128,sizes[]=144,sizes[]=152,sizes[]=192,sizes[]=257,sizes[]=384,sizes[]=512';
 import { client } from './views';
 
 const initialState = window.__PRELOADED_STATE__ || {};
@@ -23,22 +23,19 @@ loadableReady(() => {
 
 	const store = configureStore(initialState);
 	const content = document.getElementById('content');
-
-	document.getElementById('fonts').removeAttribute('disabled');
+	const element = document.getElementById('serverCSS');
 
 	renderMethod(client(window.location.pathname, store, renderOptions.context, insertCss), content);
 
+	if (element) {
+		element.parentNode.removeChild(element);
+	}
 	registerLazyImageLoading({
 		useNativeLoading: false,
 		loadBelowFold: false,
 		decodeImages: true
 	});
 
-	const element = document.getElementById('serverCSS');
-
-	if (element) {
-		element.parentNode.removeChild(element);
-	}
 	if (renderOptions.enableSW === true) {
 		registerWorker({
 			clientSideRendered: renderOptions.clientSideRendered,

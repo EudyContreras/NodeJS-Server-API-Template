@@ -27,7 +27,7 @@ const responsiveLoader = (path) => ({
 		esModule: true,
 		quality: 85,
 		placeholder: true,
-		placeholderSize: 15,
+		placeholderSize: 30,
 		adapter: require('responsive-loader/sharp')
 	}
 });

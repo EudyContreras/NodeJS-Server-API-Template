@@ -77,7 +77,7 @@ export const DefaultLayout = (props) => {
 				{props.html.touchIcons.map((x, i) => (
 					<link rel="apple-touch-icon" type="image/png" sizes={x} key={i} href={`${props.html.touchIconsPath}${x}.${fileType}`} defer />
 				))}
-				<link rel="stylesheet" crossOrigin="anonymous" href="styles/fonts.css" as="font" media="all" id="fonts" async disabled />
+				<link rel="stylesheet" crossOrigin="anonymous" href="styles/fonts.css" as="font" media="all" id="fonts" async defer />
 
 				{props.html.preconnect.map((x, i) => (
 					<link rel="preconnect" crossOrigin="anonymous" key={i} href={x} />
@@ -96,9 +96,13 @@ export const DefaultLayout = (props) => {
 				<script
 					dangerouslySetInnerHTML={{
 						__html: `
+							// document.getElementById("fonts").removeAttribute("disabled");
 							window.__RENDER_OPTIONS__=${JSON.stringify(options).replace(/</g, '\\u003c')};
 							window.__PRELOADED_STATE__= ${JSON.stringify(props.state).replace(/</g, '\\u003c')};
-					
+							
+							window.addEventListener("load", () => {
+								// document.getElementById("fonts").removeAttribute("disabled");
+							});	
 						`
 					}}
 				/>
