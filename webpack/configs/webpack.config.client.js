@@ -28,7 +28,7 @@ const enviroment = process.env.NODE_ENV;
 const isProduction = enviroment === 'production';
 const sourceLocation = precompile ? 'dist' : 'src';
 const publicPath = '../../build/public';
-const entryPoint = `./${sourceLocation}/client/client.${precompile ? 'js' : 'jsx'}`;
+const entryPoint = `./${sourceLocation}/client/client.${precompile ? 'js' : 'tsx'}`;
 
 const resources = [
 	{

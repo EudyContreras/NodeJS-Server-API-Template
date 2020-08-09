@@ -26,7 +26,6 @@ interface CssExports {
   'installButton': string;
   'installButtonIcon': string;
   'invisible': string;
-  'loadable': string;
   'loaded': string;
   'loading': string;
   'loadingPage': string;
@@ -47,6 +46,7 @@ interface CssExports {
   'navSticky': string;
   'navTransition': string;
   'paramsTable': string;
+  'pendingIcon': string;
   'ripple': string;
   'rippleDrop': string;
   'rippleEffect': string;

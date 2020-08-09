@@ -11,9 +11,9 @@
 			"sizes": "72x72",
 			"type": "image/webp"
 		}, {
-			"src": "images/touch_icon/touch_icon_120x120.webp",
+			"src": "images/touch_icon/touch_icon_120x120.png",
 			"sizes": "120x120",
-			"type": "image/webp"
+			"type": "image/png"
 		}, {
 			"src": "images/touch_icon/touch_icon_144x144.webp",
 			"sizes": "144x144",

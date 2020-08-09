@@ -15,7 +15,7 @@ const options = {
 };
 
 type LazyConfigOptions = {
-	throttleThreshold: number;
+	throttleThreshold?: number;
 	useNativeLoading: boolean;
 	loadBelowFold: boolean;
 	decodeImages: boolean;

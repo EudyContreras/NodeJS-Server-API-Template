@@ -1,6 +1,5 @@
 import React, { createRef, RefObject } from 'react';
 import rippleEffect from '../../../../../appliers/ripple.applier';
-import FontFaceObserver from 'fontfaceobserver';
 import { connect } from 'react-redux';
 import { IStateTree } from '../../../../../reducers';
 import { join } from '../../../../utililties/react.utils';
@@ -46,31 +45,13 @@ class SidebarSearch extends React.PureComponent<Props, any> {
 
 	public componentDidMount = (): void => {
 		this._isMounted = true;
-		new FontFaceObserver('Material Icons')
-			.load(null, 5000)
-			.then(() => {
-				if (this._isMounted) {
-					this.setState({
-						iconLoaded: true
-					});
-				}
-			})
-			.catch((error) => {
-				console.log('Something went wrong!', error);
-			});
 	};
 
 	public render = (): JSX.Element => {
 		const style = this.props.styling;
 
 		const classes = [style.search, style.shadowElevate];
-		const iconsClasses = [MaterialIcons.class, style.searchButtonIcon];
-
-		if (!this.state.iconLoaded) {
-			iconsClasses.push(style.loadable);
-		} else {
-			iconsClasses.push(style.loaded);
-		}
+		const iconsClasses = [MaterialIcons.class, style.searchButtonIcon, style.pendingIcon];
 
 		return (
 			<form className={join(...classes)} method="post">

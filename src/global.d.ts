@@ -5,8 +5,15 @@ declare global {
 		globalThis: any;
 		__VERSION_NUMBER__: string;
 	}
+	interface NodeModule {
+		hot: {
+			accept()
+		};
+	}
 	interface Window {
 		__VERSION_NUMBER__: string;
+		__PRELOADED_STATE__: any;
+		__RENDER_OPTIONS__: any;
 		__WB_MANIFEST: any;
 		logRequests: boolean;
 		allowCors: boolean;

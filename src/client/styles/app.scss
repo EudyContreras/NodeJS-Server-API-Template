@@ -74,7 +74,7 @@ body::-webkit-scrollbar {
 	background: transparent;
 }
 
-.loadable {
+.pending-icon {
 	opacity: 0;
 	transition: opacity 1.0s $standardInterpolator;
 }

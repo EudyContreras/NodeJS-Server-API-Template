@@ -1,7 +1,6 @@
 import React from 'react';
 import { MaterialIcons } from '../../../../stores/icon.library';
 import rippleEffect from '../../../../appliers/ripple.applier';
-import FontFaceObserver from 'fontfaceobserver';
 import { connect } from 'react-redux';
 import { join } from '../../../../appliers/style.applier';
 import * as InstallHelper from '../../../../../workers/helpers/intallation.helper';
@@ -22,17 +21,6 @@ class Action extends React.PureComponent<Props, any> {
 	}
 
 	public componentDidMount = (): void => {
-		new FontFaceObserver('Material Icons')
-			.load(null, 5000)
-			.then(() => {
-				this.setState({
-					iconLoaded: true
-				});
-			})
-			.catch((error) => {
-				console.log('Something went wrong!', error);
-			});
-
 		if (!InstallHelper.hasInstallInfo()) {
 			this.props.setInstalled(true);
 		} else {
@@ -55,23 +43,19 @@ class Action extends React.PureComponent<Props, any> {
 		const style = this.props.styling;
 
 		const classes = [style.installButton];
-		const iconsClasses = [MaterialIcons.class, style.installButtonIcon];
+		const iconsClasses = [MaterialIcons.class, style.installButtonIcon, style.pendingIcon];
 
-		if (!this.state.iconLoaded) {
-			iconsClasses.push(style.loadable);
-		} else {
-			iconsClasses.push(style.loaded);
-		}
-
-		let icon = 'add';
+		let icon = MaterialIcons.icons.ADD;
 
 		if (this.props.installed) {
-			icon = 'more_vert';
+			icon = MaterialIcons.icons.MORE_VERTICAL;
 		}
 
 		return (
 			<div onClick={this.initInstallation} className={join(...classes)} title="install">
-				<i className={join(...iconsClasses)}>{icon}</i>
+				<i id={MaterialIcons.id} className={join(...iconsClasses)}>
+					{icon}
+				</i>
 			</div>
 		);
 	};

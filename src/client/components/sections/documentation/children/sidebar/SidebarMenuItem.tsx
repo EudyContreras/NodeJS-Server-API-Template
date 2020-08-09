@@ -1,7 +1,6 @@
 import React from 'react';
 import Wrapper from '../../../../common/Wrapper';
 import SidebarSubMenu from './SidebarSubMenu';
-import FontFaceObserver from 'fontfaceobserver';
 import { MaterialIcons } from '../../../../../stores/icon.library';
 import { join } from '../../../../utililties/react.utils';
 
@@ -36,18 +35,6 @@ class SidebarMenuItem extends React.PureComponent<any, State> {
 
 	public componentDidMount = (): void => {
 		this._isMounted = true;
-		new FontFaceObserver('Material Icons')
-			.load(null, 5000)
-			.then(() => {
-				if (this._isMounted) {
-					this.setState({
-						iconLoaded: true
-					});
-				}
-			})
-			.catch((error) => {
-				console.log('Something went wrong!', error);
-			});
 	};
 
 	public render = (): JSX.Element => {
@@ -56,16 +43,10 @@ class SidebarMenuItem extends React.PureComponent<any, State> {
 		const style = this.props.styling;
 
 		const classes = [style.menuItem];
-		const iconClasses = [MaterialIcons.class];
+		const iconClasses = [MaterialIcons.class, style.pendingIcon];
 
 		if (this.state.expanded) {
 			classes.push(style.active);
-		}
-
-		if (!this.state.iconLoaded) {
-			iconClasses.push(style.loadable);
-		} else {
-			iconClasses.push(style.loaded);
 		}
 
 		return (

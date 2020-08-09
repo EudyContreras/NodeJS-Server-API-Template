@@ -15,7 +15,7 @@ const serverPort = process.env.PORT;
 const usesCSR = process.env.CSR === 'true';
 
 const publicPath = '../../build/public';
-const entryPoint = './src/client/client.jsx';
+const entryPoint = './src/client/client.tsx';
 
 const fileName = './scripts/[name].bundle.js';
 const serverURL = `http://localhost:${serverPort}`;
