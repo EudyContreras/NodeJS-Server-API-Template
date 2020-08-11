@@ -1,64 +1,46 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Wrapper from '../../../../common/Wrapper';
 import SidebarSubMenu from './SidebarSubMenu';
 import { MaterialIcons } from '../../../../../stores/icon.library';
 import { join } from '../../../../utililties/react.utils';
+import { useSelector } from 'react-redux';
+import { IStateTree } from '../../../../../reducers';
 
-interface State {
-	expanded: boolean;
-	iconLoaded: boolean;
-}
+export const SidebarMenuItem: React.FC<any> = React.memo(
+	(props: any): JSX.Element => {
+		const [expanded, setExpanded] = useState(false);
+		const iconsLoaded = useSelector<IStateTree>((state) => state.presentation.assets.fonts[MaterialIcons.name] === true);
 
-class SidebarMenuItem extends React.PureComponent<any, State> {
-	private _isMounted: boolean;
-
-	constructor(props: any) {
-		super(props);
-		this._isMounted = false;
-		this.state = {
-			expanded: false,
-			iconLoaded: false
-		};
-	}
-
-	private openSubMenu = (): void => {
-		if (this._isMounted) {
-			this.setState((state: State) => ({
-				expanded: !state.expanded
-			}));
-		}
-	};
-
-	public componentWillUnmount = (): void => {
-		this._isMounted = false;
-	};
-
-	public componentDidMount = (): void => {
-		this._isMounted = true;
-	};
-
-	public render = (): JSX.Element => {
-		const hash = this.props.hash;
-		const label = this.props.label;
-		const style = this.props.styling;
+		const hash = props.hash;
+		const label = props.label;
+		const style = props.styling;
 
 		const classes = [style.menuItem];
-		const iconClasses = [MaterialIcons.class, style.pendingIcon];
+		const iconClasses = [MaterialIcons.class];
 
-		if (this.state.expanded) {
+		const openSubMenu = (): void => {
+			setExpanded((state) => !state);
+		};
+
+		if (!iconsLoaded) {
+			iconClasses.push(style.pendingIcon);
+		}
+
+		if (expanded) {
 			classes.push(style.active);
 		}
 
 		return (
 			<li className={style.menuItemWrapper}>
-				<Wrapper className={join(...classes)} onClick={this.openSubMenu}>
+				<Wrapper className={join(...classes)} onClick={openSubMenu}>
 					<a href={hash}>{label}</a>
 					<i className={join(...iconClasses)}>{MaterialIcons.icons.CHEV_RIGHT}</i>
 				</Wrapper>
-				<SidebarSubMenu styling={style} expanded={this.state.expanded} />
+				<SidebarSubMenu styling={style} expanded={expanded} />
 			</li>
 		);
-	};
-}
+	},
+	(prevProps, nextProps) => true
+);
 
 export default SidebarMenuItem;

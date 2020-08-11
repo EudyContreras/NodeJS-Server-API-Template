@@ -1,12 +1,14 @@
 import { combineReducers } from 'redux';
 
 import routeLoaderReducer, { IRouteLoader } from './common/loader.reducer';
+import assetsReducer, { IAssetsState } from './common/assets.reducer';
 import notifierReducer, { INavNotifier } from './common/notifier.reducer';
 import navigationReducer, { INavigationBar } from './common/navigation.reducer';
 import documentationReducer, { IDocumentationArea } from './documentation/section.reducer';
 import appdataReducer, { IApplicationData } from './common/application.reducer';
 
 export interface IPresentation {
+	assets: IAssetsState;
 	navigation: INavigationBar;
 	documentation: IDocumentationArea;
 }
@@ -24,6 +26,7 @@ export interface IStateTree {
 
 const rootReducer = combineReducers({
 	presentation: combineReducers({
+		assets: assetsReducer,
 		navigation: navigationReducer,
 		documentation: documentationReducer
 	}),

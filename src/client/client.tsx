@@ -8,8 +8,10 @@ import './resources/images/icons/favicon.ico';
 import './resources/images/touch_icon.png?sizes[]=72,sizes[]=128,sizes[]=144,sizes[]=152,sizes[]=192,sizes[]=257,sizes[]=384,sizes[]=512';
 import { client } from './views';
 import { MaterialIcons } from './stores/icon.library';
+import { setFontsLoaded } from './actions/common/assets.action';
+import { IStateTree } from './reducers';
 
-const initialState: any = window.__PRELOADED_STATE__ || {};
+const initialState: IStateTree = window.__PRELOADED_STATE__ || {};
 const renderOptions: any = window.__RENDER_OPTIONS__ || {};
 
 delete window.__PRELOADED_STATE__;
@@ -20,17 +22,17 @@ const insertCss = (...styles: any[]): any => {
 	return (): any => removeCss.forEach((dispose) => dispose());
 };
 
-// Observe loading of Inter (to remove 'Inter', remove the <link> tag in
-// the index.html file and this observer)
-const openSansObserver = new FontFaceObserver(MaterialIcons.name, {});
+const materialFontsObserver = new FontFaceObserver(MaterialIcons.name, {});
 
-// When Inter is loaded, add a font-family using Inter to the body
-openSansObserver
+materialFontsObserver
 	.load(null, 5000)
 	.then(() => {
 		[].slice.call(document.querySelectorAll(`.${MaterialIcons.class}`)).forEach((el: HTMLElement) => {
 			el.style.opacity = '1';
 		});
+		const reccord = { [MaterialIcons.name as string]: true };
+		initialState.presentation.assets.fonts = { ...reccord };
+		setFontsLoaded(MaterialIcons.name);
 	})
 	.catch((error) => {
 		console.log('Something went wrong!', error);

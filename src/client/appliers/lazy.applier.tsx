@@ -31,27 +31,34 @@ const inBounds = (image: any): boolean =>
 	getComputedStyle(image).display !== 'none';
 
 const applyOnSource = (source: HTMLSourceElement): void => {
-	source.srcset = source.dataset.srcset || '';
-	source.removeAttribute(attributes.SRC_SET);
+	if (source.dataset.srcset) {
+		source.srcset = source.dataset.srcset;
+		source.removeAttribute(attributes.SRC_SET);
+	}
 };
 
 const applyOnImage = (image: HTMLImageElement): void => {
-	image.srcset = image.dataset.srcset || '';
-	image.src = image.dataset.src || '';
-	image.removeAttribute(attributes.SRC);
-	image.removeAttribute(attributes.SRC_SET);
+	if (image.dataset.srcset) {
+		image.srcset = image.dataset.srcset;
+		image.removeAttribute(attributes.SRC_SET);
+	}
+	if (image.dataset.src) {
+		image.src = image.dataset.src;
+		image.removeAttribute(attributes.SRC);
+	}
 };
 
 const loadImage = ({ src, srcSet }: ImageProps, decode = true): Promise<{ imageUrl; imageSet }> => {
 	const image = new Image();
-	if (srcSet) image.srcset = srcSet;
-	if (src) image.src = src;
-	if (decode)
+	if (!src && !srcSet) return Promise.reject(Error(`Could not load the image for: ${src}`));
+	if (decode) {
+		if (srcSet) image.srcset = srcSet;
+		if (src) image.src = src;
 		return image
 			.decode()
 			.then(() => Promise.resolve({ imageUrl: src, imageSet: srcSet }))
 			.catch((encodingError: Error) => Promise.reject(encodingError));
-
+	}
 	return new Promise((resolve, reject) => {
 		image.onload = (): void => {
 			resolve({ imageUrl: src, imageSet: srcSet });
@@ -59,10 +66,12 @@ const loadImage = ({ src, srcSet }: ImageProps, decode = true): Promise<{ imageU
 		image.onerror = (): void => {
 			reject(Error(`Could not load the image for: ${src}`));
 		};
+		if (src) image.src = src;
+		if (srcSet) image.srcset = srcSet;
 	});
 };
 
-const restartLoading = (delay?: number | undefined): void => {
+const restartLoading = (decodeImages: boolean, delay?: number | undefined): void => {
 	const lazyImages: HTMLImageElement[] = [].slice.call(document.querySelectorAll(selectorName));
 
 	if (lazyImages.length > 0) {
@@ -70,20 +79,18 @@ const restartLoading = (delay?: number | undefined): void => {
 		if (nextImage) {
 			if (delay) {
 				setTimeout(() => {
-					loadImagesBelowFold(nextImage, delay);
+					loadImagesBelowFold(nextImage, decodeImages, delay);
 				}, delay);
 			} else {
-				loadImagesBelowFold(nextImage, config.foldLoadInterval);
+				loadImagesBelowFold(nextImage, decodeImages, config.foldLoadInterval);
 			}
 		}
 	}
 };
 
-const loadImagesBelowFold = (element: HTMLElement | null, delay: number): void => {
-	if (!element) return;
-
-	let src = element.dataset.src || '';
-	let srcSet = element.dataset.srcset || '';
+function lazyLoadElement(element: HTMLElement, decodeImages: boolean, onLoaded?: () => void): void {
+	let src = element.dataset.src;
+	let srcSet = element.dataset.srcset;
 
 	element.classList.remove(lazyClass);
 
@@ -91,33 +98,65 @@ const loadImagesBelowFold = (element: HTMLElement | null, delay: number): void =
 		const sources: HTMLSourceElement[] | null = [].slice.call(element.querySelectorAll('source'));
 		const images: HTMLImageElement[] | null = [].slice.call(element.querySelectorAll('img'));
 
-		src = images[0].dataset.src || '';
-		srcSet = sources[0].dataset.srcset || images[0].dataset.srcset || '';
+		src = images[0].dataset.src;
+		srcSet = sources[0].dataset.srcset;
 
-		if (element.dataset.decoded === 'true' || src.length <= 0) {
-			return restartLoading();
+		loadImage({ src, srcSet }, decodeImages)
+			.then(() => {
+				if (sources && sources.length > 0) applyOnSource(sources[0]);
+				if (images && images.length > 0) applyOnImage(images[0]);
+				onLoaded && onLoaded();
+			})
+			.catch((error) => console.log(error, src));
+	} else if (element instanceof HTMLImageElement) {
+		loadImage({ src, srcSet }, decodeImages)
+			.then(() => {
+				applyOnImage(element);
+				onLoaded && onLoaded();
+			})
+			.catch((error) => console.log(error, src));
+	}
+}
+
+function loadImagesBelowFold(element: HTMLElement | null, decodeImages: boolean, delay: number): void {
+	if (!element) return;
+
+	let src = element.dataset.src;
+	let srcSet = element.dataset.srcset;
+
+	element.classList.remove(lazyClass);
+
+	if (element instanceof HTMLPictureElement) {
+		const sources: HTMLSourceElement[] | null = [].slice.call(element.querySelectorAll('source'));
+		const images: HTMLImageElement[] | null = [].slice.call(element.querySelectorAll('img'));
+
+		src = images[0].dataset.src;
+		srcSet = sources[0].dataset.srcset;
+
+		if (element.dataset.decoded === 'true' || !src || src.length <= 0) {
+			return restartLoading(decodeImages);
 		}
 
-		loadImage({ src, srcSet })
+		loadImage({ src, srcSet }, decodeImages)
 			.then(() => {
 				if (sources && sources.length > 0) applyOnSource(sources[0]);
 				if (images && images.length > 0) applyOnImage(images[0]);
 
-				restartLoading(delay);
+				restartLoading(decodeImages, delay);
 			})
 			.catch((error) => console.log(error, src));
 	} else if (element instanceof HTMLImageElement) {
-		if (element.dataset.decoded === 'true' || src.length <= 0) {
-			return restartLoading();
+		if (element.dataset.decoded === 'true' || !src || src.length <= 0) {
+			return restartLoading(decodeImages);
 		}
-		loadImage({ src, srcSet })
+		loadImage({ src, srcSet }, decodeImages)
 			.then(() => {
 				applyOnImage(element);
-				restartLoading(delay);
+				restartLoading(decodeImages, delay);
 			})
 			.catch((error) => console.log(error, src));
 	}
-};
+}
 
 export function registerLazyImageLoading({
 	throttleThreshold = 20,
@@ -128,7 +167,7 @@ export function registerLazyImageLoading({
 	const lazyImages: HTMLImageElement[] = [].slice.call(document.querySelectorAll(selectorName));
 
 	if ('loading' in HTMLImageElement.prototype && useNativeLoading) {
-		lazyImages.forEach((element: HTMLElement) => {
+		lazyImages.forEach(async (element: HTMLElement) => {
 			element.classList.remove(lazyClass);
 			if (element instanceof HTMLPictureElement) {
 				const sources: HTMLSourceElement[] | null = [].slice.call(element.querySelectorAll('source'));
@@ -150,19 +189,17 @@ export function registerLazyImageLoading({
 		});
 	} else if (window.IntersectionObserver) {
 		const observer = new IntersectionObserver((entries) => {
-			for (let i = 0, len = entries.length; i < len; i++) {
-				const entry = entries[i];
+			entries.forEach((entry) => {
 				if (entry.intersectionRatio > 0) {
 					const element: any | HTMLElement = entry.target;
 					const decoded = element.dataset.decoded === 'true';
 					if (element.classList.contains(lazyClass) || decoded) {
-						element.classList.remove(lazyClass);
 						lazyLoadElement(element, decodeImages);
 					}
 
 					observer.unobserve(element);
 				}
-			}
+			});
 		}, options);
 
 		lazyImages.forEach((image) => {
@@ -175,7 +212,6 @@ export function registerLazyImageLoading({
 		lazyImages.forEach((element: HTMLElement) => {
 			if (inBounds(element)) {
 				if (element.classList.contains(lazyClass)) {
-					element.classList.remove(lazyClass);
 					lazyLoadElement(element, decodeImages);
 				}
 
@@ -191,7 +227,6 @@ export function registerLazyImageLoading({
 				lazyImages.forEach((element: HTMLElement) => {
 					if (inBounds(element)) {
 						if (element.classList.contains(lazyClass)) {
-							element.classList.remove(lazyClass);
 							lazyLoadElement(element, decodeImages);
 						}
 
@@ -215,40 +250,8 @@ export function registerLazyImageLoading({
 		setTimeout(() => {
 			if (lazyImages.length > 0) {
 				const image = lazyImages.shift();
-				image && loadImagesBelowFold(image, config.foldLoadInterval);
+				image && loadImagesBelowFold(image, decodeImages, config.foldLoadInterval);
 			}
 		}, config.foldLoadDelay);
-	}
-}
-
-function lazyLoadElement(element: HTMLElement, decodeImages: boolean, onLoaded?: () => void): void {
-	let src = element.dataset.src || '';
-	let srcSet = element.dataset.srcset || '';
-
-	if (element instanceof HTMLPictureElement) {
-		const sources: HTMLSourceElement[] | null = [].slice.call(element.querySelectorAll('source'));
-		const images: HTMLImageElement[] | null = [].slice.call(element.querySelectorAll('img'));
-
-		src = images[0].dataset.src || '';
-		srcSet = sources[0].dataset.srcset || images[0].dataset.srcset || '';
-
-		loadImage({ src, srcSet }, decodeImages)
-			.then(() => {
-				if (sources && sources.length > 0) applyOnSource(sources[0]);
-				if (images && images.length > 0) applyOnImage(images[0]);
-				onLoaded && onLoaded();
-			})
-			.catch((error) => console.log(error, src));
-	} else if (element instanceof HTMLImageElement) {
-		if (decodeImages) {
-			loadImage({ src, srcSet }, decodeImages)
-				.then(() => {
-					applyOnImage(element);
-					onLoaded && onLoaded();
-				})
-				.catch((error) => console.log(error, src));
-		} else {
-			applyOnImage(element);
-		}
 	}
 }

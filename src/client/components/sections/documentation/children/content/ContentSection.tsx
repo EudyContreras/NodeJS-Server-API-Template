@@ -23,12 +23,12 @@ class ContentSection extends React.PureComponent<any> {
 						srcSet={srcSet}
 						mediaQuery={{
 							queries: [
-								{ maxWidth: 600 * 2, targetWidth: 250 },
-								{ maxWidth: 800 * 2, targetWidth: 400 },
-								{ maxWidth: 1000 * 2, targetWidth: 600 },
-								{ maxWidth: 1200 * 2, targetWidth: 800 },
-								{ maxWidth: 1400 * 2, targetWidth: 1000 },
-								{ minWidth: 1401 * 2, targetWidth: 1200 }
+								{ maxWidth: 400, targetWidth: 250 },
+								{ maxWidth: 700, targetWidth: 400 },
+								{ maxWidth: 1000, targetWidth: 600 },
+								{ maxWidth: 1300, targetWidth: 800 },
+								{ maxWidth: 1600, targetWidth: 1000 },
+								{ minWidth: 1901, targetWidth: 1200 }
 							],
 							fallback: 800
 						}}
@@ -39,21 +39,21 @@ class ContentSection extends React.PureComponent<any> {
 	};
 }
 
-class ContentSectionAlt extends React.PureComponent<any> {
+class ContentSectionA extends React.PureComponent<any> {
 	public render = (): JSX.Element => {
 		const { styling, index } = this.props;
 		return (
 			<article className={styling.content}>
 				<div className={styling.contentInner}>
 					<LazyImage
-						tryWebp={true}
+						tryWebp={false}
 						lazyLoad={true}
 						index={index}
 						className={styling.imageContainer}
 						alt={'Some alt text'}
-						src={`https://picsum.photos/1200/900/?image=${index}`}
+						src={`https://picsum.photos/1000/700/?image=${index}`}
 						aspectRatio={16 / 9}
-						placeholder={`https://picsum.photos/15/15/?image=${index}&blur=3`}
+						placeholder={`https://picsum.photos/15/15/?image=${index}&blur=2`}
 					/>
 				</div>
 			</article>

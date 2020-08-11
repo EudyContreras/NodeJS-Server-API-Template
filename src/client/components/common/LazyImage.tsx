@@ -1,10 +1,13 @@
 import React, { useState, useEffect, useReducer } from 'react';
 import { join } from '../utililties/react.utils';
 import { lazyClass } from '../../appliers/lazy.applier';
+import { useSelector, useDispatch } from 'react-redux';
 import ImageStyle from '../../styles/modules/lazyimg.module.scss';
 import useStyles from 'isomorphic-style-loader/useStyles';
 import memoize from 'fast-memoize';
 import webpSupport from 'supports-webp';
+import { IStateTree } from '../../reducers';
+import { ImageLoadedAction } from '../../actions/common/assets.action';
 
 const styling: any = ImageStyle;
 
@@ -160,23 +163,23 @@ const onSuccess = (
 	}
 };
 
-const failedState = { hasLoaded: false, hasFailed: true };
-const successState = { hasLoaded: true, hasFailed: false };
-const initialState = { hasLoaded: false, hasFailed: false };
+const failedState = { loaded: false, hasFailed: true };
+const successState = { loaded: true, hasFailed: false };
+const initialState = { loaded: false, hasFailed: false };
 
-const onFoldState: ImgAttribute = { decoding: 'async' };
-const offFoldState: ImgAttribute = { loading: 'eager' };
+const onFoldState: ImgAttribute = { loading: 'eager' };
+const offFoldState: ImgAttribute = { loading: 'eager', decoding: 'async' };
 const remotePropsState: ImgAttribute = { crossOrigin: 'anonymous' };
 
 export const LazyImage: React.FC<LazyImageProps> = (props: LazyImageProps): JSX.Element => {
 	const { src, alt, srcSet, index, images, fallback, mediaQuery, className, placeholder } = props;
-
-	const [{ hasLoaded, hasFailed }, setLoadState] = useState(initialState);
-
-	useStyles(styling);
+	const [{ loaded, hasFailed }, setLoadState] = useState(initialState);
+	const inMemory = useSelector<IStateTree>((state) => state.presentation.assets.images[src] === true);
+	const dispatch = useDispatch();
 
 	const onLoaded = (event: React.SyntheticEvent<HTMLImageElement>): void => {
-		setLoadState(successState);
+		const url = event.currentTarget.src;
+		if (!inMemory && url) dispatch({ ...ImageLoadedAction, payload: src });
 	};
 
 	const onFailed = (event: React.SyntheticEvent<HTMLImageElement>): void => {
@@ -198,6 +201,10 @@ export const LazyImage: React.FC<LazyImageProps> = (props: LazyImageProps): JSX.
 		}
 	};
 
+	const hasLoaded = loaded || inMemory;
+
+	useStyles(styling);
+
 	const sizes = buildSizes(mediaQuery);
 	const imgSets = images && buildSet(images, fileType.WEBP);
 	const containerClasses = join(styling.lazyImage, styling.lazyImageWrapper, className);
@@ -206,16 +213,37 @@ export const LazyImage: React.FC<LazyImageProps> = (props: LazyImageProps): JSX.
 	const lazyProps: ImgAttribute = (index || 0) > 6 ? onFoldState : offFoldState;
 	const remoteProps: ImgAttribute = srcSet ? {} : remotePropsState;
 
+	console.log('Rendered: ', index, ' ', src);
 	return (
 		<div className={containerClasses}>
 			<img {...lazyProps} {...remoteProps} src={placeholder} alt={alt} aria-hidden={true} className={styling.lazyImagePlaceholder} />
 			{srcSet ? (
 				<picture data-index={index} className={!hasLoaded ? lazyClass : ''}>
-					<source type={mediaType.WBP} data-srcset={imgSets || srcSet} sizes={sizes} className={elementClasses} />
-					<img alt={alt} data-src={src} data-srcset={srcSet} sizes={sizes} data-index={index} onLoad={onLoaded} onError={onFailed} className={elementClasses} />
+					<source
+						{...(hasLoaded ? { srcSet: imgSets || srcSet } : { 'data-srcset': imgSets || srcSet })}
+						type={mediaType.WBP}
+						sizes={sizes}
+						className={elementClasses}
+					/>
+					<img
+						alt={alt}
+						{...(hasLoaded ? { src: src, srcSet: srcSet } : { onLoad: onLoaded, 'data-src': src, 'data-srcset': srcSet })}
+						sizes={sizes}
+						data-index={index}
+						onError={onFailed}
+						className={elementClasses}
+					/>
 				</picture>
 			) : (
-				<img alt={alt} crossOrigin="anonymous" data-src={src} data-index={index} onLoad={onLoaded} onError={onFailed} className={elementClasses} />
+				<img
+					{...(hasLoaded ? { src: src } : { 'data-src': src })}
+					alt={alt}
+					crossOrigin="anonymous"
+					data-index={index}
+					onLoad={onLoaded}
+					onError={onFailed}
+					className={elementClasses}
+				/>
 			)}
 		</div>
 	);

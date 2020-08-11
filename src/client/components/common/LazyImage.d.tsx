@@ -19,9 +19,9 @@ interface SrcSet {
 }
 
 interface ImageProps {
-	src: string;
+	src?: string;
 	alt?: string;
-	srcSet: string;
+	srcSet?: string;
 	sizes?: string;
 }
 
