@@ -8,6 +8,8 @@ import memoize from 'fast-memoize';
 import webpSupport from 'supports-webp';
 import { IStateTree } from '../../reducers';
 import { ImageLoadedAction } from '../../actions/common/assets.action';
+import { createSelector } from 'reselect';
+import { IAssetsState } from '../../reducers/common/assets.reducer';
 
 const styling: any = ImageStyle;
 
@@ -163,18 +165,19 @@ const onSuccess = (
 	}
 };
 
-const failedState = { loaded: false, hasFailed: true };
-const successState = { loaded: true, hasFailed: false };
-const initialState = { loaded: false, hasFailed: false };
-
 const onFoldState: ImgAttribute = { loading: 'eager' };
 const offFoldState: ImgAttribute = { loading: 'eager', decoding: 'async' };
 const remotePropsState: ImgAttribute = { crossOrigin: 'anonymous' };
 
+const selectImageAssetState = (src: string): any =>
+	createSelector<IStateTree, Record<string, boolean>, unknown>(
+		(state) => state.presentation.assets.images,
+		(images) => images[src] === true
+	);
+
 export const LazyImage: React.FC<LazyImageProps> = (props: LazyImageProps): JSX.Element => {
 	const { src, alt, srcSet, index, images, fallback, mediaQuery, className, placeholder } = props;
-	const [{ loaded, hasFailed }, setLoadState] = useState(initialState);
-	const inMemory = useSelector<IStateTree>((state) => state.presentation.assets.images[src] === true);
+	const inMemory = useSelector<IStateTree>(selectImageAssetState(src));
 	const dispatch = useDispatch();
 
 	const onLoaded = (event: React.SyntheticEvent<HTMLImageElement>): void => {
@@ -192,16 +195,11 @@ export const LazyImage: React.FC<LazyImageProps> = (props: LazyImageProps): JSX.
 				image.srcset = buildSet(fallback.images);
 			}
 			image.onerror = null;
-			image.onerror = (): void => {
-				setLoadState(failedState);
-			};
 			image.src = fallback.src;
-		} else {
-			setLoadState(failedState);
 		}
 	};
 
-	const hasLoaded = loaded || inMemory;
+	const hasLoaded = inMemory;
 
 	useStyles(styling);
 
@@ -210,10 +208,9 @@ export const LazyImage: React.FC<LazyImageProps> = (props: LazyImageProps): JSX.
 	const containerClasses = join(styling.lazyImage, styling.lazyImageWrapper, className);
 	const elementClasses = join(styling.lazyImageSource, hasLoaded ? styling.lazyImageLoaded : srcSet ? '' : lazyClass);
 
-	const lazyProps: ImgAttribute = (index || 0) > 6 ? onFoldState : offFoldState;
+	const lazyProps: ImgAttribute = (index || 0) < 4 ? onFoldState : offFoldState;
 	const remoteProps: ImgAttribute = srcSet ? {} : remotePropsState;
 
-	console.log('Rendered: ', index, ' ', src);
 	return (
 		<div className={containerClasses}>
 			<img {...lazyProps} {...remoteProps} src={placeholder} alt={alt} aria-hidden={true} className={styling.lazyImagePlaceholder} />
