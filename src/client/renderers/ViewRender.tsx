@@ -4,6 +4,7 @@ import path from 'path';
 import config from '../../configs/config.client.json';
 import webpSupport from 'supports-webp';
 import configureStore from '../stores/store';
+import { ServerStyleSheet } from 'styled-components';
 import ViewRenderer from '../../server/middleware/renderer';
 import AppStyle from '../styles/app.scss';
 import ReactDOM from 'react-dom/server';
@@ -63,19 +64,30 @@ class IndexViewRenderer extends ViewRenderer {
 		const cssInjector = (...styles): void => {
 			styles.forEach((style) => css.add(style._getCss()));
 		};
+
+		const sheet = new ServerStyleSheet();
 		const reactApp = application(req.url, this.store, context, cssInjector);
 		const contentChunks = extractor.collectChunks(reactApp);
 
 		const scriptTags = extractor.getScriptTags();
 		const styleTags = extractor.getStyleTags();
+		let styledTags;
 
-		ReactDOM.renderToString(reactApp);
+		try {
+			ReactDOM.renderToString(sheet.collectStyles(reactApp));
+			styledTags = sheet.getStyleTags();
+		} catch (error) {
+			console.error(error);
+		} finally {
+			sheet.seal();
+		}
 
 		const props = {
 			css: [{ id: 'serverCSS', cssText: [...css].join('') }],
 			html: config.html,
 			state: this.state,
 			styles: styleTags,
+			styledTags: styledTags,
 			scripts: scriptTags,
 			context: context,
 			webpSupport: await webpSupport,

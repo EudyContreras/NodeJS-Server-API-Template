@@ -12,7 +12,7 @@ export const DefaultLayout = (props) => {
 		clientSideRendered: props.clientSideRendered
 	};
 
-	const fileType = props.webpSupport ? 'webp' : 'png';
+	const fileType = 'webp';
 
 	return (
 		<html lang="en-US">
@@ -68,16 +68,16 @@ export const DefaultLayout = (props) => {
 				<link rel="mask-icon" href={props.favicon} size="any" color="#23282d" defer />
 
 				{/* <!-- Others --> */}
-				<link rel="shortcut icon" sizes="120x120" type="image/x-icon" href={`${props.html.touchIconsPath}120x120.${fileType}`} defer />
-				<link rel="shortcut icon" sizes="120x120" type="image/png" href={`${props.html.touchIconsPath}120x120.${fileType}`} defer />
+				<link rel="shortcut icon" sizes="128x128" type="image/x-icon" href={`${props.html.touchIconsPath}128x128.${fileType}`} defer />
+				<link rel="shortcut icon" sizes="128x128" type="image/webp" href={`${props.html.touchIconsPath}128x128.${fileType}`} defer />
 
-				<link rel="apple-touch-startup-image" type="image/png" sizes="348x348" href={`${props.html.touchIconsPath}348x348.${fileType}`} defer />
+				<link rel="apple-touch-startup-image" type="image/webp" sizes="348x348" href={`${props.html.touchIconsPath}348x348.${fileType}`} defer />
 
 				{/* <!-- Apple touch icons  --> */}
 				{props.html.touchIcons.map((x, i) => (
-					<link rel="apple-touch-icon" type="image/png" sizes={x} key={i} href={`${props.html.touchIconsPath}${x}.${fileType}`} defer />
+					<link rel="apple-touch-icon" type="image/webp" sizes={x} key={i} href={`${props.html.touchIconsPath}${x}.${fileType}`} defer />
 				))}
-				<link rel="stylesheet" crossOrigin="anonymous" href="styles/fonts.css" as="font" media="all" id="fonts" async defer />
+				<link rel="stylesheet" crossOrigin="anonymous" href="styles/fonts.css" as="font" media="all" id="fonts" defer async />
 
 				{props.html.preconnect.map((x, i) => (
 					<link rel="preconnect" crossOrigin="anonymous" key={i} href={x} />
@@ -88,6 +88,7 @@ export const DefaultLayout = (props) => {
 				{props.css.map((style) => (
 					<style key={style.id} id={style.id} dangerouslySetInnerHTML={{ __html: style.cssText }} />
 				))}
+				{parse(props.styledTags)}
 				<noscript>You need to enable JavaScript to fully be able to use this this web-app.</noscript>
 				<script async crossOrigin="anonymous" rel="preconnect" src={props.html.jquery} />
 			</head>
@@ -96,13 +97,8 @@ export const DefaultLayout = (props) => {
 				<script
 					dangerouslySetInnerHTML={{
 						__html: `
-							// document.getElementById("fonts").removeAttribute("disabled");
 							window.__RENDER_OPTIONS__=${JSON.stringify(options).replace(/</g, '\\u003c')};
 							window.__PRELOADED_STATE__= ${JSON.stringify(props.state).replace(/</g, '\\u003c')};
-							
-							window.addEventListener("load", () => {
-								// document.getElementById("fonts").removeAttribute("disabled");
-							});	
 						`
 					}}
 				/>
@@ -118,6 +114,7 @@ DefaultLayout.propTypes = {
 	webpSupport: PropTypes.bool,
 	clientSideRendered: PropTypes.bool,
 	watchConnection: PropTypes.bool,
+	styledTags: PropTypes.string,
 	scripts: PropTypes.string,
 	styles: PropTypes.string,
 	enableSW: PropTypes.bool,

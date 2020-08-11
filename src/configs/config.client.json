@@ -19,7 +19,7 @@
 		"favIcon": "images/favicon.ico",
 		"touchIconsPath": "images/touch_icon/touch_icon_",
 		"touchIcons": [
-			"76x76", "120x120", "144x144", "152x152", "192x192", "256x256", "348x348", "512x512"
+			"76x76", "128x128", "144x144", "152x152", "192x192", "256x256", "348x348", "512x512"
 		],
 		"preconnect": [
 			"https://fonts.gstatic.com",

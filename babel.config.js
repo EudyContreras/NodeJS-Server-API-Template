@@ -27,6 +27,7 @@ module.exports = function (api) {
 				proposal: 'minimal'
 			}
 		],
+		'babel-plugin-styled-components',
 		'@babel/plugin-syntax-dynamic-import',
 		'@babel/plugin-syntax-import-meta',
 		'@babel/plugin-proposal-json-strings',

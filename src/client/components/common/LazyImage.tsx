@@ -1,15 +1,14 @@
 import React, { useState, useEffect, useReducer } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { join } from '../utililties/react.utils';
 import { lazyClass } from '../../appliers/lazy.applier';
-import { useSelector, useDispatch } from 'react-redux';
 import ImageStyle from '../../styles/modules/lazyimg.module.scss';
 import useStyles from 'isomorphic-style-loader/useStyles';
-import memoize from 'fast-memoize';
 import webpSupport from 'supports-webp';
+import memoize from 'fast-memoize';
 import { IStateTree } from '../../reducers';
 import { ImageLoadedAction } from '../../actions/common/assets.action';
 import { createSelector } from 'reselect';
-import { IAssetsState } from '../../reducers/common/assets.reducer';
 
 const styling: any = ImageStyle;
 

@@ -108,7 +108,6 @@ Fast production ready boilerplate backed by the MERN stack. Built to provide the
   <li><b>Linkable</b>  – Can easily be shared via a URL, and does not require complex installation.</li>
 </ul></dd>  
 
-
 ## Requirements
 
 * [node & npm](https://nodejs.org/en/)
