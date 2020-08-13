@@ -17,7 +17,6 @@ module.exports = (path, isProduction) => [
 					importLoaders: 1
 				}
 			},
-			// { loader: 'postcss-loader' },
 			{
 				loader: 'less-loader',
 				options: {

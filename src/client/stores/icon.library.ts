@@ -5,6 +5,8 @@ export const MaterialIcons = {
 	icons: {
 		MORE_VERTICAL: 'more_vert',
 		INFORMATION: 'information',
+		EXPAND_MORE: 'expand_more',
+		EXPAND_LESS: 'expand_less',
 		CHEV_RIGHT: 'chevron_right',
 		CHEV_LEFT: 'chevron_left',
 		WARNING: 'warning',

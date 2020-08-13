@@ -85,10 +85,12 @@ export const DefaultLayout = (props) => {
 				{/* <!-- Manifest.json  --> */}
 				<link rel="manifest" href={props.html.manifest} />
 
+				{parse(props.styledTags)}
+
 				{props.css.map((style) => (
 					<style key={style.id} id={style.id} dangerouslySetInnerHTML={{ __html: style.cssText }} />
 				))}
-				{parse(props.styledTags)}
+
 				<noscript>You need to enable JavaScript to fully be able to use this this web-app.</noscript>
 				<script async crossOrigin="anonymous" rel="preconnect" src={props.html.jquery} />
 			</head>

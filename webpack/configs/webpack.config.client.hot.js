@@ -17,7 +17,7 @@ const usesCSR = process.env.CSR === 'true';
 const publicPath = '../../build/public';
 const entryPoint = './src/client/client.tsx';
 
-const fileName = './scripts/[name].bundle.js';
+const fileName = 'scripts/[name].bundle.js';
 const serverURL = `http://localhost:${serverPort}`;
 
 const proxyOptions = !usesCSR ? {
@@ -99,6 +99,6 @@ module.exports = {
 		rules: loaders(path, false)
 	},
 	resolve: {
-		extensions: ['.js', '.jsx', '.tsx', '.ts', '.scss']
+		extensions: ['.js', '.jsx', '.tsx', '.ts', '.scss', '.css']
 	}
 };
