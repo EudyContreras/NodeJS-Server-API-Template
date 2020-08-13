@@ -2,7 +2,7 @@
   "compilerOptions": {
     /* Basic Options */
     // "incremental": true,                   /* Enable incremental compilation */
-    "target": "ES2016",
+    "target": "ES2015",
     /* Specify ECMAScript target version: 'ES3' (default), 'ES5', 'ES2015', 'ES2016', 'ES2017', 'ES2018', 'ES2019' or 'ESNEXT'. */
     "module": "ESNext",
     /* Specify module code generation: 'none', 'commonjs', 'amd', 'system', 'umd', 'es2015', or 'ESNext'. */
@@ -63,7 +63,7 @@
     // "mapRoot": "",                         /* Specify the location where debugger should locate map files instead of generated locations. */
     // "inlineSourceMap": true,               /* Emit a single file with source maps instead of having a separate file. */
     // "inlineSources": true,                 /* Emit the source alongside the sourcemaps within a single file; requires '--inlineSourceMap' or '--sourceMap' to be set. */
-
+    "skipLibCheck": true,  
     /* Experimental Options */
     "experimentalDecorators": true,        /* Enables experimental support for ES7 decorators. */
     "emitDecoratorMetadata": true,         /* Enables experimental support for emitting type metadata for decorators. */
@@ -85,7 +85,7 @@
     ]
   },
   "include": [
-    "src/**/*", "*.ts", "*.jsx",".js", ".css", ".scss", ".ico", ".png", ".html", "src/client/.babelrc.js"
+    "src/**/*", "*.ts", "*.tsx", "*.jsx",".js", ".css", ".scss", ".ico", ".png", ".html", "src/client/.babelrc.js"
   ],
   "exclude": [
     "node_modules",

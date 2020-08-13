@@ -43,6 +43,10 @@
 			"src": "images/touch_icon/touch_icon_512x512.webp",
 			"sizes": "512x512",
 			"type": "image/webp"
+		}, {
+			"src": "images/touch_icon/touch_icon_512x512.png",
+			"sizes": "512x512",
+			"type": "image/png"
 		}
 	],
 	"serviceworker": {

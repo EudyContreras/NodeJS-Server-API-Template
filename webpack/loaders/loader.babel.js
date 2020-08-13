@@ -1,5 +1,5 @@
 
-const options = () => {
+const babelOptions = () => {
 	const presets = [
 		['@babel/preset-env', {
 			targets: {
@@ -63,11 +63,13 @@ const options = () => {
 	};
 };
 
-module.exports = {
-	test: /\.(jsx|js)$/,
+const babelLoader = (includeOptions) => ({
+	test: /\.(ts|js)x?$/,
 	exclude: /(node_modules|bower_components)/,
 	use: {
 		loader: 'babel-loader',
-		options: options()
+		...includeOptions ? { options: babelOptions() } : {}
 	}
-};
+});
+
+module.exports = (includeOptions) => [babelLoader(includeOptions)];

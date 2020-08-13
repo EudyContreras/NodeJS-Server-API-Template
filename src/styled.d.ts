@@ -1,4 +1,5 @@
 import 'styled-components'
+import { CSSProp } from 'styled-components';
 
 declare module 'styled-components' {
     export interface DefaultTheme {
@@ -22,4 +23,10 @@ declare module 'styled-components' {
             standardInterpolator: string,
         }
     }
+}
+
+declare module 'react' {
+	interface HTMLAttributes<T> extends AriaAttributes, DOMAttributes<T> {
+	  css?: CSSProp<DefaultTheme>;
+	}
 }

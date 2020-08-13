@@ -3,11 +3,10 @@ require('dotenv').config();
 
 const path = require('path');
 const webpack = require('webpack');
+const loaders = require('../loaders');
 const WaitPlugin = require('../plugins/WaitPlugin');
 const NodeExternals = require('webpack-node-externals');
 const optimization = require('../sections/optimization');
-const imageLoader = require('../loaders/loader.image');
-const styleLoader = require('../loaders/loader.stylings');
 const LoadablePlugin = require('@loadable/webpack-plugin');
 const NodemonPlugin = require('nodemon-webpack-plugin');
 
@@ -56,7 +55,7 @@ module.exports = {
 	target: 'node',
 	mode: enviroment,
 	cache: !isProduction,
-	devtool: isProduction ? 'none' : 'inline-source-map',
+	devtool: isProduction ? '' : 'eval-cheap-module-source-map',
 	performance: {
 		hints: 'warning'
 	},
@@ -64,7 +63,7 @@ module.exports = {
 	entry: entryPoint,
 	output: {
 		path: path.join(__dirname, publicPath),
-		publicPath: '',
+		publicPath: '/',
 		pathinfo: false,
 		filename: 'server.js',
 		globalObject: 'this'
@@ -73,11 +72,7 @@ module.exports = {
 	optimization: optimization({ splitChunk: null, production: isProduction, dropConsole: false }),
 	externals: [NodeExternals()],
 	module: {
-		rules: [
-			{ test: /\.(jsx|tsx|ts|js)$/, exclude: /(node_modules)/, use:  'babel-loader' }, 
-			...imageLoader('', 'images'),
-			...styleLoader(path, isProduction)
-		]
+		rules: loaders(path, isProduction)
 	},
 	resolve: {
 		extensions: ['.js', '.jsx', '.tsx', '.ts', '.scss', '.css']

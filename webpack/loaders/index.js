@@ -5,14 +5,15 @@ const imageLoader = require('./loader.image');
 const styleLoader = require('./loader.stylings');
 const fileLoader = require('./loader.file');
 const svgLoader = require('./loader.svgs');
-
+const babelLoader = require('./loader.babel');
+const htmlLoader = require('./loader.html');
+const rawLoader = require('./loader.raw');
 module.exports = (path, isProduction) => [
-	{ test: /\.(jsx|tsx|ts|js)$/, exclude: /(node_modules)/, use: 'babel-loader' }, 
-	{ test: /\.(mp4|webm)$/, use: 'url-loader' },
-	{ test: /\.hbs$/, loader: 'handlebars-loader' },
-	{ test: /\.html$/i, loader: 'html-loader' },
-	fileLoader(''),
+	...babelLoader(false),
+	...htmlLoader(),
+	...fileLoader('/'),
+	...rawLoader(),
 	...imageLoader('', 'images'),
 	...styleLoader(path, isProduction),
-	svgLoader
+	...svgLoader()
 ];

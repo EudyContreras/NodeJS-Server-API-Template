@@ -71,37 +71,37 @@ class IndexViewRenderer extends ViewRenderer {
 
 		const scriptTags = extractor.getScriptTags();
 		const styleTags = extractor.getStyleTags();
-		let styledTags;
 
 		try {
 			ReactDOM.renderToString(sheet.collectStyles(reactApp));
-			styledTags = sheet.getStyleTags();
+			const styledTags = sheet.getStyleTags();
+
+			const props = {
+				css: [{ id: 'serverCSS', cssText: [...css].join('') }],
+				html: config.html,
+				state: this.state,
+				styles: styleTags,
+				styledTags: styledTags,
+				scripts: scriptTags,
+				context: context,
+				webpSupport: true,
+				enableSW: process.env.USE_SW === 'true',
+				clientSideRendered: process.env.CSR === 'true',
+				watchConnection: true,
+				content: contentChunks,
+				cache: true
+			};
+
+			config.headers.forEach((header) => {
+				res.setHeader(header.LABEL, header.VALUE);
+			});
+
+			res.render(config.layout.FULL, props);
 		} catch (error) {
-			console.error(error);
+			console.error('Error: ', error);
 		} finally {
 			sheet.seal();
 		}
-
-		const props = {
-			css: [{ id: 'serverCSS', cssText: [...css].join('') }],
-			html: config.html,
-			state: this.state,
-			styles: styleTags,
-			styledTags: styledTags,
-			scripts: scriptTags,
-			context: context,
-			webpSupport: await webpSupport,
-			enableSW: process.env.USE_SW === 'true',
-			clientSideRendered: process.env.CSR === 'true',
-			watchConnection: true,
-			content: contentChunks,
-			cache: true
-		};
-
-		config.headers.forEach((header) => {
-			res.setHeader(header.LABEL, header.VALUE);
-		});
-		res.render(config.layout.FULL, props);
 	};
 
 	private renderShell = async (req: Request, res: Response): Promise<void> => {

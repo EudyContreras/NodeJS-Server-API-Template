@@ -57,8 +57,20 @@ const imageLoader = () => ({
 	}
 });
 
+const imageUrlLoader = (path) => ({
+	test: /\.(webp|png|jpg|jpe?g|gif)$/i,
+	use: [{
+		loader: 'url-loader',
+		options: {
+			limit: 8192,
+			fallback: require.resolve('responsive-loader'),
+			...responsiveLoader(path).options
+		}
+	}]
+});
+
 module.exports = (public, path) => [
-	responsiveLoader(path),
+	imageUrlLoader(path),
 	fileLoader(public, path),
 	imageLoader()
 ];

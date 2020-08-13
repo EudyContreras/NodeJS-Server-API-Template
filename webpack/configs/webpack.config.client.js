@@ -100,7 +100,7 @@ const plugins = [
 	new DuplicatePackageCheckerPlugin(),
 	// new BundleAnalyzerPlugin({ token: process.env.BUNDLE_ANALYZER_TOKEN }),
 	new CleanWebpackPlugin({ cleanStaleWebpackAssets: isProduction }),
-	new CopyPlugin(resources),
+	new CopyPlugin({ patterns: resources }),
 	new HtmlWebpackPlugin({
 		excludeChunks: [/main.bundle.*.js/, /vendors.bundle.*.js/],
 		template: `${sourceLocation}/client/resources/html/offline.hbs`,
@@ -194,19 +194,19 @@ module.exports = {
 		pathinfo: false,
 		filename: fileName,
 		chunkFilename: chunkFileName,
-		publicPath: '',
+		publicPath: '/',
 		globalObject: 'this'
 	},
 	externals: {
 		jquery: 'jQuery'
 	},
 	optimization: {
-		...optimization({ splitChunk: splitChunk, production: isProduction, dropConsole: isProduction })
+		...optimization({ splitChunk: splitChunk, production: isProduction, dropConsole: false })
 	},
 	module: {
 		rules: loaders(path, isProduction)
 	},
 	resolve: {
-		extensions: ['*', '.js', '.jsx', '.tsx', '.ts', '.scss', '.css']
+		extensions: ['.js', '.jsx', '.tsx', '.ts', '.scss', '.css']
 	}
 };

@@ -1,4 +1,6 @@
-import { css } from 'styled-components';
+import styledBase, { css } from 'styled-components';
+
+export const styled = styledBase;
 
 export const cssStyle = css`
 	cursor: pointer;
@@ -16,18 +18,21 @@ export const cssStyle = css`
 	box-shadow: 0 2px 4px 1px rgba(0, 0, 0, 0.4);
 	transition: all 0.4s ${(props): any => props.theme.easing.standardInterpolator};
 
-	i {
+	& > i {
 		color: ${(props): any => props.theme.controls.colors.icon.primary};
+		margin: auto;
+		opacity: 0;
 		font-size: 26px;
+		transition: 0.3s transform 0.2s ${(props): any => props.theme.easing.easeInInterpolator};
 	}
 
 	&.active {
 		opacity: 1;
 		transform: translateY(0px);
 
-		i {
+		& > i {
+			opacity: 1;
 			transform: translateY(0);
-			transition: 0.3s all 0.2s ${(props): any => props.theme.easing.easeInInterpolator};
 		}
 
 		&:hover {
@@ -48,7 +53,8 @@ export const cssStyle = css`
 		clip-path: inset(0);
 		transform: translateY(100px) scale(0.5, 1.2);
 
-		i {
+		& > i {
+			opacity: 0;
 			transform: translateY(6px);
 		}
 	}

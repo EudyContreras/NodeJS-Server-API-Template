@@ -1,13 +1,18 @@
-/* eslint-disable @typescript-eslint/naming-convention */
-import React, { useEffect, useState } from 'react';
-import { cssStyle } from './ScrollToTop.style';
+import React, { useEffect, useState, Fragment } from 'react';
+import { cssStyle, styled } from './ScrollToTop.style';
 import { MaterialIcons } from '../../stores/icon.library';
 import { join } from '../../appliers/style.applier';
+import { useSelector } from 'react-redux';
+import { IStateTree } from '../../reducers';
 
 interface Props {
 	styling: any;
 	topOffset?: number;
 }
+
+const Button = styled.div`
+	${(): any => cssStyle}
+`;
 
 const scrollToTop = (topOffset) => (): void => {
 	const top = document.documentElement.scrollTop || document.body.scrollTop;
@@ -18,7 +23,8 @@ const scrollToTop = (topOffset) => (): void => {
 
 export const ScrollToTop: React.FC<Props> = ({ styling, topOffset = 65 }: Props): JSX.Element => {
 	const [showButton, setShowButton] = useState(false);
-	const toggleIconClasses = [MaterialIcons.class, styling.expandIcon];
+	const iconsLoaded = useSelector<IStateTree>((state) => state.presentation.assets.fonts[MaterialIcons.name] === true);
+	const iconClasses = [MaterialIcons.class];
 
 	const scrollFunc = (): void => {
 		if (window.scrollY > topOffset) {
@@ -36,8 +42,8 @@ export const ScrollToTop: React.FC<Props> = ({ styling, topOffset = 65 }: Props)
 	}, [showButton, topOffset]);
 
 	return (
-		<div css={cssStyle} onClick={scrollToTop(topOffset)} className={showButton ? 'active' : 'inactive'}>
-			<i className={join(...toggleIconClasses)}>{MaterialIcons.icons.EXPAND_MORE}</i>
-		</div>
+		<Button css={cssStyle} onClick={scrollToTop(topOffset)} className={showButton ? 'active' : 'inactive'}>
+			{iconsLoaded ? <i className={join(...iconClasses)}>{MaterialIcons.icons.EXPAND_LESS}</i> : <Fragment />}
+		</Button>
 	);
 };

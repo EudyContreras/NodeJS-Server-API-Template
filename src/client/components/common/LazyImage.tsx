@@ -42,7 +42,8 @@ const IMG_FALLBACK_ACTION_TAG = 'FALLBACK_IMAGE_LOADED';
 
 const getSrc = (src: string, type: string | undefined): string => (type ? src.replace(typeRegex, `.${type}`) : src);
 
-const buildSet = memoize((images: SrcSet[], type?: string | undefined): string => {
+const buildSet = memoize((srcSetIn: string | null | undefined, images: SrcSet[], type?: string | undefined): string => {
+	if (!type) return srcSetIn || '';
 	const srcSet: string[] = [];
 	images.forEach((image) => {
 		const path = getSrc(image.path, type);
@@ -191,7 +192,7 @@ export const LazyImage: React.FC<LazyImageProps> = (props: LazyImageProps): JSX.
 				image.srcset = fallback.srcSet;
 			}
 			if (fallback.images) {
-				image.srcset = buildSet(fallback.images);
+				image.srcset = buildSet(fallback.srcSet, fallback.images);
 			}
 			image.onerror = null;
 			image.src = fallback.src;
@@ -203,7 +204,7 @@ export const LazyImage: React.FC<LazyImageProps> = (props: LazyImageProps): JSX.
 	useStyles(styling);
 
 	const sizes = buildSizes(mediaQuery);
-	const imgSets = images && buildSet(images, fileType.WEBP);
+	const imgSets = images && buildSet(srcSet, images, fileType.WEBP);
 	const containerClasses = join(styling.lazyImage, styling.lazyImageWrapper, className);
 	const elementClasses = join(styling.lazyImageSource, hasLoaded ? styling.lazyImageLoaded : srcSet ? '' : lazyClass);
 

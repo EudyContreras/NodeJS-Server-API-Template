@@ -8,10 +8,12 @@ module.exports = function (api) {
 				node: 'current'
 			}
 		}],
-		'@babel/preset-react',
-		'@babel/preset-typescript'
+		'@babel/preset-typescript',
+		'@babel/preset-react'
 	];
 	const plugins = [
+		'@babel/plugin-transform-typescript',
+		['styled-components', { ssr: true, displayName: true } ],
 		'react-css-modules',
 		'@loadable/babel-plugin',
 		'@babel/plugin-proposal-class-properties',
@@ -27,7 +29,6 @@ module.exports = function (api) {
 				proposal: 'minimal'
 			}
 		],
-		'babel-plugin-styled-components',
 		'@babel/plugin-syntax-dynamic-import',
 		'@babel/plugin-syntax-import-meta',
 		'@babel/plugin-proposal-json-strings',
@@ -37,9 +38,12 @@ module.exports = function (api) {
 		'@babel/plugin-proposal-function-bind'
 	].filter(Boolean);
 
-	const developmentPlugins = [];
+	const developmentPlugins = [
+		['styled-components', { ssr: true, displayName: true } ]
+	];
 
 	const productionPlugins = [
+		['styled-components', { ssr: true, displayName: true } ],
 		'transform-react-remove-prop-types',
 		'@babel/plugin-transform-react-inline-elements',
 		['babel-plugin-transform-react-class-to-function', { memo: true }]
@@ -48,12 +52,12 @@ module.exports = function (api) {
 	return {
 		env: {
 			production: {
-				presets: [],
-				plugins: productionPlugins
+				plugins: productionPlugins,
+				presets: []
 			},
 			development: {
-				presets: [],
-				plugins: developmentPlugins
+				plugins: developmentPlugins,
+				presets: []
 			}
 		},
 		presets,
