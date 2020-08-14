@@ -42,7 +42,7 @@ export const ScrollToTop: React.FC<Props> = ({ styling, topOffset = 65 }: Props)
 	}, [showButton, topOffset]);
 
 	return (
-		<Button css={cssStyle} onClick={scrollToTop(topOffset)} className={showButton ? 'active' : 'inactive'}>
+		<Button onClick={scrollToTop(topOffset)} className={showButton ? 'active' : 'inactive'}>
 			{iconsLoaded ? <i className={join(...iconClasses)}>{MaterialIcons.icons.EXPAND_LESS}</i> : <Fragment />}
 		</Button>
 	);
