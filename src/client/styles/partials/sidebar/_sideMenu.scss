@@ -3,118 +3,138 @@
 @import './sideMenuToggle';
 @import './sideSubMenu';
 
-.side-menu {
-   width: 17%;
-   height: 100vh;
-   position: absolute;
-   min-width: 230px;
+.side-menu-container {
+   overflow-y: auto;
    scroll-behavior: smooth;
-   overflow-y: visible;
-   will-change: transform;
-   margin: 0;
-   z-index: 1000;
-   color: rgba(165, 167, 168, 1);
-   background-color: rgba(55, 60, 64, 1);
-   box-shadow: 2px 0px 6px 0px rgba(0, 0, 0, 0.3);
-   transition: all 0.3s $standardInterpolator;
+   position: absolute;
+   height: 100vh;
+   width: 100%;
+}
 
-   & ul {
-      padding-inline-start: 0px;
-      list-style-type: none;
-   }
+.side-menu-container::-webkit-scrollbar {
+	width: 8px;
+	display: none;
+	background-color: rgba(0, 0, 0, 0);
+}
 
-   &.fixed {
-      position: fixed;
-   }
+.side-menu-container::-webkit-scrollbar-track {
+	border-radius: 10px;
+	background-color: rgba(0, 0, 0, 0);
+}
 
-   &:hover {
-      box-shadow: 6px 0px 12px 0px rgba(0, 0, 0, 0.3);
-   }
+.side-menu-container::-webkit-scrollbar-thumb {
+	border-radius: 10px;
+	background-color: #555;
+}
 
-   &-peek {
-      transform: translateX(0px) !important;
-      transition: all 0.3s $standardInterpolator;
-   }
+.side-menu {
+	width: 17%;
+	   height: 100vh;
+	   min-width: 230px;
+	position: absolute;
+	overflow-y: visible;
+	will-change: transform;
+	z-index: 1000;
+	color: rgba(165, 167, 168, 1);
+	background-color: rgba(55, 60, 64, 1);
+	box-shadow: 2px 0px 6px 0px rgba(0, 0, 0, 0.3);
+	transition: all 0.3s $standardInterpolator;
 
-   &-peek>.search {
-      opacity: 1 !important;
-   }
+	& ul {
+	  	padding-inline-start: 0px;
+    	list-style-type: none;
+	}
 
-   &-closed {
-      transform: translateX(calc(-100% + 20px));
-   }
+	&.fixed {
+		position: fixed;
+	}
 
-   &-closed>.search {
-      opacity: 0;
-   }
+	&:hover {
+		box-shadow: 6px 0px 12px 0px rgba(0, 0, 0, 0.3);
+	}
 
-   &-closed~.content-wrapper {
-      will-change: margin-right margin-left;
-      margin-left: 0%;
-      margin-right: 40%;
-   }
+	&-peek {
+		transform: translateX(0px) !important;
+		transition: all 0.3s $standardInterpolator;
+	}
 
-   &-closed~.sandbox-area {
-      width: 40%;
-   }
+	&-peek > .search {
+		opacity: 1 !important;
+	}
 
-   &-closed~.sandbox-area {
-      width: 40%;
-   }
+	&-closed {
+		transform: translateX(calc(-100% + 20px));
+	}
 
-   &-closed~.footer-area {
-      margin-left: 0%;
-   }
+	&-closed > .search {
+		opacity: 0;
+	}
 
-   &-closed .expand-icon {
-      transform: rotate(0deg);
-   }
+	&-closed ~ .content-wrapper {
+		will-change: margin-right margin-left;
+		margin-left: 0%;
+		margin-right: 40%;
+	}
+
+	&-closed ~ .sandbox-area {
+		width: 40%;
+	}
+
+	&-closed ~ .footer-area {
+		margin-left: 0%;
+	}
+
+	&-closed .expand-icon {
+		transform: rotate(0deg);
+	}
 }
 
 .top-section {
-   display: flex;
-   justify-content: space-between;
-   align-items: center;
-   padding-left: 30px;
-   padding-top: 30px;
-   padding-bottom: 30px;
-   background-color: rgba(68, 72, 77, 1);
-   border-bottom-width: 1px;
-   border-bottom-style: solid;
-   border-bottom-color: rgba(0, 0, 0, 0.3);
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding-left: 30px;
+	padding-top: 30px;
+	padding-bottom: 30px;
+	background-color: rgba(68, 72, 77, 1);
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+	border-bottom-color: rgba(0, 0, 0, 0.3);
 
-   & h2 {
-      font-weight: 300;
-      font-size: 20px;
-      color: #eee;
-   }
+	& h2 {
+		font-weight: 300;
+		font-size: 20px;
+		color: #eee;
+	}
 
-   &-version {
-      margin-top: 10px;
-      font-size: 14px;
-      font-weight: 200;
-      /*opacity: 0.75;*/
-      color: rgba(178, 182, 186, 1);
-   }
+	&-version {
+		margin-top: 10px;
+		font-size: 14px;
+		font-weight: 200;
+		/*opacity: 0.75;*/
+		color: rgba(178, 182, 186, 1);
+	}
 }
 
 .middle-section {
-   padding-top: 1em;
-   padding-bottom: 1em;
-   border-bottom-style: solid;
-   border-bottom-width: 1px;
-   border-bottom-color: #484c50;
+	padding-top: 1em;
+	padding-bottom: 1em;
 }
 
 .main-section {
    padding-top: 1em;
+   margin-bottom: 2em;
 }
 
 .menu-header {
-   text-transform: uppercase;
-   padding-left: 30px;
-   padding-top: 30px;
-   font-weight: 500;
-   font-size: 14px;
-   color: #eee;
+	text-transform: uppercase;
+	padding-left: 30px;
+	padding-top: 30px;
+	padding-bottom: 25px;
+	font-weight: 500;
+	font-size: 14px;
+	color: #eee;
+	border-top-style: solid;
+	border-top-width: 1px;
+	border-top-color: #484c50;
 }

@@ -9,6 +9,7 @@ import { appendWhen } from '../../../../../appliers/style.applier';
 import { getSidemenu } from '../../../../../selectors/sidemenu.selector';
 import { setHovered, setFixed } from '../../../../../actions/documentation/sidebar.action';
 import { join } from '../../../../utililties/react.utils';
+import SidebarToggle from './SidebarToggle';
 
 const headers = ['Introduction', 'Endpoints'];
 
@@ -95,10 +96,13 @@ class SidebarMenu extends React.Component<Props, any> {
 
 		return (
 			<aside {...common} {...actions}>
-				<TopSection styling={style} />
-				<SideMenuSearch styling={style} menuState={this.state} />
-				<MiddleSection styling={style} header={headers[0]} />
-				<MainSection styling={style} header={headers[1]} />
+				<div className={style.sideMenuContainer}>
+					<TopSection styling={style} />
+					<SideMenuSearch styling={style} menuState={this.state} />
+					<MiddleSection styling={style} header={headers[0]} />
+					<MainSection styling={style} header={headers[1]} />
+				</div>
+				<SidebarToggle styling={style} />
 			</aside>
 		);
 	};

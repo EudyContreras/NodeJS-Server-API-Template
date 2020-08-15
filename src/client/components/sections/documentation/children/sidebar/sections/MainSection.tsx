@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
 import MenuItem from '../SidebarMenuItem';
 
-const routes = ['Users', 'Privideles', 'Roles', 'Invitation', 'Users', 'Privideles', 'Roles', 'Invitation'];
+const routes = ['Users', 'Priviledges', 'Roles', 'Invitation', 'Users', 'Priviledges', 'Roles', 'Invitation', 'Users', 'Priviledges', 'Roles', 'Invitation'];
 
 export default class MainSection extends React.PureComponent<any, any> {
 	public render = (): JSX.Element => {

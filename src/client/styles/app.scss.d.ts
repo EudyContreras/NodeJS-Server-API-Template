@@ -61,6 +61,7 @@ interface CssExports {
   'shadowElevate': string;
   'sideMenu': string;
   'sideMenuClosed': string;
+  'sideMenuContainer': string;
   'sideMenuPeek': string;
   'smExpanded': string;
   'staggerIn': string;

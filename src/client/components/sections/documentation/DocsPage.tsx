@@ -4,7 +4,6 @@ import ContentArea from './children/content/ContentArea';
 import FooterArea from './children/footer/FooterArea';
 import SideMenu from './children/sidebar/SidebarMenu';
 import SandBox from './children/sandbox/SandboxArea';
-
 import { DispatchProps, Dispatchers } from '../../../actions/documentation/section.action';
 import { ScrollToTop } from '../../common/ScrollToTop';
 
