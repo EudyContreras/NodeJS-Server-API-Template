@@ -1,66 +1,52 @@
 import React from 'react';
 import rippleEffect from '../../../../../appliers/ripple.applier';
 import { MaterialIcons } from '../../../../../stores/icon.library';
-import { toggleExpand } from '../../../../../actions/documentation/sidebar.action';
+import { toggleAction } from '../../../../../actions/documentation/sidebar.action';
 import { IToggle } from '../../../../../reducers/documentation/sidebar.reducer';
 import { join } from '../../../../utililties/react.utils';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { IStateTree } from '../../../../../reducers';
 
-interface StateProps {
-	hidden: boolean;
-	locked: boolean;
-}
+type StateProps = {
+	styling: any;
+};
 
-interface DispatchProps {
-	toggleExpand: () => void;
-}
+const SidebarToggle: React.FC<StateProps> = ({ styling }: StateProps): JSX.Element => {
+	const dispatch = useDispatch();
+	const { locked, hidden } = useSelector<IStateTree, IToggle>((state) => state.presentation.documentation.sidebar.toggle);
 
-type State = IToggle;
-type Props = StateProps & DispatchProps & any;
+	const elementTitle = locked ? 'collapse' : 'expand';
+	const iconText = locked ? MaterialIcons.icons.CHEV_RIGHT : MaterialIcons.icons.MENU;
 
-class SidebarToggle extends React.PureComponent<Props, State> {
-	private toggleSidebar = (event: React.MouseEvent<HTMLElement, MouseEvent>): void => {
-		const style = this.props.styling;
-
-		rippleEffect(event, style);
-
-		this.props.toggleExpand();
+	const toggleSidebar = (event: React.MouseEvent<HTMLElement, MouseEvent>): void => {
+		rippleEffect(event, styling);
+		dispatch(toggleAction);
 	};
 
-	public render = (): JSX.Element => {
-		const style = this.props.styling;
-		const elementTitle = this.props.locked ? 'collapse' : 'expand';
-		const iconText = this.props.locked ? MaterialIcons.icons.CHEV_RIGHT : MaterialIcons.icons.MENU;
-
-		const props = {
-			title: elementTitle,
-			value: this.props.locked,
-			onClick: this.toggleSidebar
-		};
-
-		const toggleClasses = [style.expand];
-		const toggleIconClasses = [MaterialIcons.class, style.expandIcon];
-
-		if (this.props.hidden) {
-			toggleClasses.push(style.expandHidden);
-		}
-
-		if (this.props.locked) {
-			toggleClasses.push(style.expandActive);
-		} else {
-			toggleIconClasses.push(style.expandIconActive);
-		}
-
-		return (
-			<div className={join(...toggleClasses)} {...props}>
-				<i className={join(...toggleIconClasses)}>{iconText}</i>
-			</div>
-		);
+	const elementProps = {
+		value: locked,
+		title: elementTitle,
+		onClick: toggleSidebar
 	};
-}
 
-const mapStateToProps = (state: any): any => ({
-	...state.presentation.documentation.sidebar.toggle
-});
+	const toggleClasses = [styling.expand];
+	const toggleIconClasses = [MaterialIcons.class, styling.expandIcon];
 
-export default connect<StateProps, DispatchProps, any>(mapStateToProps, { toggleExpand })(SidebarToggle);
+	if (hidden) {
+		toggleClasses.push(styling.expandHidden);
+	}
+
+	if (locked) {
+		toggleClasses.push(styling.expandActive);
+	} else {
+		toggleIconClasses.push(styling.expandIconActive);
+	}
+
+	return (
+		<div className={join(...toggleClasses)} {...elementProps}>
+			<i className={join(...toggleIconClasses)}>{iconText}</i>
+		</div>
+	);
+};
+
+export default SidebarToggle;

@@ -36,6 +36,7 @@ interface DispatchPropsLoader {
 type Props = StateProps & DispatchProps & DispatchPropsLoader;
 
 type State = {
+	hovering: boolean;
 	topPosition: number;
 };
 
@@ -45,12 +46,13 @@ class Navbar extends React.Component<Props, State> {
 	constructor(props: any) {
 		super(props);
 		this.state = {
+			hovering: false,
 			topPosition: -1
 		};
 		this.navbar = React.createRef();
 	}
 
-	public shouldComponentUpdate = (nextProps: any): boolean =>
+	public shouldComponentUpdate = (nextProps: any, _nextState: any): boolean =>
 		!shallowEqual(this.props.anchored, nextProps.anchored) ||
 		!shallowEqual(this.props.mouseInside, nextProps.mouseInside) ||
 		!shallowEqual(this.props.activeTab, nextProps.activeTab);
@@ -83,7 +85,7 @@ class Navbar extends React.Component<Props, State> {
 		window.addEventListener('scroll', this.anchor, { passive: true });
 	};
 
-	private anchor = throttle((): void => {
+	private anchor = (): void => {
 		const top = this.state.topPosition;
 		const anchored = this.props.anchored;
 
@@ -96,23 +98,37 @@ class Navbar extends React.Component<Props, State> {
 		if (scroll < top) {
 			anchored && this.props.setAnchored(false);
 		}
-	}, 50);
+	};
 
 	private onMouseEnter = (): void => {
 		if (!this.props.anchored) {
 			return;
 		}
-		setTimeout(() => {
-			if (this.props.anchored) {
-				this.props.setMouseInside(true);
+		this.setState(
+			{
+				hovering: true
+			},
+			() => {
+				setTimeout(() => {
+					if (this.state.hovering && this.props.anchored) {
+						this.props.setMouseInside(true);
+					}
+				}, 100);
 			}
-		}, 100);
+		);
 	};
 
 	private onMouseExit = (): void => {
-		if (this.props.anchored) {
-			this.props.setMouseInside(false);
-		}
+		this.setState(
+			{
+				hovering: false
+			},
+			() => {
+				if (this.props.anchored) {
+					this.props.setMouseInside(false);
+				}
+			}
+		);
 	};
 
 	private manageLoader = (tab: any): void => {

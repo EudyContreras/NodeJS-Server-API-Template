@@ -1,11 +1,11 @@
 import SearchService from '../../services/search.service';
 import IAction from '../../actions/action';
 
-export const SEARCH_ACTION_SOURCE = 'SEARCH_ACTION_SOURCE';
+export const SEARCH_ACTION_SOURCE = 'SEARCH_ACTION';
 
-export const SEARCH_RESULTS = SEARCH_ACTION_SOURCE + 'SEARCH_RESULTS';
-export const LOADING_SEARCH_RESULTS = SEARCH_ACTION_SOURCE + 'LOADING_SEARCH_RESULTS';
-export const SEARCH_ERROR = SEARCH_ACTION_SOURCE + 'SEARCH_ERROR';
+export const SEARCH_RESULTS = 'SEARCH_ACTION_RESULTS';
+export const LOADING_SEARCH_RESULTS = 'EARCH_ACTION_LOADING_RESULTS';
+export const SEARCH_ERROR = 'SEARCH_ACTION_ERROR';
 
 export interface DispatchProps {
 	performSearchAction: (prefix: string) => void;
