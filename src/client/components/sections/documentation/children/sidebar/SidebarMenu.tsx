@@ -13,16 +13,16 @@ import SidebarToggle from './SidebarToggle';
 
 const headers = ['Introduction', 'Endpoints'];
 
-interface StateProps {
+type StateProps = {
 	fixed: boolean;
 	hovered: boolean;
 	expanded: boolean;
-}
+};
 
-interface DispatchProps {
+type DispatchProps = {
 	setHovered: (hovered: boolean) => void;
 	setFixed: (fixed: boolean) => void;
-}
+};
 
 const Dispatchers = { setHovered, setFixed };
 
@@ -37,29 +37,15 @@ class SidebarMenu extends React.Component<Props, any> {
 	}
 
 	private onMouseEnter = (): void => {
-		this.setState(
-			{
-				hovering: true
-			},
-			() => {
-				this.props.setHovered(true);
-			}
-		);
+		this.props.setHovered(true);
 	};
 
 	private onMouseExit = (): void => {
-		this.setState(
-			{
-				hovering: false
-			},
-			() => {
-				setTimeout(() => {
-					if (!this.state.hovering) {
-						this.props.setHovered(false);
-					}
-				}, 300);
+		setTimeout(() => {
+			if (!this.state.hovering) {
+				this.props.setHovered(false);
 			}
-		);
+		}, 300);
 	};
 
 	public shouldComponentUpdate = (nextProps: any, nextState: any): boolean =>

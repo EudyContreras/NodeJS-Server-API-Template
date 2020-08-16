@@ -1,8 +1,6 @@
-import styledBase, { css } from 'styled-components';
+import styled from 'styled-components';
 
-export const styled = styledBase;
-
-export const cssStyle = css`
+export const Button = styled.div`
 	cursor: pointer;
 	bottom: 0;
 	right: 0;
@@ -60,4 +58,4 @@ export const cssStyle = css`
 	}
 `;
 
-export default cssStyle;
+export default Button;

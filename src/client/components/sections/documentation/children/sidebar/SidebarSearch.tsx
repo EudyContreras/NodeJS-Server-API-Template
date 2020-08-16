@@ -1,74 +1,66 @@
-import React, { createRef, RefObject } from 'react';
+import React, { useRef } from 'react';
 import rippleEffect from '../../../../../appliers/ripple.applier';
-import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { IStateTree } from '../../../../../reducers';
 import { join } from '../../../../utililties/react.utils';
 import { MaterialIcons } from '../../../../../stores/icon.library';
-import { DispatchProps, Dispatchers } from '../../../../../actions/documentation/search.action';
+import { performSearchAction } from '../../../../../actions/documentation/search.action';
 
-interface StateProps {
-	searchError?: any | undefined | null;
-	searchResults: any[];
-	isSearching: boolean;
-	iconLoaded: boolean;
-}
+type StateProps = {
+	styling: any;
+	menuState: any;
+};
 
-type Props = StateProps & DispatchProps & any;
+const elementProps = {
+	formMethod: 'post',
+	inputType: 'text',
+	inputName: 'search',
+	inputTitle: 'Search',
+	inputKey: 'search-input'
+};
 
-class SidebarSearch extends React.PureComponent<Props, any> {
-	private _isMounted: boolean;
-	private inputRef: RefObject<HTMLInputElement>;
+const SidebarSearch: React.FC<StateProps> = React.memo(
+	({ styling }: StateProps): JSX.Element => {
+		const dispatch = useDispatch();
+		const inputRef = useRef<HTMLInputElement>(null);
 
-	constructor(props: any) {
-		super(props);
-		this._isMounted = false;
-		this.inputRef = createRef();
-		this.state = {
-			isSearching: false,
-			iconLoaded: false
+		const formClasses = [styling.search, styling.shadowElevate];
+		const iconsClasses = [MaterialIcons.class, styling.searchButtonIcon];
+		const iconsLoaded = useSelector<IStateTree>((state) => state.presentation.assets.fonts[MaterialIcons.name] === true);
+
+		const performSearch = async (event: React.MouseEvent<HTMLElement, MouseEvent>): Promise<void> => {
+			event.preventDefault();
+
+			rippleEffect(event, styling);
+
+			performSearchAction(inputRef.current!.value)(dispatch);
 		};
-	}
 
-	private performSearch = async (event: React.MouseEvent<HTMLElement, MouseEvent>): Promise<void> => {
-		event.preventDefault();
+		if (!iconsLoaded) {
+			iconsClasses.push(styling.pendingIcon);
+		}
 
-		rippleEffect(event, this.props.styling);
-
-		const searchText = this.inputRef.current!.value;
-
-		this.props.performSearch(searchText);
-	};
-
-	public componentWillUnmount = (): void => {
-		this._isMounted = false;
-	};
-
-	public componentDidMount = (): void => {
-		this._isMounted = true;
-	};
-
-	public render = (): JSX.Element => {
-		const style = this.props.styling;
-
-		const classes = [style.search, style.shadowElevate];
-		const iconsClasses = [MaterialIcons.class, style.searchButtonIcon, style.pendingIcon];
+		const formClassName = join(...formClasses);
+		const iconClassName = join(...iconsClasses);
 
 		return (
-			<form className={join(...classes)} method="post">
-				<label htmlFor="search"></label>
-				<input key="search-input" ref={this.inputRef} type="text" name="search" aria-label="search" className={style.searchTextbox} placeholder="Search" />
-				<div id="search" title="Search" className={style.searchButton} onClick={this.performSearch}>
-					<i className={join(...iconsClasses)}>search</i>
+			<form className={formClassName} method={elementProps.formMethod}>
+				<label htmlFor={elementProps.inputName}></label>
+				<input
+					ref={inputRef}
+					key={elementProps.inputKey}
+					type={elementProps.inputType}
+					name={elementProps.inputName}
+					aria-label={elementProps.inputName}
+					className={styling.searchTextbox}
+					placeholder={elementProps.inputTitle}
+				/>
+				<div id={elementProps.inputName} title={elementProps.inputTitle} className={styling.searchButton} onClick={performSearch}>
+					<i className={iconClassName}>search</i>
 				</div>
 			</form>
 		);
-	};
-}
+	}
+);
 
-const mapStateToProps = (state: IStateTree & any): any => ({
-	isSearching: state.presentation.documentation.sidebar.searchbar.isLoading,
-	searchResults: state.presentation.documentation.sidebar.searchbar.searchResults,
-	searchError: state.presentation.documentation.sidebar.searchbar.error
-});
-
-export default connect<StateProps, DispatchProps, any>(mapStateToProps, Dispatchers)(SidebarSearch);
+export default SidebarSearch;

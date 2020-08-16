@@ -1,5 +1,6 @@
 import React from 'react';
 import memoize from 'fast-memoize';
+import { throttle } from 'lodash';
 import Action from './children/NavbarAction';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -35,7 +36,7 @@ interface DispatchPropsLoader {
 type Props = StateProps & DispatchProps & DispatchPropsLoader;
 
 type State = {
-	hovering: boolean;
+	topPosition: number;
 };
 
 class Navbar extends React.Component<Props, State> {
@@ -43,10 +44,10 @@ class Navbar extends React.Component<Props, State> {
 
 	constructor(props: any) {
 		super(props);
-		this.navbar = React.createRef();
 		this.state = {
-			hovering: false
+			topPosition: -1
 		};
+		this.navbar = React.createRef();
 	}
 
 	public shouldComponentUpdate = (nextProps: any): boolean =>
@@ -58,6 +59,10 @@ class Navbar extends React.Component<Props, State> {
 		this.applyAnchor(this.navbar.current!);
 	};
 
+	public componentWillUnmount = (): void => {
+		window.removeEventListener('scroll', this.anchor);
+	};
+
 	private applyAnchor = (navbar: HTMLElement): void => {
 		const margin = 15;
 		const topOffset = -(navbar.clientHeight - margin);
@@ -67,51 +72,44 @@ class Navbar extends React.Component<Props, State> {
 		const scroll = body.getBoundingClientRect().top;
 		const scrollTop = navbar.getBoundingClientRect().top;
 
-		const topPosition = Math.abs(scroll) + (scrollTop - topOffset);
+		const topPos = Math.abs(scroll) + (scrollTop - topOffset);
+
+		this.setState({
+			topPosition: topPos
+		});
 
 		this.props.setOffsetTop(margin - 1);
 
-		window.addEventListener('scroll', () => this.anchor(topPosition));
+		window.addEventListener('scroll', this.anchor, { passive: true });
 	};
 
-	private anchor = (top: number): void => {
+	private anchor = throttle((): void => {
+		const top = this.state.topPosition;
 		const anchored = this.props.anchored;
 
-		const scroll = document.body.scrollTop || document.documentElement.scrollTop;
+		const scroll = document.body.scrollTop || document.documentElement.scrollTop || 0;
 
-		if (scroll! >= top && !anchored) {
-			this.props.setAnchored(true);
+		if (scroll >= top) {
+			!anchored && this.props.setAnchored(true);
 		}
 
-		if (scroll! < top && anchored) {
-			this.props.setAnchored(false);
+		if (scroll < top) {
+			anchored && this.props.setAnchored(false);
 		}
-	};
+	}, 50);
 
 	private onMouseEnter = (): void => {
 		if (!this.props.anchored) {
 			return;
 		}
-		this.setState(
-			{
-				hovering: true
-			},
-			() => {
-				setTimeout(() => {
-					if (this.state.hovering) {
-						if (this.props.anchored) {
-							this.props.setMouseInside(true);
-						}
-					}
-				}, 100);
+		setTimeout(() => {
+			if (this.props.anchored) {
+				this.props.setMouseInside(true);
 			}
-		);
+		}, 100);
 	};
 
 	private onMouseExit = (): void => {
-		this.setState({
-			hovering: false
-		});
 		if (this.props.anchored) {
 			this.props.setMouseInside(false);
 		}
@@ -121,27 +119,22 @@ class Navbar extends React.Component<Props, State> {
 		if (this.props.isLoaderActive) {
 			this.props.hideLoader();
 		}
-		if (tab != null) {
-			const empty = this.props.loadedRoutes.length <= 0;
-			if (empty || !this.props.loadedRoutes.includes(tab.link)) {
-				if (tab.lazyLoaded) {
-					this.props.showLoader();
-				}
+		const empty = this.props.loadedRoutes.length <= 0;
+		if (empty || !this.props.loadedRoutes.includes(tab.link)) {
+			if (tab.lazyLoaded) {
+				this.props.showLoader();
 			}
 		}
 	};
 
 	private handleLinkClick = (tab: any): void => {
-		this.manageLoader(tab);
-
 		if (tab == null) {
 			return this.props.setActiveTab(tab);
 		}
-		swMessager.emit(events.MESSAGE, { type: messages.ADD_TO_CACHE, payload: tab.link });
 
-		if (this.props.activeTab === null) {
-			this.props.setActiveTab(tab);
-		} else if (this.props.activeTab.label !== tab.label) {
+		if (this.props.activeTab === null || this.props.activeTab.label !== tab.label) {
+			this.manageLoader(tab);
+			swMessager.emit(events.MESSAGE, { type: messages.ADD_TO_CACHE, payload: tab.link });
 			this.props.setActiveTab(tab);
 		}
 	};
@@ -193,7 +186,7 @@ class Navbar extends React.Component<Props, State> {
 				<ul>
 					{routes.map((element: any, idx: number) => (
 						<li key={idx}>
-							<Link {...memoize(this.getLinkProps)(style, element, idx)}>{element.label}</Link>
+							<Link {...this.getLinkProps(style, element, idx)}>{element.label}</Link>
 						</li>
 					))}
 				</ul>

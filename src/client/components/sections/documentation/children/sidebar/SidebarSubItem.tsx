@@ -2,27 +2,32 @@ import React from 'react';
 import { join } from '../../../../utililties/react.utils';
 import { MaterialIcons } from '../../../../../stores/icon.library';
 
-class SidebarSubItem extends React.PureComponent<any, any> {
-	public render = (): JSX.Element => {
-		const hash = this.props.hash;
-		const label = this.props.label;
-		const method = this.props.method;
-		const style = this.props.styling;
+type StateProps = {
+	hash: string;
+	label: string;
+	method: string;
+	styling: any;
+};
 
-		const classes = [style.httpMethod, style.httpAll];
+const SidebarSubItem: React.FC<StateProps> = React.memo(
+	(props: StateProps): JSX.Element => {
+		const { hash, label, method, styling } = props;
+
+		const classes = [styling.httpMethod, styling.httpAll];
+		const className = join(...classes);
 
 		return (
-			<li className={style.subMenuItem}>
-				<div className={style.subMenuItemWrapper}>
-					<h3 className={join(...classes)}>{method}</h3>
-					<a className={style.truncate} href={hash}>
+			<li className={styling.subMenuItem}>
+				<div className={styling.subMenuItemWrapper}>
+					<h3 className={className}>{method}</h3>
+					<a className={styling.truncate} href={hash}>
 						{label}
 					</a>
 				</div>
 				<i className={MaterialIcons.class}>{MaterialIcons.icons.CHEV_RIGHT}</i>
 			</li>
 		);
-	};
-}
+	}
+);
 
 export default SidebarSubItem;

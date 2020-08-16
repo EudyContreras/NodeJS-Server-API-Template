@@ -3,15 +3,15 @@ import IAction from '../../actions/action';
 
 export const SEARCH_ACTION_SOURCE = 'SEARCH_ACTION_SOURCE';
 
-export const SEARCH_RESULTS = 'SEARCH_RESULTS';
-export const LOADING_SEARCH_RESULTS = 'LOADING_SEARCH_RESULTS';
-export const SEARCH_ERROR = 'SEARCH_ERROR';
+export const SEARCH_RESULTS = SEARCH_ACTION_SOURCE + 'SEARCH_RESULTS';
+export const LOADING_SEARCH_RESULTS = SEARCH_ACTION_SOURCE + 'LOADING_SEARCH_RESULTS';
+export const SEARCH_ERROR = SEARCH_ACTION_SOURCE + 'SEARCH_ERROR';
 
 export interface DispatchProps {
-	performSearch: (prefix: string) => void;
+	performSearchAction: (prefix: string) => void;
 }
 
-export const performSearch = (prefix: string) => async (dispatch: (action?: any) => any): Promise<void> => {
+export const performSearchAction = (prefix: string) => async (dispatch: (action?: IAction) => any): Promise<void> => {
 	dispatch(loading());
 
 	const service = new SearchService();
@@ -20,7 +20,7 @@ export const performSearch = (prefix: string) => async (dispatch: (action?: any)
 
 	if (error) return dispatch(onError(error));
 
-	dispatch(searchEvent(result));
+	dispatch(searchAction(result));
 };
 
 export const loading = (): IAction => ({
@@ -34,10 +34,10 @@ export const onError = (error: any): IAction => ({
 	payload: error
 });
 
-export const searchEvent = (result: any): IAction => ({
+export const searchAction = (result: any): IAction => ({
 	from: SEARCH_ACTION_SOURCE,
 	type: SEARCH_RESULTS,
 	payload: result
 });
 
-export const Dispatchers = { performSearch };
+export const Dispatchers = { performSearchAction };
