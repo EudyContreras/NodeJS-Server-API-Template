@@ -28,13 +28,13 @@ const SidebarSearch: React.FC<StateProps> = React.memo(
 		const iconsClasses = [MaterialIcons.class, styling.searchButtonIcon];
 		const iconsLoaded = useSelector<IStateTree>((state) => state.presentation.assets.fonts[MaterialIcons.name] === true);
 
-		const performSearch = async (event: React.MouseEvent<HTMLElement, MouseEvent>): Promise<void> => {
+		async function performSearch(event: React.MouseEvent<HTMLElement, MouseEvent>): Promise<void> {
 			event.preventDefault();
 
 			rippleEffect(event, styling);
 
 			performSearchAction(inputRef.current!.value)(dispatch);
-		};
+		}
 
 		if (!iconsLoaded) {
 			iconsClasses.push(styling.pendingIcon);

@@ -2,8 +2,8 @@ import IAction from '../action';
 
 export const ASSET_MANAGER = 'ASSET_MANAGER';
 
-export const IMAGE_LOADED = ASSET_MANAGER + '_IMAGE_LOADED';
-export const FONTS_LOADED = ASSET_MANAGER + '_FONTS_LOADED';
+export const IMAGE_LOADED = 'ASSET_MANAGER_IMAGE_LOADED';
+export const FONTS_LOADED = 'ASSET_MANAGER_FONTS_LOADED';
 
 export enum AssetType {
 	IMAGE,

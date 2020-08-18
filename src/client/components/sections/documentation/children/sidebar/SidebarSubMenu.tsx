@@ -65,23 +65,23 @@ const SidebarSubMenu: React.FC<StateProps> = ({ styling, expanded, parent }: Sta
 
 	const classes = [styling.subMenu];
 
-	const onHidden = (): void => {
+	function onHidden(): void {
 		setState(
 			(state: State): State => ({
 				...state,
 				hidden: true
 			})
 		);
-	};
+	}
 
-	const onShown = (): void => {
+	function onShown(): void {
 		setState(
 			(state: State): State => ({
 				...state,
 				hidden: false
 			})
 		);
-	};
+	}
 
 	useEffect(() => {
 		const menu = menuRef.current;
@@ -99,21 +99,13 @@ const SidebarSubMenu: React.FC<StateProps> = ({ styling, expanded, parent }: Sta
 	));
 
 	if (state.loaded) {
-		classes.push(styling.smExpanded);
-		if (expanded) {
-			return (
-				<ul ref={menuRef} onTransitionEnd={onShown} className={join(...classes)} style={getStyle(state.height)}>
-					{listItems}
-				</ul>
-			);
-		} else {
-			const styling = state.hidden ? hiddenStyle() : getStyle(0);
-			return (
-				<ul ref={menuRef} onTransitionEnd={onHidden} className={join(...classes)} style={styling}>
-					{listItems}
-				</ul>
-			);
-		}
+		const style = expanded ? getStyle(state.height) : state.hidden ? hiddenStyle() : getStyle(0);
+		const onEnd = expanded ? onShown : onHidden;
+		return (
+			<ul ref={menuRef} onTransitionEnd={onEnd} className={join(...classes, styling.smExpanded)} style={style}>
+				{listItems}
+			</ul>
+		);
 	}
 	return (
 		<ul ref={menuRef} className={join(...classes)}>

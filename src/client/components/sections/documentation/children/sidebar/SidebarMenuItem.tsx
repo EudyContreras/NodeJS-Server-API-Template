@@ -19,9 +19,9 @@ export const SidebarMenuItem: React.FC<StateProps> = React.memo(
 		const classes = [styling.menuItem];
 		const iconClasses = [MaterialIcons.class];
 
-		const openSubMenu = (_event: React.MouseEvent<HTMLDivElement, MouseEvent>): void => {
+		function openSubMenu(_event: React.MouseEvent<HTMLDivElement, MouseEvent>): void {
 			setExpanded((state) => !state);
-		};
+		}
 
 		if (!iconsLoaded) {
 			iconClasses.push(styling.pendingIcon);

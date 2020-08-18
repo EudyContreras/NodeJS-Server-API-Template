@@ -27,25 +27,19 @@ const getSelection = createSelector<IStateTree, IStateTree, State>(
 	})
 );
 
-const scrollToTop = (topOffset) => (): void => {
-	const top = document.documentElement.scrollTop || document.body.scrollTop;
-	if (top > topOffset) {
-		window.scroll(0, topOffset);
-	}
-};
-
-const getViewProps = (active: boolean): ViewProps => ({
-	event: 'scroll',
-	title: 'Scroll to top',
-	class: active ? 'active' : 'inactive'
-});
-
 export const ScrollToTop: React.FC = (): JSX.Element => {
 	const { fonts, topOffset, navbarHeight } = getSelection(useSelector<IStateTree, IStateTree>((state) => state));
 	const [showButton, setShowButton] = useState(false);
 	const fontIsLoaded = fonts[MaterialIcons.name] === true;
 	const iconClasses = [MaterialIcons.class];
 	const offsetTop = navbarHeight - topOffset;
+
+	function scrollToTop(): void {
+		const top = document.documentElement.scrollTop || document.body.scrollTop;
+		if (top > offsetTop) {
+			window.scroll(0, offsetTop);
+		}
+	}
 
 	useEffect(() => {
 		const scrollFunc = (): void => {
@@ -61,10 +55,14 @@ export const ScrollToTop: React.FC = (): JSX.Element => {
 		return (): any => window.removeEventListener(viewProps.event, scrollFunc);
 	}, [showButton]);
 
-	const viewProps = getViewProps(showButton);
+	const viewProps: ViewProps = {
+		event: 'scroll',
+		title: 'Scroll to top',
+		class: showButton ? 'active' : 'inactive'
+	};
 
 	return (
-		<Button title={viewProps.title} onClick={scrollToTop(offsetTop)} className={viewProps.class}>
+		<Button title={viewProps.title} onClick={scrollToTop} className={viewProps.class}>
 			{fontIsLoaded && <i className={join(...iconClasses)}>{MaterialIcons.icons.EXPAND_LESS}</i>}
 		</Button>
 	);
