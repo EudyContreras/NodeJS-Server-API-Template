@@ -1,15 +1,17 @@
-import React from 'react';
+import React, { useEffect, useState, RefObject, useRef } from 'react';
 import TopSection from './sections/TopSection';
 import MainSection from './sections/MainSection';
 import MiddleSection from './sections/MiddleSection';
 import SideMenuSearch from './SidebarSearch';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { shallowEqual } from '../../../../utililties/comparer.utils';
 import { appendWhen } from '../../../../../appliers/style.applier';
 import { getSidemenu } from '../../../../../selectors/sidemenu.selector';
 import { setHovered, setFixed } from '../../../../../actions/documentation/sidebar.action';
 import { join } from '../../../../utililties/react.utils';
 import SidebarToggle from './SidebarToggle';
+import { IStateTree, IPresentation } from '../../../../../reducers';
+import { ISideMenu } from '../../../../../reducers/documentation/sidebar.reducer';
 
 const headers = ['Introduction', 'Endpoints'];
 
@@ -19,95 +21,60 @@ interface StateProps {
 	expanded: boolean;
 }
 
-interface DispatchProps {
-	setHovered: (hovered: boolean) => void;
-	setFixed: (fixed: boolean) => void;
-}
+type Props = {
+	self: RefObject<HTMLElement>;
+	styling: any;
+};
 
-const Dispatchers = { setHovered, setFixed };
+const SidebarMenu: React.FC<Props> = React.memo(
+	({ styling, self }: Props): JSX.Element => {
+		const { isHovered, isFixed, isExpanded, offsetTop } = getSidemenu(useSelector<IStateTree, IPresentation>((state) => state.presentation));
+		const dispatch = useDispatch();
+		const isHovering = useRef(false);
 
-type Props = StateProps & DispatchProps & any;
-
-class SidebarMenu extends React.Component<Props, any> {
-	constructor(props: any) {
-		super(props);
-		this.state = {
-			hovering: false
+		const onMouseEnter = (): void => {
+			isHovering.current = true;
+			setHovered(true)(dispatch);
 		};
-	}
 
-	private onMouseEnter = (): void => {
-		this.setState(
-			{
-				hovering: true
-			},
-			() => {
-				this.props.setHovered(true);
-			}
-		);
-	};
+		const onMouseExit = (): void => {
+			isHovering.current = false;
+			setTimeout(() => {
+				if (!isHovering.current) {
+					setHovered(false)(dispatch);
+				}
+			}, 400);
+		};
 
-	private onMouseExit = (): void => {
-		this.setState(
-			{
-				hovering: false
-			},
-			() => {
-				setTimeout(() => {
-					if (!this.state.hovering) {
-						this.props.setHovered(false);
-					}
-				}, 300);
-			}
-		);
-	};
+		const styles = [styling.sideMenu];
+		const cssTop = isFixed ? offsetTop : 'auto';
 
-	public shouldComponentUpdate = (nextProps: any, _nextState: any): boolean =>
-		!shallowEqual(this.props.fixed, nextProps.fixed) ||
-		!shallowEqual(this.props.hovered, nextProps.hovered) ||
-		!shallowEqual(this.props.expanded, nextProps.expanded);
-
-	private getProperties = (style: any): any & any => {
-		const styles = [style.sideMenu];
-		const cssTop = this.props.fixed ? this.props.offsetTop : 'auto';
-
-		appendWhen(styles, !this.props.expanded, style.sideMenuClosed);
-		appendWhen(styles, !this.props.expanded && this.props.hovered, style.sideMenuPeek);
-		appendWhen(styles, this.props.fixed, style.fixed);
+		appendWhen(styles, !isExpanded, styling.sideMenuClosed);
+		appendWhen(styles, !isExpanded && isHovered, styling.sideMenuPeek);
+		appendWhen(styles, isFixed, styling.fixed);
 
 		const common = {
-			ref: this.props.self,
 			style: { top: cssTop },
 			className: join(...styles)
 		};
 
 		const actions = {
-			onMouseEnter: this.onMouseEnter,
-			onMouseLeave: this.onMouseExit
+			onMouseEnter: onMouseEnter,
+			onMouseLeave: onMouseExit
 		};
 
-		return { common, actions };
-	};
-
-	public render = (): JSX.Element => {
-		const style = this.props.styling;
-
-		const { common, actions } = this.getProperties(style);
-
 		return (
-			<aside {...common} {...actions}>
-				<div className={style.sideMenuContainer}>
-					<TopSection styling={style} />
-					<SideMenuSearch styling={style} menuState={this.state} />
-					<MiddleSection styling={style} header={headers[0]} />
-					<MainSection styling={style} header={headers[1]} />
+			<aside ref={self} {...common} {...actions}>
+				<div className={styling.sideMenuContainer}>
+					<TopSection styling={styling} />
+					<SideMenuSearch styling={styling} />
+					<MiddleSection styling={styling} header={headers[0]} />
+					<MainSection styling={styling} header={headers[1]} />
 				</div>
-				<SidebarToggle styling={style} />
+				<SidebarToggle styling={styling} />
 			</aside>
 		);
-	};
-}
+	}
+);
 
-const mapStateToProps = (state: any): any => getSidemenu(state.presentation);
-
-export default connect<StateProps, DispatchProps, any>(mapStateToProps, Dispatchers)(SidebarMenu);
+export default SidebarMenu;

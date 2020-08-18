@@ -8,7 +8,7 @@ import { performSearchAction } from '../../../../../actions/documentation/search
 
 type StateProps = {
 	styling: any;
-	menuState: any;
+	menuState?: any;
 };
 
 const elementProps = {

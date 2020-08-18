@@ -2,6 +2,8 @@ interface IScrollListener {
 	onScroll(style: any, scroll: number): void;
 }
 
+export const StickyClass = 'sticky_element';
+
 export class ScrollListener implements IScrollListener {
 	public top: number;
 	public bottom?: number;

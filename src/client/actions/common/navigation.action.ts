@@ -1,3 +1,5 @@
+import IAction from '../action';
+
 export const NAV_BAR_MENU = 'NAV_BAR_MENU';
 export const NAV_BAR_MENU_ANCHORED = 'NAV_BAR_MENU_ANCHORED';
 export const NAV_BAR_MENU_OFFSET_TOP = 'NAV_BAR_MENU_OFFSET_TOP';
@@ -7,23 +9,29 @@ export const NAV_BAR_MENU_MOUSE_INSIDE = 'NAV_BAR_MENU_MOUSE_INSIDE';
 export interface DispatchProps {
 	setAnchored: (anchored: boolean) => void;
 	setMouseInside: (inside: boolean) => void;
-	setOffsetTop: (offset: number) => void;
+	setOffsetTop: (offset: number, height: number) => void;
 	setActiveTab: (tab: string) => void;
 }
 
-export const setOffsetTop = (offset: number) => (dispatch: (action?: any) => any): void => {
-	dispatch({ ...offsetTopAction, payload: offset });
+export const setOffsetTop = (offset: number, height: number) => (dispatch: (action?: IAction) => any): void => {
+	dispatch({
+		...offsetTopAction,
+		payload: {
+			offset: offset,
+			height: height
+		}
+	});
 };
 
-export const setMouseInside = (inside: boolean) => (dispatch: (action?: any) => any): void => {
+export const setMouseInside = (inside: boolean) => (dispatch: (action?: IAction) => any): void => {
 	dispatch({ ...navInsideAction, payload: inside });
 };
 
-export const setAnchored = (anchored: boolean) => (dispatch: (action?: any) => any): void => {
+export const setAnchored = (anchored: boolean) => (dispatch: (action?: IAction) => any): void => {
 	dispatch({ ...navAnchorAction, payload: anchored });
 };
 
-export const setActiveTab = (tab: any) => (dispatch: (action?: any) => any): void => {
+export const setActiveTab = (tab: any) => (dispatch: (action?: any) => IAction): void => {
 	dispatch({ ...activeTabAction, payload: tab });
 };
 

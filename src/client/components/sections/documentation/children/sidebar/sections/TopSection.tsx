@@ -1,15 +1,18 @@
 import React from 'react';
-import SideMenuToggle from '../SidebarToggle';
 import VersionInfo from './VersionInfo';
 
-export default class TopSection extends React.PureComponent<any, any> {
-	public render = (): JSX.Element => {
-		const style = this.props.styling;
+type StateProps = {
+	styling: any;
+};
 
-		return (
-			<div className={style.topSection}>
-				<VersionInfo styling={style} />
-			</div>
-		);
-	};
-}
+export const TopSection: React.FC<any> = (props: StateProps): JSX.Element => {
+	const style = props.styling;
+
+	return (
+		<div className={style.topSection}>
+			<VersionInfo styling={style} />
+		</div>
+	);
+};
+
+export default TopSection;

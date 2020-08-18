@@ -52,7 +52,7 @@ class Action extends React.PureComponent<Props, any> {
 		}
 
 		return (
-			<div onClick={this.initInstallation} className={join(...classes)} title="install">
+			<div onClick={this.initInstallation} className={join(...classes)} title="Install">
 				<i id={MaterialIcons.id} className={join(...iconsClasses)}>
 					{icon}
 				</i>

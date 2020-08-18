@@ -98,7 +98,7 @@ class DocsPage extends React.Component<Props> {
 				<SandBox self={this.sandbox} styling={style} />
 				<ContentArea self={this.content} styling={style} />
 				<FooterArea self={this.footer} styling={style} />
-				<ScrollToTop styling={style} />
+				<ScrollToTop />
 			</Fragment>
 		);
 	};

@@ -1,6 +1,4 @@
 import React from 'react';
-import memoize from 'fast-memoize';
-import { throttle } from 'lodash';
 import Action from './children/NavbarAction';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -69,18 +67,16 @@ class Navbar extends React.Component<Props, State> {
 		const margin = 15;
 		const topOffset = -(navbar.clientHeight - margin);
 
-		const body = document.body;
+		const navScroll = navbar.getBoundingClientRect().top;
+		const bodyScroll = document.body.getBoundingClientRect().top;
 
-		const scroll = body.getBoundingClientRect().top;
-		const scrollTop = navbar.getBoundingClientRect().top;
-
-		const topPos = Math.abs(scroll) + (scrollTop - topOffset);
+		const topPos = Math.abs(bodyScroll) + (navScroll - topOffset);
 
 		this.setState({
 			topPosition: topPos
 		});
 
-		this.props.setOffsetTop(margin - 1);
+		this.props.setOffsetTop(margin - 1, navbar.clientHeight);
 
 		window.addEventListener('scroll', this.anchor, { passive: true });
 	};
@@ -105,9 +101,9 @@ class Navbar extends React.Component<Props, State> {
 			return;
 		}
 		this.setState(
-			{
+			() => ({
 				hovering: true
-			},
+			}),
 			() => {
 				setTimeout(() => {
 					if (this.state.hovering && this.props.anchored) {
@@ -120,9 +116,9 @@ class Navbar extends React.Component<Props, State> {
 
 	private onMouseExit = (): void => {
 		this.setState(
-			{
+			() => ({
 				hovering: false
-			},
+			}),
 			() => {
 				if (this.props.anchored) {
 					this.props.setMouseInside(false);

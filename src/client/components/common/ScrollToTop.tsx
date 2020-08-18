@@ -1,15 +1,31 @@
-import React, { useEffect, useState, Fragment } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button } from './ScrollToTop.style';
-import { throttle } from 'lodash';
 import { MaterialIcons } from '../../stores/icon.library';
 import { join } from '../../appliers/style.applier';
 import { useSelector } from 'react-redux';
 import { IStateTree } from '../../reducers';
+import { createSelector } from 'reselect';
 
-interface Props {
-	styling: any;
-	topOffset?: number;
-}
+type State = {
+	fonts: Record<string, boolean>;
+	topOffset: number;
+	navbarHeight: number;
+};
+
+type ViewProps = {
+	title: string;
+	event: string;
+	class: string;
+};
+
+const getSelection = createSelector<IStateTree, IStateTree, State>(
+	(state: IStateTree): IStateTree => state,
+	(state: IStateTree) => ({
+		fonts: state.presentation.assets.fonts,
+		topOffset: state.presentation.navigation.offsetTop,
+		navbarHeight: state.presentation.navigation.navbarHeight
+	})
+);
 
 const scrollToTop = (topOffset) => (): void => {
 	const top = document.documentElement.scrollTop || document.body.scrollTop;
@@ -18,28 +34,38 @@ const scrollToTop = (topOffset) => (): void => {
 	}
 };
 
-export const ScrollToTop: React.FC<Props> = ({ styling, topOffset = 65 }: Props): JSX.Element => {
+const getViewProps = (active: boolean): ViewProps => ({
+	event: 'scroll',
+	title: 'Scroll to top',
+	class: active ? 'active' : 'inactive'
+});
+
+export const ScrollToTop: React.FC = (): JSX.Element => {
+	const { fonts, topOffset, navbarHeight } = getSelection(useSelector<IStateTree, IStateTree>((state) => state));
 	const [showButton, setShowButton] = useState(false);
-	const iconsLoaded = useSelector<IStateTree>((state) => state.presentation.assets.fonts[MaterialIcons.name] === true);
+	const fontIsLoaded = fonts[MaterialIcons.name] === true;
 	const iconClasses = [MaterialIcons.class];
+	const offsetTop = navbarHeight - topOffset;
 
 	useEffect(() => {
-		const scrollFunc = throttle((): void => {
-			if (window.scrollY > topOffset) {
+		const scrollFunc = (): void => {
+			if (window.scrollY > offsetTop) {
 				!showButton && setShowButton(true);
 			} else {
 				showButton && setShowButton(false);
 			}
-		}, 150);
+		};
 
-		window.addEventListener('scroll', scrollFunc, { passive: true });
+		window.addEventListener(viewProps.event, scrollFunc, { passive: true });
 
-		return (): any => window.removeEventListener('scroll', scrollFunc);
+		return (): any => window.removeEventListener(viewProps.event, scrollFunc);
 	}, [showButton]);
 
+	const viewProps = getViewProps(showButton);
+
 	return (
-		<Button onClick={scrollToTop(topOffset)} className={showButton ? 'active' : 'inactive'}>
-			{iconsLoaded ? <i className={join(...iconClasses)}>{MaterialIcons.icons.EXPAND_LESS}</i> : <Fragment />}
+		<Button title={viewProps.title} onClick={scrollToTop(offsetTop)} className={viewProps.class}>
+			{fontIsLoaded && <i className={join(...iconClasses)}>{MaterialIcons.icons.EXPAND_LESS}</i>}
 		</Button>
 	);
 };
