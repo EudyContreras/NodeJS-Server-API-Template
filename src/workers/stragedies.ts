@@ -1,7 +1,7 @@
 import { clientMessages, cachableTypes, cacheNames, fallbacks, responseType, headers } from './constants';
 import { days } from './helpers/timespan.helper';
 import { logger, inRange, sendMessageToClients, isHomeOrigin } from './commons';
-import { hasExpired, attachExpiration, getAllEntries, getEntry } from './handlers/localstorage';
+import { hasExpired, attachExpiration, getAllEntries, getEntry } from './handlers/indexdbHandler';
 
 const TIMEOUT = 5000;
 
@@ -172,7 +172,16 @@ export function cacheFirst(stragedy: CacheStragedy): void {
 		cache.then((cache) =>
 			cache.match(request).then(async (response) => {
 				if (response && quotaOptions) {
-					return hasExpired(request.url).then((expired) => (!expired ? response : network(cache)));
+					const expired = await hasExpired(request.url);
+					if (expired === null) {
+						try {
+							return response;
+						} finally {
+							network(cache);
+						}
+					} else {
+						return !expired ? response : network(cache);
+					}
 				}
 				return response || network(cache);
 			}))

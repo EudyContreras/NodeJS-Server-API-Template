@@ -4,11 +4,11 @@
 @import './sideSubMenu';
 
 .side-menu-container {
-	overflow-y: auto;
-	scroll-behavior: smooth;
 	position: absolute;
 	height: 100vh;
 	width: 100%;
+	overflow-y: auto;
+	scroll-behavior: smooth;	
 }
 
 .side-menu-container::-webkit-scrollbar {

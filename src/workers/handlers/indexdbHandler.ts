@@ -149,10 +149,10 @@ export async function updateEntry(
 	}
 }
 
-export async function hasExpired(key: string): Promise<boolean> {
+export async function hasExpired(key: string): Promise<boolean | null> {
 	try {
 		const entry = await instance.getItem(key);
-		return entry ? (entry.expiryDate ? Date.now() > entry.expiryDate : false) : true;
+		return entry ? (entry.expiryDate ? Date.now() > entry.expiryDate : false) : null;
 	} catch (error) {
 		DEBUG_MODE && logger.error('Something went wrong', error);
 		return true;

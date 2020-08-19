@@ -2,14 +2,12 @@ import React from 'react';
 import Action from './children/NavbarAction';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import swMessager from '../../../utilities/messageBus';
 import { IStateTree } from '../../../reducers';
 import { shallowEqual } from '../../utililties/comparer.utils';
 import { appendWhen, join } from '../../../appliers/style.applier';
 import { getNavigationBar } from '../../../selectors/navbar.selector';
 import { showLoader, hideLoader } from '../../../actions/common/loader.action';
 import { DispatchProps, Dispatchers } from '../../../actions/common/navigation.action';
-import { events, messages } from '../../../../workers/constants';
 
 interface StateProps {
 	anchored: boolean;
@@ -33,21 +31,20 @@ interface DispatchPropsLoader {
 
 type Props = StateProps & DispatchProps & DispatchPropsLoader;
 
-type State = {
-	hovering: boolean;
-	topPosition: number;
-};
-
-class Navbar extends React.Component<Props, State> {
+class Navbar extends React.Component<Props> {
 	private navbar: React.RefObject<HTMLElement>;
+	private topPosRef: React.MutableRefObject<number>;
+	private hoverRef: React.MutableRefObject<boolean>;
 
 	constructor(props: any) {
 		super(props);
 		this.state = {
-			hovering: false,
 			topPosition: -1
 		};
+		this.topPosRef = React.createRef() as React.MutableRefObject<number>;
+		this.hoverRef = React.createRef() as React.MutableRefObject<boolean>;
 		this.navbar = React.createRef();
+		this.hoverRef.current = false;
 	}
 
 	public shouldComponentUpdate = (nextProps: any, _nextState: any): boolean =>
@@ -72,9 +69,7 @@ class Navbar extends React.Component<Props, State> {
 
 		const topPos = Math.abs(bodyScroll) + (navScroll - topOffset);
 
-		this.setState({
-			topPosition: topPos
-		});
+		this.topPosRef.current = topPos;
 
 		this.props.setOffsetTop(margin - 1, navbar.clientHeight);
 
@@ -82,7 +77,7 @@ class Navbar extends React.Component<Props, State> {
 	};
 
 	private anchor = (): void => {
-		const top = this.state.topPosition;
+		const top = this.topPosRef.current;
 		const anchored = this.props.anchored;
 
 		const scroll = document.body.scrollTop || document.documentElement.scrollTop || 0;
@@ -100,31 +95,21 @@ class Navbar extends React.Component<Props, State> {
 		if (!this.props.anchored) {
 			return;
 		}
-		this.setState(
-			() => ({
-				hovering: true
-			}),
-			() => {
-				setTimeout(() => {
-					if (this.state.hovering && this.props.anchored) {
-						this.props.setMouseInside(true);
-					}
-				}, 100);
-			}
-		);
+		this.hoverRef.current = true;
+		if (this.props.anchored) {
+			this.props.setMouseInside(true);
+		}
 	};
 
 	private onMouseExit = (): void => {
-		this.setState(
-			() => ({
-				hovering: false
-			}),
-			() => {
+		this.hoverRef.current = false;
+		setTimeout(() => {
+			if (this.hoverRef.current === false) {
 				if (this.props.anchored) {
 					this.props.setMouseInside(false);
 				}
 			}
-		);
+		}, 300);
 	};
 
 	private manageLoader = (tab: any): void => {
@@ -146,7 +131,6 @@ class Navbar extends React.Component<Props, State> {
 
 		if (this.props.activeTab === null || this.props.activeTab.label !== tab.label) {
 			this.manageLoader(tab);
-			swMessager.emit(events.MESSAGE, { type: messages.ADD_TO_CACHE, payload: tab.link });
 			this.props.setActiveTab(tab);
 		}
 	};

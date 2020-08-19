@@ -38,19 +38,30 @@ const defaultCachePredicate: CachePredicate = {
 const isSideEffectRequest = (request: Request): boolean =>
 	[...Object.values(constants.sideEffects)].includes(request.method) || request.method !== httpMethods.GET;
 
-const isWebFontRequest = (request: Request, url: any): boolean => request.destination === cachableTypes.FONT || url.origin === commonOrigins.STATIC_WEB_FONTS;
+const isWebFontRequest = (destination: string, url: any): boolean => destination === cachableTypes.FONT || url.origin === commonOrigins.STATIC_WEB_FONTS;
 
 const isAcceptedApiRequest = (request: Request): boolean => request.url.includes('/api/') && request.method === httpMethods.GET;
 
-const any = (request: Request, ...types: string[]): boolean => types.includes(request.destination);
+const any = (destination: string, ...types: string[]): boolean => types.includes(destination);
 
 DEBUG_MODE && logger.log('Your service worker is loaded 🎉');
 
-self.addEventListener(events.FETCH, (event: any) => {
+self.addEventListener(events.FETCH, async (event: any) => {
 	const request: Request = event.request.clone();
 	const url: URL = new URL(request.url);
+	let destination: string = request.destination;
 
 	if (!url.origin.startsWith('http')) return;
+
+	if (destination === '') {
+		if (filetypePatterns.IMAGE.test(request.url)) {
+			destination = cachableTypes.IMAGE;
+		} else if (filetypePatterns.STATIC.test(request.url)) {
+			destination = cachableTypes.SCRIPT;
+		} else if (filetypePatterns.DATA.test(request.url)) {
+			destination = cachableTypes.DOCUMENT;
+		}
+	}
 
 	DEBUG_MODE && logger.info(request.destination, request.url);
 
@@ -61,7 +72,7 @@ self.addEventListener(events.FETCH, (event: any) => {
 		return;
 	}
 
-	if (any(request, cachableTypes.STYLE, cachableTypes.SCRIPT, cachableTypes.DOCUMENT)) {
+	if (any(destination, cachableTypes.STYLE, cachableTypes.SCRIPT, cachableTypes.DOCUMENT)) {
 		const cacheName = url.origin === commonOrigins.STYLESHEET_FONTS ? cacheKeys.GOOGLE_FONTS_SHEETS_CACHE : cacheKeys.STATIC_CACHE;
 		const cachePredicate: CachePredicate = {
 			crossOrigin: true,
@@ -71,7 +82,7 @@ self.addEventListener(events.FETCH, (event: any) => {
 		return;
 	}
 
-	if (isWebFontRequest(request, url)) {
+	if (isWebFontRequest(destination, url)) {
 		const cacheName = cacheKeys.GOOGLE_FONTS_WEB_CACHE;
 		const cachePredicate: CachePredicate = {
 			crossOrigin: true,
@@ -81,7 +92,7 @@ self.addEventListener(events.FETCH, (event: any) => {
 		return;
 	}
 
-	if (request.destination === cachableTypes.IMAGE) {
+	if (destination === cachableTypes.IMAGE) {
 		const cacheName = cacheKeys.IMAGE_CACHE;
 		const quotaOptions: CacheQuotaOptions = {
 			clearOnError: true,
@@ -93,7 +104,7 @@ self.addEventListener(events.FETCH, (event: any) => {
 		return;
 	}
 
-	if (request.destination === cachableTypes.AUDIO) {
+	if (destination === cachableTypes.AUDIO) {
 		const cacheName = cacheKeys.MEDIA_CACHE;
 		const quotaOptions: CacheQuotaOptions = {
 			clearOnError: true,
@@ -104,7 +115,7 @@ self.addEventListener(events.FETCH, (event: any) => {
 		return;
 	}
 
-	if (request.destination === cachableTypes.VIDEO) {
+	if (destination === cachableTypes.VIDEO) {
 		const cacheName = cacheKeys.MEDIA_CACHE;
 		const quotaOptions: CacheQuotaOptions = {
 			clearOnError: true,
@@ -155,15 +166,15 @@ self.addEventListener(events.INSTALL, async (event: any) => {
 
 const handleInstallation = async (urls: string[], callback: (cacheName: string, urls: string[]) => void): Promise<void> => {
 	try {
-		// const imageAssets = urls.filter((x) => filetypePatterns.IMAGE.test(x) || filetypePatterns.PROGRESSIVE_IMAGE.test(x));
+		const imageAssets = urls.filter((x) => filetypePatterns.IMAGE.test(x) || filetypePatterns.PROGRESSIVE_IMAGE.test(x));
 		const mediaAssets = urls.filter((x) => filetypePatterns.VIDEO.test(x) || filetypePatterns.AUDIO.test(x));
 		const fontAssests = urls.filter((x) => filetypePatterns.FONT.test(x));
 		const staticAssets = urls.filter((x) => filetypePatterns.STATIC.test(x));
 		const dataAssets = urls.filter((x) => filetypePatterns.DATA.test(x));
 
-		// if (imageAssets.length > 0) {
-		// 	await callback(cacheKeys.IMAGE_CACHE, imageAssets);
-		// }
+		if (imageAssets.length > 0) {
+			await callback(cacheKeys.IMAGE_CACHE, imageAssets);
+		}
 		if (fontAssests.length > 0) {
 			await callback(cacheKeys.GOOGLE_FONTS_WEB_CACHE, fontAssests);
 		}
