@@ -141,7 +141,7 @@ self.addEventListener(events.FETCH, async (event: any) => {
 	}
 });
 
-self.addEventListener(events.INSTALL, async (event: any) => {
+self.addEventListener(events.INSTALL, async (event: Event | any) => {
 	DEBUG_MODE && logger.log(events.INSTALL, `Version : ${__VERSION_NUMBER__}`, event);
 
 	const allResources = Array.from(new Set([...precacheManifest.map((x: any) => x.url), ...constants.urlsToCache]));
@@ -154,6 +154,10 @@ self.addEventListener(events.INSTALL, async (event: any) => {
 			DEBUG_MODE && logger.error('Could not save urls: ', requests, error);
 		}
 	};
+
+	caches.open(cacheKeys.STATIC_CACHE).then((cache) => {
+		cache.add(new Request(self.origin));
+	});
 
 	if (allResources.length > 0) {
 		event.waitUntil(

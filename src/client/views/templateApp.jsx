@@ -90,8 +90,6 @@ export const DefaultLayout = (props) => {
 				{props.css.map((style) => (
 					<style key={style.id} id={style.id} dangerouslySetInnerHTML={{ __html: style.cssText }} />
 				))}
-
-				<noscript>You need to enable JavaScript to fully be able to use this this web-app.</noscript>
 				<script async crossOrigin="anonymous" rel="preconnect" src={props.html.jquery} />
 			</head>
 			<body>

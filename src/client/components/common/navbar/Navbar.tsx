@@ -57,7 +57,7 @@ class Navbar extends React.Component<Props> {
 	};
 
 	public componentWillUnmount = (): void => {
-		window.removeEventListener('scroll', this.anchor);
+		window.removeEventListener('wheel', this.anchor);
 	};
 
 	private applyAnchor = (navbar: HTMLElement): void => {
@@ -73,7 +73,7 @@ class Navbar extends React.Component<Props> {
 
 		this.props.setOffsetTop(margin - 1, navbar.clientHeight);
 
-		window.addEventListener('scroll', this.anchor, { passive: true });
+		window.addEventListener('wheel', this.anchor, { passive: true });
 	};
 
 	private anchor = (): void => {

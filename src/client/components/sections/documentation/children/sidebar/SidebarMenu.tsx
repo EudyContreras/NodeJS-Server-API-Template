@@ -4,14 +4,12 @@ import MainSection from './sections/MainSection';
 import MiddleSection from './sections/MiddleSection';
 import SideMenuSearch from './SidebarSearch';
 import { useDispatch, useSelector } from 'react-redux';
-import { shallowEqual } from '../../../../utililties/comparer.utils';
 import { appendWhen } from '../../../../../appliers/style.applier';
 import { getSidemenu } from '../../../../../selectors/sidemenu.selector';
-import { setHovered, setFixed } from '../../../../../actions/documentation/sidebar.action';
+import { setHovered } from '../../../../../actions/documentation/sidebar.action';
 import { join } from '../../../../utililties/react.utils';
 import SidebarToggle from './SidebarToggle';
 import { IStateTree, IPresentation } from '../../../../../reducers';
-import { ISideMenu } from '../../../../../reducers/documentation/sidebar.reducer';
 
 const headers = ['Introduction', 'Endpoints'];
 
@@ -32,19 +30,19 @@ const SidebarMenu: React.FC<Props> = React.memo(
 		const dispatch = useDispatch();
 		const isHovering = useRef(false);
 
-		const onMouseEnter = (): void => {
+		function onMouseEnter(): void {
 			isHovering.current = true;
 			setHovered(true)(dispatch);
-		};
+		}
 
-		const onMouseExit = (): void => {
+		function onMouseExit(): void {
 			isHovering.current = false;
 			setTimeout(() => {
 				if (!isHovering.current) {
 					setHovered(false)(dispatch);
 				}
 			}, 400);
-		};
+		}
 
 		const styles = [styling.sideMenu];
 		const cssTop = isFixed ? offsetTop : 'auto';

@@ -1,9 +1,7 @@
 import React from 'react';
 import Section from './ContentSection';
 
-class ContentArea extends React.Component<any, any> {
-	public shouldComponentUpdate = (nextProps: any, nextState: any): boolean => false;
-
+class ContentArea extends React.PureComponent<any, any> {
 	public render = (): JSX.Element => {
 		const { styling } = this.props;
 		return (

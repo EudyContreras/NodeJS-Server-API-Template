@@ -34,32 +34,34 @@ export const ScrollToTop: React.FC = (): JSX.Element => {
 	const iconClasses = [MaterialIcons.class];
 	const offsetTop = navbarHeight - topOffset;
 
-	function scrollToTop(): void {
-		const top = document.documentElement.scrollTop || document.body.scrollTop;
-		if (top > offsetTop) {
-			window.scroll(0, offsetTop);
-		}
-	}
-
-	useEffect(() => {
-		const scrollFunc = (): void => {
-			if (window.scrollY > offsetTop) {
-				!showButton && setShowButton(true);
-			} else {
-				showButton && setShowButton(false);
-			}
-		};
-
-		window.addEventListener(viewProps.event, scrollFunc, { passive: true });
-
-		return (): any => window.removeEventListener(viewProps.event, scrollFunc);
-	}, [showButton]);
-
 	const viewProps: ViewProps = {
 		event: 'scroll',
 		title: 'Scroll to top',
 		class: showButton ? 'active' : 'inactive'
 	};
+
+	function scrollToTop(): void {
+		const top = document.documentElement.scrollTop || document.body.scrollTop;
+		if (top > offsetTop) {
+			window.scroll({
+				top: offsetTop,
+				behavior: 'smooth'
+			});
+		}
+	}
+
+	function scrollFunc(): void {
+		if (window.scrollY > offsetTop) {
+			!showButton && setShowButton(true);
+		} else {
+			showButton && setShowButton(false);
+		}
+	}
+
+	useEffect(() => {
+		window.addEventListener(viewProps.event, scrollFunc, { passive: true });
+		return (): any => window.removeEventListener(viewProps.event, scrollFunc);
+	}, [showButton]);
 
 	return (
 		<Button title={viewProps.title} onClick={scrollToTop} className={viewProps.class}>

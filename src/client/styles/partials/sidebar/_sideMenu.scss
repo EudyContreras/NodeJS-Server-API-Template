@@ -28,7 +28,7 @@
 }
 
 .side-menu {
-	width: 17%;
+	width: calc((230px + 17%) - 17%);
 	height: 100vh;
 	min-width: 230px;
 	position: absolute;
@@ -71,8 +71,8 @@
 	}
 
 	&-closed ~ .content-wrapper {
-		will-change: margin-right margin-left;
-		margin-left: 0%;
+		will-change: margin-right, margin-left;
+		margin-left: 20px;
 		margin-right: 40%;
 	}
 

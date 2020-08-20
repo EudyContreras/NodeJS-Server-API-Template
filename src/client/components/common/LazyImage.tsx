@@ -180,12 +180,12 @@ export const LazyImage: React.FC<LazyImageProps> = (props: LazyImageProps): JSX.
 	const inMemory = useSelector<IStateTree>(selectImageAssetState(src));
 	const dispatch = useDispatch();
 
-	const onLoaded = (event: React.SyntheticEvent<HTMLImageElement>): void => {
+	function onLoaded(event: React.SyntheticEvent<HTMLImageElement>): void {
 		const url = event.currentTarget.src;
 		if (!inMemory && url) dispatch({ ...ImageLoadedAction, payload: src });
-	};
+	}
 
-	const onFailed = (event: React.SyntheticEvent<HTMLImageElement>): void => {
+	function onFailed(event: React.SyntheticEvent<HTMLImageElement>): void {
 		const image: HTMLImageElement = event.currentTarget;
 		if (fallback) {
 			if (fallback.srcSet) {
@@ -197,7 +197,7 @@ export const LazyImage: React.FC<LazyImageProps> = (props: LazyImageProps): JSX.
 			image.onerror = null;
 			image.src = fallback.src;
 		}
-	};
+	}
 
 	const hasLoaded = inMemory;
 

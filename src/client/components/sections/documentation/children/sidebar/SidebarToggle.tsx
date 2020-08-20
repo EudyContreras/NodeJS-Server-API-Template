@@ -18,10 +18,10 @@ const SidebarToggle: React.FC<StateProps> = ({ styling }: StateProps): JSX.Eleme
 	const elementTitle = locked ? 'collapse' : 'expand';
 	const iconText = locked ? MaterialIcons.icons.CHEV_RIGHT : MaterialIcons.icons.MENU;
 
-	const toggleSidebar = (event: React.MouseEvent<HTMLElement, MouseEvent>): void => {
+	function toggleSidebar(event: React.MouseEvent<HTMLElement, MouseEvent>): void {
 		rippleEffect(event, styling);
 		dispatch(toggleAction);
-	};
+	}
 
 	const elementProps = {
 		value: locked,
