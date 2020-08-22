@@ -9,7 +9,7 @@ export const Button = styled.div`
 	z-index: 10000;
 	width: 45px;
 	height: 45px;
-	margin: 0 3em 2.5em 0;
+	margin: 0 2em 1.5em 0;
 	border-radius: 50%;
 	will-change: transform, opacity;
 	background-color: ${(props): any => props.theme.controls.colors.primary};

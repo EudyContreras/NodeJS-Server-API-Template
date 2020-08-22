@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import React, { createRef, RefObject, Fragment } from 'react';
+import React, { createRef, RefObject, Fragment, MutableRefObject } from 'react';
 import ContentArea from './children/content/ContentArea';
 import FooterArea from './children/footer/FooterArea';
 import SideMenu from './children/sidebar/SidebarMenu';
@@ -8,28 +8,29 @@ import { DispatchProps, Dispatchers } from '../../../actions/documentation/secti
 import { ScrollToTop } from '../../common/ScrollToTop';
 
 interface StateProps {
+	styling: any;
 	offsetTop: number;
 	sandboxFixedTop: boolean;
 	sandboxFixedBottom: boolean;
 }
 
-type Props = StateProps & DispatchProps & any;
+type Props = StateProps & DispatchProps;
 
-class DocsPage extends React.Component<Props> {
+class DocsPage extends React.PureComponent<Props> {
 	private readonly footer: RefObject<HTMLElement>;
 	private readonly sidebar: RefObject<HTMLElement>;
 	private readonly sandbox: RefObject<HTMLElement>;
 	private readonly content: RefObject<HTMLElement>;
+	private readonly offsetBottom: MutableRefObject<number>;
 
-	constructor(props: any) {
+	constructor(props: Props) {
 		super(props);
 		this.footer = createRef();
 		this.sidebar = createRef();
 		this.sandbox = createRef();
 		this.content = createRef();
+		this.offsetBottom = createRef() as MutableRefObject<number>;
 	}
-
-	public shouldComponentUpdate = (): any => false;
 
 	private getBottomPosition = (): number => {
 		const body = document.body;
@@ -43,36 +44,42 @@ class DocsPage extends React.Component<Props> {
 	};
 
 	private handleResize = (): void => {
-		const bottomPosition = this.getBottomPosition();
+		const offsetBottom = this.offsetBottom.current || 0;
 
-		this.applyInitialValues(bottomPosition);
+		this.applyInitialValues(offsetBottom);
 	};
 
-	private handleScroll = (offsetBottom = 0): void => {
+	private handleScroll = (): void => {
+		const offsetBottom = this.offsetBottom.current || 0;
 		const fixedTop = this.props.sandboxFixedTop;
 
 		const scroll = document.body.scrollTop || document.documentElement.scrollTop;
 
 		const bottomFixed = this.props.sandboxFixedBottom;
 
-		if (scroll > offsetBottom) {
+		if (scroll >= offsetBottom) {
 			if (!bottomFixed && fixedTop) {
 				this.props.setSandboxFixedBottom(true);
 			}
-		} else if (scroll <= offsetBottom) {
+		} else {
 			if (bottomFixed) {
 				this.props.setSandboxFixedBottom(false);
 			}
 		}
 	};
 
+	public componentWillUnmount = (): void => {
+		window.removeEventListener('scroll', this.handleScroll);
+		window.removeEventListener('resize', this.handleResize);
+	};
+
 	public componentDidMount = (): void => {
-		const bottomPosition = this.getBottomPosition();
+		this.offsetBottom.current = this.getBottomPosition();
 
-		this.applyInitialValues(bottomPosition);
+		this.applyInitialValues(this.offsetBottom.current);
 
-		window.onscroll = (): void => this.handleScroll(bottomPosition - this.props.offsetTop);
-		window.onresize = (): void => this.handleResize();
+		window.addEventListener('scroll', this.handleScroll, { passive: true });
+		window.addEventListener('resize', this.handleResize, { passive: true });
 	};
 
 	private applyInitialValues = (bottomPosition: number): void => {
@@ -106,7 +113,7 @@ class DocsPage extends React.Component<Props> {
 
 const mapStateToProps = (state: any): any => ({
 	offsetTop: state.presentation.navigation.offsetTop,
-	sandboxFixedTop: state.presentation.documentation.sandbox.fixedTop,
+	sandboxFixedTop: state.presentation.navigation.anchored,
 	sandboxFixedBottom: state.presentation.documentation.sandbox.fixedBottom
 });
 

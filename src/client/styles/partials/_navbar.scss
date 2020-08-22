@@ -38,6 +38,7 @@ $expandColorActive: rgba(0, 0, 0, 0.3);
 	}
 
 	&-padder {
+		height: 50px;
 		position: static;
 		background-color: $navbarColor;
 		padding: {
@@ -46,7 +47,6 @@ $expandColorActive: rgba(0, 0, 0, 0.3);
 			left: 1.5em;
 			right: 3em;
 		}
-		height: 50px;
 	}
 
 	&-transition {

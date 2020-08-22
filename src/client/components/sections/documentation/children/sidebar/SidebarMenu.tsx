@@ -1,32 +1,43 @@
-import React, { useEffect, useState, RefObject, useRef } from 'react';
+import React, { RefObject, useRef } from 'react';
 import TopSection from './sections/TopSection';
 import MainSection from './sections/MainSection';
 import MiddleSection from './sections/MiddleSection';
 import SideMenuSearch from './SidebarSearch';
+import SidebarToggle from './SidebarToggle';
 import { useDispatch, useSelector } from 'react-redux';
 import { appendWhen } from '../../../../../appliers/style.applier';
-import { getSidemenu } from '../../../../../selectors/sidemenu.selector';
 import { setHovered } from '../../../../../actions/documentation/sidebar.action';
 import { join } from '../../../../utililties/react.utils';
-import SidebarToggle from './SidebarToggle';
 import { IStateTree, IPresentation } from '../../../../../reducers';
+import { createSelector } from 'reselect';
 
 const headers = ['Introduction', 'Endpoints'];
 
-interface StateProps {
-	fixed: boolean;
-	hovered: boolean;
-	expanded: boolean;
-}
+type State = {
+	isFixed: boolean;
+	isHovered: boolean;
+	isExpanded: boolean;
+	offsetTop: number;
+};
 
 type Props = {
 	self: RefObject<HTMLElement>;
 	styling: any;
 };
 
+export const getSidemenu = createSelector<IStateTree, IPresentation, State>(
+	(state: IStateTree): IPresentation => state.presentation,
+	(state: IPresentation) => ({
+		isFixed: state.navigation.anchored,
+		isHovered: state.documentation.sidebar.hovered,
+		isExpanded: state.documentation.sidebar.expanded,
+		offsetTop: state.navigation.offsetTop
+	})
+);
+
 const SidebarMenu: React.FC<Props> = React.memo(
 	({ styling, self }: Props): JSX.Element => {
-		const { isHovered, isFixed, isExpanded, offsetTop } = getSidemenu(useSelector<IStateTree, IPresentation>((state) => state.presentation));
+		const { isHovered, isFixed, isExpanded, offsetTop } = useSelector<IStateTree, State>(getSidemenu);
 		const dispatch = useDispatch();
 		const isHovering = useRef(false);
 

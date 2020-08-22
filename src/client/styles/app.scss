@@ -3,10 +3,6 @@ $easeOutInterpolator: cubic-bezier(0.4, 0, 1, 1);
 $standardInterpolator: cubic-bezier(.25, .8, .25, 1);
 
 @mixin transition($x...) {
-	-webkit-transition: $x;
-	-moz-transition: $x;
-	-ms-transition: $x;
-	-o-transition: $x;
 	transition: $x;
 }
 

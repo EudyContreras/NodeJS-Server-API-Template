@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
 import MenuItem from '../SidebarMenuItem';
 
-const routes = ['Users', 'Priviledges', 'Roles', 'Invitation', 'Users', 'Priviledges', 'Roles', 'Invitation', 'Users', 'Priviledges', 'Roles', 'Invitation'];
+const routes = ['Users', 'Priviledges', 'Roles', 'Invitation', 'Users', 'Priviledges', 'Roles', 'Invitation'];
 
 type StateProps = {
 	header: string;

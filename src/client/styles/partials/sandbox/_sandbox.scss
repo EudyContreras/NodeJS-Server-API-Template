@@ -1,31 +1,30 @@
 .sandbox-area {
-	float: right;
 	right: 0;
 	width: 35%;
-	height: 100vh;
+	height: calc(100% - 14px);
 	display: flex;
 	justify-content: space-around;
 	flex-direction: column;
 	position: absolute;
-	box-sizing: border-box;
+	box-sizing: content-box;
 	margin: 0;
 	z-index: 100;
 	overflow: hidden;
-	padding-top: 3em;
-	padding-bottom: 3em;
 	background-color: rgba(38, 43, 47, 1);
-	box-shadow: -2px -2px 5px 0px rgba(0, 0, 0, 0.4);
+	box-shadow: -2px 1px 5px 1px rgba(0, 0, 0, 0.4);
 	transition: width 0.3s $standardInterpolator;
 	will-change: width;
 
 	& div {
 		display: flex;
-		height: 100vh;
+		height: 100%;
 		background-color: rgba(32, 36, 40, 1);
 		border-radius: 6px;
 		margin: {
 			left: 2em;
 			right: 2em;
+			top: 3em;
+			bottom: 6.5em;
 		}
 	}
 }

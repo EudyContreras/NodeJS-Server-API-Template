@@ -38,9 +38,6 @@ class Navbar extends React.Component<Props> {
 
 	constructor(props: any) {
 		super(props);
-		this.state = {
-			topPosition: -1
-		};
 		this.topPosRef = React.createRef() as React.MutableRefObject<number>;
 		this.hoverRef = React.createRef() as React.MutableRefObject<boolean>;
 		this.navbar = React.createRef();
@@ -57,7 +54,7 @@ class Navbar extends React.Component<Props> {
 	};
 
 	public componentWillUnmount = (): void => {
-		window.removeEventListener('wheel', this.anchor);
+		window.removeEventListener('scroll', this.anchor);
 	};
 
 	private applyAnchor = (navbar: HTMLElement): void => {
@@ -73,7 +70,7 @@ class Navbar extends React.Component<Props> {
 
 		this.props.setOffsetTop(margin - 1, navbar.clientHeight);
 
-		window.addEventListener('wheel', this.anchor, { passive: true });
+		window.addEventListener('scroll', this.anchor, { passive: true });
 	};
 
 	private anchor = (): void => {
@@ -84,9 +81,7 @@ class Navbar extends React.Component<Props> {
 
 		if (scroll >= top) {
 			!anchored && this.props.setAnchored(true);
-		}
-
-		if (scroll < top) {
+		} else {
 			anchored && this.props.setAnchored(false);
 		}
 	};
@@ -192,11 +187,7 @@ class Navbar extends React.Component<Props> {
 	};
 }
 
-const mapStateToProps = (state: IStateTree | any): any => ({
-	...getNavigationBar(state.presentation),
-	loadedRoutes: state.generalData.routeLoader.loadedRoutes,
-	isLoaderActive: state.generalData.routeLoader.isActive
-});
+const mapStateToProps = (state: IStateTree | any): any => getNavigationBar(state);
 
 export default connect<StateProps, DispatchProps | DispatchPropsLoader, any>(mapStateToProps, {
 	...Dispatchers,

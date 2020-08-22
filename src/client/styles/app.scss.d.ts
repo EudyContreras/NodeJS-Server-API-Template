@@ -14,6 +14,7 @@ interface CssExports {
   'expandIconActive': string;
   'fixed': string;
   'footerArea': string;
+  'footerContent': string;
   'hidden': string;
   'httpAll': string;
   'httpDelete': string;

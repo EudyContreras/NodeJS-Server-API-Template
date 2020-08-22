@@ -5,7 +5,7 @@
 
 .side-menu-container {
 	position: absolute;
-	height: 100vh;
+	height: 100%;
 	width: 100%;
 	overflow-y: auto;
 	scroll-behavior: smooth;	
@@ -28,9 +28,8 @@
 }
 
 .side-menu {
-	width: calc((230px + 17%) - 17%);
-	height: 100vh;
-	min-width: 230px;
+	width: calc(230px + 5%);
+	height: calc(100% - 14px);
 	position: absolute;
 	overflow-y: visible;
 	will-change: transform;
