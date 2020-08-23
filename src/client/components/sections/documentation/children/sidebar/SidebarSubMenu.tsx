@@ -32,6 +32,7 @@ type State = {
 };
 
 type StateProps = {
+	animate?: boolean;
 	expanded: boolean;
 	styling: any;
 	parent: string;
@@ -39,6 +40,7 @@ type StateProps = {
 
 const InitialProps: StateProps = {
 	expanded: false,
+	animate: true,
 	parent: '',
 	styling: {}
 };
@@ -55,7 +57,7 @@ const getStyle = (height: number): any => ({
 	visibility: 'visible'
 });
 
-const SidebarSubMenu: React.FC<StateProps> = ({ styling, expanded, parent }: StateProps = InitialProps): JSX.Element => {
+const SidebarSubMenu: React.FC<StateProps> = ({ styling, expanded, parent, animate }: StateProps = InitialProps): JSX.Element => {
 	const menuRef = useRef<HTMLUListElement>(null);
 	const [state, setState] = useState<State>({
 		hidden: true,
@@ -101,8 +103,11 @@ const SidebarSubMenu: React.FC<StateProps> = ({ styling, expanded, parent }: Sta
 	if (state.loaded) {
 		const style = expanded ? getStyle(state.height) : state.hidden ? hiddenStyle() : getStyle(0);
 		const onEnd = expanded ? onShown : onHidden;
+		if (animate) {
+			classes.push(styling.smExpanded);
+		}
 		return (
-			<ul ref={menuRef} onTransitionEnd={onEnd} className={join(...classes, styling.smExpanded)} style={style}>
+			<ul ref={menuRef} onTransitionEnd={onEnd} className={join(...classes)} style={style}>
 				{listItems}
 			</ul>
 		);

@@ -4,6 +4,7 @@ import { MaterialIcons } from '../../../../../stores/icon.library';
 import { join } from '../../../../utililties/react.utils';
 import { useSelector } from 'react-redux';
 import { IStateTree } from '../../../../../reducers';
+import { useLocation } from 'react-router';
 
 type StateProps = {
 	hash: string;
@@ -13,7 +14,9 @@ type StateProps = {
 
 export const SidebarMenuItem: React.FC<StateProps> = React.memo(
 	({ hash, label, styling }: StateProps): JSX.Element => {
-		const [expanded, setExpanded] = useState(false);
+		const location = useLocation();
+		const hasHash = location.hash === hash;
+		const [expanded, setExpanded] = useState(hasHash);
 		const iconsLoaded = useSelector<IStateTree>((state) => state.presentation.assets.fonts[MaterialIcons.name] === true);
 
 		const classes = [styling.menuItem];
@@ -37,7 +40,7 @@ export const SidebarMenuItem: React.FC<StateProps> = React.memo(
 					<a href={hash}>{label}</a>
 					<i className={join(...iconClasses)}>{MaterialIcons.icons.CHEV_RIGHT}</i>
 				</div>
-				<SidebarSubMenu styling={styling} expanded={expanded} parent={hash} />
+				<SidebarSubMenu styling={styling} expanded={expanded} animate={true} parent={hash} />
 			</li>
 		);
 	},
