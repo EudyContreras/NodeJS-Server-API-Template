@@ -10,7 +10,7 @@ export interface IRouteLoader {
 }
 
 export const InitialState: IRouteLoader = {
-	isActive: true,
+	isActive: false,
 	loadedRoutes: []
 };
 
