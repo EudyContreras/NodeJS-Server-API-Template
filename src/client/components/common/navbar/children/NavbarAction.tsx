@@ -1,68 +1,62 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import useStyles from 'isomorphic-style-loader/useStyles';
 import { MaterialIcons } from '../../../../stores/icon.library';
-import rippleEffect from '../../../../appliers/ripple.applier';
-import { connect } from 'react-redux';
+import { useRippple, rippleStyle } from '../../../../appliers/ripple.applier';
+import { useDispatch, useSelector } from 'react-redux';
 import { join } from '../../../../appliers/style.applier';
 import * as InstallHelper from '../../../../../workers/helpers/intallation.helper';
-import { DispatchProps, Dispatchers } from '../../../../actions/common/application/appdata.action';
+import { Dispatchers } from '../../../../actions/common/application/appdata.action';
+import { IStateTree } from '../../../../reducers';
+import { createSelector } from 'reselect';
 
-interface StateProps {
-	installed: boolean;
-}
+type StateProps = {
+	styling: any;
+};
 
-type Props = StateProps & DispatchProps & any;
+type State = {
+	isInstalled: boolean;
+};
 
-class Action extends React.PureComponent<Props, any> {
-	constructor(props: any) {
-		super(props);
-		this.state = {
-			iconLoaded: false
-		};
-	}
+const getSelection = createSelector<IStateTree, IStateTree, State>(
+	(state: IStateTree): IStateTree => state,
+	(state: IStateTree) => ({
+		isInstalled: state.generalData.appData.installed
+	})
+);
 
-	public componentDidMount = (): void => {
-		if (!InstallHelper.hasInstallInfo()) {
-			this.props.setInstalled(true);
-		} else {
-			this.props.setInstalled(InstallHelper.isInstalled());
-		}
-		InstallHelper.register((state: boolean) => {
-			this.props.setInstalled(state);
-		});
-	};
+export const Action: React.FC<StateProps> = ({ styling }: StateProps): JSX.Element => {
+	const dispatch = useDispatch();
+	const { isInstalled } = useSelector<IStateTree, State>(getSelection);
 
-	private initInstallation = (event: React.MouseEvent<HTMLElement, MouseEvent>): void => {
-		const style = this.props.styling;
-
-		rippleEffect(event, style);
+	function initInstallation(event: React.MouseEvent<HTMLElement, MouseEvent>): void {
+		useRippple(event);
 
 		InstallHelper.showPrompt();
-	};
+	}
 
-	public render = (): JSX.Element => {
-		const style = this.props.styling;
+	const classes = [styling.installButton];
+	const iconsClasses = [MaterialIcons.class, styling.installButtonIcon, styling.pendingIcon];
+	const icon = isInstalled ? MaterialIcons.icons.MORE_VERTICAL : MaterialIcons.icons.ADD;
 
-		const classes = [style.installButton];
-		const iconsClasses = [MaterialIcons.class, style.installButtonIcon, style.pendingIcon];
-
-		let icon = MaterialIcons.icons.ADD;
-
-		if (this.props.installed) {
-			icon = MaterialIcons.icons.MORE_VERTICAL;
+	useStyles(rippleStyle);
+	useEffect(() => {
+		if (!InstallHelper.hasInstallInfo()) {
+			Dispatchers.setInstalled(true)(dispatch);
+		} else {
+			Dispatchers.setInstalled(InstallHelper.isInstalled())(dispatch);
 		}
+		InstallHelper.register((state: boolean) => {
+			Dispatchers.setInstalled(state)(dispatch);
+		});
+	}, [isInstalled]);
 
-		return (
-			<div onClick={this.initInstallation} className={join(...classes)} title="Install">
-				<i id={MaterialIcons.id} className={join(...iconsClasses)}>
-					{icon}
-				</i>
-			</div>
-		);
-	};
-}
+	return (
+		<div onClick={initInstallation} className={join(...classes)} title="Install">
+			<i id={MaterialIcons.id} className={join(...iconsClasses)}>
+				{icon}
+			</i>
+		</div>
+	);
+};
 
-const mapStateToProps = (state: any): any => ({
-	installed: state.generalData.appData.installed
-});
-
-export default connect<StateProps, DispatchProps, any>(mapStateToProps, Dispatchers)(Action);
+export default Action;

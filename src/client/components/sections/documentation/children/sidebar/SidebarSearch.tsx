@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
-import rippleEffect from '../../../../../appliers/ripple.applier';
+import useStyles from 'isomorphic-style-loader/useStyles';
+import { useRippple, rippleStyle } from '../../../../../appliers/ripple.applier';
 import { useSelector, useDispatch } from 'react-redux';
 import { IStateTree } from '../../../../../reducers';
 import { join } from '../../../../utililties/react.utils';
@@ -31,7 +32,7 @@ const SidebarSearch: React.FC<StateProps> = React.memo(
 		async function performSearch(event: React.MouseEvent<HTMLElement, MouseEvent>): Promise<void> {
 			event.preventDefault();
 
-			rippleEffect(event, styling);
+			useRippple(event);
 
 			performSearchAction(inputRef.current!.value)(dispatch);
 		}
@@ -42,6 +43,8 @@ const SidebarSearch: React.FC<StateProps> = React.memo(
 
 		const formClassName = join(...formClasses);
 		const iconClassName = join(...iconsClasses);
+
+		useStyles(rippleStyle);
 
 		return (
 			<form className={formClassName} method={elementProps.formMethod}>

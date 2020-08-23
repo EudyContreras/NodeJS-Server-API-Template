@@ -1,4 +1,5 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, createRef } from 'react';
+import { motion } from 'framer-motion';
 import SidebarSubItem from './SidebarSubItem';
 import { join } from '../../../../utililties/react.utils';
 
@@ -24,6 +25,15 @@ const links = [
 		method: { label: 'DEL' }
 	}
 ];
+
+const variants = {
+	open: {
+		transition: { staggerChildren: 0.05, delayChildren: 0.01 }
+	},
+	closed: {
+		transition: { staggerChildren: 0, staggerDirection: -1 }
+	}
+};
 
 type State = {
 	hidden: boolean;
@@ -57,7 +67,9 @@ const getStyle = (height: number): any => ({
 	visibility: 'visible'
 });
 
-const SidebarSubMenu: React.FC<StateProps> = ({ styling, expanded, parent, animate }: StateProps = InitialProps): JSX.Element => {
+const isEqual = (prevProps: Readonly<StateProps>, nextProps: Readonly<StateProps>): boolean => prevProps?.expanded === nextProps?.expanded;
+
+const SidebarSubMenu: React.FC<StateProps> = React.memo(({ styling, expanded, parent, animate }: StateProps = InitialProps): JSX.Element => {
 	const menuRef = useRef<HTMLUListElement>(null);
 	const [state, setState] = useState<State>({
 		hidden: true,
@@ -107,16 +119,16 @@ const SidebarSubMenu: React.FC<StateProps> = ({ styling, expanded, parent, anima
 			classes.push(styling.smExpanded);
 		}
 		return (
-			<ul ref={menuRef} onTransitionEnd={onEnd} className={join(...classes)} style={style}>
+			<motion.ul variants={variants} animate={expanded ? 'open' : 'closed'} ref={menuRef} onTransitionEnd={onEnd} className={join(...classes)} style={style}>
 				{listItems}
-			</ul>
+			</motion.ul>
 		);
 	}
 	return (
-		<ul ref={menuRef} className={join(...classes)}>
+		<motion.ul variants={variants} ref={menuRef} className={join(...classes)}>
 			{listItems}
-		</ul>
+		</motion.ul>
 	);
-};
+}, isEqual);
 
 export default SidebarSubMenu;

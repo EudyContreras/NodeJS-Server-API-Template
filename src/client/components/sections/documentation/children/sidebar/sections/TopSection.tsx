@@ -5,14 +5,16 @@ type StateProps = {
 	styling: any;
 };
 
-export const TopSection: React.FC<any> = (props: StateProps): JSX.Element => {
-	const style = props.styling;
+export const TopSection: React.FC<any> = React.memo(
+	(props: StateProps): JSX.Element => {
+		const style = props.styling;
 
-	return (
-		<div className={style.topSection}>
-			<VersionInfo styling={style} />
-		</div>
-	);
-};
+		return (
+			<div className={style.topSection}>
+				<VersionInfo styling={style} />
+			</div>
+		);
+	}
+);
 
 export default TopSection;

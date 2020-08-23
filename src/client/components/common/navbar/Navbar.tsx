@@ -1,196 +1,140 @@
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import Action from './children/NavbarAction';
-import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import { IStateTree } from '../../../reducers';
-import { shallowEqual } from '../../utililties/comparer.utils';
 import { appendWhen, join } from '../../../appliers/style.applier';
-import { getNavigationBar } from '../../../selectors/navbar.selector';
-import { showLoader, hideLoader } from '../../../actions/common/loader.action';
-import { DispatchProps, Dispatchers } from '../../../actions/common/navigation.action';
+import { Dispatchers } from '../../../actions/common/navigation.action';
+import { useViewportScroll } from 'framer-motion';
+// import { useViewpoVrtScroll } from 'framer-motion';
+import { createSelector } from 'reselect';
+import NavbarLink, { NavbarLinkSimple } from './children/NavbarLink';
+import { LinkInfo } from '../../Routes';
 
 interface StateProps {
-	anchored: boolean;
-	routings: any;
+	routings: LinkInfo[];
 	styling: any;
 	location: string;
-	brandName: string;
-	mouseInside: boolean | null;
-	loadedRoutes: string[];
-	isLoaderActive: boolean;
-	activeTab: null | {
-		label: string;
-		index: string;
-	};
+	brandName?: string;
 }
 
-interface DispatchPropsLoader {
-	showLoader: () => void;
-	hideLoader: (loadedRoute?: string) => void;
-}
+type Props = StateProps;
 
-type Props = StateProps & DispatchProps & DispatchPropsLoader;
+type Selection = {
+	isAnchored: boolean;
+	isMouseInside: boolean | null;
+};
 
-class Navbar extends React.Component<Props> {
-	private navbar: React.RefObject<HTMLElement>;
-	private topPosRef: React.MutableRefObject<number>;
-	private hoverRef: React.MutableRefObject<boolean>;
+const getSelection = createSelector<IStateTree, IStateTree, Selection>(
+	(state: IStateTree): IStateTree => state,
+	(state: IStateTree): Selection => ({
+		isAnchored: state.presentation.navigation.anchored,
+		isMouseInside: state.presentation.navigation.mouseInside
+	})
+);
 
-	constructor(props: any) {
-		super(props);
-		this.topPosRef = React.createRef() as React.MutableRefObject<number>;
-		this.hoverRef = React.createRef() as React.MutableRefObject<boolean>;
-		this.navbar = React.createRef();
-		this.hoverRef.current = false;
-	}
+export const Navbar: React.FC<Props> = React.memo(
+	(props: Props): JSX.Element => {
+		const dispatch = useDispatch();
+		const topPosRef = useRef<number>();
+		const hoverRef = useRef<boolean>(false);
+		const anchorRef = useRef<boolean>(false);
+		const navbarRef = useRef<HTMLElement>(null);
+		const { scrollY } = useViewportScroll();
 
-	public shouldComponentUpdate = (nextProps: any, _nextState: any): boolean =>
-		!shallowEqual(this.props.anchored, nextProps.anchored) ||
-		!shallowEqual(this.props.mouseInside, nextProps.mouseInside) ||
-		!shallowEqual(this.props.activeTab, nextProps.activeTab);
+		const { isAnchored, isMouseInside } = useSelector<IStateTree, Selection>(getSelection);
+		const { styling, routings, location } = props;
+		const classes = [styling.nav];
 
-	public componentDidMount = (): void => {
-		this.applyAnchor(this.navbar.current!);
-	};
+		anchorRef.current = isAnchored;
 
-	public componentWillUnmount = (): void => {
-		window.removeEventListener('scroll', this.anchor);
-	};
-
-	private applyAnchor = (navbar: HTMLElement): void => {
-		const margin = 15;
-		const topOffset = -(navbar.clientHeight - margin);
-
-		const navScroll = navbar.getBoundingClientRect().top;
-		const bodyScroll = document.body.getBoundingClientRect().top;
-
-		const topPos = Math.abs(bodyScroll) + (navScroll - topOffset);
-
-		this.topPosRef.current = topPos;
-
-		this.props.setOffsetTop(margin - 1, navbar.clientHeight);
-
-		window.addEventListener('scroll', this.anchor, { passive: true });
-	};
-
-	private anchor = (): void => {
-		const top = this.topPosRef.current;
-		const anchored = this.props.anchored;
-
-		const scroll = document.body.scrollTop || document.documentElement.scrollTop || 0;
-
-		if (scroll >= top) {
-			!anchored && this.props.setAnchored(true);
-		} else {
-			anchored && this.props.setAnchored(false);
+		function onMouseEnter(): void {
+			if (!isAnchored) {
+				return;
+			}
+			hoverRef.current = true;
+			if (isAnchored) {
+				Dispatchers.setMouseInside(true)(dispatch);
+			}
 		}
-	};
 
-	private onMouseEnter = (): void => {
-		if (!this.props.anchored) {
-			return;
+		function onMouseExit(): void {
+			hoverRef.current = false;
+			setTimeout(() => {
+				if (hoverRef.current === false) {
+					if (isAnchored) {
+						Dispatchers.setMouseInside(false)(dispatch);
+					}
+				}
+			}, 300);
 		}
-		this.hoverRef.current = true;
-		if (this.props.anchored) {
-			this.props.setMouseInside(true);
-		}
-	};
 
-	private onMouseExit = (): void => {
-		this.hoverRef.current = false;
-		setTimeout(() => {
-			if (this.hoverRef.current === false) {
-				if (this.props.anchored) {
-					this.props.setMouseInside(false);
+		useEffect(() => {
+			function anchor(scrollValue: number): void {
+				const isAnchored = anchorRef.current === true;
+				const top = topPosRef.current || 0;
+
+				if (scrollValue >= top) {
+					!isAnchored && Dispatchers.setAnchored(true)(dispatch);
+				} else {
+					isAnchored && Dispatchers.setAnchored(false)(dispatch);
 				}
 			}
-		}, 300);
-	};
 
-	private manageLoader = (tab: any): void => {
-		if (this.props.isLoaderActive) {
-			this.props.hideLoader();
-		}
-		const empty = this.props.loadedRoutes.length <= 0;
-		if (empty || !this.props.loadedRoutes.includes(tab.link)) {
-			if (tab.lazyLoaded) {
-				this.props.showLoader();
+			const navbar = navbarRef.current;
+
+			if (navbar) {
+				const margin = 15;
+				const topOffset = -(navbar.clientHeight - margin);
+
+				const navScroll = navbar.getBoundingClientRect().top;
+				const bodyScroll = document.body.getBoundingClientRect().top;
+
+				const topPos = Math.abs(bodyScroll) + (navScroll - topOffset);
+
+				topPosRef.current = topPos;
+
+				Dispatchers.setOffsetTop(margin - 1, navbar.clientHeight)(dispatch);
+
+				scrollY.onChange(anchor);
 			}
-		}
-	};
+			return (): any => {
+				scrollY.clearListeners();
+				scrollY.destroy();
+			};
+		}, [navbarRef, topPosRef]);
 
-	private handleLinkClick = (tab: any): void => {
-		if (tab == null) {
-			return this.props.setActiveTab(tab);
-		}
+		const mouseInside = isMouseInside === true;
+		const mouseOutside = isMouseInside === false;
 
-		if (this.props.activeTab === null || this.props.activeTab.label !== tab.label) {
-			this.manageLoader(tab);
-			this.props.setActiveTab(tab);
-		}
-	};
-
-	private getLinkProps = (style: any, element: any, idx: number): any => {
-		const activeTab = this.props.activeTab;
-		const location = this.props.location;
-
-		const classes = [style.navLink];
-
-		appendWhen(classes, activeTab === null && element.link === location, style.navLinkActive);
-		appendWhen(classes, activeTab !== null && element.label === activeTab.label, style.navLinkActive);
+		appendWhen(classes, isAnchored, styling.navSticky);
+		appendWhen(classes, isAnchored && mouseInside, styling.navTransition, styling.navPeeky);
+		appendWhen(classes, isAnchored && mouseOutside, styling.navTransition);
 
 		const properties = {
+			ref: navbarRef,
 			className: join(...classes),
-			onClick: (): void => this.handleLinkClick({ ...element, index: idx }),
-			to: element.link
+			onMouseEnter: onMouseEnter,
+			onMouseLeave: onMouseExit
 		};
 
-		return properties;
-	};
-
-	public render = (): JSX.Element => {
-		const style = this.props.styling;
-		const routes = this.props.routings;
-		const classes = [style.nav];
-
-		const mouseInside = this.props.mouseInside === true;
-		const mouseOutside = this.props.mouseInside === false;
-
-		appendWhen(classes, this.props.anchored, style.navSticky);
-		appendWhen(classes, this.props.anchored && mouseInside, style.navTransition, style.navPeeky);
-		appendWhen(classes, this.props.anchored && mouseOutside, style.navTransition);
-
-		const properties = {
-			ref: this.navbar,
-			className: join(...classes),
-			onMouseEnter: this.onMouseEnter,
-			onMouseLeave: this.onMouseExit
-		};
+		const navLinks = routings.map((element: LinkInfo, idx: number) => (
+			<li key={idx}>
+				<NavbarLink styling={styling} tabInfo={element} location={location} />
+			</li>
+		));
 
 		return (
 			<header {...properties}>
-				<Link to="/" onClick={(): void => this.handleLinkClick(null)}>
-					<div className={style.navLogo} title="Home">
-						<div className={style.status}></div>
+				<NavbarLinkSimple target="/">
+					<div className={styling.navLogo} title="Home">
+						<div className={styling.status}></div>
 					</div>
-				</Link>
-				<ul>
-					{routes.map((element: any, idx: number) => (
-						<li key={idx}>
-							<Link {...this.getLinkProps(style, element, idx)}>{element.label}</Link>
-						</li>
-					))}
-				</ul>
-				<Action styling={style} />
+				</NavbarLinkSimple>
+				<ul>{navLinks}</ul>
+				<Action styling={styling} />
 			</header>
 		);
-	};
-}
+	}
+);
 
-const mapStateToProps = (state: IStateTree | any): any => getNavigationBar(state);
-
-export default connect<StateProps, DispatchProps | DispatchPropsLoader, any>(mapStateToProps, {
-	...Dispatchers,
-	showLoader,
-	hideLoader
-})(Navbar);
+export default Navbar;

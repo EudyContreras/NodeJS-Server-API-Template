@@ -48,6 +48,12 @@ export const routes = [
 	}
 ];
 
+export type LinkInfo = {
+	link: string;
+	label: string;
+	lazyLoaded: boolean;
+};
+
 export type Mapping = {
 	navLink: boolean | undefined;
 	label: string | undefined;

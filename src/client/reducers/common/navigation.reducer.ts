@@ -7,6 +7,7 @@ import {
 } from '../../actions/common/navigation.action';
 
 import IAction from '../../actions/action';
+import { LinkInfo } from '../../components/Routes';
 
 export const SOURCE = NAV_BAR_MENU;
 
@@ -20,10 +21,7 @@ export interface INavigationBar {
 	offsetTop: number;
 	navbarHeight: number;
 	mouseInside: boolean | null;
-	acitiveTab: null | {
-		label: string;
-		index: number;
-	};
+	acitiveTab: LinkInfo | null;
 	navigationTabs: INavigationTab[];
 }
 

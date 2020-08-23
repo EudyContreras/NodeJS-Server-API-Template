@@ -8,6 +8,7 @@ const svgLoader = require('./loader.svgs');
 const babelLoader = require('./loader.babel');
 const htmlLoader = require('./loader.html');
 const rawLoader = require('./loader.raw');
+
 module.exports = (path, isProduction) => [
 	...babelLoader(false),
 	...htmlLoader(),

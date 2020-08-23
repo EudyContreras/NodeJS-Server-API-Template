@@ -6,7 +6,7 @@ import Notifier from './common/navbar/NavbarNotifier';
 import withStyles from 'isomorphic-style-loader/withStyles';
 import Loader from './common/Loader';
 import style from '../styles/app.scss';
-import router from './Routes';
+import router, { LinkInfo } from './Routes';
 
 import { Switch, Route } from 'react-router-dom';
 
@@ -38,21 +38,21 @@ class App extends React.PureComponent<any, State> {
 		const props = this.props;
 		const routes = router({ styling: this.styling });
 
-		const elements = routes
+		const elements: LinkInfo[] = routes
 			.filter((x) => x.mapping.navLink === true)
 			.map((x) => ({ link: x.mapping.path, label: x.mapping.label, lazyLoaded: x.mapping.lazyLoaded }));
 
 		const routings = routes.map((route, idx) => <Route exact history={props.history} key={idx} path={route.mapping.path} component={route.render} />);
 
 		return (
-			<Fragment>
+			<div className={style.mainContent}>
 				<NavbarPadder self={this.padder} styling={this.styling} />
 				<ErrorBoundary>
 					<Loader styling={this.styling} />
 					<Switch> {routings} </Switch>
 				</ErrorBoundary>
 				<NavbarMenu styling={this.styling} location={this.props.location} routings={elements} />
-			</Fragment>
+			</div>
 		);
 	};
 }

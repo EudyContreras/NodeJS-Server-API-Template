@@ -21,7 +21,6 @@ type State = {
 };
 
 type Props = {
-	self: RefObject<HTMLElement>;
 	styling: any;
 };
 
@@ -36,7 +35,7 @@ export const getSidemenu = createSelector<IStateTree, IPresentation, State>(
 );
 
 const SidebarMenu: React.FC<Props> = React.memo(
-	({ styling, self }: Props): JSX.Element => {
+	({ styling }: Props): JSX.Element => {
 		const { isHovered, isFixed, isExpanded, offsetTop } = useSelector<IStateTree, State>(getSidemenu);
 		const dispatch = useDispatch();
 		const isHovering = useRef(false);
@@ -73,7 +72,7 @@ const SidebarMenu: React.FC<Props> = React.memo(
 		};
 
 		return (
-			<aside ref={self} {...common} {...actions}>
+			<aside {...common} {...actions}>
 				<div className={styling.sideMenuContainer}>
 					<TopSection styling={styling} />
 					<SideMenuSearch styling={styling} />

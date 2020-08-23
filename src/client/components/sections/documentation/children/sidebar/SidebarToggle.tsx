@@ -1,5 +1,6 @@
 import React from 'react';
-import rippleEffect from '../../../../../appliers/ripple.applier';
+import useStyles from 'isomorphic-style-loader/useStyles';
+import { useRippple, rippleStyle } from '../../../../../appliers/ripple.applier';
 import { MaterialIcons } from '../../../../../stores/icon.library';
 import { toggleAction } from '../../../../../actions/documentation/sidebar.action';
 import { IToggle } from '../../../../../reducers/documentation/sidebar.reducer';
@@ -19,7 +20,7 @@ const SidebarToggle: React.FC<StateProps> = ({ styling }: StateProps): JSX.Eleme
 	const iconText = locked ? MaterialIcons.icons.CHEV_RIGHT : MaterialIcons.icons.MENU;
 
 	function toggleSidebar(event: React.MouseEvent<HTMLElement, MouseEvent>): void {
-		rippleEffect(event, styling);
+		useRippple(event);
 		dispatch(toggleAction);
 	}
 
@@ -41,6 +42,8 @@ const SidebarToggle: React.FC<StateProps> = ({ styling }: StateProps): JSX.Eleme
 	} else {
 		toggleIconClasses.push(styling.expandIconActive);
 	}
+
+	useStyles(rippleStyle);
 
 	return (
 		<div className={join(...toggleClasses)} {...elementProps}>

@@ -18,7 +18,6 @@ type Props = StateProps & DispatchProps;
 
 class DocsPage extends React.PureComponent<Props> {
 	private readonly footer: RefObject<HTMLElement>;
-	private readonly sidebar: RefObject<HTMLElement>;
 	private readonly sandbox: RefObject<HTMLElement>;
 	private readonly content: RefObject<HTMLElement>;
 	private readonly offsetBottom: MutableRefObject<number>;
@@ -26,7 +25,6 @@ class DocsPage extends React.PureComponent<Props> {
 	constructor(props: Props) {
 		super(props);
 		this.footer = createRef();
-		this.sidebar = createRef();
 		this.sandbox = createRef();
 		this.content = createRef();
 		this.offsetBottom = createRef() as MutableRefObject<number>;
@@ -101,7 +99,7 @@ class DocsPage extends React.PureComponent<Props> {
 
 		return (
 			<Fragment>
-				<SideMenu self={this.sidebar} styling={style} />
+				<SideMenu styling={style} />
 				<SandBox self={this.sandbox} styling={style} />
 				<ContentArea self={this.content} styling={style} />
 				<FooterArea self={this.footer} styling={style} />

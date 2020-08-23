@@ -1,4 +1,5 @@
 import IAction from '../action';
+import { LinkInfo } from '../../components/Routes';
 
 export const NAV_BAR_MENU = 'NAV_BAR_MENU';
 export const NAV_BAR_MENU_ANCHORED = 'NAV_BAR_MENU_ANCHORED';
@@ -31,7 +32,7 @@ export const setAnchored = (anchored: boolean) => (dispatch: (action?: IAction) 
 	dispatch({ ...navAnchorAction, payload: anchored });
 };
 
-export const setActiveTab = (tab: any) => (dispatch: (action?: any) => IAction): void => {
+export const setActiveTab = (tab: LinkInfo | null) => (dispatch: (action?: any) => IAction): void => {
 	dispatch({ ...activeTabAction, payload: tab });
 };
 

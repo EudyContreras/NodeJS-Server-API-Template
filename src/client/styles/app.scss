@@ -6,7 +6,6 @@ $standardInterpolator: cubic-bezier(.25, .8, .25, 1);
 	transition: $x;
 }
 
-@import './partials/ripple';
 @import './partials/elevate';
 @import './partials/navbar';
 @import './partials/loaders';
@@ -41,9 +40,16 @@ html {
 }
 
 body {
+	background-color: rgba(36, 40, 44, 1);
+	-webkit-font-smoothing: auto;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+.main-content {
+	overflow-y: scroll;
+	scroll-behavior: smooth;
 	margin: 0;
 	color: #eee;
-	background-color: rgba(36, 40, 44, 1);
 	font-family: 'Roboto', sans-serif;
 	font-family: sans-serif;
 	text-decoration: none;

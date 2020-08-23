@@ -90,7 +90,6 @@ export const DefaultLayout = (props) => {
 				{props.css.map((style) => (
 					<style key={style.id} id={style.id} dangerouslySetInnerHTML={{ __html: style.cssText }} />
 				))}
-				<script async crossOrigin="anonymous" rel="preconnect" src={props.html.jquery} />
 			</head>
 			<body>
 				<section id="content">{props.content}</section>

@@ -30,6 +30,7 @@ interface CssExports {
   'loaded': string;
   'loading': string;
   'loadingPage': string;
+  'mainContent': string;
   'mainSection': string;
   'menuHeader': string;
   'menuItem': string;
@@ -49,8 +50,6 @@ interface CssExports {
   'paramsTable': string;
   'pendingIcon': string;
   'ripple': string;
-  'rippleDrop': string;
-  'rippleEffect': string;
   'routePage': string;
   'routePageLoaded': string;
   'routePageLoading': string;

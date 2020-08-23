@@ -5,6 +5,7 @@ import { join } from '../../../../utililties/react.utils';
 import { useSelector } from 'react-redux';
 import { IStateTree } from '../../../../../reducers';
 import { useLocation } from 'react-router';
+import { createSelector } from 'reselect';
 
 type StateProps = {
 	hash: string;
@@ -12,12 +13,23 @@ type StateProps = {
 	styling: any;
 };
 
+type Selection = {
+	fonts: Record<string, boolean>;
+};
+
+const getSelection = createSelector<IStateTree, IStateTree, Selection>(
+	(state: IStateTree): IStateTree => state,
+	(state: IStateTree) => ({
+		fonts: state.presentation.assets.fonts
+	})
+);
+
 export const SidebarMenuItem: React.FC<StateProps> = React.memo(
 	({ hash, label, styling }: StateProps): JSX.Element => {
 		const location = useLocation();
 		const hasHash = location.hash === hash;
 		const [expanded, setExpanded] = useState(hasHash);
-		const iconsLoaded = useSelector<IStateTree>((state) => state.presentation.assets.fonts[MaterialIcons.name] === true);
+		const selection = useSelector<IStateTree, Selection>(getSelection);
 
 		const classes = [styling.menuItem];
 		const iconClasses = [MaterialIcons.class];
@@ -26,7 +38,7 @@ export const SidebarMenuItem: React.FC<StateProps> = React.memo(
 			setExpanded((state) => !state);
 		}
 
-		if (!iconsLoaded) {
+		if (!selection.fonts[MaterialIcons.name] === true) {
 			iconClasses.push(styling.pendingIcon);
 		}
 
@@ -43,8 +55,7 @@ export const SidebarMenuItem: React.FC<StateProps> = React.memo(
 				<SidebarSubMenu styling={styling} expanded={expanded} animate={true} parent={hash} />
 			</li>
 		);
-	},
-	(_prevProps, _nextProps) => true
+	}
 );
 
 export default SidebarMenuItem;
