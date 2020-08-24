@@ -9,7 +9,7 @@
 }
 
 .ripple-effect {
-	animation: rippleDrop 0.4s ease-in;
+	animation: rippleDrop 0.4s linear;
 }
 
 @keyframes rippleDrop {

@@ -44,3 +44,5 @@ declare module 'isomorphic-style-loader/StyleContext';
 declare module 'isomorphic-style-loader/withStyles';
 
 declare module 'react-loadable-ssr-addon';
+
+declare const __CLIENT_RENDERED__: boolean;

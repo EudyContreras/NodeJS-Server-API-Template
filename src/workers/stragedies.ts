@@ -1,7 +1,7 @@
 import { clientMessages, cachableTypes, cacheNames, fallbacks, responseType, headers } from './constants';
 import { days } from './helpers/timespan.helper';
 import { logger, inRange, sendMessageToClients, isHomeOrigin } from './commons';
-import { hasExpired, attachExpiration, getAllEntries, getEntry } from './handlers/indexdbHandler';
+import { hasExpired, attachExpiration, getAllEntries, getEntry } from './handlers/cache.Handler';
 
 const TIMEOUT = 5000;
 

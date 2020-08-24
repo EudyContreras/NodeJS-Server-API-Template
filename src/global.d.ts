@@ -1,8 +1,10 @@
 export {};
 
+declare const __CLIENT_RENDERED__: boolean;
 declare global {
 	interface This {
 		globalThis: any;
+		__CLIENT_RENDERED__: boolean;
 		__VERSION_NUMBER__: string;
 	}
 	interface NodeModule {
@@ -19,6 +21,7 @@ declare global {
 		allowCors: boolean;
 		urlsToCache: any;
 		clients: any;
+		indexedDB: any;
 		clientConfig: any;
 		registration: any;
 		skipWaiting: () => any;

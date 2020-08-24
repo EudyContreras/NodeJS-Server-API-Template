@@ -40,12 +40,14 @@ export const Action: React.FC<StateProps> = ({ styling }: StateProps): JSX.Eleme
 
 	useStyles(rippleStyle);
 	useEffect(() => {
-		if (!InstallHelper.hasInstallInfo()) {
-			Dispatchers.setInstalled(true)(dispatch);
-		} else {
-			Dispatchers.setInstalled(InstallHelper.isInstalled())(dispatch);
-		}
-		InstallHelper.register((state: boolean) => {
+		InstallHelper.hasInstallInfo().then((isInstalled) => {
+			if (isInstalled === null) {
+				Dispatchers.setInstalled(false)(dispatch);
+			} else {
+				Dispatchers.setInstalled(isInstalled)(dispatch);
+			}
+		});
+		return InstallHelper.registerListener((state: boolean) => {
 			Dispatchers.setInstalled(state)(dispatch);
 		});
 	}, [isInstalled]);

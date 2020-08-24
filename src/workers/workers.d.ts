@@ -1,4 +1,5 @@
 declare const __VERSION_NUMBER__: any;
+declare const __CLIENT_RENDERED__: boolean;
 
 interface WorkerMessage {
 	type: string;

@@ -47,6 +47,9 @@ plugins.push(
 	}),
 	new LoadablePlugin({
 		filename: 'loadable-stats.json'
+	}),
+	new webpack.DefinePlugin({
+		__CLIENT_RENDERED__: false
 	})
 );
 
@@ -55,7 +58,7 @@ module.exports = {
 	target: 'node',
 	mode: enviroment,
 	cache: !isProduction,
-	devtool: isProduction ? '' : 'eval-cheap-module-source-map',
+	devtool: isProduction ? null : 'eval-cheap-module-source-map',
 	performance: {
 		hints: 'warning'
 	},

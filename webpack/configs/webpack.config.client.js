@@ -167,7 +167,7 @@ if (isProduction) {
 }
 
 plugins.push(new WorkboxPlugin.InjectManifest({
-	maximumFileSizeToCacheInBytes: 5000000,
+	maximumFileSizeToCacheInBytes: 6000000,
 	swSrc: path.join(process.cwd(), `${sourceLocation}/workers/serviceWorker.${precompile ? 'js' : 'ts'}`),
 	swDest: `${publicPath}/service-worker.js`,
 	compileSrc: true,
@@ -180,7 +180,7 @@ module.exports = {
 	target: 'web',
 	mode: enviroment,
 	bail: isProduction,
-	devtool: isProduction ? '' : 'eval-cheap-module-source-map',
+	devtool: isProduction ? null : 'eval-cheap-module-source-map',
 	entry: { app: entryPoint },
 	cache: !isProduction,
 	performance: {

@@ -19,7 +19,10 @@ const structure = {
 		READ_WRITE: READ_WRITE
 	},
 	keyPaths: {
-		PRIMARY_KEY: { index: indexes.ENTRY_ID, target: 'id' },
+		PRIMARY_KEY: {
+			index: indexes.ENTRY_ID,
+			target: 'id'
+		},
 		KEYS: [
 			{ index: indexes.ENTRY_URL, target: 'url' },
 			{ index: indexes.CACHE_NAME, target: 'cacheName' }
