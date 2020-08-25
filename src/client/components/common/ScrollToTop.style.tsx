@@ -1,6 +1,8 @@
 import styled from 'styled-components';
 
-export const Button = styled.div`
+export const Button = styled.div.attrs((props: { showIcon: boolean }) => ({
+	opacity: props.showIcon ? '1' : '0'
+}))`
 	cursor: pointer;
 	bottom: 0;
 	right: 0;
@@ -19,7 +21,7 @@ export const Button = styled.div`
 	& > i {
 		color: ${(props): any => props.theme.controls.colors.icon.primary};
 		margin: auto;
-		opacity: 0;
+		opacity: ${(props): any => props.opacity};
 		font-size: 26px;
 		transition: 0.3s transform 0.2s ${(props): any => props.theme.easing.easeInInterpolator};
 	}
@@ -29,7 +31,7 @@ export const Button = styled.div`
 		transform: translateY(0px);
 
 		& > i {
-			opacity: 1;
+			opacity: ${(props): any => props.opacity};
 			transform: translateY(0);
 		}
 

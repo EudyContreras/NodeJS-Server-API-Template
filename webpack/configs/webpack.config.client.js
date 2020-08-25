@@ -12,7 +12,6 @@ const ManifestPlugin = require('webpack-manifest-plugin');
 const CompressPlugin = require('compression-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const LoadablePlugin = require('@loadable/webpack-plugin');
-const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const BundleAnalyzerPlugin = require('@bundle-analyzer/webpack-plugin');
 const DuplicatePackageCheckerPlugin = require('duplicate-package-checker-webpack-plugin');
 const BrotliPlugin = require('brotli-webpack-plugin');
@@ -147,7 +146,6 @@ if (isProduction) {
 	plugins.push(
 		new webpack.optimize.ModuleConcatenationPlugin(),
 		new webpack.optimize.OccurrenceOrderPlugin(),
-		new OptimizeCssAssetsPlugin(),
 		new CompressPlugin({
 			filename: '[path].gz[query]',
 			algorithm: 'gzip',
@@ -180,7 +178,7 @@ module.exports = {
 	target: 'web',
 	mode: enviroment,
 	bail: isProduction,
-	devtool: isProduction ? null : 'eval-cheap-module-source-map',
+	devtool: isProduction ? false : 'eval-cheap-module-source-map',
 	entry: { app: entryPoint },
 	cache: !isProduction,
 	performance: {

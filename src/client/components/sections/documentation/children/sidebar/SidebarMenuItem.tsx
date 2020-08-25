@@ -14,13 +14,13 @@ type StateProps = {
 };
 
 type Selection = {
-	fonts: Record<string, boolean>;
+	fontsLoaded: boolean;
 };
 
 const getSelection = createSelector<IStateTree, IStateTree, Selection>(
 	(state: IStateTree): IStateTree => state,
 	(state: IStateTree) => ({
-		fonts: state.presentation.assets.fonts
+		fontsLoaded: state.presentation.assets.fonts[MaterialIcons.name] === true
 	})
 );
 
@@ -29,7 +29,7 @@ export const SidebarMenuItem: React.FC<StateProps> = React.memo(
 		const location = useLocation();
 		const hasHash = location.hash === hash;
 		const [expanded, setExpanded] = useState(hasHash);
-		const selection = useSelector<IStateTree, Selection>(getSelection);
+		const { fontsLoaded } = useSelector<IStateTree, Selection>(getSelection);
 
 		const classes = [styling.menuItem];
 		const iconClasses = [MaterialIcons.class];
@@ -38,7 +38,7 @@ export const SidebarMenuItem: React.FC<StateProps> = React.memo(
 			setExpanded((state) => !state);
 		}
 
-		if (!selection.fonts[MaterialIcons.name] === true) {
+		if (!fontsLoaded) {
 			iconClasses.push(styling.pendingIcon);
 		}
 

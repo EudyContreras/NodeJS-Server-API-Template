@@ -13,32 +13,37 @@ type StateProps = {
 	styling: any;
 };
 
-type State = {
+type Selection = {
 	isInstalled: boolean;
+	fontsLoaded: boolean;
 };
 
-const getSelection = createSelector<IStateTree, IStateTree, State>(
+const getSelection = createSelector<IStateTree, IStateTree, Selection>(
 	(state: IStateTree): IStateTree => state,
 	(state: IStateTree) => ({
+		fontsLoaded: state.presentation.assets.fonts[MaterialIcons.name] === true,
 		isInstalled: state.generalData.appData.installed
 	})
 );
 
 export const Action: React.FC<StateProps> = ({ styling }: StateProps): JSX.Element => {
 	const dispatch = useDispatch();
-	const { isInstalled } = useSelector<IStateTree, State>(getSelection);
+	const { isInstalled, fontsLoaded } = useSelector<IStateTree, Selection>(getSelection);
 
 	function initInstallation(event: React.MouseEvent<HTMLElement, MouseEvent>): void {
 		useRippple(event);
-
 		InstallHelper.showPrompt();
 	}
 
 	const classes = [styling.installButton];
-	const iconsClasses = [MaterialIcons.class, styling.installButtonIcon, styling.pendingIcon];
+	const iconsClasses = [MaterialIcons.class, styling.installButtonIcon];
 	const icon = isInstalled ? MaterialIcons.icons.MORE_VERTICAL : MaterialIcons.icons.ADD;
 
+	if (!fontsLoaded) {
+		iconsClasses.push(styling.pendingIcon);
+	}
 	useStyles(rippleStyle);
+
 	useEffect(() => {
 		InstallHelper.hasInstallInfo().then((isInstalled) => {
 			if (isInstalled === null) {

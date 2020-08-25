@@ -1,46 +1,47 @@
-$expandColor: #484c50;
-$expandColorActive: rgba(0, 0, 0, 0.3);
+$expand-color: rgb(68, 72, 77);
+$expand-shadow-color-active: rgba(0, 0, 0, 0.3);
 
-$interpolator: cubic-bezier(.25, .8, .25, 1);
+$interpolator: cubic-bezier(0.25, 0.8, 0.25, 1);
 
 .expand {
-   cursor: pointer;
-   display: flex;
-   justify-items: center;
-   overflow: hidden;
-   position: absolute;
-   top: 94px;
-   left: calc(100% - 15px);
-   width: 30px;
-   height: 30px;
-   border-radius: 50%;
-   background-color: $expandColor;
-   box-shadow: 0 2px 4px 1px rgba(0, 0, 0, 0.4);
-   transition: all 0.3s $interpolator;
+	cursor: pointer;
+	display: flex;
+	justify-items: center;
+	overflow: hidden;
+	position: absolute;
+	top: 94px;
+	left: calc(100% - 15px);
+	width: 30px;
+	height: 30px;
+	border-radius: 50%;
+	background-color: $expand-color;
+	box-shadow: 0 2px 4px 1px rgba(0, 0, 0, 0.4);
+	transition: all 0.3s $interpolator;
 
-   &-hidden {
-      opacity: 0;
-      transition: opacity 0.5s ease-in-out 1s;
-   }
+	&-hidden {
+		opacity: 0;
+		transition: opacity 0.5s ease-in-out 1s;
+	}
 
-   &:hover {
-      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
-      background-color: rgba(92, 96, 100, 1);
-   }
+	&:hover {
+		box-shadow: 0 8px 18px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+		background-color: rgb(70, 74, 79);
+		transform: scale(1.2);
+	}
 
-   &:active {
-      transform: scale(0.9);
-      box-shadow: 1px 0px 1px 0px $expandColorActive;
-   }
+	&:active {
+		transform: scale(0.9);
+		box-shadow: 1px 0 1px 0 $expand-shadow-color-active;
+	}
 
-   &-icon {
-      font-size: 20px;
-      transition: font-size 0.3s $interpolator;
-      transform: rotate(-180deg);
-      margin: auto;
-   }
+	&-icon {
+		font-size: 20px;
+		transition: font-size 0.3s $interpolator;
+		transform: rotate(-180deg);
+		margin: auto;
+	}
 
-   &-icon-active {
-      font-size: 16px;
-   }
+	&-icon-active {
+		font-size: 16px;
+	}
 }

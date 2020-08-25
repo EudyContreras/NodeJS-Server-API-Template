@@ -58,7 +58,7 @@ module.exports = {
 	target: 'node',
 	mode: enviroment,
 	cache: !isProduction,
-	devtool: isProduction ? null : 'eval-cheap-module-source-map',
+	devtool: isProduction ? false : 'eval-cheap-module-source-map',
 	performance: {
 		hints: 'warning'
 	},

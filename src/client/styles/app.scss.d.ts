@@ -5,13 +5,14 @@ interface CssExports {
   'backgroundAnim': string;
   'bottom': string;
   'content': string;
+  'contentArea': string;
   'contentInner': string;
   'contentPadder': string;
-  'contentWrapper': string;
   'expand': string;
   'expandHidden': string;
   'expandIcon': string;
   'expandIconActive': string;
+  'expanded': string;
   'fixed': string;
   'footerArea': string;
   'footerContent': string;
@@ -47,6 +48,7 @@ interface CssExports {
   'navPeeky': string;
   'navSticky': string;
   'navTransition': string;
+  'normal': string;
   'paramsTable': string;
   'pendingIcon': string;
   'ripple': string;

@@ -30,14 +30,23 @@
 	}
 }
 
-.content-wrapper {
+.content-area {
 	display: flex;
+	transform: translateZ(0);
 	flex-direction: column;
 	will-change: margin-right, margin-left;
-	margin-left: calc(230px + 5%);
-	margin-right: 35%;
 	background-color: rgb(48, 53, 57);
 	transition: all 0.3s $standardInterpolator;
+
+	&.expanded {
+		margin-left: 20px;
+		margin-right: 40%;
+	}
+
+	&.normal {
+		margin-left: calc(230px + 5%);
+		margin-right: 35%;
+	}
 }
 
 .content-padder {

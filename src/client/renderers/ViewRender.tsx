@@ -2,11 +2,9 @@
 
 import path from 'path';
 import config from '../../configs/config.client.json';
-import webpSupport from 'supports-webp';
 import configureStore from '../stores/store';
 import { ServerStyleSheet } from 'styled-components';
 import ViewRenderer from '../../server/middleware/renderer';
-import AppStyle from '../styles/app.scss';
 import ReactDOM from 'react-dom/server';
 import { routes } from '../components/Routes';
 import { Store } from 'redux';
@@ -16,21 +14,18 @@ import IAction from '../actions/action';
 import { ChunkExtractor } from '@loadable/server';
 
 const statsFile = path.resolve('build/public/loadable-stats.json');
-const appStyle: any = AppStyle;
 
 class IndexViewRenderer extends ViewRenderer {
 	private routing = '/';
 	private router: Router;
 	private store: Store<any, IAction>;
 	private state: any;
-	private css: any;
 
 	constructor() {
 		super();
 		this.router = Router();
 		this.store = configureStore({});
 		this.state = this.store.getState();
-		this.css = { cssText: appStyle._getCss() };
 		this.setupRoutes(this.router);
 	}
 
@@ -113,7 +108,6 @@ class IndexViewRenderer extends ViewRenderer {
 		const content = application(req.url, this.store, context, cssInjector);
 
 		const props = {
-			css: this.css,
 			html: config.html,
 			enableSW: process.env.USE_SW === 'true',
 			context: context,

@@ -77,7 +77,7 @@ export const DefaultLayout = (props) => {
 				{props.html.touchIcons.map((x, i) => (
 					<link rel="apple-touch-icon" type="image/webp" sizes={x} key={i} href={`${props.html.touchIconsPath}${x}.${fileType}`} defer />
 				))}
-				<link rel="stylesheet" crossOrigin="anonymous" href="styles/fonts.css" as="font" media="all" id="fonts" defer async />
+				<link rel="stylesheet" as="style" crossOrigin="anonymous" href="styles/fonts.css" media="all" id="fonts" defer async />
 
 				{props.html.preconnect.map((x, i) => (
 					<link rel="preconnect" crossOrigin="anonymous" key={i} href={x} />
@@ -88,7 +88,7 @@ export const DefaultLayout = (props) => {
 				{parse(props.styledTags)}
 
 				{props.css.map((style) => (
-					<style key={style.id} id={style.id} dangerouslySetInnerHTML={{ __html: style.cssText }} />
+					<style key={style.id} id={style.id} dangerouslySetInnerHTML={{ __html: style.cssText }} async />
 				))}
 			</head>
 			<body>

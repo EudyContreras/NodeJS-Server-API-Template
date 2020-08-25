@@ -28,5 +28,6 @@ declare module 'styled-components' {
 declare module 'react' {
 	interface HTMLAttributes<T> extends AriaAttributes, DOMAttributes<T> {
         css?: CSSProp<DefaultTheme>;
+        showIcon?: boolean;
 	}
 }

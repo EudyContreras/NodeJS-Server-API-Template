@@ -1,11 +1,27 @@
 import React from 'react';
 import Section from './ContentSection';
+import { useSelector } from 'react-redux';
+import { createSelector } from 'reselect';
+import { IStateTree, IPresentation } from '../../../../../reducers';
+import { join } from '../../../../utililties/react.utils';
 
-class ContentArea extends React.PureComponent<any, any> {
-	public render = (): JSX.Element => {
-		const { styling } = this.props;
+type Selection = {
+	isExpanded: boolean;
+};
+
+const getSelection = createSelector<IStateTree, IPresentation, Selection>(
+	(state: IStateTree) => state.presentation,
+	(state: IPresentation): Selection => ({ isExpanded: !state.documentation.sidebar.expanded })
+);
+
+const ContentArea: React.FC<any> = React.memo(
+	({ styling }: any): JSX.Element => {
+		const { isExpanded } = useSelector<IStateTree, Selection>(getSelection);
+
+		const classes = [styling.contentArea, isExpanded ? styling.expanded : styling.normal];
+
 		return (
-			<div className={styling.contentWrapper}>
+			<div className={join(...classes)}>
 				<div className={styling.contentPadder}>
 					<Section index={0} styling={styling} />
 					<Section index={1} styling={styling} />
@@ -41,7 +57,7 @@ class ContentArea extends React.PureComponent<any, any> {
 				</div>
 			</div>
 		);
-	};
-}
+	}
+);
 
 export default ContentArea;

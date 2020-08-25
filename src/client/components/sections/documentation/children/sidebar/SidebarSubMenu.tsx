@@ -26,15 +26,6 @@ const links = [
 	}
 ];
 
-const variants = {
-	open: {
-		transition: { staggerChildren: 0.05, delayChildren: 0.01 }
-	},
-	closed: {
-		transition: { staggerChildren: 0, staggerDirection: -1 }
-	}
-};
-
 type State = {
 	hidden: boolean;
 	loaded: boolean;
@@ -119,15 +110,15 @@ const SidebarSubMenu: React.FC<StateProps> = React.memo(({ styling, expanded, pa
 			classes.push(styling.smExpanded);
 		}
 		return (
-			<motion.ul variants={variants} animate={expanded ? 'open' : 'closed'} ref={menuRef} onTransitionEnd={onEnd} className={join(...classes)} style={style}>
+			<ul ref={menuRef} onTransitionEnd={onEnd} className={join(...classes)} style={style}>
 				{listItems}
-			</motion.ul>
+			</ul>
 		);
 	}
 	return (
-		<motion.ul variants={variants} ref={menuRef} className={join(...classes)}>
+		<ul ref={menuRef} className={join(...classes)}>
 			{listItems}
-		</motion.ul>
+		</ul>
 	);
 }, isEqual);
 

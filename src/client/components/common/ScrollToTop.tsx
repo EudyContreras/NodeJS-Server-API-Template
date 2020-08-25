@@ -8,11 +8,11 @@ import { useSelector } from 'react-redux';
 import { IStateTree } from '../../reducers';
 import { useRippple, rippleStyle } from '../../appliers/ripple.applier';
 
-type State = {
-	fonts: Record<string, boolean>;
+type Selection = {
 	isFixed: boolean;
 	topOffset: number;
 	navbarHeight: number;
+	fontsLoaded: boolean;
 };
 
 type ViewProps = {
@@ -20,21 +20,20 @@ type ViewProps = {
 	class: string;
 };
 
-const getSelection = createSelector<IStateTree, IStateTree, State>(
+const getSelection = createSelector<IStateTree, IStateTree, Selection>(
 	(state: IStateTree): IStateTree => state,
 	(state: IStateTree) => ({
-		fonts: state.presentation.assets.fonts,
 		isFixed: state.presentation.navigation.anchored,
 		topOffset: state.presentation.navigation.offsetTop,
-		navbarHeight: state.presentation.navigation.navbarHeight
+		navbarHeight: state.presentation.navigation.navbarHeight,
+		fontsLoaded: state.presentation.assets.fonts[MaterialIcons.name] === true
 	})
 );
 
 export const ScrollToTop: React.FC = React.memo(
 	(): JSX.Element => {
-		const { fonts, isFixed, topOffset, navbarHeight } = useSelector<IStateTree, State>(getSelection);
+		const { fontsLoaded, isFixed, topOffset, navbarHeight } = useSelector<IStateTree, Selection>(getSelection);
 		const [showButton, setShowButton] = useState(false);
-		const fontIsLoaded = fonts[MaterialIcons.name] === true;
 		const iconClasses = [MaterialIcons.class];
 		const offsetTop = navbarHeight - topOffset;
 
@@ -63,8 +62,8 @@ export const ScrollToTop: React.FC = React.memo(
 		useStyles(rippleStyle);
 
 		return (
-			<Button title={viewProps.title} onClick={scrollToTop} className={viewProps.class}>
-				{fontIsLoaded && <i className={join(...iconClasses)}>{MaterialIcons.icons.EXPAND_LESS}</i>}
+			<Button title={viewProps.title} onClick={scrollToTop} showIcon={fontsLoaded} className={viewProps.class}>
+				<i className={join(...iconClasses)}>{MaterialIcons.icons.EXPAND_LESS}</i>
 			</Button>
 		);
 	}
