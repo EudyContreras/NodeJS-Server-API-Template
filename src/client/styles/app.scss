@@ -6,6 +6,7 @@ $standardInterpolator: cubic-bezier(.25, .8, .25, 1);
 	transition: $x;
 }
 
+@import './partials/mquery';
 @import './partials/elevate';
 @import './partials/navbar';
 @import './partials/loaders';

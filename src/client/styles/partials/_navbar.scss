@@ -1,3 +1,5 @@
+@import './mquery';
+
 $peeky-height: 65;
 $navbar-color: rgba(35, 40, 45, 1);
 $expand-color-active: rgba(0, 0, 0, 0.3);
@@ -14,6 +16,11 @@ $expand-color-active: rgba(0, 0, 0, 0.3);
 	left: 0;
 	right: 0;
 	z-index: 2000;
+
+	@include media-max(tablet) {
+		justify-content: space-between;
+	}
+	
 	padding: {
 		top: 0.8em;
 		bottom: 0.8em;
@@ -25,15 +32,41 @@ $expand-color-active: rgba(0, 0, 0, 0.3);
 		margin-left: auto;
 		margin-right: 1em;
 		list-style: none;
-		display: flex;
 		font-size: 0.8em;
 		text-transform: uppercase;
+		display: -webkit-inline-box;
+
+		@include media-max(phone_xl) {
+			display: none;
+		}
+
+		@include media-max(tablet) {
+			margin-left: 0;
+			margin-right: 0;
+			padding: 0;
+    		list-style-type: none;
+		}
+		@include media-min-max(tablet, tablet_xl) {
+			margin-right: 0.3em;
+		}
 	}
 
 	ul > li {
 		display: inline;
 		padding: 0 2em;
 		letter-spacing: 1px;
+
+		@include media-min-max(phone_xl, tablet) {
+			padding: 0 0.8em;
+		}
+
+		@include media-min-max(tablet, tablet_xl) {
+			padding: 0 1em;
+		}
+
+		@include media-max(tablet) {
+			padding: 0 0.2em;
+		}
 	}
 
 	&-padder {
@@ -101,12 +134,11 @@ $expand-color-active: rgba(0, 0, 0, 0.3);
 .install-button {
 	cursor: pointer;
 	display: flex;
-	justify-items: center;
-	overflow: hidden;
-	width: 35px;
-	height: 35px;
+	width: auto;
+	height: auto;
 	margin-right: 1em;
 	border-radius: 50%;
+	justify-content: center;
 	background-color: rgb(31, 35, 40);
 	transform: translateX(15px);
 	box-shadow: 0 1px 1px 1px rgba(0, 0, 0, 0.4);
@@ -118,6 +150,7 @@ $expand-color-active: rgba(0, 0, 0, 0.3);
 		transition: font-size 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 		transform: rotate(-180deg);
 		margin: auto;
+		padding: 8px;
 	}
 
 	&:hover {

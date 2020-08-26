@@ -42,11 +42,12 @@ $accect-color: rgb(220, 139, 2);
 	a {
 		@include transition(color 0.2s ease-out);
 		display: inline-block;
-		color: rgba(165, 167, 168, 1);
+		color: rgb(170, 172, 173);
 		font-size: 12px;
 		padding: 8px 16px;
 		text-decoration: none;
-		font-weight: 100;
+		font-weight: 400;
+		letter-spacing: 1px;
 	}
 
 	i {
@@ -63,13 +64,12 @@ $accect-color: rgb(220, 139, 2);
 		border-left-style: solid;
 	}
 
-	&:hover > i {
+	&:hover i {
 		color: rgb(220, 220, 220);
 	}
 
-	&:hover > a {
-		color: rgb(230, 230, 230);
-		font-weight: 500;
+	&:hover a {
+		color: rgb(190, 192, 193);
 	}
 }
 

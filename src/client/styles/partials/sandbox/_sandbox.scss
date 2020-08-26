@@ -15,6 +15,10 @@
 	transition: width 0.3s $standardInterpolator;
 	will-change: width;
 
+	@include media-max(tablet_xl) {
+		display: none;
+	}
+
 	& div {
 		display: flex;
 		height: 100%;

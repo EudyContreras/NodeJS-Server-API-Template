@@ -7,6 +7,7 @@ $background-color-hovered: rgb(67, 72, 77);
 
 .menu-item {
 	@include transition(background-color 0.2s ease-out);
+	cursor: pointer;
 	display: flex;
 	align-items: center;
 	justify-content: space-between;

@@ -1,22 +1,7 @@
 import React, { Fragment } from 'react';
 import MenuItem from '../SidebarMenuItem';
 
-const routes = [
-	'Users',
-	'Priviledges',
-	'Roles',
-	'Invitations',
-	'Stores',
-	'Producs',
-	'Customers',
-	'Locations',
-	'Accounts',
-	'Employees',
-	'Customers',
-	'Locations',
-	'Accounts',
-	'Employees'
-];
+const routes = ['Users', 'Priviledges', 'Roles', 'Invitations', 'Stores', 'Producs', 'Customers'];
 
 type StateProps = {
 	header: string;

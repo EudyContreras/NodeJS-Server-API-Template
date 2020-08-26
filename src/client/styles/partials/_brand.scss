@@ -1,52 +1,55 @@
-$rippleColor: rgb(220, 138, 0);
-$rippleColorDark: #e2a115;
-$rippleColorDarker: rgb(226, 161, 21);;
-$rippleCenter: #fff;
-
+$ripple-color: rgb(220, 138, 0);
+$ripple-color-dark: #e2a115;
+$ripple-color-darker: rgb(226, 161, 21);
+$ripple-center: #fff;
 
 .status {
-   width: 2em;
-   height: 2em;
-   margin-left: 1em;
-   display: flex;
-   justify-items: center;
-   justify-content: center;
-   border-radius: 50%;
-   align-items: center;
-   background-color: $rippleColor;
-   text-decoration: none;
-   box-shadow: 2px 3px 10px 2px rgba(0, 0, 0, 0.4);
-   // animation: ripple 2s cubic-bezier(.25, .8, .25, 1) infinite;
+	width: 2em;
+	height: 2em;
+	margin-left: 1em;
+	display: flex;
+	justify-items: center;
+	justify-content: center;
+	border-radius: 50%;
+	align-items: center;
+	background-color: $ripple-color;
+	text-decoration: none;
+	box-shadow: 2px 3px 10px 2px rgba(0, 0, 0, 0.4);
+	// animation: ripple 2s cubic-bezier(.25, .8, .25, 1) infinite;
 
-   &::before {
-      content: "";
-      clear: both;
-      width: 1.5em;
-      height: 1.5em;
-      display: inline-table;
-      align-self: center;
-      justify-self: center;
-      justify-content: center;
-      align-content: center;
-      position: absolute;
-      border-radius: 50%;
-      background-color: $rippleColorDark;
-      box-shadow: 0px 0px 2px 1px rgba(0,0,0,0.08);
-   }
+   @include media-max(tablet) {
+      margin-left: 0;
+   };
 
-   &::after {
-      content: "";
-      clear: both;
-      width: 0.8em;
-      height: 0.8em;
-      display: inline-table;
-      align-self: center;
-      justify-self: center;
-      justify-content: center;
-      align-content: center;
-      position: absolute;
-      border-radius: 50%;
-      background-color: $rippleCenter;
-      box-shadow: 2px 2px 3px 0px rgba(0,0,0,0.2);
-   }
+	&::before {
+		content: '';
+		clear: both;
+		width: 1.5em;
+		height: 1.5em;
+		display: inline-table;
+		align-self: center;
+		justify-self: center;
+		justify-content: center;
+		align-content: center;
+		position: absolute;
+		border-radius: 50%;
+		background-color: $ripple-color-dark;
+		box-shadow: 0 0 2px 1px rgba(0, 0, 0, 0.08);
+	}
+
+	&::after {
+		content: '';
+		clear: both;
+		width: 0.8em;
+		height: 0.8em;
+		display: inline-table;
+		align-self: center;
+		justify-self: center;
+		justify-content: center;
+		align-content: center;
+		position: absolute;
+		border-radius: 50%;
+		background-color: $ripple-center;
+		box-shadow: 2px 2px 3px 0 rgba(0, 0, 0, 0.2);
+	}
 }

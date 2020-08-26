@@ -41,11 +41,27 @@
 	&.expanded {
 		margin-left: 20px;
 		margin-right: 40%;
+
+		@include media-max(tablet_xl) {
+			margin-right: 0%;
+		}
+
+		@include media-max(phone_xl) {
+			margin-left: 0;
+		}
 	}
 
 	&.normal {
 		margin-left: calc(230px + 5%);
 		margin-right: 35%;
+
+		@include media-max(tablet_xl) {
+			margin-right: 0%;
+		}
+
+		@include media-max(phone_xl) {
+			margin-left: 0;
+		}
 	}
 }
 
@@ -66,10 +82,17 @@
 	display: flex;
 	flex-direction: column;
 
+	@include media-max(phone_xl) {
+		padding-top: 2em;
+		padding-bottom: 0;
+		padding-left: 0;
+		padding-right: 0;
+	}
+
 	&-inner  {
 		display: flex;
 		background-color: rgb(55, 60, 64);
-		height: -webkit-fill-available;
+		height: inherit;
 		border-radius: 8px;
 	}
 }
