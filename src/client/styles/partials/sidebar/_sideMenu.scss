@@ -40,7 +40,8 @@
 	transition: all 0.3s $standardInterpolator;
 
 	@include media-max(phone_xl) {
-		width: 75%;
+		width: 100%;
+		transform: translateX(-100%);
 	}
 
 	ul {

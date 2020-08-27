@@ -69,6 +69,7 @@ export const Navbar: React.FC<Props> = React.memo(
 		}
 
 		useEffect(() => {
+			const navbar = navbarRef.current;
 			function anchor(scrollValue: number): void {
 				const isAnchored = anchorRef.current === true;
 				const top = topPosRef.current || 0;
@@ -79,8 +80,6 @@ export const Navbar: React.FC<Props> = React.memo(
 					isAnchored && Dispatchers.setAnchored(false)(dispatch);
 				}
 			}
-
-			const navbar = navbarRef.current;
 
 			if (navbar) {
 				const margin = 15;

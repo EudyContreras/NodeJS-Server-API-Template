@@ -48,7 +48,6 @@ const SidebarSearch: React.FC<StateProps> = React.memo(
 
 		return (
 			<form className={formClassName} method={elementProps.formMethod}>
-				<label htmlFor={elementProps.inputName}></label>
 				<input
 					ref={inputRef}
 					key={elementProps.inputKey}

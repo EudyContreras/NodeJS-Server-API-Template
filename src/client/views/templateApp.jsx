@@ -22,7 +22,7 @@ export const DefaultLayout = (props) => {
 				<meta charSet="utf-8" />
 				<meta name="author" content={props.html.author} />
 				<meta name="copyright" content={props.html.copyright} />
-				<meta name="viewport" content="width=device-width, minimum-scale=1 initial-scale=1" />
+				<meta name="viewport" content="width=device-width, minimum-scale=0.9 initial-scale=0.9" />
 				<meta name="keywords" content={props.html.keywords} />
 				<meta name="description" content={props.html.description} />
 				<meta name="application-name" content={props.html.title} />

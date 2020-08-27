@@ -18,6 +18,10 @@ $interpolator: cubic-bezier(0.25, 0.8, 0.25, 1);
 	box-shadow: 0 2px 4px 1px rgba(0, 0, 0, 0.4);
 	transition: all 0.3s $interpolator;
 
+	@include media-max(phone_xl) {
+		display: none;
+	}
+
 	&-hidden {
 		opacity: 0;
 		transition: opacity 0.5s ease-in-out 1s;
