@@ -16,6 +16,7 @@
 		"apple": {
 			"statusBarStyle": "default"
 		},
+		"fileType": "webp",
 		"favIcon": "images/favicon.ico",
 		"touchIconsPath": "images/touch_icon/touch_icon_",
 		"touchIcons": [

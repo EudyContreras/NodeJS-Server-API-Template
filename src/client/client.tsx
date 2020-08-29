@@ -1,17 +1,16 @@
 import ReactDOM from 'react-dom';
-import configureStore from './stores/store';
+import configureStore, { StoreInitialState } from './stores/store';
 import FontFaceObserver from 'fontfaceobserver';
 import { registerWorker } from '../workers/helpers/register.helper';
 import { registerLazyImageLoading } from './appliers/lazy.applier';
 import { loadableReady } from '@loadable/component';
 import { client } from './views';
 import { MaterialIcons } from './stores/icon.library';
-import { setFontsLoaded } from './actions/common/assets.action';
-import { IStateTree } from './reducers';
 import './resources/images/icons/favicon.ico';
 import './resources/images/touch_icon.png?sizes[]=72,sizes[]=128,sizes[]=144,sizes[]=152,sizes[]=192,sizes[]=257,sizes[]=384,sizes[]=512';
+import { IStateTree } from './reducers';
 
-const initialState: IStateTree = window.__PRELOADED_STATE__ || {};
+const initialState: IStateTree = window.__PRELOADED_STATE__ || StoreInitialState;
 const renderOptions: any = window.__RENDER_OPTIONS__ || {};
 
 delete window.__PRELOADED_STATE__;
@@ -22,6 +21,8 @@ const insertCss = (...styles: any[]): any => {
 	return (): any => removeCss.forEach((dispose) => dispose());
 };
 
+const clientSideRendered = renderOptions.clientSideRendered;
+
 const materialFontsObserver = new FontFaceObserver(MaterialIcons.name, {});
 
 materialFontsObserver
@@ -29,28 +30,39 @@ materialFontsObserver
 	.then(() => {
 		const reccord = { [MaterialIcons.name as string]: true };
 		initialState.presentation.assets.fonts = { ...reccord };
-		setFontsLoaded(MaterialIcons.name);
 
-		setTimeout(() => {
-			registerLazyImageLoading({
-				useNativeLoading: false,
-				loadBelowFold: false,
-				decodeImages: true
-			});
-		}, 500);
+		if (!clientSideRendered) {
+			setTimeout(() => {
+				registerLazyImageLoading({
+					useNativeLoading: false,
+					loadBelowFold: false,
+					decodeImages: true
+				});
+			}, 500);
+		}
 	})
 	.catch((error) => {
 		console.log('Something went wrong!', error);
 	});
 
-loadableReady(() => {
-	const renderMethod = renderOptions.clientSideRendered || module.hot ? ReactDOM.render : ReactDOM.hydrate;
-
+const render = (): any => {
 	const store = configureStore(initialState);
 	const content = document.getElementById('content');
 	const element = document.getElementById('serverCSS');
 
-	renderMethod(client(window.location.pathname, store, renderOptions.context, insertCss), content);
+	const renderMethod = clientSideRendered || module.hot ? ReactDOM.render : ReactDOM.hydrate;
+
+	const clientFunc = client({ url: window.location.pathname, store: store, insertCss: insertCss });
+
+	renderMethod(clientFunc, content);
+
+	if (clientSideRendered) {
+		registerLazyImageLoading({
+			useNativeLoading: false,
+			loadBelowFold: false,
+			decodeImages: true
+		});
+	}
 
 	if (element) {
 		element?.parentNode?.removeChild(element);
@@ -58,7 +70,7 @@ loadableReady(() => {
 
 	if (renderOptions.enableSW === true) {
 		registerWorker({
-			clientSideRendered: renderOptions.clientSideRendered,
+			clientSideRendered: clientSideRendered,
 			watchConnnectionState: renderOptions.watchConnection,
 			registerPushNotifications: false,
 			registerBackgroundSync: false
@@ -67,4 +79,10 @@ loadableReady(() => {
 	if (module.hot) {
 		module.hot.accept();
 	}
-});
+};
+
+if (clientSideRendered) {
+	render();
+} else {
+	loadableReady(render);
+};

@@ -25,7 +25,7 @@ export interface INavigationBar {
 	navigationTabs: INavigationTab[];
 }
 
-const InitialState: INavigationBar = {
+export const InitialState: INavigationBar = {
 	anchored: false,
 	offsetTop: 0,
 	navbarHeight: 0,

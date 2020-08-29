@@ -12,13 +12,14 @@ import { application } from '../views';
 import { Router, Request, Response } from 'express';
 import IAction from '../actions/action';
 import { ChunkExtractor } from '@loadable/server';
+import { IStateTree } from '../reducers';
 
 const statsFile = path.resolve('build/public/loadable-stats.json');
 
 class IndexViewRenderer extends ViewRenderer {
 	private routing = '/';
 	private router: Router;
-	private store: Store<any, IAction>;
+	private store: Store<IStateTree, IAction>;
 	private state: any;
 
 	constructor() {
@@ -61,7 +62,7 @@ class IndexViewRenderer extends ViewRenderer {
 		};
 
 		const sheet = new ServerStyleSheet();
-		const reactApp = application(req.url, this.store, context, cssInjector);
+		const reactApp = application({ url: req.url, store: this.store, context: context, insertCss: cssInjector });
 		const contentChunks = extractor.collectChunks(reactApp);
 
 		const scriptTags = extractor.getScriptTags();
@@ -105,7 +106,7 @@ class IndexViewRenderer extends ViewRenderer {
 		const cssInjector = (...styles): void => {
 			styles.forEach((style) => css.add(style._getCss()));
 		};
-		const content = application(req.url, this.store, context, cssInjector);
+		const content = application({ url: req.url, store: this.store, context: context, insertCss: cssInjector });
 
 		const props = {
 			html: config.html,

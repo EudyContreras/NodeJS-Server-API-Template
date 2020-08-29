@@ -24,7 +24,7 @@ const plugins = [];
 
 const stats = usesHMR ? { stats: 'minimal' } : { };
 
-if (process.env.CSR !== 'true') {
+if (!usesCSR) {
 	plugins.push(new WaitPlugin({ filename: 'build/public/loadable-stats.json' }, 40000));
 }
 if (isProduction) {
@@ -33,13 +33,15 @@ if (isProduction) {
 		new webpack.optimize.OccurrenceOrderPlugin()
 	);
 } else {
-	plugins.push(
-		new NodemonPlugin({
-			watch: path.resolve(publicPath),
-			script: 'build/server.js',
-			ext: 'js,json'
-		})
-	);
+	if (!usesCSR) {
+		plugins.push(
+			new NodemonPlugin({
+				watch: path.resolve(publicPath),
+				script: 'build/server.js',
+				ext: 'js,json'
+			})
+		);
+	}
 }
 plugins.push(
 	new webpack.optimize.LimitChunkCountPlugin({

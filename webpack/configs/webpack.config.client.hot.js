@@ -43,10 +43,13 @@ const proxyOptions = !usesCSR ? {
 
 const pluggins = [
 	new webpack.DefinePlugin(EnvDefiner()),
-	new WaitPlugin({ filename: 'build/loadable-stats.json', timeout: 40000 }),
 	new ReactRefreshWebpackPlugin(),
 	new LoadablePlugin()
 ];
+
+if (!usesCSR) {
+	pluggins.push(new WaitPlugin({ filename: 'build/loadable-stats.json', timeout: 40000 }));
+}
 
 const splitChunk = {
 	splitChunks: {

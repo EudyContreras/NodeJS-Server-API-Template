@@ -8,8 +8,19 @@ import { createBrowserHistory, createMemoryHistory } from 'history';
 import { BrowserRouter, StaticRouter } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
 import { ApplicationTheme } from '../styles/themes/ApplicationTheme';
+import { IStateTree } from '../reducers';
+import { Store } from 'redux';
+import IAction from '../actions/action';
 
-export const appLight = (url: string, css: any, context: any): JSX.Element => {
+type Props = {
+	url: string,
+	css?: any,
+	context?: any,
+	store: Store<IStateTree, IAction>,
+	insertCss: Function
+};
+
+export const appLight = ({ url, css, context }: Props): JSX.Element => {
 	const styling = new Set([css]);
 	const insertCss = (...styles): void => styles.forEach((style) => styling.add(style._getCss()));
 
@@ -26,7 +37,7 @@ export const appLight = (url: string, css: any, context: any): JSX.Element => {
 	);
 };
 
-export const application = (url: string, store: any, context: any, insertCss: Function): JSX.Element => {
+export const application = ({ url, store, context, insertCss }: Props): JSX.Element => {
 	const history = createMemoryHistory();
 	return (
 		<Provider store={store}>
@@ -41,7 +52,7 @@ export const application = (url: string, store: any, context: any, insertCss: Fu
 	);
 };
 
-export const client = (url: string, store: any, context: any, insertCss: Function): JSX.Element => {
+export const client = ({ url, store, insertCss }: Props): JSX.Element => {
 	const history = createBrowserHistory();
 	return (
 		<Provider store={store}>

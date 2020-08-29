@@ -22,7 +22,7 @@ export const DefaultLayout = (props) => {
 				<meta charSet="utf-8" />
 				<meta name="author" content={props.html.author} />
 				<meta name="copyright" content={props.html.copyright} />
-				<meta name="viewport" content="width=device-width, minimum-scale=0.9 initial-scale=0.9" />
+				<meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1" />
 				<meta name="keywords" content={props.html.keywords} />
 				<meta name="description" content={props.html.description} />
 				<meta name="application-name" content={props.html.title} />
@@ -82,6 +82,7 @@ export const DefaultLayout = (props) => {
 				{props.html.preconnect.map((x, i) => (
 					<link rel="preconnect" crossOrigin="anonymous" key={i} href={x} />
 				))}
+				
 				{/* <!-- Manifest.json  --> */}
 				<link rel="manifest" href={props.html.manifest} />
 
@@ -93,7 +94,7 @@ export const DefaultLayout = (props) => {
 			</head>
 			<body>
 				<section id="content">{props.content}</section>
-				<script
+				<script type="text/javascript"
 					dangerouslySetInnerHTML={{
 						__html: `
 							window.__RENDER_OPTIONS__=${JSON.stringify(options).replace(/</g, '\\u003c')};
