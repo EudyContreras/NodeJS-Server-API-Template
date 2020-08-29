@@ -58,7 +58,7 @@ export const Action: React.FC<StateProps> = ({ styling }: StateProps): JSX.Eleme
 	}, [isInstalled]);
 
 	return (
-		<div onClick={initInstallation} className={join(...classes)} title="Install">
+		<div onClick={initInstallation} className={join(...classes)} title='Install'>
 			<i id={MaterialIcons.id} className={join(...iconsClasses)}>
 				{icon}
 			</i>

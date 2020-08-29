@@ -37,17 +37,15 @@ $expand-color-active: rgba(0, 0, 0, 0.3);
 		margin-right: 1em;
 		list-style: none;
 		font-size: 0.8em;
+		padding: 0;
 		text-transform: uppercase;
-		display: -webkit-inline-box;
 
 		@include media-max(phone_xl) {
 			display: none;
 		}
 
 		@include media-max(tablet) {
-			margin-left: 0;
-			margin-right: 0;
-			padding: 0;
+		    margin: auto;
     		list-style-type: none;
 		}
 
@@ -79,7 +77,7 @@ $expand-color-active: rgba(0, 0, 0, 0.3);
 		position: static;
 		background-color: $navbar-color;
 
-		@include media-max(tablet) {
+		@include media-max(phone_xl) {
 			height: 40px;
 		}
 
@@ -152,9 +150,10 @@ $expand-color-active: rgba(0, 0, 0, 0.3);
 .install-button {
 	cursor: pointer;
 	display: flex;
-	padding: 6px;
-	margin-right: 1em;
+	width: 35px;
+	height: 35px;
 	border-radius: 50%;
+	overflow: hidden;
 	justify-content: center;
 	background-color: rgb(31, 35, 40);
 	transform: translateX(15px);
@@ -163,7 +162,7 @@ $expand-color-active: rgba(0, 0, 0, 0.3);
 
 	&-icon {
 		font-size: 22px;
-		color: rgba(158, 108, 108, 0.7);
+		color: rgba(255, 255, 255, 0.7);
 		transition: font-size 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 		transform: rotate(-180deg);
 		margin: auto;

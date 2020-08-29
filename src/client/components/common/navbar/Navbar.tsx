@@ -124,8 +124,8 @@ export const Navbar: React.FC<Props> = React.memo(
 
 		return (
 			<header {...properties}>
-				<NavbarLinkSimple target="/">
-					<div className={styling.navLogo} title="Home">
+				<NavbarLinkSimple target='/'>
+					<div className={styling.navLogo} title='Home'>
 						<div className={styling.status}></div>
 					</div>
 				</NavbarLinkSimple>

@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
 import { createSelector } from 'reselect';
-import useStyles from 'isomorphic-style-loader/useStyles';
 import { Button } from './ScrollToTop.style';
 import { MaterialIcons } from '../../stores/icon.library';
 import { join } from '../../appliers/style.applier';
 import { useSelector } from 'react-redux';
 import { IStateTree } from '../../reducers';
-import { useRippple, rippleStyle } from '../../appliers/ripple.applier';
 
 type Selection = {
 	isFixed: boolean;
@@ -43,7 +41,6 @@ export const ScrollToTop: React.FC = React.memo(
 		};
 
 		function scrollToTop(event: React.MouseEvent<HTMLElement, MouseEvent>): void {
-			useRippple(event);
 			const top = document.documentElement.scrollTop || document.body.scrollTop;
 			if (top > offsetTop) {
 				window.scroll({
@@ -58,8 +55,6 @@ export const ScrollToTop: React.FC = React.memo(
 		} else {
 			showButton && setShowButton(false);
 		}
-
-		useStyles(rippleStyle);
 
 		return (
 			<Button title={viewProps.title} onClick={scrollToTop} showIcon={fontsLoaded} className={viewProps.class}>
