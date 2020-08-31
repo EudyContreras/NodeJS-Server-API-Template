@@ -1,7 +1,7 @@
 import { clientMessages, cachableTypes, cacheNames, fallbacks, responseType, headers } from './constants';
 import { days } from './helpers/timespan.helper';
 import { logger, inRange, sendMessageToClients, isHomeOrigin } from './commons';
-import { hasExpired, attachExpiration, getAllEntries, getEntry } from './handlers/localstorage';
+import { hasExpired, attachExpiration, getAllEntries, getEntry } from './handlers/cache.Handler';
 
 const TIMEOUT = 5000;
 
@@ -47,13 +47,26 @@ const errorResponse = (): Response => {
 
 Cache.prototype.addToCache = async function (request: Request, response: Response | any, cacheName: string, maxEntries?: number): Promise<Response> {
 	try {
-		await this.put(request, response);
-		if (maxEntries) {
+		if (!maxEntries) {
+			this.put(request, response);
+			return response;
+		}
+		if (indexedDB) {
+			this.put(request, response);
 			getAllEntries(cacheName).then((entries) => {
 				if (entries.values.length >= maxEntries) {
 					const leastFrequent = entries.reduce((prev: CacheEntryInfo, current: CacheEntryInfo) =>
 						prev.visitFrequency < current.visitFrequency ? prev : current);
 					this.delete(leastFrequent.url);
+				}
+			});
+			return response;
+		} else {
+			this.keys().then((keys) => {
+				if (keys.length < maxEntries) {
+					this.put(request, response);
+				} else {
+					this.delete(keys[0]).then(() => this.put(request, response));
 				}
 			});
 		}
@@ -159,7 +172,16 @@ export function cacheFirst(stragedy: CacheStragedy): void {
 		cache.then((cache) =>
 			cache.match(request).then(async (response) => {
 				if (response && quotaOptions) {
-					return hasExpired(request.url).then((expired) => (!expired ? response : network(cache)));
+					const expired = await hasExpired(request.url);
+					if (expired === null) {
+						try {
+							return response;
+						} finally {
+							network(cache);
+						}
+					} else {
+						return !expired ? response : network(cache);
+					}
 				}
 				return response || network(cache);
 			}))

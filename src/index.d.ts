@@ -13,6 +13,16 @@ declare module '*.webp' {
 	export = value;
 }
 
+declare module '*.jpeg' {
+	const value: any;
+	export = value;
+}
+
+declare module '*.jpg' {
+	const value: any;
+	export = value;
+}
+
 declare module '*.pem' {
 	const value: any;
 	export = value;
@@ -34,3 +44,5 @@ declare module 'isomorphic-style-loader/StyleContext';
 declare module 'isomorphic-style-loader/withStyles';
 
 declare module 'react-loadable-ssr-addon';
+
+declare const __CLIENT_RENDERED__: boolean;

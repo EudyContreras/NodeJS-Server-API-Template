@@ -1,0 +1,77 @@
+$phone: 380px;
+$phone-xl: 624px;
+$tablet: 768px;
+$tablet-xl: 1100px;
+$desktop-xm: 1200px;
+$desktop-xl: 1800px;
+
+$sizes: $phone, $phone-xl, $tablet, $tablet-xl, $desktop-xm, $desktop-xl;
+
+$media-sizes: (
+	phone: $phone,
+	phone_xl: $phone-xl,
+	tablet: $tablet,
+	tablet_xl: $tablet-xl,
+	desktop_xm: $desktop-xm,
+	desktop: $desktop-xl
+);
+
+@mixin media($breakpoint) {
+	@if $breakpoint == phone {
+		@media only screen and (max-width: $phone) {
+			@content;
+		}
+	} @else if $breakpoint == phone_xl {
+		@media only screen and (min-width: $phone) and (max-width: $phone-xl) {
+			@content;
+		}
+	} @else if $breakpoint == tablet {
+		@media only screen and (min-width: $phone-xl) and (max-width: $tablet) {
+			@content;
+		}
+	} @else if $breakpoint == tablet_xl {
+		@media only screen and (min-width: $tablet) and (max-width: $tablet-xl) {
+			@content;
+		}
+	} @else if $breakpoint == desktop_xm {
+		@media only screen and (min-width: $tablet-xl) and (max-width: $desktop-xm) {
+			@content;
+		}
+	} @else if $breakpoint == desktop {
+		@media only screen and (min-width: $desktop-xm) and (max-width: $desktop-xl) {
+			@content;
+		}
+	}
+}
+
+@mixin media-min-max($breakpointMin, $breakpointMax) {
+	@each $size-min in $sizes {
+		@each $size-max in $sizes {
+			@if ($size-min == map-get($media-sizes, $breakpointMin) and $size-max == map-get($media-sizes, $breakpointMax)) {
+				@media only screen and (min-width: $size-min) and (max-width: $size-max) {
+					@content;
+				}
+			}
+		}
+	}
+}
+
+@mixin media-min($breakpoint) {
+	@each $size in $sizes {
+		@if ($size == map-get($media-sizes, $breakpoint)) {
+			@media only screen and (min-width: $size) {
+				@content;
+			}
+		}
+	}
+}
+
+@mixin media-max($breakpoint) {
+	@each $size in $sizes {
+		@if ($size == map-get($media-sizes, $breakpoint)) {
+			@media only screen and (max-width: $size) {
+				@content;
+			}
+		}
+	}
+}

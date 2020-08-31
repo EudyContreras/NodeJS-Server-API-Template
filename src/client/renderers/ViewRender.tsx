@@ -3,31 +3,30 @@
 import path from 'path';
 import config from '../../configs/config.client.json';
 import configureStore from '../stores/store';
+import { ServerStyleSheet } from 'styled-components';
 import ViewRenderer from '../../server/middleware/renderer';
-import AppStyle from '../styles/app.scss';
+import ReactDOM from 'react-dom/server';
 import { routes } from '../components/Routes';
 import { Store } from 'redux';
 import { application } from '../views';
 import { Router, Request, Response } from 'express';
 import IAction from '../actions/action';
 import { ChunkExtractor } from '@loadable/server';
+import { IStateTree } from '../reducers';
 
 const statsFile = path.resolve('build/public/loadable-stats.json');
-const appStyle: any = AppStyle;
 
 class IndexViewRenderer extends ViewRenderer {
 	private routing = '/';
 	private router: Router;
-	private store: Store<any, IAction>;
+	private store: Store<IStateTree, IAction>;
 	private state: any;
-	private css: any;
 
 	constructor() {
 		super();
 		this.router = Router();
 		this.store = configureStore({});
 		this.state = this.store.getState();
-		this.css = { cssText: appStyle._getCss() };
 		this.setupRoutes(this.router);
 	}
 
@@ -45,54 +44,71 @@ class IndexViewRenderer extends ViewRenderer {
 		} else {
 			const shell = req.query.shell !== undefined;
 
-			const css = new Set();
-			const cssInjector = (...styles): void => {
-				styles.forEach((style) => css.add(style._getCss()));
-			};
-
 			if (shell) {
-				return await this.renderShell(req, res, cssInjector);
+				return await this.renderShell(req, res);
 			} else {
-				return await this.renderApplication(req, res, cssInjector);
+				return await this.renderApplication(req, res);
 			}
 		}
 	};
 
-	private renderApplication = async (req: Request, res: Response, cssInjector: (...styles: any[]) => void): Promise<void> => {
+	private renderApplication = async (req: Request, res: Response): Promise<void> => {
 		const extractor = new ChunkExtractor({ statsFile: statsFile, entrypoints: ['app'] });
 
 		const context = {};
-		const content = extractor.collectChunks(application(req.url, this.store, context, cssInjector));
+		const css = new Set();
+		const cssInjector = (...styles): void => {
+			styles.forEach((style) => css.add(style._getCss()));
+		};
+
+		const sheet = new ServerStyleSheet();
+		const reactApp = application({ url: req.url, store: this.store, context: context, insertCss: cssInjector });
+		const contentChunks = extractor.collectChunks(reactApp);
 
 		const scriptTags = extractor.getScriptTags();
 		const styleTags = extractor.getStyleTags();
 
-		const props = {
-			css: this.css,
-			html: config.html,
-			state: this.state,
-			styles: styleTags,
-			scripts: scriptTags,
-			context: context,
-			enableSW: process.env.USE_SW === 'true',
-			clientSideRendered: process.env.CSR === 'true',
-			watchConnection: true,
-			content: content,
-			cache: true
-		};
+		try {
+			ReactDOM.renderToString(sheet.collectStyles(reactApp));
+			const styledTags = sheet.getStyleTags();
 
-		config.headers.forEach((header) => {
-			res.setHeader(header.LABEL, header.VALUE);
-		});
-		res.render(config.layout.FULL, props);
+			const props = {
+				css: [{ id: 'serverCSS', cssText: [...css].join('') }],
+				html: config.html,
+				state: this.state,
+				styles: styleTags,
+				styledTags: styledTags,
+				scripts: scriptTags,
+				context: context,
+				webpSupport: true,
+				enableSW: process.env.USE_SW === 'true',
+				clientSideRendered: process.env.CSR === 'true',
+				watchConnection: true,
+				content: contentChunks,
+				cache: true
+			};
+
+			config.headers.forEach((header) => {
+				res.setHeader(header.LABEL, header.VALUE);
+			});
+
+			res.render(config.layout.FULL, props);
+		} catch (error) {
+			console.error('Error: ', error);
+		} finally {
+			sheet.seal();
+		}
 	};
 
-	private renderShell = async (req: Request, res: Response, cssInjector: (...styles: any[]) => void): Promise<void> => {
+	private renderShell = async (req: Request, res: Response): Promise<void> => {
 		const context = {};
-		const content = application(req.url, this.store, context, cssInjector);
+		const css = new Set();
+		const cssInjector = (...styles): void => {
+			styles.forEach((style) => css.add(style._getCss()));
+		};
+		const content = application({ url: req.url, store: this.store, context: context, insertCss: cssInjector });
 
 		const props = {
-			css: this.css,
 			html: config.html,
 			enableSW: process.env.USE_SW === 'true',
 			context: context,

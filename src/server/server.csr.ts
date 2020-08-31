@@ -4,7 +4,7 @@ import RoleController from './controllers/restful/api/roles';
 import UserController from './controllers/restful/api/users';
 import IndexViewRender from '../client/renderers/ViewRenderLight';
 import SchemaController from './controllers/restful/api/schema';
-import SearchController from './controllers/restful/api/Search';
+import SearchController from './controllers/restful/api/search';
 import InviteController from './controllers/restful/api/invitations';
 import PriviledgeController from './controllers/restful/api/priviledges';
 import AuthenticationController from './controllers/restful/api/authentication';

@@ -1,6 +1,7 @@
 
 /* eslint-disable @typescript-eslint/no-var-requires */
 const TerserPlugin = require('terser-webpack-plugin');
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 
 const developmentOptimization = () => ({
 	minimize: false,
@@ -52,7 +53,8 @@ const productionOptimization = (splitChunk, dropConsole) => ({
 					ascii_only: true
 				}
 			}
-		})
+		}),
+		new OptimizeCSSAssetsPlugin({})
 	],
 	nodeEnv: 'production',
 	chunkIds: false,

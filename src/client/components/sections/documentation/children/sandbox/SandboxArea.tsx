@@ -7,7 +7,10 @@ import { setTopFixed, setBottomFixed } from '../../../../../actions/documentatio
 import { join } from '../../../../utililties/react.utils';
 
 interface StateProps {
+	self: any;
+	styling: any;
 	fixedTop: boolean;
+	offsetTop: number;
 	fixedBottom: boolean;
 	offsetBottom: number;
 }
@@ -19,14 +22,14 @@ interface DispatchProps {
 
 const Dispatchers = { setTopFixed, setBottomFixed };
 
-type Props = StateProps & DispatchProps & any;
+type Props = StateProps & DispatchProps;
 
-class SandboxArea extends React.PureComponent<Props, any> {
+class SandboxArea extends React.PureComponent<Props> {
 	private getProperties = (style: any): any & any => {
 		const styles = [style.sandboxArea];
-		const cssTop = this.props.fixedTop ? this.props.offsetTop : this.props.fixedBottom ? this.props.offsetBottom : 'auto';
+		const cssTop = this.props.fixedTop && !this.props.fixedBottom ? this.props.offsetTop : this.props.fixedBottom ? this.props.offsetBottom : 'auto';
 
-		appendWhen(styles, this.props.fixedTop, style.fixed);
+		appendWhen(styles, this.props.fixedTop && !this.props.fixedBottom, style.fixed);
 
 		const common = {
 			ref: this.props.self,

@@ -16,7 +16,7 @@ const anyExist = (filename) => {
 };
 
 class WaitPlugin extends WebpackBeforeBuildPlugin {
-	constructor({ filename, interval = 100, timeout = 10000 }) {
+	constructor({ filename, interval = 100, timeout = 30000 }) {
 		super(function (stats, callback) {
 			const start = Date.now();
 			function poll() {

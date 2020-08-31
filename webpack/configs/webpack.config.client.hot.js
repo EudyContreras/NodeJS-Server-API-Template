@@ -15,9 +15,9 @@ const serverPort = process.env.PORT;
 const usesCSR = process.env.CSR === 'true';
 
 const publicPath = '../../build/public';
-const entryPoint = './src/client/client.jsx';
+const entryPoint = './src/client/client.tsx';
 
-const fileName = './scripts/[name].bundle.js';
+const fileName = 'scripts/[name].bundle.js';
 const serverURL = `http://localhost:${serverPort}`;
 
 const proxyOptions = !usesCSR ? {
@@ -25,22 +25,31 @@ const proxyOptions = !usesCSR ? {
 		'/': {
 			target: serverURL,
 			changeOrigin: true,
-			secure: false
+			secure: false,
+			headers: {
+				'Connection': 'keep-alive'
+			}
 		},
 		'/rest/api': {
 			target: serverURL,
 			changeOrigin: true,
-			secure: false
+			secure: false,
+			headers: {
+				'Connection': 'keep-alive'
+			}
 		}
 	}
 } : { };
 
 const pluggins = [
 	new webpack.DefinePlugin(EnvDefiner()),
-	new WaitPlugin({ filename: 'build/public/loadable-stats.json', timeout: 15000 }),
 	new ReactRefreshWebpackPlugin(),
 	new LoadablePlugin()
 ];
+
+if (!usesCSR) {
+	pluggins.push(new WaitPlugin({ filename: 'build/loadable-stats.json', timeout: 40000 }));
+}
 
 const splitChunk = {
 	splitChunks: {
@@ -93,6 +102,6 @@ module.exports = {
 		rules: loaders(path, false)
 	},
 	resolve: {
-		extensions: ['.js', '.jsx', '.tsx', '.ts', '.scss']
+		extensions: ['.js', '.jsx', '.tsx', '.ts', '.scss', '.css']
 	}
 };

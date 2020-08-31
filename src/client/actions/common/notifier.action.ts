@@ -1,3 +1,5 @@
+import IAction from '../action';
+
 export const NAV_NOTIFIER = 'NAV_NOTIFIER';
 
 export const NAV_NOTIFIER_HIDE = 'NAV_NOTIFIER_HIDE';
@@ -29,7 +31,7 @@ export const showNotifier = (icon: string, text: string, autoDimiss = true, dism
 	});
 };
 
-export const hideNotifier = () => (dispatch: (action?: any) => any): void => {
+export const hideNotifier = () => (dispatch: (action?: IAction) => any): void => {
 	dispatch(notifierHideAction);
 };
 

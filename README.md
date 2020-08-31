@@ -1,5 +1,5 @@
 <div align="center">
-  <h1>React Isomorphic PWA</h1> <a target="_blank" rel="noopener noreferrer" href="http://standardjs.com"><img alt="js-standard-style" src="https://cdn.rawgit.com/standard/standard/master/badge.svg"></a>
+  <h1>React Isomorphic PWA ⚡️</h1> <a target="_blank" rel="noopener noreferrer" href="http://standardjs.com"><img alt="js-standard-style" src="https://cdn.rawgit.com/standard/standard/master/badge.svg"></a>
 </div>
 
 
@@ -11,8 +11,8 @@ Fast production ready boilerplate backed by the MERN stack. Built to provide the
 </br>
 <div align="center">
 <img alt="License MIT" src="https://img.shields.io/github/license/EudyContreras/NodeJS-Server-API-Template?color=blue&logo=github&style=for-the-badge">
-<img alt="GitHub language count" src="https://img.shields.io/github/languages/count/EudyContreras/NodeJS-Server-API-Template?style=for-the-badge&logo=github">
-<img alt="GitHub top language" src="https://img.shields.io/github/languages/top/EudyContreras/NodeJS-Server-API-Template?style=for-the-badge&logo=github">
+<img alt="David" src="https://img.shields.io/david/EudyContreras/NodeJS-Server-API-Template?style=for-the-badge&color=gree&logo=npm">
+<img alt="Build Status" src="https://img.shields.io/travis/com/EudyContreras/NodeJS-Server-API-Template/development?style=for-the-badge&logo=travis">
 <img alt="Package Version" src="https://img.shields.io/github/package-json/v/EudyContreras/NodeJS-Server-API-Template?logo=github&style=for-the-badge">
 </div>
 <br>
@@ -20,8 +20,8 @@ Fast production ready boilerplate backed by the MERN stack. Built to provide the
 <br>
 <div align="center">
 <a target="_blank" rel="noopener noreferrer" href="https://www.codefactor.io/repository/github/eudycontreras/nodejs-server-api-template/overview/development"><img alt="CodeFactor Grade" src="https://img.shields.io/codefactor/grade/github/EudyContreras/NodeJS-Server-API-Template/development?style=for-the-badge&logo=codefactor"></a>
-<img alt="David" src="https://img.shields.io/david/EudyContreras/NodeJS-Server-API-Template?style=for-the-badge&color=gree&logo=Dependabot">
-<img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/EudyContreras/NodeJS-Server-API-Template?style=for-the-badge&logo=github">
+<img alt="GitHub language count" src="https://img.shields.io/github/languages/count/EudyContreras/NodeJS-Server-API-Template?style=for-the-badge&logo=github">
+<img alt="GitHub top language" src="https://img.shields.io/github/languages/top/EudyContreras/NodeJS-Server-API-Template?style=for-the-badge&logo=github">
 <a target="_blank" rel="noopener noreferrer" href="https://github.com/prettier/prettier"><img alt="code style: prettier" src="https://img.shields.io/badge/formatter-prettier-ff69b4.svg?style=for-the-badge&logo=prettier"></a>
 </div>
 <br>
@@ -58,8 +58,11 @@ Fast production ready boilerplate backed by the MERN stack. Built to provide the
 ## Features:
 
 <dl>
+  <dt>Quality assured</dt>
+  <dd>Uses lighthouse ci for monitoring the application quality and keeping strict performance budgets</dd>
+  
   <dt>Predictable state managemen</dt>
-  <dd>Read-only predictable, flexible and easy to debug data state using redux..</dd>
+  <dd>Read-only predictable, flexible and easy to debug data state management using redux.</dd>
 
   <dt>Next generation JavaScript</dt>
   <dd>Write next gen type safe JS using features such as Spread and Rest Operator, Imports and Exports, Arrow functions, JSX/TSX syntax, template strings, object destructuring and more.</dd>
@@ -77,7 +80,7 @@ Fast production ready boilerplate backed by the MERN stack. Built to provide the
   <dd>Allows component based code splitting using loadable components for a consistently fast application that dynamically loads the chunks needed at runtime. 
   
   <dt>Typescript</dt>
-  <dd>Write highly scalable, maintainable and self-documented code which is easy-to-debug in large applications and codebases with a highly productive development experience.</dd>
+  <dd>Highly scalable, maintainable and self-documented code which is easy-to-debug in large applications and codebases with a highly productive development experience.</dd>
   
   <dt>Efficient Compression</dt>
   <dd>Uses lightweight and highly efficient compression methods to provides smallest bundles possible made possible with: Gzip and Brotli compression</dd>
@@ -85,7 +88,7 @@ Fast production ready boilerplate backed by the MERN stack. Built to provide the
   <dt>Universal/Isomorphic React</dt>
   <dd>Render the content on both the server and the client for a full isomorphic experience. The app allows you to seamlessly switch between CSR and SSR. An Isomorphic approach can for example allow the initial page to be rendered on the server while subsequent pages load directly from the client.</dd>
   <ul>
-  <li><b>Fast initial paga</b>  - Prevents flashing a blank page to the user and improves the user experience. Perfect for SPAs
+  <li><b>Fast initial page</b>  - Prevents flashing a blank page to the user and improves the user experience. Perfect for SPAs
   <li><b>Improved SEO</b> - Provides consistent SEO performance. Google favors sites with faster load times.
   </ul>
   <dt>Progressive Web App</dt>
@@ -104,7 +107,6 @@ Fast production ready boilerplate backed by the MERN stack. Built to provide the
   <li><b>Installable</b>  – Provides homescreen icons without the use of an App Store. Can be installed on all devices and provide a stand alone experience.</li>
   <li><b>Linkable</b>  – Can easily be shared via a URL, and does not require complex installation.</li>
 </ul></dd>  
-
 
 ## Requirements
 

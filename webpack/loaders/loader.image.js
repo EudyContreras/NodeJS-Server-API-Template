@@ -1,6 +1,39 @@
 
-module.exports = (path, useResponsive) => [{
-	test: /\.(jpe?g|png|svg|ico)$/,
+const fileLoader = (public = 'public', path) => ({
+	test: /\.(gif|svg|ico)$/,
+	loader: 'file-loader',
+	options: {
+		outputPath: path,
+		publicPath: public,
+		name(file) {
+			const parts = file.split('/');
+			const isIcon = parts[parts.length - 1].startsWith('icon');
+
+			if (process.env.NODE_ENV === 'development') {
+				return isIcon ? '[name].[ext]' : '[name].[ext]';
+			}
+			return isIcon ? '[name].[ext]' : '[name].[ext]';
+		}
+	}	
+});
+
+const responsiveLoader = (path) => ({
+	test: /\.(jpe?g|png|webp)$/i,
+	loader: 'responsive-loader',
+	options: {
+		name: '[name]/[name]_[width]x[width].[ext]',
+		outputPath: path,
+		size: 2200,
+		esModule: true,
+		quality: 85,
+		placeholder: true,
+		placeholderSize: 30,
+		adapter: require('responsive-loader/sharp')
+	}
+});
+
+const imageLoader = () => ({
+	test: /\.(jpe?g|png|gif|svg|ico)$/,
 	loader: 'image-webpack-loader',
 	enforce: 'pre',
 	options: {
@@ -19,42 +52,25 @@ module.exports = (path, useResponsive) => [{
 			interlaced: false
 		},
 		webp: {
-			quality: 90
+			quality: 93
 		}
 	}
-},
-useResponsive ? {
-	test: /\.(jpe?g|png)$/i,
-	loader: 'responsive-loader',
-	options: {
-		name: 'icons/[name]-[width]x[width].[ext]',
-		outputPath: path,
-		sizes: [72, 76, 96, 120, 128, 144, 152, 180, 192, 257, 384, 512],
-		placeholder: true,
-		placeholderSize: 50,
-		adapter: require('responsive-loader/sharp')
-	}
-} : {
-	test: /\.(jpe?g|png)$/,
-	loader: 'url-loader',
-	options: {
-		limit: 10 * 1024
-	}
-},
-{
-	test: /\.(ico)$/i,
-	loader: 'file-loader',
-	options: {
-		outputPath: path,
-		publicPath: path,
-		name(file) {
-			const parts = file.split('/');
-			const isIcon = parts[parts.length - 1].startsWith('icon');
+});
 
-			if (process.env.NODE_ENV === 'development') {
-				return isIcon ? 'icons/[name].[ext]' : '[name].[ext]';
-			}
-			return isIcon ? 'icons/[name].[ext]' : '[name].[ext]';
+const imageUrlLoader = (path) => ({
+	test: /\.(webp|png|jpg|jpe?g|gif)$/i,
+	use: [{
+		loader: 'url-loader',
+		options: {
+			limit: 8192,
+			fallback: require.resolve('responsive-loader'),
+			...responsiveLoader(path).options
 		}
-	}
-}];
+	}]
+});
+
+module.exports = (public, path) => [
+	imageUrlLoader(path),
+	fileLoader(public, path),
+	imageLoader()
+];

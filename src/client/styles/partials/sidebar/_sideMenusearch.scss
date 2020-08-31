@@ -1,86 +1,81 @@
-
-$buttonColor: rgba(92, 96, 100, 1);
-$fieldColor: rgba(255, 255, 255, 1);
+$button-color: rgba(92, 96, 100, 1);
+$field-color: rgba(255, 255, 255, 1);
 
 .search {
-  outline: 0;
-  margin-left: 1.4em;
-  margin-right: 1.4em;
-  margin-bottom: 2em !important;
-  margin-top: 2.5em;
-  width: auto;
-  display: flex;
-  border-radius:4px;
-  border: 0px;
-  transition: all 0.5s $standardInterpolator;
+	outline: 0;
+	margin-left: 1.2em;
+	margin-right: 1.2em;
+	margin-bottom: 3em;
+	margin-top: 3em;
+	width: auto;
+	display: flex;
+	border-radius: 4px;
+	border: 0;
+	transition: all 0.5s $standardInterpolator;
 
-  &-textbox {
-    outline: 0;
-    height: 38px;
-    display: flex;
-    font-size: 14px;
-    justify-self: center;
-    align-self: center;
-    font-size: 14px;
-    width: 80%;
-    line-height: 42px;
-    padding: 0 16px;
-    background-color: $fieldColor;
-    color: #212121;
-    border: 0;
-    border-width: 0px;
-    float: left;
-    border-radius: 4px 0 0 4px;
-  
-    &:focus {
-      outline: 0;
-      background-color: #FFF;
-    }
-  
-    &:active {
-      outline: 0;
-      background-color: #FFF;
-    }
-  }
+	&-textbox {
+		outline: 0;
+		height: 38px;
+		display: flex;
+		font-size: 14px;
+		width: 100vh;
+		width: -webkit-fill-available;
+		line-height: 42px;
+		padding: 0 16px;
+		background-color: $field-color;
+		color: #212121;
+		border: 0;
+		border-width: 0;
+		float: left;
+		border-radius: 4px 0 0 4px;
 
-  &-button {
-    display: flex;
-    overflow: hidden;
-    transform: scale(1.02);
-    justify-self: center;
-    align-self: center;
-    outline: 0;
-    height: 38px;
-    width: 30px;
-    padding-left: 8px;
-    padding-right: 8px;
-    background-color: $buttonColor;
-    text-align: center;
-    line-height: 42px;
-    border: 0;
-    color: #EEE;
-    text-rendering: auto;
-    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
-    transition: all .2s ease-in-out ;
-    border-radius: 0 4px 4px 0;
-  
-    &:hover {
-      transform: scale(1.05);
-      background-color: rgba(112, 116, 120, 1);
-    }
-  
-    &:active {
-      transform: scale(1);
-    }
-  
-    &:hover &-icon  {
-      color: rgb(255, 255, 255);
-    }
+		&:focus {
+			outline: 0;
+			background-color: #fff;
+		}
 
-    &-icon {
-      transition: all .2s ease-in-out ;
-      font-size: 18px;
-      margin: auto;
-    }
-  }
+		&:active {
+			outline: 0;
+			background-color: #fff;
+		}
+	}
+
+	&-button {
+		display: flex;
+		overflow: hidden;
+		transform: scale(1.02);
+		outline: 0;
+		height: 38px;
+		width: 30px;
+		padding-left: 8px;
+		padding-right: 8px;
+		background-color: $button-color;
+		text-align: center;
+		line-height: 42px;
+		border: 0;
+		color: #eee;
+		text-rendering: auto;
+		text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+		transition: all 0.2s ease-in-out;
+		border-radius: 0 4px 4px 0;
+
+		&:hover {
+			transform: scale(1.05);
+			background-color: rgba(112, 116, 120, 1);
+		}
+
+		&:active {
+			transform: scale(1);
+		}
+
+		&-icon {
+			transition: all 0.2s ease-in-out;
+			font-size: 18px;
+			margin: auto;
+		}
+
+		&:hover &-icon {
+			color: rgb(255, 255, 255);
+		}
+	}
 }

@@ -6,5 +6,5 @@ before_install:
   - npm install -g @lhci/cli@0.4.x
 script:
   - npm run lint:test
-  - npm run build:prod
-  - npm run lighthouse:test:dev
+  #- npm run build:prod
+  #- npm run lighthouse:test:dev

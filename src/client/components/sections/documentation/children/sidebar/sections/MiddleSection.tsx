@@ -3,13 +3,17 @@ import MenuItem from '../SidebarMenuItem';
 
 const links = ['Quickstart', 'Basics'];
 
-export default class MiddleSection extends React.PureComponent<any, any> {
-	public render = (): JSX.Element => {
-		const style = this.props.styling;
+type StateProps = {
+	header: string;
+	styling: any;
+};
+export const MiddleSection: React.FC<StateProps> = React.memo(
+	(props: StateProps): JSX.Element => {
+		const style = props.styling;
 
 		return (
 			<Fragment>
-				<h2 className={style.menuHeader}>{this.props.header}</h2>
+				<h2 className={style.menuHeader}>{props.header}</h2>
 				<ul className={style.middleSection}>
 					{links.map((x, index) => (
 						<MenuItem key={index} styling={style} hash={'#' + x} label={x} />
@@ -17,5 +21,7 @@ export default class MiddleSection extends React.PureComponent<any, any> {
 				</ul>
 			</Fragment>
 		);
-	};
-}
+	}
+);
+
+export default MiddleSection;

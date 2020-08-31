@@ -3,11 +3,10 @@ require('dotenv').config();
 
 const path = require('path');
 const webpack = require('webpack');
+const loaders = require('../loaders');
 const WaitPlugin = require('../plugins/WaitPlugin');
 const NodeExternals = require('webpack-node-externals');
 const optimization = require('../sections/optimization');
-const imageLoader = require('../loaders/loader.image');
-const styleLoader = require('../loaders/loader.stylings');
 const LoadablePlugin = require('@loadable/webpack-plugin');
 const NodemonPlugin = require('nodemon-webpack-plugin');
 
@@ -25,8 +24,8 @@ const plugins = [];
 
 const stats = usesHMR ? { stats: 'minimal' } : { };
 
-if (process.env.CSR !== 'true') {
-	plugins.push(new WaitPlugin({ filename: 'build/public/loadable-stats.json' }));
+if (!usesCSR) {
+	plugins.push(new WaitPlugin({ filename: 'build/public/loadable-stats.json' }, 40000));
 }
 if (isProduction) {
 	plugins.push(
@@ -34,15 +33,26 @@ if (isProduction) {
 		new webpack.optimize.OccurrenceOrderPlugin()
 	);
 } else {
-	plugins.push(
-		new NodemonPlugin()
-	);
+	if (!usesCSR) {
+		plugins.push(
+			new NodemonPlugin({
+				watch: path.resolve(publicPath),
+				script: 'build/server.js',
+				ext: 'js,json'
+			})
+		);
+	}
 }
 plugins.push(
 	new webpack.optimize.LimitChunkCountPlugin({
 		maxChunks: 1
 	}),
-	new LoadablePlugin()
+	new LoadablePlugin({
+		filename: 'loadable-stats.json'
+	}),
+	new webpack.DefinePlugin({
+		__CLIENT_RENDERED__: false
+	})
 );
 
 module.exports = {
@@ -50,7 +60,7 @@ module.exports = {
 	target: 'node',
 	mode: enviroment,
 	cache: !isProduction,
-	devtool: isProduction ? 'none' : 'inline-source-map',
+	devtool: isProduction ? false : 'eval-cheap-module-source-map',
 	performance: {
 		hints: 'warning'
 	},
@@ -67,13 +77,9 @@ module.exports = {
 	optimization: optimization({ splitChunk: null, production: isProduction, dropConsole: false }),
 	externals: [NodeExternals()],
 	module: {
-		rules: [
-			{ test: /\.(jsx|tsx|ts|js)$/, exclude: /(node_modules)/, use:  'babel-loader' }, 
-			...imageLoader('public/images', true),
-			...styleLoader(path, isProduction)
-		]
+		rules: loaders(path, isProduction)
 	},
 	resolve: {
-		extensions: ['*', '.js', '.jsx', '.tsx', '.ts', '.scss', '.css']
+		extensions: ['.js', '.jsx', '.tsx', '.ts', '.scss', '.css']
 	}
 };
