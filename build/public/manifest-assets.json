@@ -1,45 +1,51 @@
 {
   "files": {
+    "jpeg": [
+      "images/demo_img/demo_img_1000x1000.jpeg",
+      "images/demo_img/demo_img_1200x1200.jpeg",
+      "images/demo_img/demo_img_250x250.jpeg",
+      "images/demo_img/demo_img_400x400.jpeg",
+      "images/demo_img/demo_img_600x600.jpeg",
+      "images/demo_img/demo_img_800x800.jpeg"
+    ],
+    "webp": [
+      "images/demo_img/demo_img_1000x1000.webp",
+      "images/demo_img/demo_img_1200x1200.webp",
+      "images/demo_img/demo_img_250x250.webp",
+      "images/demo_img/demo_img_400x400.webp",
+      "images/demo_img/demo_img_600x600.webp",
+      "images/demo_img/demo_img_800x800.webp",
+      "images/touch_icon/touch_icon_128x128.webp",
+      "images/touch_icon/touch_icon_144x144.webp",
+      "images/touch_icon/touch_icon_152x152.webp",
+      "images/touch_icon/touch_icon_192x192.webp",
+      "images/touch_icon/touch_icon_257x257.webp",
+      "images/touch_icon/touch_icon_384x384.webp",
+      "images/touch_icon/touch_icon_512x512.webp",
+      "images/touch_icon/touch_icon_72x72.webp"
+    ],
     "ico": [
       "images/favicon.ico"
     ],
     "png": [
-      "images/icons/touch-icon-120x120.png",
-      "images/icons/touch-icon-128x128.png",
-      "images/icons/touch-icon-144x144.png",
-      "images/icons/touch-icon-152x152.png",
-      "images/icons/touch-icon-180x180.png",
-      "images/icons/touch-icon-192x192.png",
-      "images/icons/touch-icon-257x257.png",
-      "images/icons/touch-icon-384x384.png",
-      "images/icons/touch-icon-512x512.png",
-      "images/icons/touch-icon-72x72.png",
-      "images/icons/touch-icon-76x76.png",
-      "images/icons/touch-icon-96x96.png"
-    ],
-    "webp": [
-      "images/icons/touch-icon-120x120.webp",
-      "images/icons/touch-icon-128x128.webp",
-      "images/icons/touch-icon-144x144.webp",
-      "images/icons/touch-icon-152x152.webp",
-      "images/icons/touch-icon-180x180.webp",
-      "images/icons/touch-icon-192x192.webp",
-      "images/icons/touch-icon-257x257.webp",
-      "images/icons/touch-icon-384x384.webp",
-      "images/icons/touch-icon-512x512.webp",
-      "images/icons/touch-icon-72x72.webp",
-      "images/icons/touch-icon-76x76.webp",
-      "images/icons/touch-icon-96x96.webp"
+      "images/touch_icon/touch_icon_128x128.png",
+      "images/touch_icon/touch_icon_144x144.png",
+      "images/touch_icon/touch_icon_152x152.png",
+      "images/touch_icon/touch_icon_192x192.png",
+      "images/touch_icon/touch_icon_257x257.png",
+      "images/touch_icon/touch_icon_384x384.png",
+      "images/touch_icon/touch_icon_512x512.png",
+      "images/touch_icon/touch_icon_72x72.png"
     ],
     "br": [
       "loadable-stats.json.br",
-      "scripts/app.bundle.0c95a499de41faa7a40b.js.br",
-      "scripts/vendors.chunk.55a8cf11aa16c4e12710.js.br"
+      "scripts/app.bundle.f284393fd0bbe534168e.js.br",
+      "scripts/vendors.chunk.41d293727de1ac81d9c0.js.br"
     ],
     "gz": [
       "loadable-stats.json.gz",
-      "scripts/app.bundle.0c95a499de41faa7a40b.js.gz",
-      "scripts/vendors.chunk.55a8cf11aa16c4e12710.js.gz"
+      "scripts/app.bundle.f284393fd0bbe534168e.js.gz",
+      "scripts/vendors.chunk.41d293727de1ac81d9c0.js.gz"
     ],
     "json": [
       "manifest.json"
@@ -61,16 +67,16 @@
   },
   "scripts": {
     "uncompressed": [
-      "scripts/vendors.chunk.55a8cf11aa16c4e12710.js",
-      "scripts/app.bundle.0c95a499de41faa7a40b.js"
+      "scripts/vendors.chunk.41d293727de1ac81d9c0.js",
+      "scripts/app.bundle.f284393fd0bbe534168e.js"
     ],
     "brotliCompressed": [
-      "scripts/app.bundle.0c95a499de41faa7a40b.js.br",
-      "scripts/vendors.chunk.55a8cf11aa16c4e12710.js.br"
+      "scripts/app.bundle.f284393fd0bbe534168e.js.br",
+      "scripts/vendors.chunk.41d293727de1ac81d9c0.js.br"
     ],
     "gzipCompressed": [
-      "scripts/app.bundle.0c95a499de41faa7a40b.js.gz",
-      "scripts/vendors.chunk.55a8cf11aa16c4e12710.js.gz"
+      "scripts/app.bundle.f284393fd0bbe534168e.js.gz",
+      "scripts/vendors.chunk.41d293727de1ac81d9c0.js.gz"
     ]
   }
 }

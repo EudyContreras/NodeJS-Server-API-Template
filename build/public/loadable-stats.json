@@ -1,21 +1,117 @@
 {
   "errors": [],
   "warnings": [],
-  "version": "4.43.0",
-  "hash": "b152d125d2ba3a1fc598",
+  "version": "4.44.1",
+  "hash": "a7339c0931ce155476c3",
   "publicPath": "/",
   "outputPath": "/Users/personal/Documents/Repositories/NodeJS-Server-API-Template/build/public",
   "assetsByChunkName": {
-    "sections-administration-AdminPage": "scripts/sections-administration-AdminPage.chunk.6d5e465bde31f5ee2079.js",
-    "sections-applications-ApplicationsPage": "scripts/sections-applications-ApplicationsPage.chunk.5910a063d0b618d0daf2.js",
-    "sections-information-AboutPage": "scripts/sections-information-AboutPage.chunk.8a89eeb534ee7a48b1b9.js",
-    "app": "scripts/app.bundle.0c95a499de41faa7a40b.js",
-    "vendors": "scripts/vendors.chunk.55a8cf11aa16c4e12710.js"
+    "sections-administration-AdminPage": "scripts/sections-administration-AdminPage.chunk.697d867d57f85cd0e782.js",
+    "sections-applications-ApplicationsPage": "scripts/sections-applications-ApplicationsPage.chunk.edb1212f8552fc611f64.js",
+    "sections-information-AboutPage": "scripts/sections-information-AboutPage.chunk.b907d93f707f7165a30d.js",
+    "app": "scripts/app.bundle.f284393fd0bbe534168e.js",
+    "vendors": "scripts/vendors.chunk.41d293727de1ac81d9c0.js"
   },
   "assets": [
     {
       "name": "../../build/public/service-worker.js",
-      "size": 19019,
+      "size": 19005,
+      "chunks": [],
+      "chunkNames": [],
+      "info": {},
+      "emitted": false
+    },
+    {
+      "name": "images/demo_img/demo_img_1000x1000.jpeg",
+      "size": 141444,
+      "chunks": [],
+      "chunkNames": [],
+      "info": {},
+      "emitted": false
+    },
+    {
+      "name": "images/demo_img/demo_img_1000x1000.webp",
+      "size": 76524,
+      "chunks": [],
+      "chunkNames": [],
+      "info": {},
+      "emitted": false
+    },
+    {
+      "name": "images/demo_img/demo_img_1200x1200.jpeg",
+      "size": 199073,
+      "chunks": [],
+      "chunkNames": [],
+      "info": {},
+      "emitted": false
+    },
+    {
+      "name": "images/demo_img/demo_img_1200x1200.webp",
+      "size": 108636,
+      "chunks": [],
+      "chunkNames": [],
+      "info": {},
+      "emitted": false
+    },
+    {
+      "name": "images/demo_img/demo_img_250x250.jpeg",
+      "size": 11486,
+      "chunks": [],
+      "chunkNames": [],
+      "info": {},
+      "emitted": false
+    },
+    {
+      "name": "images/demo_img/demo_img_250x250.webp",
+      "size": 6588,
+      "chunks": [],
+      "chunkNames": [],
+      "info": {},
+      "emitted": false
+    },
+    {
+      "name": "images/demo_img/demo_img_400x400.jpeg",
+      "size": 26091,
+      "chunks": [],
+      "chunkNames": [],
+      "info": {},
+      "emitted": false
+    },
+    {
+      "name": "images/demo_img/demo_img_400x400.webp",
+      "size": 14152,
+      "chunks": [],
+      "chunkNames": [],
+      "info": {},
+      "emitted": false
+    },
+    {
+      "name": "images/demo_img/demo_img_600x600.jpeg",
+      "size": 53002,
+      "chunks": [],
+      "chunkNames": [],
+      "info": {},
+      "emitted": false
+    },
+    {
+      "name": "images/demo_img/demo_img_600x600.webp",
+      "size": 28212,
+      "chunks": [],
+      "chunkNames": [],
+      "info": {},
+      "emitted": false
+    },
+    {
+      "name": "images/demo_img/demo_img_800x800.jpeg",
+      "size": 90655,
+      "chunks": [],
+      "chunkNames": [],
+      "info": {},
+      "emitted": false
+    },
+    {
+      "name": "images/demo_img/demo_img_800x800.webp",
+      "size": 47956,
       "chunks": [],
       "chunkNames": [],
       "info": {},
@@ -30,23 +126,7 @@
       "emitted": false
     },
     {
-      "name": "images/icons/touch-icon-120x120.png",
-      "size": 7664,
-      "chunks": [],
-      "chunkNames": [],
-      "info": {},
-      "emitted": false
-    },
-    {
-      "name": "images/icons/touch-icon-120x120.webp",
-      "size": 2682,
-      "chunks": [],
-      "chunkNames": [],
-      "info": {},
-      "emitted": false
-    },
-    {
-      "name": "images/icons/touch-icon-128x128.png",
+      "name": "images/touch_icon/touch_icon_128x128.png",
       "size": 8602,
       "chunks": [],
       "chunkNames": [],
@@ -54,7 +134,7 @@
       "emitted": false
     },
     {
-      "name": "images/icons/touch-icon-128x128.webp",
+      "name": "images/touch_icon/touch_icon_128x128.webp",
       "size": 2894,
       "chunks": [],
       "chunkNames": [],
@@ -62,7 +142,7 @@
       "emitted": false
     },
     {
-      "name": "images/icons/touch-icon-144x144.png",
+      "name": "images/touch_icon/touch_icon_144x144.png",
       "size": 9519,
       "chunks": [],
       "chunkNames": [],
@@ -70,7 +150,7 @@
       "emitted": false
     },
     {
-      "name": "images/icons/touch-icon-144x144.webp",
+      "name": "images/touch_icon/touch_icon_144x144.webp",
       "size": 3310,
       "chunks": [],
       "chunkNames": [],
@@ -78,7 +158,7 @@
       "emitted": false
     },
     {
-      "name": "images/icons/touch-icon-152x152.png",
+      "name": "images/touch_icon/touch_icon_152x152.png",
       "size": 10059,
       "chunks": [],
       "chunkNames": [],
@@ -86,7 +166,7 @@
       "emitted": false
     },
     {
-      "name": "images/icons/touch-icon-152x152.webp",
+      "name": "images/touch_icon/touch_icon_152x152.webp",
       "size": 3510,
       "chunks": [],
       "chunkNames": [],
@@ -94,23 +174,7 @@
       "emitted": false
     },
     {
-      "name": "images/icons/touch-icon-180x180.png",
-      "size": 12148,
-      "chunks": [],
-      "chunkNames": [],
-      "info": {},
-      "emitted": false
-    },
-    {
-      "name": "images/icons/touch-icon-180x180.webp",
-      "size": 4144,
-      "chunks": [],
-      "chunkNames": [],
-      "info": {},
-      "emitted": false
-    },
-    {
-      "name": "images/icons/touch-icon-192x192.png",
+      "name": "images/touch_icon/touch_icon_192x192.png",
       "size": 12937,
       "chunks": [],
       "chunkNames": [],
@@ -118,7 +182,7 @@
       "emitted": false
     },
     {
-      "name": "images/icons/touch-icon-192x192.webp",
+      "name": "images/touch_icon/touch_icon_192x192.webp",
       "size": 4298,
       "chunks": [],
       "chunkNames": [],
@@ -126,7 +190,7 @@
       "emitted": false
     },
     {
-      "name": "images/icons/touch-icon-257x257.png",
+      "name": "images/touch_icon/touch_icon_257x257.png",
       "size": 17591,
       "chunks": [],
       "chunkNames": [],
@@ -134,7 +198,7 @@
       "emitted": false
     },
     {
-      "name": "images/icons/touch-icon-257x257.webp",
+      "name": "images/touch_icon/touch_icon_257x257.webp",
       "size": 5874,
       "chunks": [],
       "chunkNames": [],
@@ -142,7 +206,7 @@
       "emitted": false
     },
     {
-      "name": "images/icons/touch-icon-384x384.png",
+      "name": "images/touch_icon/touch_icon_384x384.png",
       "size": 27624,
       "chunks": [],
       "chunkNames": [],
@@ -150,7 +214,7 @@
       "emitted": false
     },
     {
-      "name": "images/icons/touch-icon-384x384.webp",
+      "name": "images/touch_icon/touch_icon_384x384.webp",
       "size": 8728,
       "chunks": [],
       "chunkNames": [],
@@ -158,7 +222,7 @@
       "emitted": false
     },
     {
-      "name": "images/icons/touch-icon-512x512.png",
+      "name": "images/touch_icon/touch_icon_512x512.png",
       "size": 37641,
       "chunks": [],
       "chunkNames": [],
@@ -166,7 +230,7 @@
       "emitted": false
     },
     {
-      "name": "images/icons/touch-icon-512x512.webp",
+      "name": "images/touch_icon/touch_icon_512x512.webp",
       "size": 11736,
       "chunks": [],
       "chunkNames": [],
@@ -174,7 +238,7 @@
       "emitted": false
     },
     {
-      "name": "images/icons/touch-icon-72x72.png",
+      "name": "images/touch_icon/touch_icon_72x72.png",
       "size": 4701,
       "chunks": [],
       "chunkNames": [],
@@ -182,7 +246,7 @@
       "emitted": false
     },
     {
-      "name": "images/icons/touch-icon-72x72.webp",
+      "name": "images/touch_icon/touch_icon_72x72.webp",
       "size": 1652,
       "chunks": [],
       "chunkNames": [],
@@ -190,40 +254,8 @@
       "emitted": false
     },
     {
-      "name": "images/icons/touch-icon-76x76.png",
-      "size": 4779,
-      "chunks": [],
-      "chunkNames": [],
-      "info": {},
-      "emitted": false
-    },
-    {
-      "name": "images/icons/touch-icon-76x76.webp",
-      "size": 1824,
-      "chunks": [],
-      "chunkNames": [],
-      "info": {},
-      "emitted": false
-    },
-    {
-      "name": "images/icons/touch-icon-96x96.png",
-      "size": 6158,
-      "chunks": [],
-      "chunkNames": [],
-      "info": {},
-      "emitted": false
-    },
-    {
-      "name": "images/icons/touch-icon-96x96.webp",
-      "size": 2216,
-      "chunks": [],
-      "chunkNames": [],
-      "info": {},
-      "emitted": false
-    },
-    {
       "name": "manifest.json",
-      "size": 1976,
+      "size": 1614,
       "chunks": [],
       "chunkNames": [],
       "info": {},
@@ -246,8 +278,8 @@
       "emitted": false
     },
     {
-      "name": "scripts/app.bundle.0c95a499de41faa7a40b.js",
-      "size": 70706,
+      "name": "scripts/app.bundle.f284393fd0bbe534168e.js",
+      "size": 77677,
       "chunks": [
         3
       ],
@@ -260,7 +292,7 @@
       "emitted": false
     },
     {
-      "name": "scripts/sections-administration-AdminPage.chunk.6d5e465bde31f5ee2079.js",
+      "name": "scripts/sections-administration-AdminPage.chunk.697d867d57f85cd0e782.js",
       "size": 850,
       "chunks": [
         0
@@ -274,7 +306,7 @@
       "emitted": false
     },
     {
-      "name": "scripts/sections-applications-ApplicationsPage.chunk.5910a063d0b618d0daf2.js",
+      "name": "scripts/sections-applications-ApplicationsPage.chunk.edb1212f8552fc611f64.js",
       "size": 855,
       "chunks": [
         1
@@ -288,7 +320,7 @@
       "emitted": false
     },
     {
-      "name": "scripts/sections-information-AboutPage.chunk.8a89eeb534ee7a48b1b9.js",
+      "name": "scripts/sections-information-AboutPage.chunk.b907d93f707f7165a30d.js",
       "size": 849,
       "chunks": [
         2
@@ -302,8 +334,8 @@
       "emitted": false
     },
     {
-      "name": "scripts/vendors.chunk.55a8cf11aa16c4e12710.js",
-      "size": 208311,
+      "name": "scripts/vendors.chunk.41d293727de1ac81d9c0.js",
+      "size": 318631,
       "chunks": [
         4
       ],
@@ -317,7 +349,7 @@
     },
     {
       "name": "styles/fonts.css",
-      "size": 3054,
+      "size": 2635,
       "chunks": [],
       "chunkNames": [],
       "info": {},
@@ -332,8 +364,8 @@
         3
       ],
       "assets": [
-        "scripts/vendors.chunk.55a8cf11aa16c4e12710.js",
-        "scripts/app.bundle.0c95a499de41faa7a40b.js"
+        "scripts/vendors.chunk.41d293727de1ac81d9c0.js",
+        "scripts/app.bundle.f284393fd0bbe534168e.js"
       ],
       "children": {
         "prefetch": [
@@ -343,7 +375,7 @@
               0
             ],
             "assets": [
-              "scripts/sections-administration-AdminPage.chunk.6d5e465bde31f5ee2079.js"
+              "scripts/sections-administration-AdminPage.chunk.697d867d57f85cd0e782.js"
             ]
           },
           {
@@ -352,7 +384,7 @@
               1
             ],
             "assets": [
-              "scripts/sections-applications-ApplicationsPage.chunk.5910a063d0b618d0daf2.js"
+              "scripts/sections-applications-ApplicationsPage.chunk.edb1212f8552fc611f64.js"
             ]
           },
           {
@@ -361,16 +393,16 @@
               2
             ],
             "assets": [
-              "scripts/sections-information-AboutPage.chunk.8a89eeb534ee7a48b1b9.js"
+              "scripts/sections-information-AboutPage.chunk.b907d93f707f7165a30d.js"
             ]
           }
         ]
       },
       "childAssets": {
         "prefetch": [
-          "scripts/sections-administration-AdminPage.chunk.6d5e465bde31f5ee2079.js",
-          "scripts/sections-applications-ApplicationsPage.chunk.5910a063d0b618d0daf2.js",
-          "scripts/sections-information-AboutPage.chunk.8a89eeb534ee7a48b1b9.js"
+          "scripts/sections-administration-AdminPage.chunk.697d867d57f85cd0e782.js",
+          "scripts/sections-applications-ApplicationsPage.chunk.edb1212f8552fc611f64.js",
+          "scripts/sections-information-AboutPage.chunk.b907d93f707f7165a30d.js"
         ]
       }
     }
@@ -382,8 +414,8 @@
         3
       ],
       "assets": [
-        "scripts/vendors.chunk.55a8cf11aa16c4e12710.js",
-        "scripts/app.bundle.0c95a499de41faa7a40b.js"
+        "scripts/vendors.chunk.41d293727de1ac81d9c0.js",
+        "scripts/app.bundle.f284393fd0bbe534168e.js"
       ],
       "children": {
         "prefetch": [
@@ -393,7 +425,7 @@
               0
             ],
             "assets": [
-              "scripts/sections-administration-AdminPage.chunk.6d5e465bde31f5ee2079.js"
+              "scripts/sections-administration-AdminPage.chunk.697d867d57f85cd0e782.js"
             ]
           },
           {
@@ -402,7 +434,7 @@
               1
             ],
             "assets": [
-              "scripts/sections-applications-ApplicationsPage.chunk.5910a063d0b618d0daf2.js"
+              "scripts/sections-applications-ApplicationsPage.chunk.edb1212f8552fc611f64.js"
             ]
           },
           {
@@ -411,16 +443,16 @@
               2
             ],
             "assets": [
-              "scripts/sections-information-AboutPage.chunk.8a89eeb534ee7a48b1b9.js"
+              "scripts/sections-information-AboutPage.chunk.b907d93f707f7165a30d.js"
             ]
           }
         ]
       },
       "childAssets": {
         "prefetch": [
-          "scripts/sections-administration-AdminPage.chunk.6d5e465bde31f5ee2079.js",
-          "scripts/sections-applications-ApplicationsPage.chunk.5910a063d0b618d0daf2.js",
-          "scripts/sections-information-AboutPage.chunk.8a89eeb534ee7a48b1b9.js"
+          "scripts/sections-administration-AdminPage.chunk.697d867d57f85cd0e782.js",
+          "scripts/sections-applications-ApplicationsPage.chunk.edb1212f8552fc611f64.js",
+          "scripts/sections-information-AboutPage.chunk.b907d93f707f7165a30d.js"
         ]
       }
     },
@@ -429,7 +461,7 @@
         1
       ],
       "assets": [
-        "scripts/sections-applications-ApplicationsPage.chunk.5910a063d0b618d0daf2.js"
+        "scripts/sections-applications-ApplicationsPage.chunk.edb1212f8552fc611f64.js"
       ],
       "children": {},
       "childAssets": {}
@@ -439,7 +471,7 @@
         2
       ],
       "assets": [
-        "scripts/sections-information-AboutPage.chunk.8a89eeb534ee7a48b1b9.js"
+        "scripts/sections-information-AboutPage.chunk.b907d93f707f7165a30d.js"
       ],
       "children": {},
       "childAssets": {}
@@ -449,7 +481,7 @@
         0
       ],
       "assets": [
-        "scripts/sections-administration-AdminPage.chunk.6d5e465bde31f5ee2079.js"
+        "scripts/sections-administration-AdminPage.chunk.697d867d57f85cd0e782.js"
       ],
       "children": {},
       "childAssets": {}
@@ -459,6 +491,48 @@
     "webpack.buildChunkGraph.visitModules": {
       "entries": [],
       "filteredEntries": 5,
+      "debug": false
+    },
+    "copy-webpack-plugin": {
+      "entries": [
+        {
+          "type": "log",
+          "message": "begin globbing '/Users/personal/Documents/Repositories/NodeJS-Server-API-Template/dist/client/resources/manifest.json' with a context of '/Users/personal/Documents/Repositories/NodeJS-Server-API-Template/dist/client/resources'"
+        },
+        {
+          "type": "log",
+          "message": "begin globbing '/Users/personal/Documents/Repositories/NodeJS-Server-API-Template/dist/client/resources/robots.txt' with a context of '/Users/personal/Documents/Repositories/NodeJS-Server-API-Template/dist/client/resources'"
+        },
+        {
+          "type": "log",
+          "message": "begin globbing '/Users/personal/Documents/Repositories/NodeJS-Server-API-Template/dist/client/resources/styles/fonts.css' with a context of '/Users/personal/Documents/Repositories/NodeJS-Server-API-Template/dist/client/resources/styles'"
+        },
+        {
+          "type": "log",
+          "message": "determined that '/Users/personal/Documents/Repositories/NodeJS-Server-API-Template/dist/client/resources/manifest.json' should write to 'manifest.json'"
+        },
+        {
+          "type": "log",
+          "message": "determined that '/Users/personal/Documents/Repositories/NodeJS-Server-API-Template/dist/client/resources/robots.txt' should write to 'robots.txt'"
+        },
+        {
+          "type": "log",
+          "message": "determined that '/Users/personal/Documents/Repositories/NodeJS-Server-API-Template/dist/client/resources/styles/fonts.css' should write to 'styles/fonts.css'"
+        },
+        {
+          "type": "log",
+          "message": "writing 'manifest.json' to compilation assets from '/Users/personal/Documents/Repositories/NodeJS-Server-API-Template/dist/client/resources/manifest.json'"
+        },
+        {
+          "type": "log",
+          "message": "writing 'robots.txt' to compilation assets from '/Users/personal/Documents/Repositories/NodeJS-Server-API-Template/dist/client/resources/robots.txt'"
+        },
+        {
+          "type": "log",
+          "message": "writing 'styles/fonts.css' to compilation assets from '/Users/personal/Documents/Repositories/NodeJS-Server-API-Template/dist/client/resources/styles/fonts.css'"
+        }
+      ],
+      "filteredEntries": 20,
       "debug": false
     }
   },
@@ -531,7 +605,7 @@
       "assets": [
         {
           "name": "../../build/public/service-worker.js",
-          "size": 19019,
+          "size": 19005,
           "chunks": [
             0
           ],
