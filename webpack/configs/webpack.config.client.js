@@ -12,8 +12,7 @@ const ManifestPlugin = require('webpack-manifest-plugin');
 const CompressPlugin = require('compression-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const LoadablePlugin = require('@loadable/webpack-plugin');
-const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
-// const BundleAnalyzerPlugin = require('@bundle-analyzer/webpack-plugin');
+const BundleAnalyzerPlugin = require('@bundle-analyzer/webpack-plugin');
 const DuplicatePackageCheckerPlugin = require('duplicate-package-checker-webpack-plugin');
 const BrotliPlugin = require('brotli-webpack-plugin');
 const optimization = require('../sections/optimization');
@@ -28,7 +27,7 @@ const enviroment = process.env.NODE_ENV;
 const isProduction = enviroment === 'production';
 const sourceLocation = precompile ? 'dist' : 'src';
 const publicPath = '../../build/public';
-const entryPoint = `./${sourceLocation}/client/client.${precompile ? 'js' : 'jsx'}`;
+const entryPoint = `./${sourceLocation}/client/client.${precompile ? 'js' : 'tsx'}`;
 
 const resources = [
 	{
@@ -43,8 +42,8 @@ const resources = [
 	}
 ];
 
-const fileName = isProduction ? 'scripts/[name].bundle.[chunkhash].js' : './scripts/[name].bundle.js';
-const chunkFileName = isProduction ? 'scripts/[name].chunk.[chunkhash].js' : './scripts/[name].chunk.js';
+const fileName = isProduction ? 'scripts/[name].bundle.[chunkhash].js' : 'scripts/[name].bundle.js';
+const chunkFileName = isProduction ? 'scripts/[name].chunk.[chunkhash].js' : 'scripts/[name].chunk.js';
 
 const splitChunk = {
 	splitChunks: {
@@ -64,8 +63,8 @@ const plugins = [
 					const parts = file.name.split('/');
 					const name = parts[parts.length - 1];
 					const nameSections = name.split('.');
-					const extension = nameSections[nameSections.length - 1];
-
+					const extensionPart = nameSections[nameSections.length - 1];
+					const extension = (extensionPart.indexOf('?') !== -1) ? extensionPart.split('?')[0] : extensionPart;
 					if (!(extension in manifest)) {
 						manifest[extension] = [];
 					}
@@ -98,9 +97,9 @@ const plugins = [
 		}
 	}),
 	new DuplicatePackageCheckerPlugin(),
-	// new BundleAnalyzerPlugin({ token: process.env.BUNDLE_ANALYZER_TOKEN }),
+	new BundleAnalyzerPlugin({ token: process.env.BUNDLE_ANALYZER_TOKEN }),
 	new CleanWebpackPlugin({ cleanStaleWebpackAssets: isProduction }),
-	new CopyPlugin(resources),
+	new CopyPlugin({ patterns: resources }),
 	new HtmlWebpackPlugin({
 		excludeChunks: [/main.bundle.*.js/, /vendors.bundle.*.js/],
 		template: `${sourceLocation}/client/resources/html/offline.hbs`,
@@ -147,7 +146,6 @@ if (isProduction) {
 	plugins.push(
 		new webpack.optimize.ModuleConcatenationPlugin(),
 		new webpack.optimize.OccurrenceOrderPlugin(),
-		new OptimizeCssAssetsPlugin(),
 		new CompressPlugin({
 			filename: '[path].gz[query]',
 			algorithm: 'gzip',
@@ -167,7 +165,7 @@ if (isProduction) {
 }
 
 plugins.push(new WorkboxPlugin.InjectManifest({
-	maximumFileSizeToCacheInBytes: 5000000,
+	maximumFileSizeToCacheInBytes: 6000000,
 	swSrc: path.join(process.cwd(), `${sourceLocation}/workers/serviceWorker.${precompile ? 'js' : 'ts'}`),
 	swDest: `${publicPath}/service-worker.js`,
 	compileSrc: true,
@@ -180,7 +178,7 @@ module.exports = {
 	target: 'web',
 	mode: enviroment,
 	bail: isProduction,
-	devtool: isProduction ? '' : 'eval-cheap-module-source-map',
+	devtool: isProduction ? false : 'eval-cheap-module-source-map',
 	entry: { app: entryPoint },
 	cache: !isProduction,
 	performance: {
@@ -201,12 +199,12 @@ module.exports = {
 		jquery: 'jQuery'
 	},
 	optimization: {
-		...optimization({ splitChunk: splitChunk, production: isProduction, dropConsole: isProduction })
+		...optimization({ splitChunk: splitChunk, production: isProduction, dropConsole: false })
 	},
 	module: {
 		rules: loaders(path, isProduction)
 	},
 	resolve: {
-		extensions: ['*', '.js', '.jsx', '.tsx', '.ts', '.scss', '.css']
+		extensions: ['.js', '.jsx', '.tsx', '.ts', '.scss', '.css']
 	}
 };

@@ -5,6 +5,7 @@ import { logger, handleWebp, filetypePatterns, filetypeCache, isHomeOrigin, inRa
 import { syncContent } from './helpers/syncevent.Helper';
 import { staleWhileRevalidate, cacheThenRefresh, cacheFirst, networkFirst, addToCache, cacheResponse, fromNetwork } from './stragedies';
 import { httpMethods, updateNotification, cachableTypes, commonOrigins, fallbacks, cacheNames, constants, syncEvents, messages, events } from './constants';
+import { func } from '@hapi/joi';
 
 const DEBUG_MODE = process.env.NODE_ENV !== 'production';
 
@@ -38,19 +39,30 @@ const defaultCachePredicate: CachePredicate = {
 const isSideEffectRequest = (request: Request): boolean =>
 	[...Object.values(constants.sideEffects)].includes(request.method) || request.method !== httpMethods.GET;
 
-const isWebFontRequest = (request: Request, url: any): boolean => request.destination === cachableTypes.FONT || url.origin === commonOrigins.STATIC_WEB_FONTS;
+const isWebFontRequest = (destination: string, url: any): boolean => destination === cachableTypes.FONT || url.origin === commonOrigins.STATIC_WEB_FONTS;
 
 const isAcceptedApiRequest = (request: Request): boolean => request.url.includes('/api/') && request.method === httpMethods.GET;
 
-const any = (request: Request, ...types: string[]): boolean => types.includes(request.destination);
+const any = (destination: string, ...types: string[]): boolean => types.includes(destination);
 
 DEBUG_MODE && logger.log('Your service worker is loaded 🎉');
 
-self.addEventListener(events.FETCH, (event: any) => {
+self.addEventListener(events.FETCH, async (event: any) => {
 	const request: Request = event.request.clone();
 	const url: URL = new URL(request.url);
+	let destination: string = request.destination;
 
 	if (!url.origin.startsWith('http')) return;
+
+	if (destination === '') {
+		if (filetypePatterns.IMAGE.test(request.url)) {
+			destination = cachableTypes.IMAGE;
+		} else if (filetypePatterns.STATIC.test(request.url)) {
+			destination = cachableTypes.SCRIPT;
+		} else if (filetypePatterns.DATA.test(request.url)) {
+			destination = cachableTypes.DOCUMENT;
+		}
+	}
 
 	DEBUG_MODE && logger.info(request.destination, request.url);
 
@@ -61,76 +73,95 @@ self.addEventListener(events.FETCH, (event: any) => {
 		return;
 	}
 
-	if (any(request, cachableTypes.STYLE, cachableTypes.SCRIPT, cachableTypes.DOCUMENT)) {
-		const cacheName = url.origin === commonOrigins.STYLESHEET_FONTS ? cacheKeys.GOOGLE_FONTS_SHEETS_CACHE : cacheKeys.STATIC_CACHE;
-		const cachePredicate: CachePredicate = {
-			crossOrigin: true,
-			cacheCondition: ({ response }) => (response && inRange(response?.status, 200, 300)) || false
-		};
-		staleWhileRevalidate({ url, event, request, cacheName, cachePredicate: cachePredicate, theresholdAge: days(1) });
-		return;
+	if (any(destination, cachableTypes.STYLE, cachableTypes.SCRIPT, cachableTypes.DOCUMENT)) {
+		return handleDocumentRequests(url, request);
 	}
 
-	if (isWebFontRequest(request, url)) {
-		const cacheName = cacheKeys.GOOGLE_FONTS_WEB_CACHE;
-		const cachePredicate: CachePredicate = {
-			crossOrigin: true,
-			acceptedStatus: [0, 200, 203, 202]
-		};
-		cacheFirst({ url, event, request, cacheName, cachePredicate });
-		return;
+	if (isWebFontRequest(destination, url)) {
+		return handleFontRequests(url, request);
 	}
 
-	if (request.destination === cachableTypes.IMAGE) {
-		const cacheName = cacheKeys.IMAGE_CACHE;
-		const quotaOptions: CacheQuotaOptions = {
-			clearOnError: true,
-			maxAgeSeconds: months(3),
-			maxEntries: 100
-		};
-
-		cacheFirst({ url, event, request, cacheName, quotaOptions, cachePredicate: defaultCachePredicate });
-		return;
+	if (destination === cachableTypes.IMAGE) {
+		return handleImageRequests(url, request);
 	}
 
-	if (request.destination === cachableTypes.AUDIO) {
-		const cacheName = cacheKeys.MEDIA_CACHE;
-		const quotaOptions: CacheQuotaOptions = {
-			clearOnError: true,
-			maxAgeSeconds: months(2),
-			maxEntries: 30
-		};
-		cacheFirst({ url, event, request, cacheName, quotaOptions, cachePredicate: defaultCachePredicate });
-		return;
+	if (destination === cachableTypes.AUDIO) {
+		return handleAudioRequests(url, request);
 	}
 
-	if (request.destination === cachableTypes.VIDEO) {
-		const cacheName = cacheKeys.MEDIA_CACHE;
-		const quotaOptions: CacheQuotaOptions = {
-			clearOnError: true,
-			maxAgeSeconds: days(30),
-			maxEntries: 10
-		};
-		cacheFirst({ url, event, request, cacheName, quotaOptions, cachePredicate: defaultCachePredicate });
-		return;
+	if (destination === cachableTypes.VIDEO) {
+		return handleVideoRequests(url, request);
 	}
 
 	if (isAcceptedApiRequest(request)) {
-		const cacheName = cacheKeys.DATA_CACHE;
-		const cachePredicate: CachePredicate = {
-			crossOrigin: true,
-			acceptedStatus: [0, 200, 203, 202]
-		};
-		const quotaOptions: CacheQuotaOptions = {
-			clearOnError: true,
-			maxAgeSeconds: hours(6),
-			maxEntries: 8
-		};
-		networkFirst({ url, event, request, cacheName, quotaOptions, cachePredicate: cachePredicate });
+		return handleApiRequests(url, request);
 	}
 });
 
-self.addEventListener(events.INSTALL, async (event: any) => {
+function handleDocumentRequests(url, request): void {
+	const cacheName = url.origin === commonOrigins.STYLESHEET_FONTS ? cacheKeys.GOOGLE_FONTS_SHEETS_CACHE : cacheKeys.STATIC_CACHE;
+	const cachePredicate: CachePredicate = {
+		crossOrigin: true,
+		cacheCondition: ({ response }) => (response && inRange(response?.status, 200, 300)) || false
+	};
+	staleWhileRevalidate({ url, event, request, cacheName, cachePredicate: cachePredicate, theresholdAge: days(1) });
+}
+
+function handleFontRequests(url, request): void {
+	const cacheName = cacheKeys.GOOGLE_FONTS_WEB_CACHE;
+	const cachePredicate: CachePredicate = {
+		crossOrigin: true,
+		acceptedStatus: [0, 200, 203, 202]
+	};
+	cacheFirst({ url, event, request, cacheName, cachePredicate });
+}
+
+function handleImageRequests(url, request): void {
+	const cacheName = cacheKeys.IMAGE_CACHE;
+	const quotaOptions: CacheQuotaOptions = {
+		clearOnError: true,
+		maxAgeSeconds: months(3),
+		maxEntries: 100
+	};
+
+	cacheFirst({ url, event, request, cacheName, quotaOptions, cachePredicate: defaultCachePredicate });
+}
+
+function handleAudioRequests(url, request): void {
+	const cacheName = cacheKeys.MEDIA_CACHE;
+	const quotaOptions: CacheQuotaOptions = {
+		clearOnError: true,
+		maxAgeSeconds: months(2),
+		maxEntries: 30
+	};
+	cacheFirst({ url, event, request, cacheName, quotaOptions, cachePredicate: defaultCachePredicate });
+}
+
+function handleVideoRequests(url, request): void {
+	const cacheName = cacheKeys.MEDIA_CACHE;
+	const quotaOptions: CacheQuotaOptions = {
+		clearOnError: true,
+		maxAgeSeconds: days(30),
+		maxEntries: 10
+	};
+	cacheFirst({ url, event, request, cacheName, quotaOptions, cachePredicate: defaultCachePredicate });
+}
+
+function handleApiRequests(url, request): void {
+	const cacheName = cacheKeys.DATA_CACHE;
+	const cachePredicate: CachePredicate = {
+		crossOrigin: true,
+		acceptedStatus: [0, 200, 203, 202]
+	};
+	const quotaOptions: CacheQuotaOptions = {
+		clearOnError: true,
+		maxAgeSeconds: hours(6),
+		maxEntries: 8
+	};
+	networkFirst({ url, event, request, cacheName, quotaOptions, cachePredicate: cachePredicate });
+}
+
+self.addEventListener(events.INSTALL, async (event: Event | any) => {
 	DEBUG_MODE && logger.log(events.INSTALL, `Version : ${__VERSION_NUMBER__}`, event);
 
 	const allResources = Array.from(new Set([...precacheManifest.map((x: any) => x.url), ...constants.urlsToCache]));
@@ -143,6 +174,10 @@ self.addEventListener(events.INSTALL, async (event: any) => {
 			DEBUG_MODE && logger.error('Could not save urls: ', requests, error);
 		}
 	};
+
+	caches.open(cacheKeys.STATIC_CACHE).then((cache) => {
+		cache.add(new Request(self.origin));
+	});
 
 	if (allResources.length > 0) {
 		event.waitUntil(

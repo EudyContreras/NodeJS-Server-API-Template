@@ -1,3 +1,5 @@
+import IAction from '../action';
+
 export const ROUTE_LOADER = 'ROUTE_LOADER';
 
 export const ROUTE_LOADER_HIDE = 'ROUTE_LOADER_HIDE';
@@ -8,11 +10,11 @@ export interface DispatchProps {
 	hideLoader: (loadedRoute?: string) => void;
 }
 
-export const showLoader = () => (dispatch: (action?: any) => any): void => {
+export const showLoader = () => (dispatch: (action?: IAction) => any): void => {
 	dispatch(showLoaderAction);
 };
 
-export const hideLoader = (loadedRoute?: string) => (dispatch: (action?: any) => any): void => {
+export const hideLoader = (loadedRoute?: string) => (dispatch: (action?: IAction) => any): void => {
 	dispatch({ ...hideLoaderAction, payload: loadedRoute });
 };
 

@@ -1,3 +1,5 @@
+import IAction from '../../action';
+
 export const APPLICATION = 'APPLICATION';
 export const APPLICATION_INSTALLED = 'APPLICATION_INSTALLED';
 
@@ -5,7 +7,7 @@ export interface DispatchProps {
 	setInstalled: (installed: boolean) => void;
 }
 
-export const setInstalled = (installed: boolean) => (dispatch: (action?: any) => any): void => {
+export const setInstalled = (installed: boolean) => (dispatch: (action?: IAction) => any): void => {
 	dispatch({ ...installationAction, payload: installed });
 };
 

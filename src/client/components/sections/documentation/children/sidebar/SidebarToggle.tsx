@@ -1,66 +1,74 @@
 import React from 'react';
-import rippleEffect from '../../../../../appliers/ripple.applier';
+import useStyles from 'isomorphic-style-loader/useStyles';
+import { useRippple, rippleStyle } from '../../../../../appliers/ripple.applier';
 import { MaterialIcons } from '../../../../../stores/icon.library';
-import { toggleExpand } from '../../../../../actions/documentation/sidebar.action';
-import { IToggle } from '../../../../../reducers/documentation/sidebar.reducer';
+import { toggleAction } from '../../../../../actions/documentation/sidebar.action';
 import { join } from '../../../../utililties/react.utils';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { IStateTree } from '../../../../../reducers';
+import { createSelector } from 'reselect';
 
-interface StateProps {
-	hidden: boolean;
-	locked: boolean;
-}
+type StateProps = {
+	styling: any;
+};
 
-interface DispatchProps {
-	toggleExpand: () => void;
-}
+type Selection = {
+	isLocked: boolean;
+	isHidden: boolean;
+	fontsLoaded: boolean;
+};
 
-type State = IToggle;
-type Props = StateProps & DispatchProps & any;
+const getSelection = createSelector<IStateTree, IStateTree, Selection>(
+	(state: IStateTree) => state,
+	(state: IStateTree): Selection => ({
+		isLocked: state.presentation.documentation.sidebar.toggle.locked,
+		isHidden: state.presentation.documentation.sidebar.toggle.hidden,
+		fontsLoaded: state.presentation.assets.fonts[MaterialIcons.name] === true
+	})
+);
 
-class SidebarToggle extends React.PureComponent<Props, State> {
-	private toggleSidebar = (event: React.MouseEvent<HTMLElement, MouseEvent>): void => {
-		const style = this.props.styling;
+const SidebarToggle: React.FC<StateProps> = ({ styling }: StateProps): JSX.Element => {
+	const dispatch = useDispatch();
+	const { isLocked, isHidden, fontsLoaded } = useSelector<IStateTree, Selection>(getSelection);
 
-		rippleEffect(event, style);
+	const elementTitle = isLocked ? 'collapse' : 'expand';
+	const iconText = isLocked ? MaterialIcons.icons.CHEV_RIGHT : MaterialIcons.icons.MENU;
 
-		this.props.toggleExpand();
+	function toggleSidebar(event: React.MouseEvent<HTMLElement, MouseEvent>): void {
+		useRippple(event);
+		dispatch(toggleAction);
+	}
+
+	const elementProps = {
+		value: isLocked,
+		title: elementTitle,
+		onClick: toggleSidebar
 	};
 
-	public render = (): JSX.Element => {
-		const style = this.props.styling;
-		const elementTitle = this.props.locked ? 'collapse' : 'expand';
-		const iconText = this.props.locked ? MaterialIcons.icons.CHEV_RIGHT : MaterialIcons.icons.MENU;
+	const toggleClasses = [styling.expand];
+	const toggleIconClasses = [MaterialIcons.class, styling.expandIcon];
 
-		const props = {
-			title: elementTitle,
-			value: this.props.locked,
-			onClick: this.toggleSidebar
-		};
+	if (!fontsLoaded) {
+		toggleIconClasses.push(styling.pendingIcon);
+	}
 
-		const toggleClasses = [style.expand];
-		const toggleIconClasses = [MaterialIcons.class, style.expandIcon];
+	if (isHidden) {
+		toggleClasses.push(styling.expandHidden);
+	}
 
-		if (this.props.hidden) {
-			toggleClasses.push(style.expandHidden);
-		}
+	if (isLocked) {
+		toggleClasses.push(styling.expandActive);
+	} else {
+		toggleIconClasses.push(styling.expandIconActive);
+	}
 
-		if (this.props.locked) {
-			toggleClasses.push(style.expandActive);
-		} else {
-			toggleIconClasses.push(style.expandIconActive);
-		}
+	useStyles(rippleStyle);
 
-		return (
-			<div className={join(...toggleClasses)} {...props}>
-				<i className={join(...toggleIconClasses)}>{iconText}</i>
-			</div>
-		);
-	};
-}
+	return (
+		<div className={join(...toggleClasses)} {...elementProps}>
+			<i className={join(...toggleIconClasses)}>{iconText}</i>
+		</div>
+	);
+};
 
-const mapStateToProps = (state: any): any => ({
-	...state.presentation.documentation.sidebar.toggle
-});
-
-export default connect<StateProps, DispatchProps, any>(mapStateToProps, { toggleExpand })(SidebarToggle);
+export default SidebarToggle;

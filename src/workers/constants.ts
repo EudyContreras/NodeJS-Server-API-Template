@@ -18,7 +18,7 @@ export const clientMessages = {
 	DATA_UPDATE: 'network_data_update'
 };
 
-export const urlsToCache = ['/', 'https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js'];
+export const urlsToCache = [];
 
 export interface CacheNames {
 	DATA_CACHE: string;

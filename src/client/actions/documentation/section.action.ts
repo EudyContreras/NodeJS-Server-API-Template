@@ -1,3 +1,5 @@
+import IAction from '../action';
+
 export const DOCUMENTATION_SECTION_ALL = 'DOCUMENTATION_SECTION_ALL';
 export const DOCUMENTATION_SECTION_ALL_FIXED = 'DOCUMENTATION_SECTION_ALL_FIXED';
 export const DOCUMENTATION_SECTION_SIDEBAR_FIXED = 'DOCUMENTATION_SECTION_SIDEBAR_FIXED';
@@ -15,7 +17,7 @@ export interface DispatchProps {
 }
 
 export const setAll = (sidebarFixed: boolean, sandboxFixedTop: boolean, sandboxFixedBottom: boolean, sandboxOffsetBottom: number) => (
-	dispatch: (action?: any) => any
+	dispatch: (action?: IAction) => any
 ): void => {
 	dispatch({
 		type: DOCUMENTATION_SECTION_ALL,
@@ -23,35 +25,35 @@ export const setAll = (sidebarFixed: boolean, sandboxFixedTop: boolean, sandboxF
 	});
 };
 
-export const setAllFixed = (sidebarFixed: boolean, sandboxFixed: boolean) => (dispatch: (action?: any) => any): void => {
+export const setAllFixed = (sidebarFixed: boolean, sandboxFixed: boolean) => (dispatch: (action?: IAction) => any): void => {
 	dispatch({
 		type: DOCUMENTATION_SECTION_ALL_FIXED,
 		payload: { sidebarFixed, sandboxFixed }
 	});
 };
 
-export const setSidebarFixed = (fixed: boolean) => (dispatch: (action?: any) => any): void => {
+export const setSidebarFixed = (fixed: boolean) => (dispatch: (action?: IAction) => any): void => {
 	dispatch({
 		type: DOCUMENTATION_SECTION_SIDEBAR_FIXED,
 		payload: fixed
 	});
 };
 
-export const setSandboxFixedTop = (fixed: boolean) => (dispatch: (action?: any) => any): void => {
+export const setSandboxFixedTop = (fixed: boolean) => (dispatch: (action?: IAction) => any): void => {
 	dispatch({
 		type: DOCUMENTATION_SECTION_SANDBOX_FIXED_TOP,
 		payload: fixed
 	});
 };
 
-export const setSandboxFixedBottom = (fixed: boolean) => (dispatch: (action?: any) => any): void => {
+export const setSandboxFixedBottom = (fixed: boolean) => (dispatch: (action?: IAction) => any): void => {
 	dispatch({
 		type: DOCUMENTATION_SECTION_SANDBOX_FIXED_BOTTOM,
 		payload: fixed
 	});
 };
 
-export const setSandboxOffsetBottom = (offset: number) => (dispatch: (action?: any) => any): void => {
+export const setSandboxOffsetBottom = (offset: number) => (dispatch: (action?: IAction) => any): void => {
 	dispatch({
 		type: DOCUMENTATION_SECTION_SANDBOX_OFFSET_BOTTOM,
 		payload: offset

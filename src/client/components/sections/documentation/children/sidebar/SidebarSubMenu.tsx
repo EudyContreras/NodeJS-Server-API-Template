@@ -1,109 +1,125 @@
-import React, { RefObject, createRef } from 'react';
+import React, { useRef, useState, useEffect, createRef } from 'react';
+import { motion } from 'framer-motion';
 import SidebarSubItem from './SidebarSubItem';
 import { join } from '../../../../utililties/react.utils';
 
 const links = [
 	{
+		link: 'register-user',
 		label: 'Register a user',
 		method: { label: 'PUT' }
 	},
 	{
+		link: 'get-all-user',
 		label: 'Get all users',
 		method: { label: 'GET' }
 	},
 	{
+		link: 'update-user',
 		label: 'Update user',
 		method: { label: 'PAT' }
 	},
 	{
+		link: 'delete-user',
 		label: 'Delete user',
 		method: { label: 'DEL' }
 	}
 ];
 
-interface State {
+type State = {
 	hidden: boolean;
 	loaded: boolean;
 	height: number;
-}
+};
 
-class SidebarSubMenu extends React.PureComponent<any, State> {
-	private readonly menu: RefObject<HTMLUListElement>;
+type StateProps = {
+	animate?: boolean;
+	expanded: boolean;
+	styling: any;
+	parent: string;
+};
 
-	constructor(props: any) {
-		super(props);
-		this.menu = createRef();
-		this.state = {
-			hidden: true,
-			loaded: false,
-			height: 0
-		};
+const InitialProps: StateProps = {
+	expanded: false,
+	animate: true,
+	parent: '',
+	styling: {}
+};
+
+const hiddenStyle = (): any => ({
+	height: 0,
+	position: 'absolute',
+	visibility: 'hidden'
+});
+
+const getStyle = (height: number): any => ({
+	height: height,
+	position: 'relative',
+	visibility: 'visible'
+});
+
+const isEqual = (prevProps: Readonly<StateProps>, nextProps: Readonly<StateProps>): boolean => prevProps?.expanded === nextProps?.expanded;
+
+const SidebarSubMenu: React.FC<StateProps> = React.memo(({ styling, expanded, parent, animate }: StateProps = InitialProps): JSX.Element => {
+	const menuRef = useRef<HTMLUListElement>(null);
+	const [state, setState] = useState<State>({
+		hidden: true,
+		loaded: false,
+		height: 0
+	});
+
+	const classes = [styling.subMenu];
+
+	function onHidden(): void {
+		setState(
+			(state: State): State => ({
+				...state,
+				hidden: true
+			})
+		);
 	}
 
-	private hiddenStyle = (): any => ({
-		height: 0,
-		position: 'absolute',
-		visibility: 'hidden'
-	});
+	function onShown(): void {
+		setState(
+			(state: State): State => ({
+				...state,
+				hidden: false
+			})
+		);
+	}
 
-	private getStyle = (height: number): any => ({
-		height: height,
-		position: 'relative',
-		visibility: 'visible'
-	});
+	useEffect(() => {
+		const menu = menuRef.current;
+		setState(
+			(state: State): State => ({
+				...state,
+				loaded: true,
+				height: (menu && menu.clientHeight) || 0
+			})
+		);
+	}, [menuRef]);
 
-	private onHidden = (): void => {
-		this.setState(() => ({
-			hidden: true
-		}));
-	};
+	const listItems = links.map((x, index) => (
+		<SidebarSubItem key={index} hash={`${parent}/${x.link}`} label={x.label} styling={styling} method={x.method.label} />
+	));
 
-	private onShown = (): void => {
-		this.setState(() => ({
-			hidden: false
-		}));
-	};
-
-	public componentDidMount = (): void => {
-		const menu = this.menu!.current!;
-
-		this.setState(() => ({
-			loaded: true,
-			height: menu.clientHeight
-		}));
-	};
-
-	public render = (): JSX.Element => {
-		const style = this.props.styling;
-		const expand = this.props.expanded;
-
-		const classes = [style.subMenu];
-		const listItems = links.map((x, index) => <SidebarSubItem key={index} hash={'#' + x} label={x.label} styling={style} method={x.method.label} />);
-
-		if (this.state.loaded) {
-			classes.push(style.smExpanded);
-			if (expand) {
-				return (
-					<ul ref={this.menu} onTransitionEnd={this.onShown} className={join(...classes)} style={this.getStyle(this.state.height)}>
-						{listItems}
-					</ul>
-				);
-			} else {
-				const styling = this.state.hidden ? this.hiddenStyle() : this.getStyle(0);
-
-				return (
-					<ul ref={this.menu} onTransitionEnd={this.onHidden} className={join(...classes)} style={styling}>
-						{listItems}
-					</ul>
-				);
-			}
+	if (state.loaded) {
+		const style = expanded ? getStyle(state.height) : state.hidden ? hiddenStyle() : getStyle(0);
+		const onEnd = expanded ? onShown : onHidden;
+		if (animate) {
+			classes.push(styling.smExpanded);
 		}
 		return (
-			<ul ref={this.menu} className={join(...classes)}>
+			<ul ref={menuRef} onTransitionEnd={onEnd} className={join(...classes)} style={style}>
 				{listItems}
 			</ul>
 		);
-	};
-}
+	}
+	return (
+		<ul ref={menuRef} className={join(...classes)}>
+			{listItems}
+		</ul>
+	);
+}, isEqual);
 
 export default SidebarSubMenu;

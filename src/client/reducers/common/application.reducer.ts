@@ -8,7 +8,7 @@ export interface IApplicationData {
 	installed: boolean;
 }
 
-const InitialState: IApplicationData = {
+export const InitialState: IApplicationData = {
 	installed: false
 };
 

@@ -5,6 +5,8 @@ import { logger } from '../commons';
 const READ_WRITE = 'readwrite';
 const READ_ONLY = 'readonly';
 
+const DEBUG_MODE = process.env.NODE_ENV !== 'production';
+
 const indexes = {
 	ENTRY_ID: 'by-id',
 	ENTRY_URL: 'by-url',
@@ -17,7 +19,10 @@ const structure = {
 		READ_WRITE: READ_WRITE
 	},
 	keyPaths: {
-		PRIMARY_KEY: { index: indexes.ENTRY_ID, target: 'id' },
+		PRIMARY_KEY: {
+			index: indexes.ENTRY_ID,
+			target: 'id'
+		},
 		KEYS: [
 			{ index: indexes.ENTRY_URL, target: 'url' },
 			{ index: indexes.CACHE_NAME, target: 'cacheName' }
@@ -121,6 +126,10 @@ export async function getAllEntries(cacheName: string): Promise<CacheEntryInfo[]
 	});
 }
 
+export async function deleteEntry(key: string): Promise<void> {
+	return await instance.deleteItem(key);
+}
+
 export async function updateEntry(
 	key: string,
 	cacheName: string,
@@ -139,16 +148,16 @@ export async function updateEntry(
 		};
 		await instance.setItem(key, updatedEntry);
 	} catch (error) {
-		logger.error('Something went wrong', error);
+		DEBUG_MODE && logger.error('Something went wrong', error);
 	}
 }
 
-export async function hasExpired(key: string): Promise<boolean> {
+export async function hasExpired(key: string): Promise<boolean | null> {
 	try {
 		const entry = await instance.getItem(key);
-		return entry ? (entry.expiryDate ? Date.now() > entry.expiryDate : false) : true;
+		return entry ? (entry.expiryDate ? Date.now() > entry.expiryDate : false) : null;
 	} catch (error) {
-		logger.error('Something went wrong', error);
+		DEBUG_MODE && logger.error('Something went wrong', error);
 		return true;
 	}
 }

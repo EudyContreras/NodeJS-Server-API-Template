@@ -1,4 +1,5 @@
 import { logger } from '../commons';
+import { IndexDB } from '../handlers/KeyVal.handler';
 
 const DEBUG_MODE = process.env.NODE_ENV !== 'production';
 
@@ -13,35 +14,54 @@ const events = {
 
 let deferredPrompt: any | null = null;
 
-export const register = (onInstalled: (intalled: boolean) => void): void => {
-	window.addEventListener(events.BEFORE_INSTALL, (event) => {
+export const registerListener = (onInstalled: (intalled: boolean) => void): (() => void) => {
+	const beforeListener = (event): void => {
 		event.preventDefault();
-		localStorage.setItem(keys.APP_INSTALLED, String(false));
-		DEBUG_MODE && logger.log('PWA not installed');
-		onInstalled(false);
-		deferredPrompt = event;
-	});
+		IndexDB.setItem(keys.APP_INSTALLED, false).then((value) => {
+			DEBUG_MODE && logger.log('PWA not installed');
+			onInstalled(false);
+			deferredPrompt = event;
+		});
+	};
+	const afterListener = (event): void => {
+		IndexDB.setItem(keys.APP_INSTALLED, true).then(() => {
+			DEBUG_MODE && logger.log('PWA is installed');
+			onInstalled(true);
+		});
+	};
 
-	window.addEventListener(events.AFTER_INSTALL, () => {
-		localStorage.setItem(keys.APP_INSTALLED, String(false));
-		DEBUG_MODE && logger.log('PWA is installed');
-		onInstalled(true);
-	});
+	window.addEventListener(events.BEFORE_INSTALL, beforeListener);
+	window.addEventListener(events.AFTER_INSTALL, afterListener);
+
+	return (): any => {
+		window.removeEventListener(events.AFTER_INSTALL, beforeListener);
+		window.removeEventListener(events.AFTER_INSTALL, afterListener);
+	};
 };
 
-export const isInstalled = (): boolean => {
-	const installationState = localStorage.getItem(keys.APP_INSTALLED);
-	if (installationState) {
-		const installed = localStorage.getItem(keys.APP_INSTALLED) === 'true';
-		DEBUG_MODE && logger.log('PWA has been installed: ', installed);
-		return installed;
-	} else {
-		DEBUG_MODE && logger.log('PWA has not been installed');
-		return false;
-	}
-};
+export const isInstalled = (): Promise<boolean> =>
+	IndexDB.getItem(keys.APP_INSTALLED)
+		.then((installed: boolean) => {
+			if (installed === true) {
+				DEBUG_MODE && logger.log('PWA has been installed: ', installed);
+				return installed;
+			} else {
+				DEBUG_MODE && logger.log('PWA has not been installed');
+				return false;
+			}
+		})
+		.catch(() => false);
 
-export const hasInstallInfo = (): boolean => localStorage.getItem(keys.APP_INSTALLED) != null;
+export const hasInstallInfo = (): Promise<boolean | null> =>
+	IndexDB.getItem(keys.APP_INSTALLED)
+		.then((isInstalled: boolean) => {
+			if (isInstalled === true || isInstalled === false) {
+				return isInstalled;
+			} else {
+				return null;
+			}
+		})
+		.catch(() => false);
 
 export const showPrompt = (): void => {
 	if (deferredPrompt !== null) {

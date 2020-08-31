@@ -1,14 +1,14 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import loadable from '@loadable/component';
-import { delayBoundary } from './utililties/loadable.utils';
-import Lost from './shared/states/LostState';
+import { suspend } from './utililties/loadable.utils';
+import Lost from './common/states/LostState';
 import Docs from './sections/documentation/DocsPage';
 
-const options = { ssr: true, fallback: <Fragment />, timing: { delay: 250 } };
+const options = { ssr: true, timing: { delay: 250 } };
 
-const Apps = loadable(() => delayBoundary(import(/* webpackPrefetch: true */ './sections/applications/ApplicationsPage'), options.timing), options);
-const About = loadable(() => delayBoundary(import(/* webpackPrefetch: true */ './sections/information/AboutPage'), options.timing), options);
-const Admin = loadable(() => delayBoundary(import(/* webpackPrefetch: true */ './sections/administration/AdminPage'), options.timing), options);
+const Apps = loadable(() => suspend(import(/* webpackPrefetch: true */ './sections/applications/ApplicationsPage'), { ssr: false }), options);
+const About = loadable(() => suspend(import(/* webpackPrefetch: true */ './sections/information/AboutPage'), options), options);
+const Admin = loadable(() => suspend(import(/* webpackPrefetch: true */ './sections/administration/AdminPage'), options), options);
 
 export const routes = [
 	{
@@ -47,6 +47,12 @@ export const routes = [
 		path: '*'
 	}
 ];
+
+export type LinkInfo = {
+	link: string;
+	label: string;
+	lazyLoaded: boolean;
+};
 
 export type Mapping = {
 	navLink: boolean | undefined;
