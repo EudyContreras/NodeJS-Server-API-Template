@@ -96,15 +96,15 @@ function lazyLoadElement(element: HTMLElement, decodeImages: boolean, onLoaded?:
 
 	if (element instanceof HTMLPictureElement) {
 		const sources: HTMLSourceElement[] | null = [].slice.call(element.querySelectorAll('source'));
-		const images: HTMLImageElement[] | null = [].slice.call(element.querySelectorAll('img'));
+		const image: HTMLImageElement | null = element.querySelector('img');
 
-		src = images[0].dataset.src;
+		src = image?.dataset.src;
 		srcSet = sources[0].dataset.srcset;
 
 		loadImage({ src, srcSet }, decodeImages)
 			.then(() => {
 				if (sources && sources.length > 0) applyOnSource(sources[0]);
-				if (images && images.length > 0) applyOnImage(images[0]);
+				if (image) applyOnImage(image);
 				onLoaded && onLoaded();
 			})
 			.catch((error) => console.log(error, src));
@@ -128,25 +128,25 @@ function loadImagesBelowFold(element: HTMLElement | null, decodeImages: boolean,
 
 	if (element instanceof HTMLPictureElement) {
 		const sources: HTMLSourceElement[] | null = [].slice.call(element.querySelectorAll('source'));
-		const images: HTMLImageElement[] | null = [].slice.call(element.querySelectorAll('img'));
+		const image: HTMLImageElement | null = element.querySelector('img');
 
-		src = images[0].dataset.src;
+		src = image?.dataset.src;
 		srcSet = sources[0].dataset.srcset;
 
-		if (element.dataset.decoded === 'true' || !src || src.length <= 0) {
+		if (Boolean(element.dataset.decoded) === true || !src || src.length <= 0) {
 			return restartLoading(decodeImages);
 		}
 
 		loadImage({ src, srcSet }, decodeImages)
 			.then(() => {
 				if (sources && sources.length > 0) applyOnSource(sources[0]);
-				if (images && images.length > 0) applyOnImage(images[0]);
+				if (image) applyOnImage(image);
 
 				restartLoading(decodeImages, delay);
 			})
 			.catch((error) => console.log(error, src));
 	} else if (element instanceof HTMLImageElement) {
-		if (element.dataset.decoded === 'true' || !src || src.length <= 0) {
+		if (Boolean(element.dataset.decoded) === true || !src || src.length <= 0) {
 			return restartLoading(decodeImages);
 		}
 		loadImage({ src, srcSet }, decodeImages)
@@ -158,6 +158,20 @@ function loadImagesBelowFold(element: HTMLElement | null, decodeImages: boolean,
 	}
 }
 
+function skipLoading(element: HTMLElement): void {
+	element.classList.remove(lazyClass);
+
+	if (element instanceof HTMLPictureElement) {
+		const sources: HTMLSourceElement[] | null = [].slice.call(element.querySelectorAll('source'));
+		const image: HTMLImageElement | null = element.querySelector('img');
+
+		if (sources && sources.length > 0) applyOnSource(sources[0]);
+		if (image) applyOnImage(image);
+	} else if (element instanceof HTMLImageElement) {
+		applyOnImage(element);
+	}
+}
+
 export function registerLazyImageLoading({
 	throttleThreshold = 20,
 	useNativeLoading = true,
@@ -165,6 +179,8 @@ export function registerLazyImageLoading({
 	decodeImages = true
 }: LazyConfigOptions): void {
 	const lazyImages: HTMLImageElement[] = [].slice.call(document.querySelectorAll(selectorName));
+
+	const loadedImages: Set<string> = new Set();
 
 	if ('loading' in HTMLImageElement.prototype && useNativeLoading) {
 		lazyImages.forEach(async (element: HTMLElement) => {
@@ -192,9 +208,22 @@ export function registerLazyImageLoading({
 			entries.forEach((entry) => {
 				if (entry.intersectionRatio > 0) {
 					const element: any | HTMLElement = entry.target;
-					const decoded = element.dataset.decoded === 'true';
-					if (element.classList.contains(lazyClass) || decoded) {
+					const decoded = Boolean(element.dataset.decoded) === true;
+
+					const src = element.dataset.src;
+					const srcSet = element.dataset.srcset;
+				
+					const loaded = (src && loadedImages.has(src)) || (srcSet && loadedImages.has(srcSet));
+
+					if (loaded) {
+						skipLoading(element);
+					} else if (element.classList.contains(lazyClass) || decoded) {
 						lazyLoadElement(element, decodeImages);
+						if (srcSet) {
+							loadedImages.add(srcSet);
+						} else if (src) {
+							loadedImages.add(src);
+						}
 					}
 
 					observer.unobserve(element);

@@ -44,7 +44,9 @@
     "debug:hot": "npm run cleanup && cross-env NODE_ENV=development PRECOMPILE=false REACT_HMR=true CSR=false concurrently --kill-others \"npm-run-all build:client build:server:watch\" \"webpack-dev-server --hot\"",
     "debug:hot:server": "npm run cleanup && cross-env NODE_ENV=development REACT_HMR=false PRECOMPILE=false CSR=true concurrently --kill-others \"npm run build:server\" \"nodemon build/server.js\"",
     "debug:hot:client": "npm run cleanup && cross-env NODE_ENV=development REACT_HMR=true PRECOMPILE=false CSR=true npm-run-all build:client && cross-env NODE_ENV=development CSR=true REACT_HMR=true PRECOMPILE=false webpack-dev-server --hot",
-    "debug:client": "npm run cleanup && cross-env NODE_ENV=development REACT_HMR=true PRECOMPILE=false CSR=true npm-run-all build:client && cross-env NODE_ENV=development CSR=true REACT_HMR=true PRECOMPILE=false webpack-dev-server"
+    "debug:client:dev": "npm run cleanup && cross-env NODE_ENV=development REACT_HMR=true PRECOMPILE=false CSR=true npm-run-all build:client && cross-env NODE_ENV=development CSR=true REACT_HMR=true PRECOMPILE=false webpack-dev-server",
+    "debug:client:prod": "npm run cleanup && cross-env NODE_ENV=production REACT_HMR=true PRECOMPILE=false CSR=true npm run build:client && cross-env NODE_ENV=production CSR=true REACT_HMR=true PRECOMPILE=false webpack-dev-server"
+  
   },
   "keywords": [
     "ssr",

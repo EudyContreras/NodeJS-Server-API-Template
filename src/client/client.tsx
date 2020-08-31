@@ -22,7 +22,6 @@ const insertCss = (...styles: any[]): any => {
 };
 
 const clientSideRendered = renderOptions.clientSideRendered;
-
 const materialFontsObserver = new FontFaceObserver(MaterialIcons.name, {});
 
 materialFontsObserver
@@ -38,7 +37,7 @@ materialFontsObserver
 					loadBelowFold: false,
 					decodeImages: true
 				});
-			}, 500);
+			}, 250);
 		}
 	})
 	.catch((error) => {
