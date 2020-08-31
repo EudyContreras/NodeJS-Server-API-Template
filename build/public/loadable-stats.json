@@ -501,11 +501,11 @@
         },
         {
           "type": "log",
-          "message": "begin globbing '/Users/personal/Documents/Repositories/NodeJS-Server-API-Template/dist/client/resources/robots.txt' with a context of '/Users/personal/Documents/Repositories/NodeJS-Server-API-Template/dist/client/resources'"
+          "message": "begin globbing '/Users/personal/Documents/Repositories/NodeJS-Server-API-Template/dist/client/resources/styles/fonts.css' with a context of '/Users/personal/Documents/Repositories/NodeJS-Server-API-Template/dist/client/resources/styles'"
         },
         {
           "type": "log",
-          "message": "begin globbing '/Users/personal/Documents/Repositories/NodeJS-Server-API-Template/dist/client/resources/styles/fonts.css' with a context of '/Users/personal/Documents/Repositories/NodeJS-Server-API-Template/dist/client/resources/styles'"
+          "message": "begin globbing '/Users/personal/Documents/Repositories/NodeJS-Server-API-Template/dist/client/resources/robots.txt' with a context of '/Users/personal/Documents/Repositories/NodeJS-Server-API-Template/dist/client/resources'"
         },
         {
           "type": "log",
@@ -513,11 +513,11 @@
         },
         {
           "type": "log",
-          "message": "determined that '/Users/personal/Documents/Repositories/NodeJS-Server-API-Template/dist/client/resources/robots.txt' should write to 'robots.txt'"
+          "message": "determined that '/Users/personal/Documents/Repositories/NodeJS-Server-API-Template/dist/client/resources/styles/fonts.css' should write to 'styles/fonts.css'"
         },
         {
           "type": "log",
-          "message": "determined that '/Users/personal/Documents/Repositories/NodeJS-Server-API-Template/dist/client/resources/styles/fonts.css' should write to 'styles/fonts.css'"
+          "message": "determined that '/Users/personal/Documents/Repositories/NodeJS-Server-API-Template/dist/client/resources/robots.txt' should write to 'robots.txt'"
         },
         {
           "type": "log",
