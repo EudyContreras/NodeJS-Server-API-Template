@@ -97,7 +97,7 @@ const plugins = [
 		}
 	}),
 	new DuplicatePackageCheckerPlugin(),
-	// new BundleAnalyzerPlugin({ token: process.env.BUNDLE_ANALYZER_TOKEN }),
+	new BundleAnalyzerPlugin({ token: process.env.BUNDLE_ANALYZER_TOKEN }),
 	new CleanWebpackPlugin({ cleanStaleWebpackAssets: isProduction }),
 	new CopyPlugin({ patterns: resources }),
 	new HtmlWebpackPlugin({

@@ -23,18 +23,18 @@ const videoLoader = () => ({
 	}]
 });
 
-const jsonLoader = () => ({
-	test: /\.(json)$/,
-	loader: 'file-loader',
-	type: 'javascript/auto',
-	options: {
-		outputPath: '/build/public',
-		publicPath: '/build/public',
-		name() {
-			return 'data/text/[name].[ext]';
-		}
-	}
-});
+// const jsonLoader = () => ({
+// 	test: /\.(json)$/,
+// 	loader: 'file-loader',
+// 	type: 'javascript/auto',
+// 	options: {
+// 		outputPath: '/build/public',
+// 		publicPath: '/build/public',
+// 		name() {
+// 			return 'data/text/[name].[ext]';
+// 		}
+// 	}
+// });
 
 module.exports = (publicPath) => [
 	videoLoader(),

@@ -5,6 +5,7 @@ import { logger, handleWebp, filetypePatterns, filetypeCache, isHomeOrigin, inRa
 import { syncContent } from './helpers/syncevent.Helper';
 import { staleWhileRevalidate, cacheThenRefresh, cacheFirst, networkFirst, addToCache, cacheResponse, fromNetwork } from './stragedies';
 import { httpMethods, updateNotification, cachableTypes, commonOrigins, fallbacks, cacheNames, constants, syncEvents, messages, events } from './constants';
+import { func } from '@hapi/joi';
 
 const DEBUG_MODE = process.env.NODE_ENV !== 'production';
 
@@ -73,73 +74,92 @@ self.addEventListener(events.FETCH, async (event: any) => {
 	}
 
 	if (any(destination, cachableTypes.STYLE, cachableTypes.SCRIPT, cachableTypes.DOCUMENT)) {
-		const cacheName = url.origin === commonOrigins.STYLESHEET_FONTS ? cacheKeys.GOOGLE_FONTS_SHEETS_CACHE : cacheKeys.STATIC_CACHE;
-		const cachePredicate: CachePredicate = {
-			crossOrigin: true,
-			cacheCondition: ({ response }) => (response && inRange(response?.status, 200, 300)) || false
-		};
-		staleWhileRevalidate({ url, event, request, cacheName, cachePredicate: cachePredicate, theresholdAge: days(1) });
-		return;
+		return handleDocumentRequests(url, request);
 	}
 
 	if (isWebFontRequest(destination, url)) {
-		const cacheName = cacheKeys.GOOGLE_FONTS_WEB_CACHE;
-		const cachePredicate: CachePredicate = {
-			crossOrigin: true,
-			acceptedStatus: [0, 200, 203, 202]
-		};
-		cacheFirst({ url, event, request, cacheName, cachePredicate });
-		return;
+		return handleFontRequests(url, request);
 	}
 
 	if (destination === cachableTypes.IMAGE) {
-		const cacheName = cacheKeys.IMAGE_CACHE;
-		const quotaOptions: CacheQuotaOptions = {
-			clearOnError: true,
-			maxAgeSeconds: months(3),
-			maxEntries: 100
-		};
-
-		cacheFirst({ url, event, request, cacheName, quotaOptions, cachePredicate: defaultCachePredicate });
-		return;
+		return handleImageRequests(url, request);
 	}
 
 	if (destination === cachableTypes.AUDIO) {
-		const cacheName = cacheKeys.MEDIA_CACHE;
-		const quotaOptions: CacheQuotaOptions = {
-			clearOnError: true,
-			maxAgeSeconds: months(2),
-			maxEntries: 30
-		};
-		cacheFirst({ url, event, request, cacheName, quotaOptions, cachePredicate: defaultCachePredicate });
-		return;
+		return handleAudioRequests(url, request);
 	}
 
 	if (destination === cachableTypes.VIDEO) {
-		const cacheName = cacheKeys.MEDIA_CACHE;
-		const quotaOptions: CacheQuotaOptions = {
-			clearOnError: true,
-			maxAgeSeconds: days(30),
-			maxEntries: 10
-		};
-		cacheFirst({ url, event, request, cacheName, quotaOptions, cachePredicate: defaultCachePredicate });
-		return;
+		return handleVideoRequests(url, request);
 	}
 
 	if (isAcceptedApiRequest(request)) {
-		const cacheName = cacheKeys.DATA_CACHE;
-		const cachePredicate: CachePredicate = {
-			crossOrigin: true,
-			acceptedStatus: [0, 200, 203, 202]
-		};
-		const quotaOptions: CacheQuotaOptions = {
-			clearOnError: true,
-			maxAgeSeconds: hours(6),
-			maxEntries: 8
-		};
-		networkFirst({ url, event, request, cacheName, quotaOptions, cachePredicate: cachePredicate });
+		return handleApiRequests(url, request);
 	}
 });
+
+function handleDocumentRequests(url, request): void {
+	const cacheName = url.origin === commonOrigins.STYLESHEET_FONTS ? cacheKeys.GOOGLE_FONTS_SHEETS_CACHE : cacheKeys.STATIC_CACHE;
+	const cachePredicate: CachePredicate = {
+		crossOrigin: true,
+		cacheCondition: ({ response }) => (response && inRange(response?.status, 200, 300)) || false
+	};
+	staleWhileRevalidate({ url, event, request, cacheName, cachePredicate: cachePredicate, theresholdAge: days(1) });
+}
+
+function handleFontRequests(url, request): void {
+	const cacheName = cacheKeys.GOOGLE_FONTS_WEB_CACHE;
+	const cachePredicate: CachePredicate = {
+		crossOrigin: true,
+		acceptedStatus: [0, 200, 203, 202]
+	};
+	cacheFirst({ url, event, request, cacheName, cachePredicate });
+}
+
+function handleImageRequests(url, request): void {
+	const cacheName = cacheKeys.IMAGE_CACHE;
+	const quotaOptions: CacheQuotaOptions = {
+		clearOnError: true,
+		maxAgeSeconds: months(3),
+		maxEntries: 100
+	};
+
+	cacheFirst({ url, event, request, cacheName, quotaOptions, cachePredicate: defaultCachePredicate });
+}
+
+function handleAudioRequests(url, request): void {
+	const cacheName = cacheKeys.MEDIA_CACHE;
+	const quotaOptions: CacheQuotaOptions = {
+		clearOnError: true,
+		maxAgeSeconds: months(2),
+		maxEntries: 30
+	};
+	cacheFirst({ url, event, request, cacheName, quotaOptions, cachePredicate: defaultCachePredicate });
+}
+
+function handleVideoRequests(url, request): void {
+	const cacheName = cacheKeys.MEDIA_CACHE;
+	const quotaOptions: CacheQuotaOptions = {
+		clearOnError: true,
+		maxAgeSeconds: days(30),
+		maxEntries: 10
+	};
+	cacheFirst({ url, event, request, cacheName, quotaOptions, cachePredicate: defaultCachePredicate });
+}
+
+function handleApiRequests(url, request): void {
+	const cacheName = cacheKeys.DATA_CACHE;
+	const cachePredicate: CachePredicate = {
+		crossOrigin: true,
+		acceptedStatus: [0, 200, 203, 202]
+	};
+	const quotaOptions: CacheQuotaOptions = {
+		clearOnError: true,
+		maxAgeSeconds: hours(6),
+		maxEntries: 8
+	};
+	networkFirst({ url, event, request, cacheName, quotaOptions, cachePredicate: cachePredicate });
+}
 
 self.addEventListener(events.INSTALL, async (event: Event | any) => {
 	DEBUG_MODE && logger.log(events.INSTALL, `Version : ${__VERSION_NUMBER__}`, event);

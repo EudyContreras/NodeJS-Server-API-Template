@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 
-const imageUrlLoader = (path) => ({
+const imageUrlLoader = () => ({
 	test: /\.(webp|png|jpg|jpe?g|gif)$/i,
 	use: [{
 		loader: 'url-loader',
@@ -11,6 +11,6 @@ const imageUrlLoader = (path) => ({
 	}]
 });
 
-module.exports = (path) => [
-	imageUrlLoader(path)
+module.exports = () => [
+	imageUrlLoader()
 ];
