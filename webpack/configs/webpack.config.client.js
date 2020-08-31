@@ -1,5 +1,6 @@
 
 /* eslint-disable @typescript-eslint/no-var-requires */
+require('dotenv').config();
 
 const path = require('path');
 const webpack = require('webpack');
@@ -23,6 +24,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const precompile = process.env.PRECOMPILE === 'true';
 const usesCSR = process.env.CSR === 'true';
 const enviroment = process.env.NODE_ENV;
+const bundleToken = process.env.BUNDLE_ANALYZER_TOKEN;
 
 const isProduction = enviroment === 'production';
 const sourceLocation = precompile ? 'dist' : 'src';
@@ -97,7 +99,7 @@ const plugins = [
 		}
 	}),
 	new DuplicatePackageCheckerPlugin(),
-	new BundleAnalyzerPlugin({ token: process.env.BUNDLE_ANALYZER_TOKEN }),
+	new BundleAnalyzerPlugin({ token: bundleToken }),
 	new CleanWebpackPlugin({ cleanStaleWebpackAssets: isProduction }),
 	new CopyPlugin({ patterns: resources }),
 	new HtmlWebpackPlugin({

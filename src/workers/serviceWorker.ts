@@ -74,31 +74,31 @@ self.addEventListener(events.FETCH, async (event: any) => {
 	}
 
 	if (any(destination, cachableTypes.STYLE, cachableTypes.SCRIPT, cachableTypes.DOCUMENT)) {
-		return handleDocumentRequests(url, request);
+		return handleDocumentRequests(url, event, request);
 	}
 
 	if (isWebFontRequest(destination, url)) {
-		return handleFontRequests(url, request);
+		return handleFontRequests(url, event, request);
 	}
 
 	if (destination === cachableTypes.IMAGE) {
-		return handleImageRequests(url, request);
+		return handleImageRequests(url, event, request);
 	}
 
 	if (destination === cachableTypes.AUDIO) {
-		return handleAudioRequests(url, request);
+		return handleAudioRequests(url, event, request);
 	}
 
 	if (destination === cachableTypes.VIDEO) {
-		return handleVideoRequests(url, request);
+		return handleVideoRequests(url, event, request);
 	}
 
 	if (isAcceptedApiRequest(request)) {
-		return handleApiRequests(url, request);
+		return handleApiRequests(url, event, request);
 	}
 });
 
-function handleDocumentRequests(url, request): void {
+function handleDocumentRequests(url, event, request): void {
 	const cacheName = url.origin === commonOrigins.STYLESHEET_FONTS ? cacheKeys.GOOGLE_FONTS_SHEETS_CACHE : cacheKeys.STATIC_CACHE;
 	const cachePredicate: CachePredicate = {
 		crossOrigin: true,
@@ -107,7 +107,7 @@ function handleDocumentRequests(url, request): void {
 	staleWhileRevalidate({ url, event, request, cacheName, cachePredicate: cachePredicate, theresholdAge: days(1) });
 }
 
-function handleFontRequests(url, request): void {
+function handleFontRequests(url, event, request): void {
 	const cacheName = cacheKeys.GOOGLE_FONTS_WEB_CACHE;
 	const cachePredicate: CachePredicate = {
 		crossOrigin: true,
@@ -116,7 +116,7 @@ function handleFontRequests(url, request): void {
 	cacheFirst({ url, event, request, cacheName, cachePredicate });
 }
 
-function handleImageRequests(url, request): void {
+function handleImageRequests(url, event, request): void {
 	const cacheName = cacheKeys.IMAGE_CACHE;
 	const quotaOptions: CacheQuotaOptions = {
 		clearOnError: true,
@@ -127,7 +127,7 @@ function handleImageRequests(url, request): void {
 	cacheFirst({ url, event, request, cacheName, quotaOptions, cachePredicate: defaultCachePredicate });
 }
 
-function handleAudioRequests(url, request): void {
+function handleAudioRequests(url, event, request): void {
 	const cacheName = cacheKeys.MEDIA_CACHE;
 	const quotaOptions: CacheQuotaOptions = {
 		clearOnError: true,
@@ -137,7 +137,7 @@ function handleAudioRequests(url, request): void {
 	cacheFirst({ url, event, request, cacheName, quotaOptions, cachePredicate: defaultCachePredicate });
 }
 
-function handleVideoRequests(url, request): void {
+function handleVideoRequests(url, event, request): void {
 	const cacheName = cacheKeys.MEDIA_CACHE;
 	const quotaOptions: CacheQuotaOptions = {
 		clearOnError: true,
@@ -147,7 +147,7 @@ function handleVideoRequests(url, request): void {
 	cacheFirst({ url, event, request, cacheName, quotaOptions, cachePredicate: defaultCachePredicate });
 }
 
-function handleApiRequests(url, request): void {
+function handleApiRequests(url, event, request): void {
 	const cacheName = cacheKeys.DATA_CACHE;
 	const cachePredicate: CachePredicate = {
 		crossOrigin: true,
