@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import React from 'react';
 // @ts-ignore-line
-import demoImage from '../../../../../resources/images/demo_img.jpeg?sizes[]=250,sizes[]=400,sizes[]=600,sizes[]=800,sizes[]=1000,sizes[]=1200';
+import demoImage from '../../../../../resources/images/demo_img.jpeg?sizes[]=400,sizes[]=600,sizes[]=800,sizes[]=1000,sizes[]=1200&format=webp';
 import { LazyImage } from '../../../../common/LazyImage';
 
 class ContentSection extends React.PureComponent<any> {
@@ -17,13 +17,14 @@ class ContentSection extends React.PureComponent<any> {
 						className={styling.imageContainer}
 						alt={'Some alt text'}
 						src={src}
+						width={width}
+						height={height}
 						index={index}
 						aspectRatio={16 / 9}
 						placeholder={placeholder}
 						srcSet={srcSet}
 						mediaQuery={{
 							queries: [
-								{ maxWidth: 400, targetWidth: 250 },
 								{ maxWidth: 700, targetWidth: 400 },
 								{ maxWidth: 1000, targetWidth: 600 },
 								{ maxWidth: 1300, targetWidth: 800 },
