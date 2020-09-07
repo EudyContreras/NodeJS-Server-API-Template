@@ -1,20 +1,16 @@
 {
   "files": {
-    "jpeg": [
-      "images/demo_img/demo_img_1000x1000.jpeg",
-      "images/demo_img/demo_img_1200x1200.jpeg",
-      "images/demo_img/demo_img_250x250.jpeg",
-      "images/demo_img/demo_img_400x400.jpeg",
-      "images/demo_img/demo_img_600x600.jpeg",
-      "images/demo_img/demo_img_800x800.jpeg"
-    ],
     "webp": [
       "images/demo_img/demo_img_1000x1000.webp",
       "images/demo_img/demo_img_1200x1200.webp",
-      "images/demo_img/demo_img_250x250.webp",
       "images/demo_img/demo_img_400x400.webp",
       "images/demo_img/demo_img_600x600.webp",
-      "images/demo_img/demo_img_800x800.webp",
+      "images/demo_img/demo_img_800x800.webp"
+    ],
+    "ico": [
+      "images/favicon.ico"
+    ],
+    "png": [
       "images/touch_icon/touch_icon_128x128.webp",
       "images/touch_icon/touch_icon_144x144.webp",
       "images/touch_icon/touch_icon_152x152.webp",
@@ -24,27 +20,14 @@
       "images/touch_icon/touch_icon_512x512.webp",
       "images/touch_icon/touch_icon_72x72.webp"
     ],
-    "ico": [
-      "images/favicon.ico"
-    ],
-    "png": [
-      "images/touch_icon/touch_icon_128x128.png",
-      "images/touch_icon/touch_icon_144x144.png",
-      "images/touch_icon/touch_icon_152x152.png",
-      "images/touch_icon/touch_icon_192x192.png",
-      "images/touch_icon/touch_icon_257x257.png",
-      "images/touch_icon/touch_icon_384x384.png",
-      "images/touch_icon/touch_icon_512x512.png",
-      "images/touch_icon/touch_icon_72x72.png"
-    ],
     "br": [
       "loadable-stats.json.br",
-      "scripts/app.bundle.f284393fd0bbe534168e.js.br",
+      "scripts/app.bundle.e07b543bb8d9e7619b1a.js.br",
       "scripts/vendors.chunk.41d293727de1ac81d9c0.js.br"
     ],
     "gz": [
       "loadable-stats.json.gz",
-      "scripts/app.bundle.f284393fd0bbe534168e.js.gz",
+      "scripts/app.bundle.e07b543bb8d9e7619b1a.js.gz",
       "scripts/vendors.chunk.41d293727de1ac81d9c0.js.gz"
     ],
     "json": [
@@ -68,14 +51,14 @@
   "scripts": {
     "uncompressed": [
       "scripts/vendors.chunk.41d293727de1ac81d9c0.js",
-      "scripts/app.bundle.f284393fd0bbe534168e.js"
+      "scripts/app.bundle.e07b543bb8d9e7619b1a.js"
     ],
     "brotliCompressed": [
-      "scripts/app.bundle.f284393fd0bbe534168e.js.br",
+      "scripts/app.bundle.e07b543bb8d9e7619b1a.js.br",
       "scripts/vendors.chunk.41d293727de1ac81d9c0.js.br"
     ],
     "gzipCompressed": [
-      "scripts/app.bundle.f284393fd0bbe534168e.js.gz",
+      "scripts/app.bundle.e07b543bb8d9e7619b1a.js.gz",
       "scripts/vendors.chunk.41d293727de1ac81d9c0.js.gz"
     ]
   }

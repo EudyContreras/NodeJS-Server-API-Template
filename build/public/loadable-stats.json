@@ -2,14 +2,14 @@
   "errors": [],
   "warnings": [],
   "version": "4.44.1",
-  "hash": "a7339c0931ce155476c3",
+  "hash": "98fcff321db35b8b97ad",
   "publicPath": "/",
   "outputPath": "/Users/personal/Documents/Repositories/NodeJS-Server-API-Template/build/public",
   "assetsByChunkName": {
     "sections-administration-AdminPage": "scripts/sections-administration-AdminPage.chunk.697d867d57f85cd0e782.js",
     "sections-applications-ApplicationsPage": "scripts/sections-applications-ApplicationsPage.chunk.edb1212f8552fc611f64.js",
     "sections-information-AboutPage": "scripts/sections-information-AboutPage.chunk.b907d93f707f7165a30d.js",
-    "app": "scripts/app.bundle.f284393fd0bbe534168e.js",
+    "app": "scripts/app.bundle.e07b543bb8d9e7619b1a.js",
     "vendors": "scripts/vendors.chunk.41d293727de1ac81d9c0.js"
   },
   "assets": [
@@ -22,24 +22,8 @@
       "emitted": false
     },
     {
-      "name": "images/demo_img/demo_img_1000x1000.jpeg",
-      "size": 141444,
-      "chunks": [],
-      "chunkNames": [],
-      "info": {},
-      "emitted": false
-    },
-    {
       "name": "images/demo_img/demo_img_1000x1000.webp",
-      "size": 76524,
-      "chunks": [],
-      "chunkNames": [],
-      "info": {},
-      "emitted": false
-    },
-    {
-      "name": "images/demo_img/demo_img_1200x1200.jpeg",
-      "size": 199073,
+      "size": 117338,
       "chunks": [],
       "chunkNames": [],
       "info": {},
@@ -47,31 +31,7 @@
     },
     {
       "name": "images/demo_img/demo_img_1200x1200.webp",
-      "size": 108636,
-      "chunks": [],
-      "chunkNames": [],
-      "info": {},
-      "emitted": false
-    },
-    {
-      "name": "images/demo_img/demo_img_250x250.jpeg",
-      "size": 11486,
-      "chunks": [],
-      "chunkNames": [],
-      "info": {},
-      "emitted": false
-    },
-    {
-      "name": "images/demo_img/demo_img_250x250.webp",
-      "size": 6588,
-      "chunks": [],
-      "chunkNames": [],
-      "info": {},
-      "emitted": false
-    },
-    {
-      "name": "images/demo_img/demo_img_400x400.jpeg",
-      "size": 26091,
+      "size": 167780,
       "chunks": [],
       "chunkNames": [],
       "info": {},
@@ -79,15 +39,7 @@
     },
     {
       "name": "images/demo_img/demo_img_400x400.webp",
-      "size": 14152,
-      "chunks": [],
-      "chunkNames": [],
-      "info": {},
-      "emitted": false
-    },
-    {
-      "name": "images/demo_img/demo_img_600x600.jpeg",
-      "size": 53002,
+      "size": 21388,
       "chunks": [],
       "chunkNames": [],
       "info": {},
@@ -95,15 +47,7 @@
     },
     {
       "name": "images/demo_img/demo_img_600x600.webp",
-      "size": 28212,
-      "chunks": [],
-      "chunkNames": [],
-      "info": {},
-      "emitted": false
-    },
-    {
-      "name": "images/demo_img/demo_img_800x800.jpeg",
-      "size": 90655,
+      "size": 43310,
       "chunks": [],
       "chunkNames": [],
       "info": {},
@@ -111,7 +55,7 @@
     },
     {
       "name": "images/demo_img/demo_img_800x800.webp",
-      "size": 47956,
+      "size": 73534,
       "chunks": [],
       "chunkNames": [],
       "info": {},
@@ -126,24 +70,8 @@
       "emitted": false
     },
     {
-      "name": "images/touch_icon/touch_icon_128x128.png",
-      "size": 8602,
-      "chunks": [],
-      "chunkNames": [],
-      "info": {},
-      "emitted": false
-    },
-    {
       "name": "images/touch_icon/touch_icon_128x128.webp",
-      "size": 2894,
-      "chunks": [],
-      "chunkNames": [],
-      "info": {},
-      "emitted": false
-    },
-    {
-      "name": "images/touch_icon/touch_icon_144x144.png",
-      "size": 9519,
+      "size": 3402,
       "chunks": [],
       "chunkNames": [],
       "info": {},
@@ -151,15 +79,7 @@
     },
     {
       "name": "images/touch_icon/touch_icon_144x144.webp",
-      "size": 3310,
-      "chunks": [],
-      "chunkNames": [],
-      "info": {},
-      "emitted": false
-    },
-    {
-      "name": "images/touch_icon/touch_icon_152x152.png",
-      "size": 10059,
+      "size": 3842,
       "chunks": [],
       "chunkNames": [],
       "info": {},
@@ -167,15 +87,7 @@
     },
     {
       "name": "images/touch_icon/touch_icon_152x152.webp",
-      "size": 3510,
-      "chunks": [],
-      "chunkNames": [],
-      "info": {},
-      "emitted": false
-    },
-    {
-      "name": "images/touch_icon/touch_icon_192x192.png",
-      "size": 12937,
+      "size": 4122,
       "chunks": [],
       "chunkNames": [],
       "info": {},
@@ -183,15 +95,7 @@
     },
     {
       "name": "images/touch_icon/touch_icon_192x192.webp",
-      "size": 4298,
-      "chunks": [],
-      "chunkNames": [],
-      "info": {},
-      "emitted": false
-    },
-    {
-      "name": "images/touch_icon/touch_icon_257x257.png",
-      "size": 17591,
+      "size": 5136,
       "chunks": [],
       "chunkNames": [],
       "info": {},
@@ -199,15 +103,7 @@
     },
     {
       "name": "images/touch_icon/touch_icon_257x257.webp",
-      "size": 5874,
-      "chunks": [],
-      "chunkNames": [],
-      "info": {},
-      "emitted": false
-    },
-    {
-      "name": "images/touch_icon/touch_icon_384x384.png",
-      "size": 27624,
+      "size": 6930,
       "chunks": [],
       "chunkNames": [],
       "info": {},
@@ -215,15 +111,7 @@
     },
     {
       "name": "images/touch_icon/touch_icon_384x384.webp",
-      "size": 8728,
-      "chunks": [],
-      "chunkNames": [],
-      "info": {},
-      "emitted": false
-    },
-    {
-      "name": "images/touch_icon/touch_icon_512x512.png",
-      "size": 37641,
+      "size": 10410,
       "chunks": [],
       "chunkNames": [],
       "info": {},
@@ -231,15 +119,7 @@
     },
     {
       "name": "images/touch_icon/touch_icon_512x512.webp",
-      "size": 11736,
-      "chunks": [],
-      "chunkNames": [],
-      "info": {},
-      "emitted": false
-    },
-    {
-      "name": "images/touch_icon/touch_icon_72x72.png",
-      "size": 4701,
+      "size": 14004,
       "chunks": [],
       "chunkNames": [],
       "info": {},
@@ -247,7 +127,7 @@
     },
     {
       "name": "images/touch_icon/touch_icon_72x72.webp",
-      "size": 1652,
+      "size": 1908,
       "chunks": [],
       "chunkNames": [],
       "info": {},
@@ -278,8 +158,8 @@
       "emitted": false
     },
     {
-      "name": "scripts/app.bundle.f284393fd0bbe534168e.js",
-      "size": 77677,
+      "name": "scripts/app.bundle.e07b543bb8d9e7619b1a.js",
+      "size": 76778,
       "chunks": [
         3
       ],
@@ -365,7 +245,7 @@
       ],
       "assets": [
         "scripts/vendors.chunk.41d293727de1ac81d9c0.js",
-        "scripts/app.bundle.f284393fd0bbe534168e.js"
+        "scripts/app.bundle.e07b543bb8d9e7619b1a.js"
       ],
       "children": {
         "prefetch": [
@@ -415,7 +295,7 @@
       ],
       "assets": [
         "scripts/vendors.chunk.41d293727de1ac81d9c0.js",
-        "scripts/app.bundle.f284393fd0bbe534168e.js"
+        "scripts/app.bundle.e07b543bb8d9e7619b1a.js"
       ],
       "children": {
         "prefetch": [
@@ -501,11 +381,11 @@
         },
         {
           "type": "log",
-          "message": "begin globbing '/Users/personal/Documents/Repositories/NodeJS-Server-API-Template/dist/client/resources/styles/fonts.css' with a context of '/Users/personal/Documents/Repositories/NodeJS-Server-API-Template/dist/client/resources/styles'"
+          "message": "begin globbing '/Users/personal/Documents/Repositories/NodeJS-Server-API-Template/dist/client/resources/robots.txt' with a context of '/Users/personal/Documents/Repositories/NodeJS-Server-API-Template/dist/client/resources'"
         },
         {
           "type": "log",
-          "message": "begin globbing '/Users/personal/Documents/Repositories/NodeJS-Server-API-Template/dist/client/resources/robots.txt' with a context of '/Users/personal/Documents/Repositories/NodeJS-Server-API-Template/dist/client/resources'"
+          "message": "begin globbing '/Users/personal/Documents/Repositories/NodeJS-Server-API-Template/dist/client/resources/styles/fonts.css' with a context of '/Users/personal/Documents/Repositories/NodeJS-Server-API-Template/dist/client/resources/styles'"
         },
         {
           "type": "log",
@@ -513,11 +393,11 @@
         },
         {
           "type": "log",
-          "message": "determined that '/Users/personal/Documents/Repositories/NodeJS-Server-API-Template/dist/client/resources/styles/fonts.css' should write to 'styles/fonts.css'"
+          "message": "determined that '/Users/personal/Documents/Repositories/NodeJS-Server-API-Template/dist/client/resources/robots.txt' should write to 'robots.txt'"
         },
         {
           "type": "log",
-          "message": "determined that '/Users/personal/Documents/Repositories/NodeJS-Server-API-Template/dist/client/resources/robots.txt' should write to 'robots.txt'"
+          "message": "determined that '/Users/personal/Documents/Repositories/NodeJS-Server-API-Template/dist/client/resources/styles/fonts.css' should write to 'styles/fonts.css'"
         },
         {
           "type": "log",

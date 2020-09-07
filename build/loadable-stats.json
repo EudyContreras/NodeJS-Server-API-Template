@@ -2,7 +2,7 @@
   "errors": [],
   "warnings": [],
   "version": "4.44.1",
-  "hash": "47c17d947a97a985e391",
+  "hash": "62adabe2dcb0e5d22e5f",
   "publicPath": "/",
   "outputPath": "/Users/personal/Documents/Repositories/NodeJS-Server-API-Template/build",
   "assetsByChunkName": {
@@ -10,48 +10,40 @@
   },
   "assets": [
     {
-      "name": "images/demo_img/demo_img_1000x1000.jpeg",
-      "size": 141444,
+      "name": "images/demo_img/demo_img_1000x1000.webp",
+      "size": 117338,
       "chunks": [],
       "chunkNames": [],
       "info": {},
       "emitted": false
     },
     {
-      "name": "images/demo_img/demo_img_1200x1200.jpeg",
-      "size": 199073,
+      "name": "images/demo_img/demo_img_1200x1200.webp",
+      "size": 167780,
       "chunks": [],
       "chunkNames": [],
       "info": {},
       "emitted": false
     },
     {
-      "name": "images/demo_img/demo_img_250x250.jpeg",
-      "size": 11486,
+      "name": "images/demo_img/demo_img_400x400.webp",
+      "size": 21388,
       "chunks": [],
       "chunkNames": [],
       "info": {},
       "emitted": false
     },
     {
-      "name": "images/demo_img/demo_img_400x400.jpeg",
-      "size": 26091,
+      "name": "images/demo_img/demo_img_600x600.webp",
+      "size": 43310,
       "chunks": [],
       "chunkNames": [],
       "info": {},
       "emitted": false
     },
     {
-      "name": "images/demo_img/demo_img_600x600.jpeg",
-      "size": 53002,
-      "chunks": [],
-      "chunkNames": [],
-      "info": {},
-      "emitted": false
-    },
-    {
-      "name": "images/demo_img/demo_img_800x800.jpeg",
-      "size": 90655,
+      "name": "images/demo_img/demo_img_800x800.webp",
+      "size": 73534,
       "chunks": [],
       "chunkNames": [],
       "info": {},
@@ -59,7 +51,7 @@
     },
     {
       "name": "server.js",
-      "size": 126244,
+      "size": 125180,
       "chunks": [
         0
       ],
