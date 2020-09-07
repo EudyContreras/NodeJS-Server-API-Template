@@ -20,7 +20,7 @@ class IndexViewRenderer extends ViewRenderer {
 	private routing = '/';
 	private router: Router;
 	private store: Store<IStateTree, IAction>;
-	private state: any;
+	private state: IStateTree;
 
 	constructor() {
 		super();

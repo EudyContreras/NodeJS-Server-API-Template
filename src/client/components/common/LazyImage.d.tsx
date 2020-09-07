@@ -46,6 +46,8 @@ interface LazyImageProps {
 	index?: number;
 	srcSet?: string;
 	styling?: any;
+	width?: number;
+	height?: number;
 	images?: SrcSet[];
 	fallback?: Fallback;
 	lazyLoad?: boolean;
