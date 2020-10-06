@@ -1,20 +1,16 @@
-import {
-	ROUTE_LOADER,
-	ROUTE_LOADER_SHOW,
-	ROUTE_LOADER_HIDE
-} from '../../actions/common/loader.action';
+import { ROUTE_LOADER, ROUTE_LOADER_SHOW, ROUTE_LOADER_HIDE } from '../../actions/common/loader.action';
 
 import IAction from '../../actions/action';
 
 export const SOURCE = ROUTE_LOADER;
 
-export interface IRouteLoader{
+export interface IRouteLoader {
 	isActive: boolean;
 	loadedRoutes: string[];
 }
 
 export const InitialState: IRouteLoader = {
-	isActive: true,
+	isActive: false,
 	loadedRoutes: []
 };
 

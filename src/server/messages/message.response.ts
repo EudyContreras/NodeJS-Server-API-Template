@@ -67,15 +67,13 @@ export const SchedulerMessages = {
 	LABEL_REQUIRED: 'A job label must be provided',
 	INTERVAL_REQUIRED: 'A job interval must be provided',
 
-	notifyStart: (job: CronJob): string => {
-		return `Satarted job: '${job.label}' to run at: '${job.interval}'`;
-	}
+	notifyStart: (job: CronJob): string => `Satarted job: '${job.label}' to run at: '${job.interval}'`
 };
 
 export const ResponseMessages = {
-	NOT_CREATED: (name: string): string => `The ${name} could not be created`,
-	NOT_FETCHED: (name: string): string => `The ${name} could not be fetched`,
-	NOT_UPDATED: (name: string): string => `The ${name} could not be updated`,
-	NOT_DELETED: (name: string): string => `The ${name} could not be deleted`,
-	NOT_FETCHED_ALL: (name: string): string => `The ${name}s could not be fetched`
+	notCreated: (name: string): string => `The ${name} could not be created`,
+	notFetched: (name: string): string => `The ${name} could not be fetched`,
+	notUpdated: (name: string): string => `The ${name} could not be updated`,
+	notDeleted: (name: string): string => `The ${name} could not be deleted`,
+	notFetchedAll: (name: string): string => `The ${name}s could not be fetched`
 };

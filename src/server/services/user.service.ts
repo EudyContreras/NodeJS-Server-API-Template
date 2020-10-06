@@ -1,5 +1,3 @@
-
-
 import InvitationService from './invitation.service';
 import EncryptionService from './encryption.service';
 import AuthenticationService from './authentication.service';
@@ -8,13 +6,11 @@ import PasswordRepository from '../repositories/password.repository';
 
 import { UserMessages } from '../messages/message.response';
 
-
 export default class UserService {
-
 	/**
-	 * @description Returns a result with all the users which are currently in 
+	 * @description Returns a result with all the users which are currently in
 	 * the database.
-	 * @returns the potential result represented as a list of users or 
+	 * @returns the potential result represented as a list of users or
 	 * the possible generated error.
 	 */
 	public async getAllUsers(): Promise<{ result?: any[]; error?: any }> {
@@ -54,7 +50,7 @@ export default class UserService {
 	 * @description Returns a result with the user with the matching email
 	 * the database.
 	 * @param email The email of the user to return
-	 * @returns the potential result represented as  user that matches the 
+	 * @returns the potential result represented as  user that matches the
 	 * given email or the possible generated error.
 	 */
 	public async getUserByEmail(email: string): Promise<{ result?: any; error?: any }> {
@@ -75,7 +71,7 @@ export default class UserService {
 	 * @description Returns a result with the user with the matching email
 	 * the database.
 	 * @param criteria The criteria used for finding the user.
-	 * @returns the potential result represented as  user that matches the 
+	 * @returns the potential result represented as  user that matches the
 	 * given email or the possible generated error.
 	 */
 	public async getUserWhere(criteria: any): Promise<{ result?: any; error?: any }> {
@@ -94,7 +90,7 @@ export default class UserService {
 
 	/**
 	 * @description Updates the user with the matching id with the specified data
-	 * Only the first name, last name and company id of the user can be updated by this 
+	 * Only the first name, last name and company id of the user can be updated by this
 	 * function.
 	 * @param userId The id of the user to return
 	 * @param  update data with the updated user details.
@@ -119,7 +115,7 @@ export default class UserService {
 	 * @description Updates the user role for the user with the given user id.
 	 * @param userId The id of the user.
 	 * @param update The new role code data to be assigned.
-	 * @returns the potential result represented as the user whose role was 
+	 * @returns the potential result represented as the user whose role was
 	 * updated or the possible generated error.
 	 */
 	public async updateUserRole(userId: string, update: any): Promise<{ result?: any; error?: any }> {
@@ -142,11 +138,10 @@ export default class UserService {
 	 * update invalidates any possible token issued to the user.
 	 * @param  userId The id of the user.
 	 * @param passwordData The data containing the old and new passwords.
-	 * @returns the potential result represented as the user whose password 
+	 * @returns the potential result represented as the user whose password
 	 * was updated or the possible generated error.
 	 */
 	public async updateUserPassword(userId: string, passwordData: any, internal = false): Promise<{ result?: any; error?: any }> {
-
 		const currentPassword = passwordData.oldPassword;
 		const newPassword = passwordData.newPassword;
 
@@ -158,7 +153,7 @@ export default class UserService {
 
 			const user = await userRepository.getUser(userId, { dto: false });
 
-			if (user === null) return { error: UserMessages.NO_SUCH_USER };
+			if (user === null) return { error: UserMessages.NO_SUCH_USER };
 
 			const isMatch = await encryptionService.comparePasswords(currentPassword, user.password);
 
@@ -180,7 +175,7 @@ export default class UserService {
 				}
 
 				const revokeResult = await authenticationService.invalidateTokens(result);
-				
+
 				await passwordRepository.clearAllWhere({ userId: user.id });
 
 				return { result: result, error: revokeResult.error };
@@ -194,9 +189,9 @@ export default class UserService {
 
 	/**
 	 * @description Registers a user given that the user has a pending active
-	 * invitation. 
+	 * invitation.
 	 * @param userData The data of the user to be registered.
-	 * @returns the potential result represented as the user who was just 
+	 * @returns the potential result represented as the user who was just
 	 * created or the possible generated error.
 	 */
 	public async registerUser(userData: any): Promise<{ result?: any; error?: any }> {
@@ -239,8 +234,8 @@ export default class UserService {
 
 			const user = await repository.insertUser(data);
 
-			if (user === null) return { error: UserMessages.NO_SUCH_USER };
-			
+			if (user === null) return { error: UserMessages.NO_SUCH_USER };
+
 			const tokeResult = await authenticationService.createToken(user);
 
 			const { error } = await this.updateInviteStatus(invitation.id, invitationService);
@@ -265,7 +260,7 @@ export default class UserService {
 	 * @description Removes the user that matches the given user id from
 	 * our records.
 	 * @param userId The id of the user to be deleted
-	 * @returns the potential result represented as the user who was just 
+	 * @returns the potential result represented as the user who was just
 	 * removed or the possible generated error.
 	 */
 	public async deleteUser(userId: string): Promise<{ result?: any; error?: any }> {

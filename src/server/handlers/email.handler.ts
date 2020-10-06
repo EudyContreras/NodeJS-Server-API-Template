@@ -1,9 +1,7 @@
-
 import nodemailer from 'nodemailer';
-import config from '../server.config';
+import config from '../../configs/config.server';
 
 export default class EmailHandler {
-
 	private account: any;
 
 	constructor(accountInfo: any) {
@@ -17,8 +15,7 @@ export default class EmailHandler {
 		return false;
 	}
 
-	public async sendTempPasswordEmail(email: string, tempPassword: string): Promise< { info: any }> {
-
+	public async sendTempPasswordEmail(email: string, tempPassword: string): Promise<{ info: any }> {
 		const emailContent = {
 			emailAddresses: email,
 			emailSubject: 'Password Recovery',
@@ -29,7 +26,7 @@ export default class EmailHandler {
 		return await this.sendEmail(emailContent, this.account);
 	}
 
-	public async sendInvitationEmail(invitation: any): Promise< { info: any }> {
+	public async sendInvitationEmail(invitation: any): Promise<{ info: any }> {
 		const name = config.host.APP_NAME;
 		const site = config.host.BASE_URL;
 
@@ -44,11 +41,11 @@ export default class EmailHandler {
 	}
 
 	/**
- * Sends an email using an injected dependency.
- * @param  emailContent The content of the email
- * to be sent.
- */
-	private async sendEmail(emailContent: any, account: any): Promise< { info: any }> {
+	 * Sends an email using an injected dependency.
+	 * @param  emailContent The content of the email
+	 * to be sent.
+	 */
+	private async sendEmail(emailContent: any, account: any): Promise<{ info: any }> {
 		const toEmail = emailContent.emailAddresses;
 		const senderEmail = account.senderEmail;
 

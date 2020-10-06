@@ -7,23 +7,38 @@ import http2 from 'spdy';
 import hsts from 'hsts';
 import helmet from 'helmet';
 import logger from 'morgan';
-import express, { NextFunction } from 'express';
+import express, { NextFunction, Request, Response } from 'express';
 import mongoose from 'mongoose';
 import cookieParser from 'cookie-parser';
-import config from './server.config';
+import config from '../configs/config.server';
 import Interceptor from './middleware/interceptor';
 import Controller from './controllers/controller';
 import ErrorHandler from './handlers/error.handler';
 import LoggingHandler from './handlers/logging.handler';
 import ViewRenderer from './middleware/renderer';
 import shrinkRay from 'shrink-ray-current';
-import expressStaticGzip from 'express-static-gzip';
+import expressStatic from 'express-static-gzip';
 import expressEnforceSSL from 'express-enforces-ssl';
 import DataInitializer from './initializers/database.initializer';
 import reactRender from 'express-react-views';
 
-export default class Application {
+const pattern = /\.(jpe?g|png)$/;
 
+const cachePolicy = (request: Request, response: Response, next: NextFunction): void => {
+	const policy = config.resources.cachePolicy;
+	response.set(policy.LABEL, policy.VALUE);
+	next();
+};
+
+const ignoreFavicon = (): ((Response, Request, NextFunction) => void) => (request: Request, response: Response, next: NextFunction): void => {
+	if (config.resources.ignored.indexOf(request.originalUrl) !== -1) {
+		response.status(204).json({});
+	} else {
+		next();
+	}
+};
+
+export default class Application {
 	public app: express.Application;
 
 	private loggHandler: LoggingHandler;
@@ -35,15 +50,14 @@ export default class Application {
 		useCreateIndex: true
 	};
 
-	constructor(args: { controllers: Controller[]; viewRenderer?: ViewRenderer[]; interceptor: Interceptor }) {
+	constructor(args: { controllers: Controller[]; viewRenderer: ViewRenderer; interceptor: Interceptor }) {
 		this.app = express();
 		this.loggHandler = new LoggingHandler();
 		this.errorHandler = new ErrorHandler(this.loggHandler);
 
-		this.setupExpress();
+		this.setupExpress(args.viewRenderer);
 		this.initializeMiddleware(args.interceptor);
 		this.initializeControllers(args.controllers);
-		this.initializeViewRenderers(args.viewRenderer);
 		this.initializeErrorHandling(args.interceptor);
 		this.connectToTheDatabase(true);
 	}
@@ -51,7 +65,7 @@ export default class Application {
 	public startlistening(): void {
 		const secure = config.ssl.ACTIVE;
 
-		const port = config.presentation.HAS_REACT_HMR ? config.host.PORT : config.host.PORT_HTTP;
+		const port = config.host.PORT;
 
 		if (secure) {
 			const port = config.host.PORT_HTTPS;
@@ -71,12 +85,12 @@ export default class Application {
 		});
 	}
 
-	private setupExpress(): void {
+	private setupExpress(renderer: ViewRenderer): void {
 		const render = config.presentation;
 		const clientRender = render.viewEngine.client;
 
 		if (!config.presentation.IS_SSR) {
-			this.app.use(this.ignoreFavicon);
+			this.app.use(ignoreFavicon());
 		}
 		if (!config.enviroment.PRODUCTION) {
 			this.app.use(logger('dev'));
@@ -85,26 +99,21 @@ export default class Application {
 			this.app.enable('trust proxy');
 			this.app.use(expressEnforceSSL());
 		}
+
 		this.app.use(cors());
 		this.app.use(helmet());
 		this.app.use(cookieParser());
 		this.app.use(shrinkRay());
+		this.app.use(hsts(config.host.secureTransport));
+		this.app.use(cachePolicy);
+		this.app.use(expressStatic(config.application.FILE_DIRECTORY, config.compression));
 		this.app.use(express.json());
 		this.app.use(express.urlencoded({ extended: false }));
-		this.app.use(hsts(config.host.secureTransport));
-		this.app.use(expressStaticGzip(config.application.FILE_DIRECTORY, config.compression));
 		this.app.use(clientRender.alias, express.static(clientRender.path));
 		this.app.set(render.viewEngine.alias, render.viewEngine.path);
 		this.app.set(render.viewEngine.label, render.viewEngine.type);
+		this.app.use(renderer.getRoute(), renderer.getRouter());
 		this.app.engine(render.viewEngine.type, reactRender.createEngine());
-	}
-
-	private ignoreFavicon(request: any, response: any, next: NextFunction): void {
-		if (config.resources.ignored.indexOf(request.originalUrl) !== -1) {
-			response.status(204).json({});
-		} else {
-			next();
-		}
 	}
 
 	private initializeMiddleware(middleware: Interceptor): void {
@@ -119,22 +128,12 @@ export default class Application {
 		});
 	}
 
-	private initializeViewRenderers(viewRenderers?: ViewRenderer[]): void {
-		if (viewRenderers != undefined) {
-			viewRenderers.forEach((renderer) => {
-				this.app.use(renderer.getRoute(), renderer.getRouter());
-			});
-		}
-	}
-
 	private initializeErrorHandling(middleware: Interceptor): void {
 		this.app.use(middleware.getNotFoundHandler());
 		this.app.use(middleware.getErrorHandler());
 	}
 
-	private initializeWebjobs(): void {
-
-	}
+	private initializeWebjobs(): void {}
 
 	private connectToTheDatabase(createInitialData = false): void {
 		const dataInitializer = new DataInitializer(this.errorHandler, this.loggHandler);
@@ -146,10 +145,11 @@ export default class Application {
 
 		const connectionString = `${prepend}${userName}:${password}${dbURIPath}`;
 
-		mongoose.connect(connectionString, this.dbOptions);
-
+		mongoose.connect(connectionString, this.dbOptions, (error) => {
+			error && console.log('Could not connect to MongoDB!', error.code);
+		});
 		mongoose.connection.once('open', async () => {
-			console.log('MongoDB connected successfully');
+			console.log('MongoDB connection opened successfully');
 			if (createInitialData) {
 				await dataInitializer.createInitialRoles();
 				await dataInitializer.createInitialAdministrators();

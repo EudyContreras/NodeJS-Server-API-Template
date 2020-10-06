@@ -2,34 +2,49 @@
 	"html": {
 		"title": "Template Engine",
 		"author": "Eudy Contreras",
-		"copyright": "Property of Eudy Contreras © 2020",
+		"copyright": "Authored by Eudy Contreras © 2020",
 		"nightMode": "disable",
 		"fullscreen": "yes",
 		"startupUrl": "/",
+		"manifest": "/manifest.json",
 		"layoutMode": "fitscreen/standard",
 		"screenOrientation": "portrait",
+		"jquery": "https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js",
 		"keywords": "template engine, react-engine, pwa-isomorphic-react, pwa, isomorphic-react, universal-react",
 		"description": "Template Web site generated the server api routing",
 		"themeColor": "#23282d",
 		"apple": {
 			"statusBarStyle": "default"
 		},
+		"fileType": "webp",
+		"favIcon": "images/favicon.ico",
+		"touchIconsPath": "images/touch_icon/touch_icon_",
+		"touchIcons": [
+			"76x76", "128x128", "144x144", "152x152", "192x192", "256x256", "348x348", "512x512"
+		],
+		"preconnect": [
+			"https://fonts.gstatic.com",
+			"https://fonts.googleapis.com"
+		],
 		"windows": {
 			"navButtonColor": "#23282d",
 			"tileColor": "#23282d",
-			"tileImage": "images/icons/touch-icon-144x144.png",
 			"tooltip": "Tooltip Text",
 			"config": "none"
 		}
 	},
 	"headers": [
 		{
+			"LABEL": "SSR",
+			"VALUE": "true"
+		},
+		{
 			"LABEL": "Set-Cookie",
 			"VALUE": "promo_shown=1; SameSite=Strict;"
 		},
 		{
 			"LABEL": "Cache-Control",
-			"VALUE": "max-age=600"
+			"VALUE": "max-age=31536000"
 		}
 	],
 	"layout": {

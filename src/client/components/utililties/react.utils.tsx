@@ -1,4 +1,3 @@
-
 export const element = (tag: string, classes: string[]): Element => {
 	const element = document.createElement(tag);
 	classes.forEach((x) => element.classList.add(x));
@@ -8,9 +7,7 @@ export const element = (tag: string, classes: string[]): Element => {
 /**
  * Joins css classes into a single string
  */
-export const join = (...names: string[]): string => {
-	return names.join(' ');
-};
+export const join = (...names: string[] | any[]): string => names.join(' ');
 
 /**
  * Creates a css styling string from the given
@@ -19,8 +16,8 @@ export const join = (...names: string[]): string => {
 export const css = (properties: any): string => {
 	let style = '';
 
-	for (const key in properties){
-		if(Object.prototype.hasOwnProperty.call(properties, key)) {
+	for (const key in properties) {
+		if (Object.prototype.hasOwnProperty.call(properties, key)) {
 			style += `${key}: ${properties[key]}; \n`;
 		}
 	}

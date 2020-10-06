@@ -1,11 +1,10 @@
-
 import Application from './application';
 import Interceptor from './middleware/interceptor';
 import RoleController from './controllers/restful/api/roles';
 import UserController from './controllers/restful/api/users';
 import IndexViewRender from '../client/renderers/ViewRender';
 import SchemaController from './controllers/restful/api/schema';
-import SearchController from './controllers/restful/api/Search';
+import SearchController from './controllers/restful/api/search';
 import InviteController from './controllers/restful/api/invitations';
 import PriviledgeController from './controllers/restful/api/priviledges';
 import AuthenticationController from './controllers/restful/api/authentication';
@@ -21,9 +20,7 @@ const args = {
 		new PriviledgeController(ROOT, ADMIN),
 		new AuthenticationController(...ALL)
 	],
-	viewRenderer: [
-		new IndexViewRender()
-	],
+	viewRenderer: new IndexViewRender(),
 	interceptor: new Interceptor()
 };
 

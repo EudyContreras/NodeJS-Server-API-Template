@@ -1,6 +1,7 @@
-/* eslint-disable @typescript-eslint/camelcase */
+
 /* eslint-disable @typescript-eslint/no-var-requires */
 const TerserPlugin = require('terser-webpack-plugin');
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 
 const developmentOptimization = () => ({
 	minimize: false,
@@ -13,7 +14,7 @@ const developmentOptimization = () => ({
 	removeEmptyChunks: false
 });
 
-const productionOptimization = (splitChunk) => ({
+const productionOptimization = (splitChunk, dropConsole) => ({
 	minimize: true,
 	minimizer: [
 		new TerserPlugin({
@@ -24,7 +25,7 @@ const productionOptimization = (splitChunk) => ({
 			extractComments: false,
 			chunkFilter: (chunk) => {
 				if (chunk.name != null) {
-					if (chunk.name.startsWith('vendor')) {
+					if (chunk.name.startsWith('vendors')) {
 						return true;
 					}
 				}
@@ -38,7 +39,7 @@ const productionOptimization = (splitChunk) => ({
 					ecma: 5,
 					warnings: true,
 					comparisons: false,
-					drop_console: false,
+					drop_console: dropConsole,
 					inline: 2
 				},
 				mangle: {
@@ -52,7 +53,8 @@ const productionOptimization = (splitChunk) => ({
 					ascii_only: true
 				}
 			}
-		})
+		}),
+		new OptimizeCSSAssetsPlugin({})
 	],
 	nodeEnv: 'production',
 	chunkIds: false,
@@ -66,6 +68,6 @@ const productionOptimization = (splitChunk) => ({
 	...splitChunk
 });
 
-module.exports = ({ splitChunk, production = false }) => (
-	{ ...(production ? productionOptimization(splitChunk) : developmentOptimization()) }
+module.exports = ({ splitChunk, production = false, dropConsole = false }) => (
+	{ ...(production ? productionOptimization(splitChunk, dropConsole) : developmentOptimization()) }
 );

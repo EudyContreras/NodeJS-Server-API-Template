@@ -4,10 +4,13 @@ import { connect } from 'react-redux';
 import { appendWhen } from '../../../../../appliers/style.applier';
 import { getSandbox } from '../../../../../selectors/sandbox.selector';
 import { setTopFixed, setBottomFixed } from '../../../../../actions/documentation/sandbox.action';
-import { join } from '../../../../utililties/react.utils';
+import { join } from '../../../../utililties/react.utils';
 
 interface StateProps {
+	self: any;
+	styling: any;
 	fixedTop: boolean;
+	offsetTop: number;
 	fixedBottom: boolean;
 	offsetBottom: number;
 }
@@ -19,20 +22,15 @@ interface DispatchProps {
 
 const Dispatchers = { setTopFixed, setBottomFixed };
 
-type Props = StateProps & DispatchProps & any;
+type Props = StateProps & DispatchProps;
 
-class SandboxArea extends React.PureComponent<Props, any> {
-
-	constructor(props: any) {
-		super(props);
-	}
-
+class SandboxArea extends React.PureComponent<Props> {
 	private getProperties = (style: any): any & any => {
 		const styles = [style.sandboxArea];
-		const cssTop = this.props.fixedTop ? this.props.offsetTop : this.props.fixedBottom ? this.props.offsetBottom : 'auto';
+		const cssTop = this.props.fixedTop && !this.props.fixedBottom ? this.props.offsetTop : this.props.fixedBottom ? this.props.offsetBottom : 'auto';
 
-		appendWhen(styles, this.props.fixedTop, style.fixed);
-		
+		appendWhen(styles, this.props.fixedTop && !this.props.fixedBottom, style.fixed);
+
 		const common = {
 			ref: this.props.self,
 			style: { top: cssTop },
@@ -49,7 +47,7 @@ class SandboxArea extends React.PureComponent<Props, any> {
 
 		return (
 			<aside {...common}>
-				<SandboxSection styling={style}/>
+				<SandboxSection styling={style} />
 			</aside>
 		);
 	};

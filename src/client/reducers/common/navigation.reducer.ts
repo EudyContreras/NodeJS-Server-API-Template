@@ -6,9 +6,10 @@ import {
 	NAV_BAR_MENU_MOUSE_INSIDE
 } from '../../actions/common/navigation.action';
 
-export const SOURCE = NAV_BAR_MENU;
-
 import IAction from '../../actions/action';
+import { LinkInfo } from '../../components/Routes';
+
+export const SOURCE = NAV_BAR_MENU;
 
 export interface INavigationTab {
 	hovered: boolean;
@@ -18,17 +19,16 @@ export interface INavigationTab {
 export interface INavigationBar {
 	anchored: boolean;
 	offsetTop: number;
+	navbarHeight: number;
 	mouseInside: boolean | null;
-	acitiveTab: null | {
-		label: string;
-		index: number;
-	};
+	acitiveTab: LinkInfo | null;
 	navigationTabs: INavigationTab[];
 }
 
-const InitialState: INavigationBar = {
+export const InitialState: INavigationBar = {
 	anchored: false,
 	offsetTop: 0,
+	navbarHeight: 0,
 	mouseInside: null,
 	acitiveTab: null,
 	navigationTabs: []
@@ -58,7 +58,8 @@ export default function (state = InitialState, action: IAction): INavigationBar 
 		case NAV_BAR_MENU_OFFSET_TOP: {
 			return {
 				...state,
-				offsetTop: action.payload
+				offsetTop: action.payload.offset,
+				navbarHeight: action.payload.height
 			};
 		}
 		default:

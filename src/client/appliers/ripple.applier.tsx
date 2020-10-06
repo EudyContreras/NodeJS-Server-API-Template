@@ -1,17 +1,22 @@
 import React from 'react';
+import RippleStyle from '../styles/modules/ripple.module.scss';
 
-const asClass = (name: string): string => '.'+name;
+const asClass = (name: string): string => `.${name}`;
+const asPixels = (value: number): string => `${value}px`;
 
-const spanElement = (name: string): Element => {
+const spanElement = (name: string): HTMLSpanElement => {
 	const element = document.createElement('span');
 	element.classList.add(name);
 	return element;
 };
 
-export default (event: React.MouseEvent<HTMLElement, MouseEvent>, style: any): void => {
-	$(asClass(style.ripple)).remove();
+export const rippleStyle: any = RippleStyle;
 
+export const useRippple = (event: React.MouseEvent<HTMLElement, MouseEvent>): void => {
 	const element = event.currentTarget;
+	const childRipple: HTMLSpanElement | null = element.querySelector(asClass(rippleStyle.ripple));
+	childRipple && element.removeChild(childRipple);
+
 	const offset = element.getBoundingClientRect();
 
 	const posX = offset.left;
@@ -19,10 +24,6 @@ export default (event: React.MouseEvent<HTMLElement, MouseEvent>, style: any): v
 
 	let buttonWidth = offset.width;
 	let buttonHeight = offset.height;
-
-	const ripple = spanElement(style.ripple);
- 
-	element.prepend(ripple);
 
 	if (buttonWidth >= buttonHeight) {
 		buttonHeight = buttonWidth;
@@ -33,10 +34,16 @@ export default (event: React.MouseEvent<HTMLElement, MouseEvent>, style: any): v
 	const x = event.pageX - posX - buttonWidth / 2;
 	const y = event.pageY - posY - buttonHeight / 2;
 
-	$(asClass(style.ripple)).css({
-		width: buttonWidth,
-		height: buttonHeight,
-		top: y,
-		left: x
-	}).addClass(style.rippleEffect);
+	const ripple = spanElement(rippleStyle.ripple);
+
+	ripple.style.width = asPixels(buttonWidth);
+	ripple.style.height = asPixels(buttonHeight);
+	ripple.style.top = asPixels(y);
+	ripple.style.left = asPixels(x);
+
+	element.prepend(ripple);
+
+	ripple.classList.add(rippleStyle.rippleEffect);
 };
+
+export default useRippple;

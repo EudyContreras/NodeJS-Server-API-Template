@@ -1,14 +1,12 @@
-
 import PermissionsService from '../services/role.service';
 import InvitationService from '../services/invitation.service';
 import UserService from '../services/user.service';
 import RoleStore from '../localstore/accessrole.store';
 import Logger from '../handlers/logging.handler';
 import Handler from '../handlers/error.handler';
-import config from '../server.config';
+import config from '../../configs/config.server';
 
 export default class DatabaseIntializer {
-
 	private logger: Logger;
 	private handler: Handler;
 

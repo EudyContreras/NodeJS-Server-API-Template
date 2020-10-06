@@ -1,19 +1,15 @@
 import React from 'react';
 
 class FooterArea extends React.Component<any, any> {
-	
-	constructor(props: any) {
-		super(props);
-	}
-
 	public render = (): JSX.Element => {
-
 		const style = this.props.styling;
 
 		return (
-			<footer ref={this.props.self} className={style.footerArea}></footer>
+			<footer ref={this.props.self} className={style.footerArea}>
+				<div className={style.footerContent}></div>
+			</footer>
 		);
 	};
-} 
+}
 
 export default FooterArea;
