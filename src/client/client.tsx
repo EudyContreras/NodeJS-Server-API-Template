@@ -7,7 +7,7 @@ import { loadableReady } from '@loadable/component';
 import { client } from './views';
 import { MaterialIcons } from './stores/icon.library';
 import './resources/images/icons/favicon.ico';
-import './resources/images/touch_icon.png?sizes[]=72,sizes[]=128,sizes[]=144,sizes[]=152,sizes[]=192,sizes[]=257,sizes[]=384,sizes[]=512';
+import './resources/images/touch_icon.png?sizes[]=72,sizes[]=128,sizes[]=144,sizes[]=152,sizes[]=192,sizes[]=257,sizes[]=384,sizes[]=512&format=webp';
 import { IStateTree } from './reducers';
 
 const initialState: IStateTree = window.__PRELOADED_STATE__ || StoreInitialState;
@@ -84,4 +84,4 @@ if (clientSideRendered) {
 	render();
 } else {
 	loadableReady(render);
-};
+}

@@ -165,8 +165,6 @@ const onSuccess = (
 	}
 };
 
-const onFoldState: ImgAttribute = { loading: 'eager' };
-const offFoldState: ImgAttribute = { loading: 'eager', decoding: 'async' };
 const remotePropsState: ImgAttribute = { crossOrigin: 'anonymous' };
 
 const selectImageAssetState = (src: string): any =>
@@ -176,7 +174,7 @@ const selectImageAssetState = (src: string): any =>
 	);
 
 export const LazyImage: React.FC<LazyImageProps> = (props: LazyImageProps): JSX.Element => {
-	const { src, alt, srcSet, index, images, fallback, mediaQuery, className, placeholder } = props;
+	const { src, alt, srcSet, index, width, height, images, fallback, mediaQuery, className, placeholder } = props;
 	const inMemory = useSelector<IStateTree>(selectImageAssetState(src));
 	const dispatch = useDispatch();
 
@@ -204,44 +202,23 @@ export const LazyImage: React.FC<LazyImageProps> = (props: LazyImageProps): JSX.
 	useStyles(styling);
 
 	const sizes = buildSizes(mediaQuery);
-	const imgSets = images && buildSet(srcSet, images, fileType.WEBP);
 	const containerClasses = join(styling.lazyImage, styling.lazyImageWrapper, className);
-	const elementClasses = join(styling.lazyImageSource, hasLoaded ? styling.lazyImageLoaded : srcSet ? '' : lazyClass);
+	const elementClasses = join(styling.lazyImageSource, hasLoaded ? styling.lazyImageLoaded : lazyClass);
 
-	const lazyProps: ImgAttribute = (index || 0) < 4 ? onFoldState : offFoldState;
 	const remoteProps: ImgAttribute = srcSet ? {} : remotePropsState;
 
 	return (
 		<div className={containerClasses}>
-			<img {...lazyProps} {...remoteProps} src={placeholder} alt={alt} aria-hidden={true} className={styling.lazyImagePlaceholder} />
-			{srcSet ? (
-				<picture data-index={index} className={!hasLoaded ? lazyClass : ''}>
-					<source
-						{...(hasLoaded ? { srcSet: imgSets || srcSet } : { 'data-srcset': imgSets || srcSet })}
-						type={mediaType.WBP}
-						sizes={sizes}
-						className={elementClasses}
-					/>
-					<img
-						alt={alt}
-						{...(hasLoaded ? { src: src, srcSet: srcSet } : { onLoad: onLoaded, 'data-src': src, 'data-srcset': srcSet })}
-						sizes={sizes}
-						data-index={index}
-						onError={onFailed}
-						className={elementClasses}
-					/>
-				</picture>
-			) : (
-				<img
-					{...(hasLoaded ? { src: src } : { 'data-src': src })}
-					alt={alt}
-					crossOrigin="anonymous"
-					data-index={index}
-					onLoad={onLoaded}
-					onError={onFailed}
-					className={elementClasses}
-				/>
-			)}
+			<img {...remoteProps} src={placeholder} alt={alt} aria-hidden={true} className={styling.lazyImagePlaceholder} />
+			<img
+				{...remoteProps}
+				{...(hasLoaded ? { src: src, srcSet: srcSet } : { onLoad: onLoaded, 'data-src': src, 'data-srcset': srcSet })}
+				alt={alt}
+				sizes={sizes}
+				data-index={index}
+				onError={onFailed}
+				className={elementClasses}
+			/>
 		</div>
 	);
 };

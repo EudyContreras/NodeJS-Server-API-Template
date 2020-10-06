@@ -57,7 +57,7 @@
 	"scope": "/",
 	"gcm_sender_id": "",
     "gcm_user_visible_only": true,
-	"start_url": "/?source=pwa",
+	"start_url": "/",
 	"permissions": [
 	  "gcm"
 	],

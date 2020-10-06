@@ -1,3 +1,4 @@
+
 .ripple {
 	width: 0;
 	height: 0;
@@ -9,7 +10,7 @@
 }
 
 .ripple-effect {
-	animation: rippleDrop 0.4s linear;
+	animation: rippleDrop 0.3s linear;
 }
 
 @keyframes rippleDrop {
