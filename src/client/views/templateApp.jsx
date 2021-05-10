@@ -82,7 +82,7 @@ export const DefaultLayout = (props) => {
 				{props.html.preconnect.map((x, i) => (
 					<link rel="preconnect" crossOrigin="anonymous" key={i} href={x} />
 				))}
-				
+
 				{/* <!-- Manifest.json  --> */}
 				<link rel="manifest" href={props.html.manifest} />
 
@@ -94,9 +94,12 @@ export const DefaultLayout = (props) => {
 			</head>
 			<body>
 				<section id="content">{props.content}</section>
-				<script type="text/javascript"
+				<script></script>
+				<script
+					type="text/javascript"
 					dangerouslySetInnerHTML={{
 						__html: `
+							if (!crossOriginIsolated) SharedArrayBuffer = ArrayBuffer;
 							window.__RENDER_OPTIONS__=${JSON.stringify(options).replace(/</g, '\\u003c')};
 							window.__PRELOADED_STATE__= ${JSON.stringify(props.state).replace(/</g, '\\u003c')};
 						`
