@@ -106,8 +106,8 @@ export default class InvitationRepository {
 	public async updateInvitation(invitationId: string, update: any, options = { dto: true }): Promise<IInvitation | any> {
 		const invitation = await Invitation.findByIdAndUpdate(invitationId, update, this.options).select(this.exclude).exec();
 
-		if (options.dto === true && invitation != null) {
-			return dataTransferDocument(invitation);
+		if (options.dto === true && invitation?.value != null) {
+			return dataTransferDocument(invitation.value);
 		}
 
 		return invitation;
@@ -116,8 +116,8 @@ export default class InvitationRepository {
 	public async updateInvitationWhere(query: any, update: any, options = { dto: true }): Promise<IInvitation | any> {
 		const invitation = await Invitation.findOneAndUpdate(query, update, this.options).select(this.exclude).exec();
 
-		if (options.dto === true && invitation != null) {
-			return dataTransferDocument(invitation);
+		if (options.dto === true && invitation?.value != null) {
+			return dataTransferDocument(invitation.value);
 		}
 
 		return invitation;

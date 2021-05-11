@@ -116,34 +116,33 @@ export default class PriviledgeRepository {
 		return result;
 	}
 
-	public async updateOrInsertPriviledge(query: any, update: any): Promise<IPriviledge | PriviledgeDTO | null> {
-		const priviledge = await Priviledge.updateOne(query, update, this.options).select(this.exclude);
-
-		return priviledge;
+	public async updateOrInsertPriviledge(query: any, update: any): Promise<IPriviledge | PriviledgeDTO | undefined> {
+		const priviledge = await Priviledge.updateOne(query, update, this.options).select(this.exclude).exec();
+		return undefined;
 	}
 
-	public async updatePriviledge(priviledgeId: string, update: any, options = { dto: true }): Promise<IPriviledge | PriviledgeDTO | null> {
+	public async updatePriviledge(priviledgeId: string, update: any, options = { dto: true }): Promise<IPriviledge | PriviledgeDTO | undefined> {
 		const priviledge = await Priviledge.findByIdAndUpdate(priviledgeId, update, this.options).select(this.exclude).exec();
 
 		const result = priviledge || null;
 
-		if (options.dto === true && result != null) {
-			return dataTransferDocument(result);
+		if (options.dto === true && result?.value != null) {
+			return dataTransferDocument(result?.value);
 		}
 
-		return result;
+		return result?.value;
 	}
 
-	public async updatePriviledgeWhere(query: any, update: any, options = { dto: true }): Promise<IPriviledge | PriviledgeDTO | null> {
+	public async updatePriviledgeWhere(query: any, update: any, options = { dto: true }): Promise<IPriviledge | PriviledgeDTO | undefined> {
 		const priviledge = await Priviledge.findOneAndUpdate(query, update, this.options).select(this.exclude).exec();
 
 		const result = priviledge || null;
 
-		if (options.dto === true && result != null) {
-			return dataTransferDocument(result);
+		if (options.dto === true && result?.value != null) {
+			return dataTransferDocument(result?.value);
 		}
 
-		return result;
+		return result?.value;
 	}
 
 	public async deletePriviledge(priviledgeId: string, options = { dto: true }): Promise<IPriviledge | PriviledgeDTO | null> {

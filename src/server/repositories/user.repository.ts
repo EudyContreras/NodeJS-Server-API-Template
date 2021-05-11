@@ -119,8 +119,8 @@ export default class UserRepository {
 
 		const result = user || null;
 
-		if (options.dto === true && result != null) {
-			return dataTransferDocument(result);
+		if (options.dto === true && result?.value != null) {
+			return dataTransferDocument(result?.value);
 		}
 
 		return result;
@@ -131,8 +131,8 @@ export default class UserRepository {
 
 		const result = user || null;
 
-		if (options.dto === true && result != null) {
-			return dataTransferDocument(result);
+		if (options.dto === true && result?.value != null) {
+			return dataTransferDocument(result?.value);
 		}
 
 		return result;

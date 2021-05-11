@@ -111,8 +111,8 @@ export default class RoleRepository {
 
 		const result = role || null;
 
-		if (options.dto === true && result != null) {
-			return dataTransferDocument(result);
+		if (options.dto === true && result?.value != null) {
+			return dataTransferDocument(result.value);
 		}
 
 		return result;
@@ -123,8 +123,8 @@ export default class RoleRepository {
 
 		const result = role || null;
 
-		if (options.dto === true && result != null) {
-			return dataTransferDocument(result);
+		if (options.dto === true && result?.value != null) {
+			return dataTransferDocument(result.value);
 		}
 
 		return result;

@@ -99,7 +99,7 @@ const plugins = [
 		}
 	}),
 	new DuplicatePackageCheckerPlugin(),
-	new BundleAnalyzerPlugin({ token: bundleToken }),
+	// new BundleAnalyzerPlugin({ token: bundleToken }),
 	new CleanWebpackPlugin({ cleanStaleWebpackAssets: isProduction }),
 	new CopyPlugin({ patterns: resources }),
 	new HtmlWebpackPlugin({
